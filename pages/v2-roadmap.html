@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>v2.0 功能迭代路线图 · 好事近</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f7f5f2; color: #2b2622; }
+
+/* 导航 */
+.topbar { background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #eee8e2; position: sticky; top: 0; z-index: 1000; }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; max-width: 1200px; margin: 0 auto; height: 56px; }
+.topbar .logo { font-size: 18px; font-weight: 800; text-decoration: none; color: #2b2622; }
+.topbar .logo span { color: #c8533a; }
+.topbar nav { display: flex; gap: 4px; overflow-x: auto; }
+.topbar nav a { padding: 6px 12px; font-size: 13px; font-weight: 600; color: #7a6e66; text-decoration: none; border-radius: 6px; white-space: nowrap; transition: all .15s; }
+.topbar nav a:hover { color: #2b2622; background: #f5f0eb; }
+.topbar nav a.active { color: #c8533a; background: #fef3ef; }
+
+.wrap { max-width: 960px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* 页面头部 */
+.page-hd { background: linear-gradient(135deg, #fef3ef, #fff8f0, #fef6e8); padding: 48px 24px 36px; text-align: center; border-bottom: 1px solid #eee8e2; }
+.page-hd h1 { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
+.page-hd .sub { font-size: 15px; color: #7a6e66; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+.page-hd .badge-row { display: flex; justify-content: center; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.page-hd .badge-row span { padding: 4px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.page-hd .badge-row .bg-plan { background: #fef6e8; color: #c98a2b; }
+.page-hd .badge-row .bg-phase { background: #eef4fa; color: #3a7abf; }
+
+/* 卡片 */
+.card { background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 1px 2px rgba(43,38,34,.04), 0 4px 16px rgba(43,38,34,.05); border: 1px solid #eee8e2; margin-bottom: 20px; }
+.card-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.card-hd h3 { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.card-hd .phase-tag { font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 700; }
+
+/* 时间线 */
+.timeline-overview { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 32px; }
+@media(max-width:768px) { .timeline-overview { grid-template-columns: repeat(3, 1fr); } }
+.to-item { text-align: center; padding: 14px 8px; border-radius: 10px; cursor: default; transition: all .2s; position: relative; }
+.to-item .to-month { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+.to-item .to-name { font-size: 13px; font-weight: 700; line-height: 1.3; }
+.to-item .to-arrow { position: absolute; top: 50%; right: -8px; transform: translateY(-50%); font-size: 14px; color: #ddd5cc; }
+.to-item:last-child .to-arrow { display: none; }
+.to-item.phase1 { background: #fef3ef; border: 1px solid #fde0d6; }
+.to-item.phase2 { background: #fef6e8; border: 1px solid #f0e0c8; }
+.to-item.phase3 { background: #edf7f0; border: 1px solid #d4e8da; }
+.to-item.phase4 { background: #eef4fa; border: 1px solid #d4e0ec; }
+.to-item.phase5 { background: #f5f0fa; border: 1px solid #e0d8ec; }
+.to-item.phase6 { background: #fefaf5; border: 1px solid #f5e8d8; }
+
+/* 功能卡片 */
+.feature-card { border-left: 4px solid; padding: 20px 24px; margin-bottom: 16px; background: #faf8f6; border-radius: 0 12px 12px 0; transition: all .2s; }
+.feature-card:hover { background: #fff; box-shadow: 0 2px 8px rgba(43,38,34,.06); }
+.feature-card .fc-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.feature-card .fc-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0; }
+.feature-card .fc-title-group { flex: 1; }
+.feature-card .fc-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.feature-card .fc-subtitle { font-size: 13px; color: #7a6e66; margin-top: 2px; }
+.feature-card .fc-body { }
+.feature-card .fc-desc { font-size: 14px; color: #2b2622; line-height: 1.7; margin-bottom: 12px; }
+.feature-card .fc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+@media(max-width:640px) { .feature-card .fc-grid { grid-template-columns: 1fr; } }
+.feature-card .fc-detail-item { padding: 10px 12px; background: #fff; border-radius: 8px; border: 1px solid #eee8e2; }
+.feature-card .fc-detail-item .fdi-label { font-size: 11px; font-weight: 700; color: #7a6e66; margin-bottom: 2px; }
+.feature-card .fc-detail-item .fdi-value { font-size: 13px; color: #2b2622; line-height: 1.5; }
+.feature-card .fc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.feature-card .fc-tags span { padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+
+/* 里程碑 */
+.milestone { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid #f5f0eb; align-items: flex-start; }
+.milestone:last-child { border-bottom: none; }
+.milestone .ms-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; border: 2px solid #fff; box-shadow: 0 0 0 2px; }
+.milestone .ms-body { flex: 1; }
+.milestone .ms-title { font-size: 14px; font-weight: 700; }
+.milestone .ms-desc { font-size: 13px; color: #7a6e66; margin-top: 2px; line-height: 1.5; }
+.milestone .ms-meta { font-size: 11px; color: #b5a99e; margin-top: 4px; display: flex; gap: 12px; }
+
+/* 依赖关系图 */
+.dep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.dep-node { padding: 14px; border-radius: 10px; text-align: center; font-size: 13px; line-height: 1.5; }
+.dep-node .dn-icon { font-size: 24px; margin-bottom: 6px; }
+.dep-node .dn-title { font-weight: 700; margin-bottom: 4px; }
+.dep-node .dn-desc { font-size: 11px; color: #7a6e66; }
+.dep-arrow { text-align: center; font-size: 20px; color: #ddd5cc; padding: 4px 0; }
+
+/* 指标卡片 */
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.metric-card { text-align: center; padding: 16px; background: #faf8f6; border-radius: 10px; border: 1px solid #eee8e2; }
+.metric-card .mc-value { font-size: 24px; font-weight: 800; }
+.metric-card .mc-label { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+.metric-card .mc-target { font-size: 10px; color: #b5a99e; margin-top: 2px; }
+
+/* 风险提示 */
+.risk-note { padding: 14px 18px; background: #fefaf5; border: 1px solid #fde0d6; border-radius: 10px; margin: 12px 0; display: flex; gap: 10px; align-items: flex-start; }
+.risk-note .rn-icon { font-size: 20px; flex-shrink: 0; }
+.risk-note .rn-body { font-size: 13px; color: #7a6e66; line-height: 1.6; }
+.risk-note .rn-body b { color: #c8533a; }
+
+/* 进度条 */
+.progress-strip { display: flex; gap: 4px; margin: 8px 0; }
+.progress-strip .ps-seg { height: 6px; border-radius: 3px; flex: 1; }
+.progress-strip .ps-seg.done { background: #4a9e6e; }
+.progress-strip .ps-seg.current { background: linear-gradient(90deg, #c8533a, #f5a623); animation: pulse-seg 2s ease-in-out infinite; }
+.progress-strip .ps-seg.pending { background: #eee8e2; }
+@keyframes pulse-seg { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 全案</a>
+    <nav>
+      <a href="../index.html">平台首页</a>
+      <a href="project.html">项目总览</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="simulator.html">模拟器</a>
+      <a href="choose.html">选择器</a>
+      <a href="cases.html">好事库</a>
+      <a href="interact2.html">互动广场</a>
+      <a href="me.html">个人中心</a>
+      <a href="v2-roadmap.html" class="active">v2.0路线图</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-hd">
+  <h1>🗺️ v2.0 功能迭代路线图</h1>
+  <p class="sub">在 v1.7 场景化互动的基础上，v2.0 将把 63 个日常微好事模板落地为 6 大功能模块，从"线上互动"走向"线下融合 + 深度价值闭环"。</p>
+  <div class="badge-row">
+    <span class="bg-plan">📋 规划中</span>
+    <span class="bg-phase">6 大功能模块</span>
+    <span class="bg-phase">预计 3 个迭代周期</span>
+    <span class="bg-phase">基于 63 个日常微好事模板</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 时间线总览 -->
+  <div class="card">
+    <div class="card-hd"><h3>📅 迭代时间线</h3></div>
+    <div class="timeline-overview">
+      <div class="to-item phase1">
+        <div class="to-month">第 1-2 月</div>
+        <div class="to-name">议事会模式</div>
+        <div class="to-arrow">→</div>
+      </div>
+      <div class="to-item phase2">
+        <div class="to-month">第 2-3 月</div>
+        <div class="to-name">友好商户体系</div>
+        <div class="to-arrow">→</div>
+      </div>
+      <div class="to-item phase3">
+        <div class="to-month">第 3-4 月</div>
+        <div class="to-name">技能认证标签</div>
+        <div class="to-arrow">→</div>
+      </div>
+      <div class="to-item phase4">
+        <div class="to-month">第 4-5 月</div>
+        <div class="to-name">公益众筹</div>
+        <div class="to-arrow">→</div>
+      </div>
+      <div class="to-item phase5">
+        <div class="to-month">第 5-6 月</div>
+        <div class="to-name">适老改造场景</div>
+        <div class="to-arrow">→</div>
+      </div>
+      <div class="to-item phase6">
+        <div class="to-month">第 6-8 月</div>
+        <div class="to-name">时间银行</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 功能模块 1：议事会模式 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📋 功能模块 1/6</h3><span class="phase-tag" style="background:#fef3ef;color:#c8533a;">Phase 1 · 第 1-2 月</span></div>
+    <div class="feature-card" style="border-color:#c8533a;">
+      <div class="fc-header">
+        <div class="fc-icon" style="background:#fef3ef;">🗳️</div>
+        <div class="fc-title-group">
+          <div class="fc-title">议事会模式 <span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#fef3ef;color:#c8533a;font-weight:600;">邻里投票</span></div>
+          <div class="fc-subtitle">邻里投票决定下一件共同好事，投票结果自动生成需求清单</div>
+        </div>
+      </div>
+      <div class="fc-body">
+        <div class="fc-desc">议事会模式是 v2.0 的"民主启动器"。它让社区从"平台推荐什么就做什么"升级为"邻居们一起决定做什么"。每一次投票都是一次社区共识的凝聚，投票结果直接转化为可执行的需求清单，形成"提议→讨论→投票→执行→反馈"的完整闭环。</div>
+        <div class="fc-grid">
+          <div class="fc-detail-item">
+            <div class="fdi-label">核心流程</div>
+            <div class="fdi-value">发起议题 → 邻居讨论（评论区） → 投票（支持/反对/弃权） → 结果公示 → 自动生成需求清单 → 分配执行</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">投票机制</div>
+            <div class="fdi-value">每人一票（基础）+ 好心值加成（每 100 好心值 +1 票，上限 3 票），投票结果实时更新，7 天自动截止</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">需求清单</div>
+            <div class="fdi-value">投票通过后自动生成 To-Do 清单，标记优先级/负责人/截止日期，完成进度全员可见</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">与日常好事库联动</div>
+            <div class="fdi-value">投票议题自动匹配日常好事库中的模板，邻居可一键引用"这个好，我们社区也做一次"</div>
+          </div>
+        </div>
+        <div class="fc-tags">
+          <span style="background:#fef3ef;color:#c8533a;">🏷️ 民主决策</span>
+          <span style="background:#fef3ef;color:#c8533a;">🏷️ 共识凝聚</span>
+          <span style="background:#fef3ef;color:#c8533a;">🏷️ 需求转化</span>
+          <span style="background:#fef3ef;color:#c8533a;">🏷️ 社区自治</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-note">
+      <div class="rn-icon">⚠️</div>
+      <div class="rn-body"><b>关键风险</b>：投票参与率不足可能导致结果失真。需设置"最低投票人数"门槛，同时通过好心值激励引导参与。参考方案：投票即 +5 好心值，议题发起人 +20 好心值。</div>
+    </div>
+  </div>
+
+  <!-- ====== 功能模块 2：友好商户体系 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📋 功能模块 2/6</h3><span class="phase-tag" style="background:#fef6e8;color:#c98a2b;">Phase 2 · 第 2-3 月</span></div>
+    <div class="feature-card" style="border-color:#c98a2b;">
+      <div class="fc-header">
+        <div class="fc-icon" style="background:#fef6e8;">🏪</div>
+        <div class="fc-title-group">
+          <div class="fc-title">友好商户体系 <span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#fef6e8;color:#c98a2b;font-weight:600;">好心值兑换</span></div>
+          <div class="fc-subtitle">好心值兑换商户优惠，用日常善行换取真实福利，让善意被看见、被回馈</div>
+        </div>
+      </div>
+      <div class="fc-body">
+        <div class="fc-desc">友好商户体系是"好心值"从虚拟积分走向真实价值的关键一步。社区周边的商户（便利店、水果店、干洗店、早餐铺等）入驻平台，提供优惠券或小礼品，邻居用好心值兑换。这不仅激励了日常善行，也为商户带来了社区曝光和客流，形成"商户让利→居民受益→社区活跃→商户受益"的正循环。</div>
+        <div class="fc-grid">
+          <div class="fc-detail-item">
+            <div class="fdi-label">商户入驻流程</div>
+            <div class="fdi-value">商户在线申请 → 社区审核 → 设置兑换方案（商品/折扣/体验） → 上架展示 → 邻居兑换核销</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">兑换方案类型</div>
+            <div class="fdi-value">① 折扣券（如 8 折优惠，50 好心值）② 免费小样（如一杯豆浆，30 好心值）③ 满减券（如满 30 减 5，80 好心值）④ 体验券（如免费洗车一次，200 好心值）</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">好心值定价</div>
+            <div class="fdi-value">建议 1 好心值 ≈ 0.1 元价值，单次兑换上限 500 好心值，商户可自定义兑换门槛</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">商户激励</div>
+            <div class="fdi-value">平台免费展示，月度"最受欢迎商户"评选，社区活动优先合作，商户信用分展示</div>
+          </div>
+        </div>
+        <div class="fc-tags">
+          <span style="background:#fef6e8;color:#c98a2b;">🏷️ 正循环激励</span>
+          <span style="background:#fef6e8;color:#c98a2b;">🏷️ 商户合作</span>
+          <span style="background:#fef6e8;color:#c98a2b;">🏷️ 价值兑现</span>
+          <span style="background:#fef6e8;color:#c98a2b;">🏷️ 社区经济</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-note">
+      <div class="rn-icon">⚠️</div>
+      <div class="rn-body"><b>关键风险</b>：商户入驻意愿和兑换方案质量是成败关键。初期建议从"社区内已有合作关系的商户"切入，提供免费入驻和首月流量扶持。需设置商户评价机制，避免低质量兑换影响用户体验。</div>
+    </div>
+  </div>
+
+  <!-- ====== 功能模块 3：技能认证标签 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📋 功能模块 3/6</h3><span class="phase-tag" style="background:#edf7f0;color:#4a9e6e;">Phase 3 · 第 3-4 月</span></div>
+    <div class="feature-card" style="border-color:#4a9e6e;">
+      <div class="fc-header">
+        <div class="fc-icon" style="background:#edf7f0;">🔧</div>
+        <div class="fc-title-group">
+          <div class="fc-title">技能认证标签 <span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#edf7f0;color:#4a9e6e;font-weight:600;">技能互助</span></div>
+          <div class="fc-subtitle">为好事搭档匹配增加技能资质认证，让义修、义剪等技能互助更靠谱</div>
+        </div>
+      </div>
+      <div class="fc-body">
+        <div class="fc-desc">技能认证标签让"好人好事"升级为"专业助人"。邻居可以在平台上认证自己的专业技能（如电工、理发、烹饪、辅导、维修等），认证后在同类型好事匹配中优先展示。这不仅提高了互助的质量和信任度，也让有技能的邻居获得更多帮助他人的机会和成就感。</div>
+        <div class="fc-grid">
+          <div class="fc-detail-item">
+            <div class="fdi-label">技能分类</div>
+            <div class="fdi-value">① 家政维修（水电/家电/家具）② 生活服务（理发/烹饪/缝纫）③ 教育辅导（课业/乐器/编程）④ 医疗健康（护理/急救/康复）⑤ 文化艺术（摄影/绘画/书法）⑥ 其他（宠物/园艺/翻译）</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">认证方式</div>
+            <div class="fdi-value">① 邻居互评认证（3 位已服务邻居推荐）② 资质上传（上传证书/执照）③ 社区公认（社区管理员手动认证）④ 技能测试（在线测试题）</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">标签展示</div>
+            <div class="fdi-value">个人中心展示技能标签墙，好事匹配时优先推荐技能匹配的邻居，标签旁显示认证等级（⭐ 社区认证 / ⭐⭐ 资质认证 / ⭐⭐⭐ 专家认证）</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">与日常好事库联动</div>
+            <div class="fdi-value">好事库中的技能类模板（如"帮老人修家电"）自动标记为"需要技能认证"，认证用户优先匹配，未认证用户可申请"学徒模式"跟随学习</div>
+          </div>
+        </div>
+        <div class="fc-tags">
+          <span style="background:#edf7f0;color:#4a9e6e;">🏷️ 信任建立</span>
+          <span style="background:#edf7f0;color:#4a9e6e;">🏷️ 专业互助</span>
+          <span style="background:#edf7f0;color:#4a9e6e;">🏷️ 技能共享</span>
+          <span style="background:#edf7f0;color:#4a9e6e;">🏷️ 质量保障</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-note">
+      <div class="rn-icon">⚠️</div>
+      <div class="rn-body"><b>关键风险</b>：认证门槛过高会抑制参与，过低则失去信任价值。建议采用"渐进式认证"——先通过邻居互评获得基础认证，再通过资质上传提升等级。同时设置"技能保险金"机制，对认证服务中出现的问题提供基础赔付。</div>
+    </div>
+  </div>
+
+  <!-- ====== 功能模块 4：公益众筹 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📋 功能模块 4/6</h3><span class="phase-tag" style="background:#eef4fa;color:#3a7abf;">Phase 4 · 第 4-5 月</span></div>
+    <div class="feature-card" style="border-color:#3a7abf;">
+      <div class="fc-header">
+        <div class="fc-icon" style="background:#eef4fa;">🤲</div>
+        <div class="fc-title-group">
+          <div class="fc-title">公益众筹 <span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#eef4fa;color:#3a7abf;font-weight:600;">集体好事</span></div>
+          <div class="fc-subtitle">好心值众筹 + 捐步换物，集体完成一件一个人做不了的好事</div>
+        </div>
+      </div>
+      <div class="fc-body">
+        <div class="fc-desc">公益众筹让"做好事"从个人行为升级为集体行动。邻居们可以众筹好心值，共同完成一件需要大量资源的好事（如为社区购买长椅、为独居老人安装扶手、为儿童角添置图书）。同时引入"捐步换物"机制——步数兑换为商家配捐，让日常行走也变成公益行为。</div>
+        <div class="fc-grid">
+          <div class="fc-detail-item">
+            <div class="fdi-label">好心值众筹</div>
+            <div class="fdi-value">发起人设定目标（如"众筹 5000 好心值，为社区活动室买一台饮水机"）→ 邻居捐献好心值 → 达到目标后执行 → 全员公示执行结果和资金流向</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">捐步换物</div>
+            <div class="fdi-value">每日步数 ≥ 5000 步可兑换为"公益步数"，累计 10000 步 → 商户配捐 1 元，配捐资金进入社区公益基金池</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">众筹类型</div>
+            <div class="fdi-value">① 物资众筹（凑好心值买实物）② 人力众筹（凑人数一起做大扫除）③ 时间众筹（凑小时数轮流陪伴老人）④ 资金众筹（外部捐赠配捐）</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">透明机制</div>
+            <div class="fdi-value">每笔众筹收支自动记录在链（模拟区块链展示），发起人需上传执行照片和反馈，众筹进度实时更新，未达标自动退还好心值</div>
+          </div>
+        </div>
+        <div class="fc-tags">
+          <span style="background:#eef4fa;color:#3a7abf;">🏷️ 集体行动</span>
+          <span style="background:#eef4fa;color:#3a7abf;">🏷️ 资源聚合</span>
+          <span style="background:#eef4fa;color:#3a7abf;">🏷️ 透明公益</span>
+          <span style="background:#eef4fa;color:#3a7abf;">🏷️ 步数公益</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-note">
+      <div class="rn-icon">⚠️</div>
+      <div class="rn-body"><b>关键风险</b>：众筹目标设定不合理（过高导致失败挫伤积极性，过低失去意义）和执行透明度不足。建议首次众筹目标设定在 1-2 周内可完成的合理范围，强制要求发起人上传执行结果照片和反馈。</div>
+    </div>
+  </div>
+
+  <!-- ====== 功能模块 5：适老改造场景 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📋 功能模块 5/6</h3><span class="phase-tag" style="background:#f5f0fa;color:#7b4a8c;">Phase 5 · 第 5-6 月</span></div>
+    <div class="feature-card" style="border-color:#7b4a8c;">
+      <div class="fc-header">
+        <div class="fc-icon" style="background:#f5f0fa;">🏠</div>
+        <div class="fc-title-group">
+          <div class="fc-title">适老改造场景 <span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#f5f0fa;color:#7b4a8c;font-weight:600;">上门服务</span></div>
+          <div class="fc-subtitle">场景匹配器新增上门服务，聚焦药箱整理、居家改造、数字助老等适老场景</div>
+        </div>
+      </div>
+      <div class="fc-body">
+        <div class="fc-desc">适老改造场景是"银发关怀"的深度落地。针对社区老年群体，平台提供一系列上门适老服务场景，包括居家安全改造（扶手安装、防滑处理）、药箱整理（定期检查过期药品、分类整理）、数字助老（教用手机、网上挂号、视频通话）等。结合技能认证标签，确保服务质量和安全性。</div>
+        <div class="fc-grid">
+          <div class="fc-detail-item">
+            <div class="fdi-label">服务场景</div>
+            <div class="fdi-value">① 居家安全（安装扶手/夜灯/防滑垫，消除绊倒隐患）② 药箱整理（清理过期药、分类常备药、制作用药清单）③ 数字助老（教用微信/挂号/打车/付款，每次 30 分钟）④ 亲情陪伴（读报、下棋、聊天、代写家书）</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">服务流程</div>
+            <div class="fdi-value">老人/家属发起需求 → 平台匹配技能认证邻居 → 上门前双向确认（服务内容/时间/时长） → 服务执行（打卡记录） → 服务评价（老人/家属打分）</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">安全保障</div>
+            <div class="fdi-value">所有服务人员需通过基础认证，服务过程平台留存记录，紧急情况一键联系家属/社区，每次服务投保 1 元（平台承担）</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">好心值激励</div>
+            <div class="fdi-value">适老服务按难度给予 20-100 好心值/次，连续服务同一老人每月额外奖励 50 好心值，获得"适老之星"徽章</div>
+          </div>
+        </div>
+        <div class="fc-tags">
+          <span style="background:#f5f0fa;color:#7b4a8c;">🏷️ 银发关怀</span>
+          <span style="background:#f5f0fa;color:#7b4a8c;">🏷️ 居家安全</span>
+          <span style="background:#f5f0fa;color:#7b4a8c;">🏷️ 数字助老</span>
+          <span style="background:#f5f0fa;color:#7b4a8c;">🏷️ 上门服务</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-note">
+      <div class="rn-icon">⚠️</div>
+      <div class="rn-body"><b>关键风险</b>：上门服务的安全性和信任问题是最大障碍。需建立严格的服务人员认证和背景核查机制，每次服务需有"双人确认"（服务者和被服务者均需确认），并设置紧急联系人。建议从社区内"熟人互助"起步，再逐步扩展到陌生人服务。</div>
+    </div>
+  </div>
+
+  <!-- ====== 功能模块 6：时间银行 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📋 功能模块 6/6</h3><span class="phase-tag" style="background:#fefaf5;color:#c47a2e;">Phase 6 · 第 6-8 月</span></div>
+    <div class="feature-card" style="border-color:#c47a2e;">
+      <div class="fc-header">
+        <div class="fc-icon" style="background:#fefaf5;color:#c47a2e;">🏦</div>
+        <div class="fc-title-group">
+          <div class="fc-title">时间银行 <span style="font-size:11px;padding:2px 8px;border-radius:999px;background:#fefaf5;color:#c47a2e;font-weight:600;">可存储 · 可追溯</span></div>
+          <div class="fc-subtitle">时间币存储制 + 三单联动，让日常好事可存储、可追溯、可兑换</div>
+        </div>
+      </div>
+      <div class="fc-body">
+        <div class="fc-desc">时间银行是 v2.0 的"终极价值闭环"。它将好心值升级为"时间币"——你帮助别人的每一分钟，都被记录为时间币存入你的"时间账户"。将来当你需要帮助时，可以从账户中支取时间币，换取其他邻居的帮助。同时引入"三单联动"机制（需求单、服务单、存兑单），确保每一笔时间币的发行和兑换都有据可查，可追溯、可审计。</div>
+        <div class="fc-grid">
+          <div class="fc-detail-item">
+            <div class="fdi-label">时间币机制</div>
+            <div class="fdi-value">1 小时服务 = 60 时间币，时间币可存储（无过期）、可兑换（兑换他人服务）、可捐赠（转赠给社区老人）。每人初始额度 100 时间币，用于启动互助</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">三单联动</div>
+            <div class="fdi-value"><b>需求单</b>：邻居发布求助需求 → <b>服务单</b>：匹配接单并执行（打卡记录时长） → <b>存兑单</b>：自动生成时间币存入/支出记录，三单相互关联可追溯</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">账户体系</div>
+            <div class="fdi-value">时间币余额 + 好心值（两套并行），时间币用于"时间交换"，好心值用于"商品/优惠兑换"，时间币每月展示"时间流水"明细</div>
+          </div>
+          <div class="fc-detail-item">
+            <div class="fdi-label">社区时间池</div>
+            <div class="fdi-value">社区总时间币发行量/流通量/沉淀量实时公示，时间币利率（随着时间币沉淀，鼓励流通），"时间富翁"排行榜</div>
+          </div>
+        </div>
+        <div class="fc-tags">
+          <span style="background:#fefaf5;color:#c47a2e;">🏷️ 价值存储</span>
+          <span style="background:#fefaf5;color:#c47a2e;">🏷️ 可追溯</span>
+          <span style="background:#fefaf5;color:#c47a2e;">🏷️ 三单联动</span>
+          <span style="background:#fefaf5;color:#c47a2e;">🏷️ 价值闭环</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-note">
+      <div class="rn-icon">⚠️</div>
+      <div class="rn-body"><b>关键风险</b>：时间银行的"信任基础"和"流通性"是最大挑战。如果时间币不能有效流通（帮助别人存了时间币但自己不需要帮助），整个系统会陷入停滞。需设计"时间币利率"（长期不流通的时间币会贬值）和"公益池"（社区定期回收沉淀时间币用于集体公益）来维持流通性。</div>
+    </div>
+  </div>
+
+  <!-- ====== 功能依赖关系 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🔗 功能依赖关系</h3><span class="phase-tag" style="background:#fef3ef;color:#c8533a;">前置条件</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;">
+      <div style="padding:16px;background:#fef3ef;border-radius:10px;border:1px solid #fde0d6;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🗳️ 议事会模式 → 🏪 友好商户</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">议事会投票产生的"社区需求清单"是友好商户入驻的"选品指南"，商户可根据社区实际需求定制兑换方案</div>
+      </div>
+      <div style="padding:16px;background:#fef6e8;border-radius:10px;border:1px solid #f0e0c8;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🏪 友好商户 → 🔧 技能认证</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">商户的入驻和运营需要技能支持（如维修、设计），技能认证标签为商户提供"社区内技能服务商"的可靠来源</div>
+      </div>
+      <div style="padding:16px;background:#edf7f0;border-radius:10px;border:1px solid #d4e8da;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🔧 技能认证 → 🤲 公益众筹</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">认证技能用户是公益众筹的"执行主力"，众筹项目需要认证用户来确保服务质量（如适老改造需要专业电工认证）</div>
+      </div>
+      <div style="padding:16px;background:#eef4fa;border-radius:10px;border:1px solid #d4e0ec;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🤲 公益众筹 → 🏠 适老改造</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">适老改造的材料和工具可通过众筹筹集资金，众筹机制为适老改造提供"资源保障"</div>
+      </div>
+      <div style="padding:16px;background:#f5f0fa;border-radius:10px;border:1px solid #e0d8ec;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🏠 适老改造 → 🏦 时间银行</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">适老改造中的"陪伴服务"是最适合时间币的场景——时间币存储的不是货币，而是"被陪伴的温暖"</div>
+      </div>
+      <div style="padding:16px;background:#fefaf5;border-radius:10px;border:1px solid #f5e8d8;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:8px;">🏦 时间银行 → 全平台价值闭环</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">时间银行是 v2.0 的收官之作，将前面 5 个模块的价值统合为"时间币"这一统一度量衡，实现"所有好事皆可存储、可兑换、可追溯"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 关键里程碑 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🏁 关键里程碑</h3></div>
+    <div class="milestone">
+      <div class="ms-dot" style="color:#c8533a;"></div>
+      <div class="ms-body">
+        <div class="ms-title">M1：议事会模式上线（第 2 月末）</div>
+        <div class="ms-desc">首个社区完成第一轮议事会投票，至少 1 个议题转化为需求清单并开始执行</div>
+        <div class="ms-meta"><span>✅ 验收标准：投票参与率 ≥ 15%</span><span>📊 目标：至少 3 个议题发起</span></div>
+      </div>
+    </div>
+    <div class="milestone">
+      <div class="ms-dot" style="color:#c98a2b;"></div>
+      <div class="ms-body">
+        <div class="ms-title">M2：首批友好商户入驻（第 3 月末）</div>
+        <div class="ms-desc">至少 5 家社区周边商户完成入驻并上架兑换方案，首月兑换次数 ≥ 50 次</div>
+        <div class="ms-meta"><span>✅ 验收标准：商户入驻 ≥ 5 家</span><span>📊 目标：兑换次数 ≥ 50 次</span></div>
+      </div>
+    </div>
+    <div class="milestone">
+      <div class="ms-dot" style="color:#4a9e6e;"></div>
+      <div class="ms-body">
+        <div class="ms-title">M3：技能认证体系运行（第 4 月末）</div>
+        <div class="ms-desc">至少 20 位邻居完成技能认证，认证用户在好事匹配中匹配率提升 30%</div>
+        <div class="ms-meta"><span>✅ 验收标准：认证用户 ≥ 20 人</span><span>📊 目标：匹配率提升 ≥ 30%</span></div>
+      </div>
+    </div>
+    <div class="milestone">
+      <div class="ms-dot" style="color:#3a7abf;"></div>
+      <div class="ms-body">
+        <div class="ms-title">M4：首个公益众筹成功（第 5 月末）</div>
+        <div class="ms-desc">首个众筹项目达成目标，完成执行并公示结果，众筹成功率 ≥ 70%</div>
+        <div class="ms-meta"><span>✅ 验收标准：众筹成功 ≥ 1 个</span><span>📊 目标：成功率 ≥ 70%</span></div>
+      </div>
+    </div>
+    <div class="milestone">
+      <div class="ms-dot" style="color:#7b4a8c;"></div>
+      <div class="ms-body">
+        <div class="ms-title">M5：适老改造服务覆盖（第 6 月末）</div>
+        <div class="ms-desc">至少 10 位社区老人获得适老改造服务，好评率 ≥ 4.5 星</div>
+        <div class="ms-meta"><span>✅ 验收标准：服务老人 ≥ 10 人</span><span>📊 目标：好评率 ≥ 4.5 星</span></div>
+      </div>
+    </div>
+    <div class="milestone">
+      <div class="ms-dot" style="color:#c47a2e;"></div>
+      <div class="ms-body">
+        <div class="ms-title">M6：时间银行全面运行（第 8 月末）</div>
+        <div class="ms-desc">时间币流通率 ≥ 60%，三单联动覆盖全部好事类型，时间池余额 ≥ 10000 币</div>
+        <div class="ms-meta"><span>✅ 验收标准：流通率 ≥ 60%</span><span>📊 目标：时间池 ≥ 10000 币</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 核心指标 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📊 v2.0 核心目标指标</h3></div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="mc-value" style="color:#c8533a;">≥ 30%</div>
+        <div class="mc-label">议事会投票参与率</div>
+        <div class="mc-target">目标：每个议题至少 30% 邻居参与</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-value" style="color:#c98a2b;">≥ 10</div>
+        <div class="mc-label">友好商户数</div>
+        <div class="mc-target">目标：至少 10 家商户入驻</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-value" style="color:#4a9e6e;">≥ 50</div>
+        <div class="mc-label">认证技能用户</div>
+        <div class="mc-target">目标：至少 50 位邻居完成认证</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-value" style="color:#3a7abf;">≥ 80%</div>
+        <div class="mc-label">众筹成功率</div>
+        <div class="mc-target">目标：众筹项目 80% 达成目标</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-value" style="color:#7b4a8c;">≥ 4.5</div>
+        <div class="mc-label">适老服务好评率</div>
+        <div class="mc-target">目标：5 星制评分 ≥ 4.5</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-value" style="color:#c47a2e;">≥ 60%</div>
+        <div class="mc-label">时间币流通率</div>
+        <div class="mc-target">目标：时间币不沉淀，持续流通</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 依赖关系总结 ====== -->
+  <div class="card" style="background:linear-gradient(135deg,#fefaf5,#fff8f0);">
+    <div class="card-hd"><h3>💡 迭代逻辑总结</h3></div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-radius:8px;">
+        <span style="font-size:20px;">🗳️</span>
+        <span style="font-size:13px;flex:1;">议事会决定"做什么"</span>
+        <span style="font-size:16px;color:#ddd5cc;">→</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-radius:8px;">
+        <span style="font-size:20px;">🏪</span>
+        <span style="font-size:13px;flex:1;">友好商户提供"兑换什么"</span>
+        <span style="font-size:16px;color:#ddd5cc;">→</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-radius:8px;">
+        <span style="font-size:20px;">🔧</span>
+        <span style="font-size:13px;flex:1;">技能认证确保"谁来做"</span>
+        <span style="font-size:16px;color:#ddd5cc;">→</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-radius:8px;">
+        <span style="font-size:20px;">🤲</span>
+        <span style="font-size:13px;flex:1;">公益众筹解决"资源从哪来"</span>
+        <span style="font-size:16px;color:#ddd5cc;">→</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-radius:8px;">
+        <span style="font-size:20px;">🏠</span>
+        <span style="font-size:13px;flex:1;">适老改造聚焦"最需要帮助的人"</span>
+        <span style="font-size:16px;color:#ddd5cc;">→</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-radius:8px;">
+        <span style="font-size:20px;">🏦</span>
+        <span style="font-size:13px;flex:1;">时间银行统合"价值存储与流通"</span>
+        <span style="font-size:16px;color:#c8533a;font-weight:700;">← 价值闭环</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 导航链接 -->
+  <div style="text-align:center;margin-top:24px;padding:20px;background:#fff;border-radius:12px;border:1px solid #eee8e2;">
+    <p style="font-size:14px;color:#7a6e66;margin-bottom:12px;">查看其他相关页面</p>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+      <a href="roadmap.html" style="padding:8px 20px;border-radius:999px;font-size:13px;font-weight:600;background:#fef3ef;color:#c8533a;text-decoration:none;">📋 整体递进路径</a>
+      <a href="cases.html" style="padding:8px 20px;border-radius:999px;font-size:13px;font-weight:600;background:#fef3ef;color:#c8533a;text-decoration:none;">📚 日常好事库</a>
+      <a href="ecosystem.html" style="padding:8px 20px;border-radius:999px;font-size:13px;font-weight:600;background:#fef3ef;color:#c8533a;text-decoration:none;">🌐 生态模拟平台</a>
+      <a href="next.html" style="padding:8px 20px;border-radius:999px;font-size:13px;font-weight:600;background:#fef3ef;color:#c8533a;text-decoration:none;">🎯 下一步行动</a>
+    </div>
+  </div>
+
+</div>
+
+<footer style="background:#fff;border-top:1px solid #eee8e2;padding:24px 0;margin-top:40px;">
+  <div class="wrap" style="text-align:center;">
+    <p style="font-size:13px;color:#7a6e66;">把好事做成日常 · v2.0 功能迭代路线图 · 规划中</p>
+  </div>
+</footer>
+
+</body>
+</html>
