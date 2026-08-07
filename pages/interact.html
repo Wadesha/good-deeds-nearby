@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>好事人格测试 · 好事近全案</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+  .quiz-section{max-width:720px;margin:0 auto;padding:20px 0}
+  .step-indicator{display:flex;gap:6px;justify-content:center;margin-bottom:28px}
+  .step-dot{width:10px;height:10px;border-radius:50%;background:var(--line);transition:.3s}
+  .step-dot.active{background:var(--brand);transform:scale(1.3)}
+  .step-dot.done{background:var(--leaf)}
+  .step-dot.skipped{background:var(--ink-faint)}
+
+  .q-card{display:none;background:var(--paper);border:1px solid var(--line);border-radius:16px;
+    padding:28px 26px;box-shadow:var(--shadow);animation:fadeIn .35s ease}
+  .q-card.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  
+  .q-num{font-size:12px;font-weight:700;color:var(--brand);letter-spacing:.1em;margin-bottom:4px}
+  .q-title{font-size:18px;font-weight:700;margin-bottom:18px;line-height:1.4}
+  .q-sub{font-size:13px;color:var(--ink-faint);margin-bottom:16px}
+
+  .options{display:flex;flex-direction:column;gap:8px}
+  .opt{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--line);
+    border-radius:12px;cursor:pointer;transition:.18s;background:var(--paper);user-select:none}
+  .opt:hover{border-color:var(--brand);background:var(--brand-soft)}
+  .opt.selected{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 3px rgba(200,83,58,.1)}
+  .opt .check{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);
+    display:grid;place-items:center;flex:0 0 auto;transition:.18s}
+  .opt.selected .check{border-color:var(--brand);background:var(--brand)}
+  .opt.selected .check::after{content:"";width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);margin-top:-2px}
+  .opt .label{font-size:15px;font-weight:500;flex:1}
+  .opt .desc{font-size:12.5px;color:var(--ink-faint);margin-top:1px}
+
+  .opt.multi .check{border-radius:4px;width:20px;height:20px}
+  .opt.multi.selected .check::after{width:9px;height:5px}
+  .opt.multi.selected .check{border-color:var(--brand);background:var(--brand)}
+
+  .q-actions{display:flex;justify-content:space-between;align-items:center;margin-top:22px}
+  .q-actions .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 22px;border-radius:9px;
+    font-size:14px;font-weight:600;border:none;cursor:pointer;transition:.15s}
+  .q-actions .btn-primary{background:var(--brand);color:#fff}
+  .q-actions .btn-primary:hover{background:var(--brand-deep);transform:translateY(-1px)}
+  .q-actions .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .q-actions .btn-ghost{background:transparent;color:var(--ink-soft)}
+  .q-actions .btn-ghost:hover{background:var(--line)}
+  .q-actions .count{font-size:13px;color:var(--ink-faint)}
+
+  /* 结果页 */
+  .result-card{max-width:580px;margin:0 auto;text-align:center}
+  .result-card .badge{width:100px;height:100px;border-radius:30px;display:grid;place-items:center;
+    font-size:42px;margin:0 auto 16px}
+  .result-card h3{font-size:24px;margin:0 0 6px}
+  .result-card .subtitle{font-size:15px;color:var(--ink-soft);margin-bottom:16px}
+  .result-card .desc{text-align:left;font-size:14px;color:var(--ink-soft);line-height:1.8;
+    background:var(--bg);border-radius:12px;padding:18px 20px;margin:14px 0}
+  .result-card .traits{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+  .result-card .traits span{background:var(--gold-soft);color:var(--gold);padding:4px 12px;
+    border-radius:999px;font-size:12.5px;font-weight:600}
+  .result-card .share-area{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+  .result-card .share-area button{display:inline-flex;align-items:center;gap:6px;padding:11px 22px;
+    border-radius:9px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+  .result-card .share-area .btn-share{background:var(--brand);color:#fff}
+  .result-card .share-area .btn-share:hover{background:var(--brand-deep)}
+  .result-card .share-area .btn-restart{background:var(--line);color:var(--ink-soft)}
+  .result-card .share-area .btn-restart:hover{background:#ddd0bc}
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--ink);
+    color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;opacity:0;
+    transition:opacity .3s;pointer-events:none;z-index:100}
+  .toast.show{opacity:1}
+
+  .result-card .result-actions{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+  .result-card .result-actions p{font-size:13px;color:var(--ink-faint);margin-bottom:10px}
+  .result-card .result-actions .btn-group{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .result-card .result-actions .btn-group a{display:inline-flex;align-items:center;gap:4px;padding:8px 14px;
+    border-radius:8px;font-size:12.5px;font-weight:600;text-decoration:none;transition:.15s}
+  .result-card .result-actions .btn-group a.blue{background:var(--sky-soft);color:var(--sky)}
+  .result-card .result-actions .btn-group a.blue:hover{background:var(--sky);color:#fff}
+  .result-card .result-actions .btn-group a.green{background:var(--leaf-soft);color:var(--leaf)}
+  .result-card .result-actions .btn-group a.green:hover{background:var(--leaf);color:#fff}
+  .result-card .result-actions .btn-group a.orange{background:var(--gold-soft);color:var(--gold)}
+  .result-card .result-actions .btn-group a.orange:hover{background:var(--gold);color:#fff}
+
+  .result-card .share-text{background:var(--bg);border:1px dashed var(--line);border-radius:10px;
+    padding:14px 16px;margin:14px 0;font-size:13px;color:var(--ink-soft);text-align:left;
+    word-break:break-all;position:relative;cursor:pointer}
+  .result-card .share-text:hover{background:var(--gold-soft)}
+  .result-card .share-text .copy-hint{position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    font-size:11px;color:var(--ink-faint);background:var(--paper);padding:2px 8px;border-radius:5px}
+
+  @media(max-width:600px){
+    .q-card{padding:20px 16px}
+    .q-title{font-size:16px}
+    .result-card .badge{width:80px;height:80px;font-size:34px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 互动</a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="interact.html" class="active">互动</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>互动</div>
+    <span class="eyebrow"><span class="dot"></span> 基于本项目调研框架</span>
+    <h1>好事人格测试</h1>
+    <p class="sub">选择你的碎片时间、偏好与动机，生成你的"好事人格"——并一键分享给朋友。本测试基于项目 H1–H5 假设框架设计，结果可对应本项目中的典型用户画像。</p>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="quiz-section" id="app">
+    <div class="step-indicator" id="steps"></div>
+
+    <div id="questions"></div>
+
+    <div id="result" style="display:none"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>把好事做成日常 <span class="heart">♥</span> · 个人兴趣探索方案</p>
+    <p style="margin-top:4px;font-size:11.5px;color:var(--ink-faint)">
+      本测评结果基于项目调研框架生成，不代表真实测评结论。
+    </p>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<button id="totop" aria-label="回到顶部">↑</button>
+
+<script>
+// ===== 题库（基于项目实际框架） =====
+const questions = [
+  {
+    id: 'scene',
+    title: '你平时有哪些碎片时间场景？',
+    sub: '可多选，选你实际有的场景——这些是"好事近"的核心匹配锚点',
+    multi: true,
+    options: [
+      { id: 'commute', label: '🚇 通勤路上', desc: '地铁/公交/打车，平均15-45分钟' },
+      { id: 'lunch', label: '☕ 午休空隙', desc: '午饭后的10-20分钟空闲' },
+      { id: 'queue', label: '⏳ 排队等候', desc: '等电梯、排队、等外卖的碎片' },
+      { id: 'kid', label: '👶 遛娃散步', desc: '带娃在小区/公园的时间' },
+      { id: 'sport', label: '🏃 运动健身', desc: '跑步/健身/散步途中' },
+      { id: 'none', label: '😅 几乎没有碎片时间', desc: '时间被填得很满' }
+    ]
+  },
+  {
+    id: 'duration',
+    title: '单次愿意投入多少时间做好事？',
+    sub: '选择最能接受的"好事耗时"——本项目任务颗粒度设计参考',
+    multi: false,
+    options: [
+      { id: '5min', label: '⏱️ ≤5分钟', desc: '顺手就做，不额外花时间' },
+      { id: '15min', label: '⏱️ 5-15分钟', desc: '刚好一个碎片时间完成' },
+      { id: '30min', label: '⏱️ 15-30分钟', desc: '一个午休就能搞定' },
+      { id: '1h', label: '⏱️ 30分钟以上', desc: '愿意专门安排时间做' }
+    ]
+  },
+  {
+    id: 'type',
+    title: '哪种好事你更愿意做？',
+    sub: '选择你最有共鸣的"好事类型"——对应MVP中的LBS任务分类',
+    multi: false,
+    options: [
+      { id: 'help', label: '📦 顺手帮邻里', desc: '帮取快递、搬东西、代跑腿' },
+      { id: 'community', label: '♻️ 社区公共事务', desc: '巡逻、垃圾分类、整理共享空间' },
+      { id: 'donate', label: '📚 二手漂流/捐赠', desc: '捐书捐物、旧物交换' },
+      { id: 'teach', label: '📱 技能助老/教学', desc: '教老人用手机、线上技能分享' },
+      { id: 'accompany', label: '💬 陪伴/倾听', desc: '陪聊、心理支持、陪伴就医' }
+    ]
+  },
+  {
+    id: 'reward',
+    title: '你更看重哪种回报？',
+    sub: '选择最能让你"持续参与"的动力——验证H3非金钱激励假设',
+    multi: false,
+    options: [
+      { id: 'honor', label: '🏆 社区荣誉感', desc: '被看见、被认可、名字上榜' },
+      { id: 'points', label: '💛 好心值可兑换', desc: '积累积分换折扣/体验/服务' },
+      { id: 'social', label: '🤝 认识新朋友', desc: '有共同善念的附近同频人' },
+      { id: 'cert', label: '📜 官方认证时长', desc: '志愿服务时长证明/证书' },
+      { id: 'none', label: '🕊️ 不需要任何回报', desc: '做了本身就是回报' }
+    ]
+  },
+  {
+    id: 'company',
+    title: '你更愿意和谁一起参与？',
+    sub: '偏好决定了"附近同频组队"功能对你的吸引力',
+    multi: false,
+    options: [
+      { id: 'alone', label: '🧑 自己就行', desc: '独立行动，自由灵活' },
+      { id: 'family', label: '👨‍👩‍👧 带上家人朋友', desc: '一起做更有意思' },
+      { id: 'org', label: '🏢 跟着社区组织', desc: '有组织有安排更省心' },
+      { id: 'neighbor', label: '🏘️ 和附近邻居', desc: '顺便认识同小区的人' },
+      { id: 'any', label: '😊 无所谓，都行', desc: '人多人少都能做' }
+    ]
+  },
+  {
+    id: 'identity',
+    title: '你觉得自己属于哪种忙人？',
+    sub: '你的"忙法"决定了项目产品的最优匹配策略',
+    multi: false,
+    options: [
+      { id: '996', label: '💼 996打工人', desc: '时间靠挤，碎片化严重' },
+      { id: 'freelance', label: '🎨 自由职业者', desc: '时间弹性但碎片化' },
+      { id: 'student', label: '🎒 学生党', desc: '课余时间碎片化' },
+      { id: 'parent', label: '👶 全职家长', desc: '带娃空隙，时间被切割' },
+      { id: 'retired', label: '🧓 退休人士', desc: '时间充裕，想发挥余热' }
+    ]
+  }
+];
+
+// ===== 结果库（对应项目画像） =====
+const results = {
+  time_fragment: {
+    badge: '⏳',
+    bg: 'var(--brand-soft)',
+    title: '时间碎片侠',
+    subtitle: '你是碎片时间利用高手！',
+    desc: '你有多样化的碎片时间场景，且愿意在15分钟内完成一件好事。你正是"好事近"项目最核心的目标用户——"时间贫困 × 意愿充足"。对你来说，好事不需要专门安排时间，"顺路+顺手"是最佳体验。',
+    traits: ['碎片化高手', '时间贫困', '意愿充足', '适合轻量任务'],
+    match: '对应项目中 H1（时间贫困者意愿）验证通过人群，单社区周活预计贡献 40%+'
+  },
+  location_keeper: {
+    badge: '📍',
+    bg: 'var(--sky-soft)',
+    title: '就近守护者',
+    subtitle: '你做公益的第一原则是：近！',
+    desc: '"离家/公司近"是你最看重的因素。你愿意在社区周边15分钟可达范围内参与公益，但不愿意为做好事专门跑远路。你完美契合"15分钟生活圈"政策和项目H2（就近+碎片是驱动力）假设。',
+    traits: ['就近优先', '社区属性强', 'LBS匹配', '稳定参与'],
+    match: '对应项目中 H2（就近+碎片驱动力）验证通过人群，LBS任务匹配度 92%'
+  },
+  point_hunter: {
+    badge: '💛',
+    bg: 'var(--gold-soft)',
+    title: '好心值猎人',
+    subtitle: '非金钱激励对你超级有效！',
+    desc: '你对"好心值、信用分、可兑换权益"这类非货币回报有强烈兴趣。你不需要现金报酬，但希望自己的善意被记录、被看见、能积累。这正是项目"非金钱正循环"设计的关键受众——"信任与时间的循环"对你最有效。',
+    traits: ['非金钱驱动', '积累型', '荣誉感强', 'H3核心验证'],
+    match: '对应项目中 H3（非金钱激励可行）目标人群，好心值兑换率预计 65%+'
+  },
+  social_connector: {
+    badge: '🤝',
+    bg: 'var(--plum-soft)',
+    title: '社交连接者',
+    subtitle: '好事和社交，你都要！',
+    desc: '你做公益的动力之一来自"认识附近同频的人"。你希望和邻居、朋友一起参与，社交对你来说是加分项而非负担。项目中的"附近同频组队"功能就是为你设计的——弱链接社交 + 公益，降低启动门槛。',
+    traits: ['社交驱动', '群体偏好', '同频连接', '社区粘性'],
+    match: '对应项目中Phase 1"附近同频组队"功能核心用户，组队参与率预计 50%+'
+  },
+  zen_doer: {
+    badge: '🕊️',
+    bg: 'var(--leaf-soft)',
+    title: '佛系行善者',
+    subtitle: '你做公益，纯粹因为想做。',
+    desc: '你不需要任何形式的回报，做了本身就是意义。你时间充裕或弹性，愿意做好事但不强求。你是社区公益的"压舱石"——稳定、持续、不计较。项目需要为你降低"找到好事"的信息门槛，而非提供激励。',
+    traits: ['纯粹利他', '无需激励', '稳定持续', '社区基石'],
+    match: '对应项目中跨代际匹配需求，时间银行存兑的潜在提供方'
+  }
+};
+
+// ===== 评分逻辑 =====
+function calcResult(answers) {
+  // 统计各维度得分
+  let scores = {
+    time_fragment: 0,
+    location_keeper: 0,
+    point_hunter: 0,
+    social_connector: 0,
+    zen_doer: 0
+  };
+
+  // scene: 碎片场景越多 → time_fragment
+  if (answers.scene) {
+    const selected = Array.isArray(answers.scene) ? answers.scene : [answers.scene];
+    if (selected.length >= 3) scores.time_fragment += 2;
+    else if (selected.length >= 1) scores.time_fragment += 1;
+    if (selected.includes('commute')) scores.time_fragment += 1;
+    if (selected.includes('none')) scores.time_fragment -= 1;
+  }
+
+  // duration: 时间越短 → time_fragment / location_keeper
+  if (answers.duration === '5min') { scores.time_fragment += 2; scores.location_keeper += 1; }
+  else if (answers.duration === '15min') { scores.time_fragment += 1; scores.location_keeper += 1; }
+  else if (answers.duration === '30min') { scores.zen_doer += 1; }
+  else if (answers.duration === '1h') { scores.zen_doer += 2; }
+
+  // type: 好事类型偏好
+  if (answers.type === 'help') { scores.location_keeper += 2; scores.time_fragment += 1; }
+  else if (answers.type === 'community') { scores.location_keeper += 2; scores.social_connector += 1; }
+  else if (answers.type === 'donate') { scores.zen_doer += 1; scores.point_hunter += 1; }
+  else if (answers.type === 'teach') { scores.social_connector += 2; scores.zen_doer += 1; }
+  else if (answers.type === 'accompany') { scores.social_connector += 2; scores.zen_doer += 1; }
+
+  // reward: 回报偏好
+  if (answers.reward === 'honor') { scores.point_hunter += 2; scores.social_connector += 1; }
+  else if (answers.reward === 'points') { scores.point_hunter += 3; }
+  else if (answers.reward === 'social') { scores.social_connector += 3; }
+  else if (answers.reward === 'cert') { scores.point_hunter += 1; scores.zen_doer += 1; }
+  else if (answers.reward === 'none') { scores.zen_doer += 3; }
+
+  // company: 社交偏好
+  if (answers.company === 'alone') { scores.time_fragment += 1; scores.zen_doer += 1; }
+  else if (answers.company === 'family') { scores.social_connector += 2; }
+  else if (answers.company === 'org') { scores.location_keeper += 1; scores.zen_doer += 1; }
+  else if (answers.company === 'neighbor') { scores.social_connector += 2; scores.location_keeper += 1; }
+  else if (answers.company === 'any') { scores.zen_doer += 1; }
+
+  // identity: 身份
+  if (answers.identity === '996') { scores.time_fragment += 2; scores.point_hunter += 1; }
+  else if (answers.identity === 'freelance') { scores.time_fragment += 1; scores.location_keeper += 1; }
+  else if (answers.identity === 'student') { scores.time_fragment += 1; scores.point_hunter += 1; }
+  else if (answers.identity === 'parent') { scores.time_fragment += 1; scores.location_keeper += 1; }
+  else if (answers.identity === 'retired') { scores.zen_doer += 2; scores.social_connector += 1; }
+
+  // 取最高分
+  let maxKey = 'time_fragment';
+  let maxVal = 0;
+  for (const [k, v] of Object.entries(scores)) {
+    if (v > maxVal) { maxVal = v; maxKey = k; }
+  }
+  return maxKey;
+}
+
+// ===== 渲染 =====
+const app = document.getElementById('app');
+const stepsEl = document.getElementById('steps');
+const questionsEl = document.getElementById('questions');
+const resultEl = document.getElementById('result');
+const toast = document.getElementById('toast');
+
+let currentStep = 0;
+let answers = {};
+
+function init() {
+  // steps
+  stepsEl.innerHTML = questions.map((q, i) =>
+    `<div class="step-dot ${i === 0 ? 'active' : ''}" data-idx="${i}"></div>`
+  ).join('');
+
+  renderQuestions();
+}
+
+function renderQuestions() {
+  questionsEl.innerHTML = questions.map((q, qi) => {
+    const isMulti = q.multi;
+    return `
+      <div class="q-card ${qi === 0 ? 'active' : ''}" data-q="${qi}">
+        <div class="q-num">问题 ${qi+1} / ${questions.length}</div>
+        <div class="q-title">${q.title}</div>
+        <div class="q-sub">${q.sub}</div>
+        <div class="options" data-q="${qi}" data-multi="${isMulti ? '1' : '0'}">
+          ${q.options.map(o => `
+            <div class="opt ${isMulti ? 'multi' : ''}" data-val="${o.id}" data-q="${qi}">
+              <div class="check"></div>
+              <div>
+                <div class="label">${o.label}</div>
+                <div class="desc">${o.desc}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-ghost" onclick="goPrev()" ${qi === 0 ? 'disabled style=opacity:0' : ''}>← 上一题</button>
+          <span class="count" id="count_${qi}"></span>
+          <button class="btn btn-primary" id="next_${qi}" onclick="goNext(${qi})" disabled>${qi === questions.length - 1 ? '查看结果' : '下一题 →'}</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 绑定选项点击
+  document.querySelectorAll('.opt').forEach(el => {
+    el.addEventListener('click', () => {
+      const qi = parseInt(el.dataset.q);
+      const q = questions[qi];
+      const val = el.dataset.val;
+      const isMulti = q.multi;
+
+      if (isMulti) {
+        el.classList.toggle('selected');
+        const sel = Array.from(document.querySelectorAll(`.opt[data-q="${qi}"].selected`)).map(e => e.dataset.val);
+        answers[q.id] = sel;
+        // 更新计数
+        const countEl = document.getElementById(`count_${qi}`);
+        if (countEl) countEl.textContent = `已选 ${sel.length} 项`;
+        // 启用按钮（至少选1项）
+        const nextBtn = document.getElementById(`next_${qi}`);
+        nextBtn.disabled = sel.length === 0;
+      } else {
+        // 单选：取消其他选中
+        document.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(e => e.classList.remove('selected'));
+        el.classList.add('selected');
+        answers[q.id] = val;
+        document.getElementById(`next_${qi}`).disabled = false;
+        const countEl = document.getElementById(`count_${qi}`);
+        if (countEl) countEl.textContent = '已选择';
+      }
+    });
+  });
+}
+
+function goNext(qi) {
+  if (qi < questions.length - 1) {
+    showStep(qi + 1);
+  } else {
+    showResult();
+  }
+}
+
+function goPrev() {
+  if (currentStep > 0) showStep(currentStep - 1);
+}
+
+function showStep(idx) {
+  currentStep = idx;
+  document.querySelectorAll('.q-card').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.step-dot').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+    if (i < idx) el.classList.add('done');
+    else el.classList.remove('done');
+  });
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function showResult() {
+  document.getElementById('questions').style.display = 'none';
+  document.getElementById('steps').style.display = 'none';
+  resultEl.style.display = 'block';
+
+  const key = calcResult(answers);
+  const r = results[key];
+
+  // 生成分享文本
+  const sceneNames = {
+    commute: '通勤路上', lunch: '午休空隙', queue: '排队等候',
+    kid: '遛娃散步', sport: '运动健身', none: '几乎无碎片时间'
+  };
+  const durationNames = {
+    '5min': '≤5分钟', '15min': '5-15分钟', '30min': '15-30分钟', '1h': '30分钟以上'
+  };
+  const typeNames = {
+    help: '顺手帮邻里', community: '社区公共事务', donate: '二手漂流/捐赠',
+    teach: '技能助老/教学', accompany: '陪伴/倾听'
+  };
+  const rewardNames = {
+    honor: '社区荣誉感', points: '好心值兑换', social: '认识新朋友',
+    cert: '官方认证时长', none: '不需要回报'
+  };
+  const companyNames = {
+    alone: '自己就行', family: '带上家人朋友', org: '跟着社区组织',
+    neighbor: '和附近邻居', any: '无所谓'
+  };
+  const identityNames = {
+    '996': '996打工人', freelance: '自由职业者', student: '学生党',
+    parent: '全职家长', retired: '退休人士'
+  };
+
+  const nameMap = { scene: sceneNames, duration: durationNames, type: typeNames, reward: rewardNames, company: companyNames, identity: identityNames };
+
+  let detailLines = [];
+  for (const [qid, val] of Object.entries(answers)) {
+    const q = questions.find(qq => qq.id === qid);
+    if (!q) continue;
+    const vals = Array.isArray(val) ? val : [val];
+    const names = vals.map(v => nameMap[qid]?.[v] || v).join('、');
+    detailLines.push(`${q.title.replace('你','我')}：${names}`);
+  }
+
+  const shareText = `🏆 我的好事人格：${r.title}（${r.subtitle}）\n\n${detailLines.join('\n')}\n\n来测测你的好事人格 → https://wadesha.github.io/good-deeds-nearby/pages/interact.html`;
+
+  resultEl.innerHTML = `
+    <div class="result-card">
+      <div class="badge" style="background:${r.bg}">${r.badge}</div>
+      <h3 style="color:${r.title === '时间碎片侠' ? 'var(--brand)' : r.title === '就近守护者' ? 'var(--sky)' : r.title === '好心值猎人' ? 'var(--gold)' : r.title === '社交连接者' ? 'var(--plum)' : 'var(--leaf)'}">${r.title}</h3>
+      <div class="subtitle">${r.subtitle}</div>
+      <div class="traits">${r.traits.map(t => `<span>${t}</span>`).join('')}</div>
+      <div class="desc">${r.desc}</div>
+      <div class="share-text" onclick="copyShareText()" title="点击复制">
+        📋 点击复制分享文本
+        <span class="copy-hint">复制</span>
+      </div>
+      <div class="share-area">
+        <button class="btn-share" onclick="shareResult()">📤 一键分享</button>
+        <button class="btn-restart" onclick="restart()">🔄 重新测试</button>
+      </div>
+      <div class="result-actions">
+        <p>基于你的"好事人格"，你可能对以下内容感兴趣：</p>
+        <div class="btn-group">
+          <a href="thesis.html" class="blue">📄 立论：时间贫困群体</a>
+          <a href="mvp.html" class="green">📱 MVP：好事近产品</a>
+          <a href="research.html" class="orange">📊 调研验证框架</a>
+        </div>
+      </div>
+    </div>
+  `;
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function shareResult() {
+  const key = calcResult(answers);
+  const r = results[key];
+  const text = `我刚刚测出了我的"好事人格"：${r.title} —— ${r.subtitle}\n\n来试试你的好事人格测试 👉 https://wadesha.github.io/good-deeds-nearby/pages/interact.html`;
+  if (navigator.share) {
+    navigator.share({ title: '我的好事人格', text }).catch(() => {});
+  } else {
+    copyText(text);
+  }
+}
+
+function copyShareText() {
+  const key = calcResult(answers);
+  const r = results[key];
+  const sceneNames = {
+    commute: '通勤路上', lunch: '午休空隙', queue: '排队等候',
+    kid: '遛娃散步', sport: '运动健身', none: '几乎无碎片时间'
+  };
+  const durationNames = {
+    '5min': '≤5分钟', '15min': '5-15分钟', '30min': '15-30分钟', '1h': '30分钟以上'
+  };
+  const typeNames = {
+    help: '顺手帮邻里', community: '社区公共事务', donate: '二手漂流/捐赠',
+    teach: '技能助老/教学', accompany: '陪伴/倾听'
+  };
+  const rewardNames = {
+    honor: '社区荣誉感', points: '好心值兑换', social: '认识新朋友',
+    cert: '官方认证时长', none: '不需要回报'
+  };
+  const companyNames = {
+    alone: '自己就行', family: '带上家人朋友', org: '跟着社区组织',
+    neighbor: '和附近邻居', any: '无所谓'
+  };
+  const identityNames = {
+    '996': '996打工人', freelance: '自由职业者', student: '学生党',
+    parent: '全职家长', retired: '退休人士'
+  };
+  const nameMap = { scene: sceneNames, duration: durationNames, type: typeNames, reward: rewardNames, company: companyNames, identity: identityNames };
+
+  let detailLines = [];
+  for (const [qid, val] of Object.entries(answers)) {
+    const q = questions.find(qq => qq.id === qid);
+    if (!q) continue;
+    const vals = Array.isArray(val) ? val : [val];
+    const names = vals.map(v => nameMap[qid]?.[v] || v).join('、');
+    detailLines.push(`${q.title.replace('你','我')}：${names}`);
+  }
+
+  const text = `🏆 我的好事人格：${r.title}（${r.subtitle}）\n${detailLines.join('\n')}\n\n来测测你的好事人格 👉 https://wadesha.github.io/good-deeds-nearby/pages/interact.html`;
+  copyText(text);
+}
+
+function copyText(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => showToast('✅ 已复制到剪贴板，快去分享给朋友吧！'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('✅ 已复制到剪贴板！');
+  }
+}
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function restart() {
+  currentStep = 0;
+  answers = {};
+  document.getElementById('questions').style.display = 'block';
+  document.getElementById('steps').style.display = 'flex';
+  document.getElementById('steps').innerHTML = questions.map((q, i) =>
+    `<div class="step-dot ${i === 0 ? 'active' : ''}" data-idx="${i}"></div>`
+  ).join('');
+  resultEl.style.display = 'none';
+  renderQuestions();
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+init();
+</script>
+</body>
+</html>
