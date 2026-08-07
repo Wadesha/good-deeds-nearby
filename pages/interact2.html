@@ -234,6 +234,64 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     <div class="s-item"><div class="s-num" id="sScenes">4</div><div class="s-label">场景覆盖</div></div>
   </div>
 
+  <!-- ====== 模块19：好事决策助手 ====== -->
+  <div class="module" id="m19">
+    <div class="module-hd">
+      <div class="m-icon blue">🤔</div>
+      <div class="m-info">
+        <h3>好事决策助手 <span class="live-badge">AI</span></h3>
+        <p>不知道做什么好？告诉我你现在的情况，我来推荐</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div class="opt-card" onclick="toggleDecision(this,'time')" data-dc="time">
+          <div class="o-check">✓</div>
+          <div class="o-icon">⏱️</div>
+          <div class="o-title">我有多少时间？</div>
+          <div class="o-desc">选择你可用的空闲时间</div>
+        </div>
+        <div class="opt-card" onclick="toggleDecision(this,'place')" data-dc="place">
+          <div class="o-check">✓</div>
+          <div class="o-icon">📍</div>
+          <div class="o-title">我在哪里？</div>
+          <div class="o-desc">选择你当前所在位置</div>
+        </div>
+        <div class="opt-card" onclick="toggleDecision(this,'energy')" data-dc="energy">
+          <div class="o-check">✓</div>
+          <div class="o-icon">⚡</div>
+          <div class="o-title">我现在状态如何？</div>
+          <div class="o-desc">选择你当前的精力和心情</div>
+        </div>
+        <div class="opt-card" onclick="toggleDecision(this,'people')" data-dc="people">
+          <div class="o-check">✓</div>
+          <div class="o-icon">👥</div>
+          <div class="o-title">和谁在一起？</div>
+          <div class="o-desc">选择你身边是否有同伴</div>
+        </div>
+      </div>
+      <!-- 决策结果 -->
+      <div id="decisionResult" style="display:none;padding:16px;background:linear-gradient(135deg,#eef4fa,#f5f8fc);border-radius:12px;border:1px solid #d4e0ec;margin-bottom:14px;animation:fadeUp .3s ease;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#eef4fa;display:grid;place-items:center;font-size:20px;">💡</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;">推荐给你</div>
+            <div style="font-size:12px;color:#7a6e66;" id="decisionReason">根据你的情况，推荐以下好事</div>
+          </div>
+        </div>
+        <div id="decisionCards" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+      </div>
+      <div class="act-bar">
+        <span class="count">选择 <b id="decisionCount">0</b>/4 项</span>
+        <button class="btn-send" id="btnM19" disabled onclick="getDecision()">🤖 开始推荐</button>
+      </div>
+      <div class="result-box" id="rM19">
+        <div class="r-title">🎯 决策结果</div>
+        <div class="r-content" id="rM19Content"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ====== 模块1：今日好事签到 ====== -->
   <div class="module" id="m1">
     <div class="module-hd">
@@ -376,6 +434,51 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
       <div class="result-box" id="rM2">
         <div class="r-title">🤝 互助已接下</div>
         <div class="r-content" id="rM2Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块20：每日好事挑战 ====== -->
+  <div class="module" id="m20">
+    <div class="module-hd">
+      <div class="m-icon orange">🔥</div>
+      <div class="m-info">
+        <h3>每日好事挑战 <span class="live-badge">今日</span></h3>
+        <p>每天一个专属挑战，完成获得额外好心值奖励</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div style="background:linear-gradient(135deg,#fef3ef,#fef6e8);border-radius:12px;padding:18px;border:1px solid #fde0d6;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#c8533a,#f5a623);display:grid;place-items:center;font-size:24px;color:#fff;">🏆</div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:#2b2622;" id="dcTitle">对 3 个陌生人微笑问好</div>
+            <div style="font-size:12px;color:#7a6e66;margin-top:2px;" id="dcDesc">微笑是最好的语言，传递温暖从微笑开始</div>
+          </div>
+        </div>
+        <div style="margin:14px 0 8px;display:flex;align-items:center;gap:10px;">
+          <div style="flex:1;height:8px;background:#eee8e2;border-radius:999px;overflow:hidden;">
+            <div id="dcProgress" style="width:0%;height:100%;background:linear-gradient(90deg,#c8533a,#f5a623);border-radius:999px;transition:width .6s ease;"></div>
+          </div>
+          <span style="font-size:14px;font-weight:800;color:#c8533a;"><span id="dcCount">0</span>/<span id="dcTarget">3</span></span>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="completeDc()" style="flex:1;padding:8px;border-radius:999px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#c8533a,#b0442e);border:none;cursor:pointer;transition:all .2s;">✓ 完成一次</button>
+          <button onclick="newChallenge()" style="padding:8px 16px;border-radius:999px;font-size:12px;font-weight:600;color:#c8533a;background:#fff;border:1px solid #c8533a;cursor:pointer;transition:all .2s;">🔄 换一个</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+        <span style="padding:4px 12px;border-radius:999px;background:#fef3ef;color:#c8533a;font-size:11px;font-weight:600;">🔥 连续 <b id="streakDays">7</b> 天</span>
+        <span style="padding:4px 12px;border-radius:999px;background:#edf7f0;color:#4a9e6e;font-size:11px;font-weight:600;">🏅 已获 <b id="dcRewards">3</b> 个奖励</span>
+        <span style="padding:4px 12px;border-radius:999px;background:#fef6e8;color:#c98a2b;font-size:11px;font-weight:600;">⭐ 累计完成 <b id="dcTotal">23</b> 次</span>
+      </div>
+      <div class="act-bar">
+        <span class="count">今日挑战完成度 <b id="dcPct">0</b>%</span>
+        <button class="btn-send" id="btnM20" onclick="claimDcReward()">🎁 领取奖励</button>
+      </div>
+      <div class="result-box" id="rM20">
+        <div class="r-title">🎉 挑战奖励已领取</div>
+        <div class="r-content" id="rM20Content"></div>
       </div>
     </div>
   </div>
@@ -1088,6 +1191,256 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
       <div class="result-box" id="rM13">
         <div class="r-title">🏃 接力成功</div>
         <div class="r-content" id="rM13Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块21：社区暖心广播 ====== -->
+  <div class="module" id="m21">
+    <div class="module-hd">
+      <div class="m-icon pink">📢</div>
+      <div class="m-info">
+        <h3>社区暖心广播 <span class="live-badge">LIVE</span></h3>
+        <p>邻居们正在做的好事，实时播报，温暖整个社区</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div id="broadcastFeed" style="max-height:320px;overflow-y:auto;padding-right:4px;">
+        <div class="broadcast-item" style="display:flex;gap:10px;padding:10px 12px;background:#fef3ef;border-radius:10px;margin-bottom:8px;animation:fadeUp .3s ease;">
+          <div style="font-size:24px;">👩</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;"><b>3栋张阿姨</b> 帮邻居收了快递 📦</div>
+            <div style="font-size:11px;color:#7a6e66;margin-top:2px;">2分钟前 · 3栋</div>
+          </div>
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#c8533a;color:#fff;font-weight:600;">NEW</span>
+        </div>
+        <div class="broadcast-item" style="display:flex;gap:10px;padding:10px 12px;background:#faf8f6;border-radius:10px;margin-bottom:8px;">
+          <div style="font-size:24px;">👨</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;"><b>7栋李先生</b> 在地铁口整理了共享单车 🚲</div>
+            <div style="font-size:11px;color:#7a6e66;margin-top:2px;">8分钟前 · 通勤路上</div>
+          </div>
+        </div>
+        <div class="broadcast-item" style="display:flex;gap:10px;padding:10px 12px;background:#faf8f6;border-radius:10px;margin-bottom:8px;">
+          <div style="font-size:24px;">👧</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;"><b>5栋小陈</b> 带女儿给楼道绿植浇了水 🌱</div>
+            <div style="font-size:11px;color:#7a6e66;margin-top:2px;">15分钟前 · 亲子时光</div>
+          </div>
+        </div>
+        <div class="broadcast-item" style="display:flex;gap:10px;padding:10px 12px;background:#faf8f6;border-radius:10px;margin-bottom:8px;">
+          <div style="font-size:24px;">👴</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;"><b>1栋王爷爷</b> 在小区花园修剪了杂草 🌿</div>
+            <div style="font-size:11px;color:#7a6e66;margin-top:2px;">22分钟前 · 花园</div>
+          </div>
+        </div>
+        <div class="broadcast-item" style="display:flex;gap:10px;padding:10px 12px;background:#faf8f6;border-radius:10px;margin-bottom:8px;">
+          <div style="font-size:24px;">👩</div>
+          <div style="flex:1;">
+            <div style="font-size:13px;"><b>6栋刘姐</b> 给独居老人送了热汤 🍲</div>
+            <div style="font-size:11px;color:#7a6e66;margin-top:2px;">30分钟前 · 暖心陪伴</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px;font-size:12px;color:#7a6e66;justify-content:center;flex-wrap:wrap;">
+        <span>📡 今日已播报 <b id="broadcastCount" style="color:#c8533a;">47</b> 件好事</span>
+        <span>👥 覆盖 <b style="color:#c8533a;">18</b> 位邻居</span>
+        <span>🔥 热度 <b style="color:#c8533a;">92%</b></span>
+      </div>
+      <div class="act-bar">
+        <span class="count">💬 你也来分享一件好事吧</span>
+        <button class="btn-send" onclick="shareBroadcast()">📤 分享我的好事</button>
+      </div>
+      <div class="result-box" id="rM21">
+        <div class="r-title">📢 好事已广播</div>
+        <div class="r-content" id="rM21Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块22：好事提醒设置 ====== -->
+  <div class="module" id="m22">
+    <div class="module-hd">
+      <div class="m-icon green">🔔</div>
+      <div class="m-info">
+        <h3>好事提醒设置 <span class="live-badge">个人</span></h3>
+        <p>设定每日好事提醒，让做好事变成日常习惯</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div class="opt-card" onclick="selectReminderTime(this,'08:00')">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌅</div>
+          <div class="o-title">早上 8:00</div>
+          <div class="o-desc">出门前，用一件好事开启一天</div>
+        </div>
+        <div class="opt-card" onclick="selectReminderTime(this,'12:00')">
+          <div class="o-check">✓</div>
+          <div class="o-icon">☀️</div>
+          <div class="o-title">中午 12:00</div>
+          <div class="o-desc">午休时间，做点顺手的好事</div>
+        </div>
+        <div class="opt-card" onclick="selectReminderTime(this,'18:00')" style="border-color:#c8533a;background:#fef3ef;">
+          <div class="o-check" style="border-color:#c8533a;background:#c8533a;">✓</div>
+          <div class="o-icon">🌆</div>
+          <div class="o-title">傍晚 18:00</div>
+          <div class="o-desc">下班路上，顺路做好事</div>
+        </div>
+        <div class="opt-card" onclick="selectReminderTime(this,'21:00')">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌙</div>
+          <div class="o-title">晚上 21:00</div>
+          <div class="o-desc">睡前回顾，记录今天的好事</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+        <div class="opt-card" style="flex:1;flex-direction:row;gap:8px;padding:12px 16px;" onclick="toggleReminderType(this,'push')">
+          <div class="o-check">✓</div>
+          <div class="o-title" style="font-size:13px;">📱 推送通知</div>
+        </div>
+        <div class="opt-card" style="flex:1;flex-direction:row;gap:8px;padding:12px 16px;" onclick="toggleReminderType(this,'sms')">
+          <div class="o-check">✓</div>
+          <div class="o-title" style="font-size:13px;">💬 短信提醒</div>
+        </div>
+        <div class="opt-card" style="flex:1;flex-direction:row;gap:8px;padding:12px 16px;" onclick="toggleReminderType(this,'email')">
+          <div class="o-check">✓</div>
+          <div class="o-title" style="font-size:13px;">📧 邮件通知</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">提醒时间：<b id="reminderTimeDisplay2">18:00</b> · 方式：<b id="reminderMethodDisplay">推送通知</b></span>
+        <button class="btn-send" id="btnM22" onclick="saveReminderSetting()">🔔 保存设置</button>
+      </div>
+      <div class="result-box" id="rM22">
+        <div class="r-title">✅ 提醒已设置</div>
+        <div class="r-content" id="rM22Content">每天 <b>18:00</b> 会通过 <b>推送通知</b> 提醒你做好事，坚持下去，让好事成为习惯！</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块23：邻里打招呼 ====== -->
+  <div class="module" id="m23">
+    <div class="module-hd">
+      <div class="m-icon purple">👋</div>
+      <div class="m-info">
+        <h3>邻里打招呼 <span class="live-badge">社交</span></h3>
+        <p>随机匹配一位邻居，用温暖的方式打个招呼</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div id="neighborMatchCard" style="padding:20px;background:linear-gradient(135deg,#faf8f6,#fefaf5);border-radius:14px;border:1px solid #eee8e2;text-align:center;margin-bottom:14px;">
+        <div style="font-size:48px;margin-bottom:8px;" id="neighborAvatar">👩</div>
+        <div style="font-size:18px;font-weight:800;" id="neighborName">张阿姨</div>
+        <div style="font-size:13px;color:#7a6e66;margin-top:2px;" id="neighborInfo">3栋 · 今日已做 3 件好事</div>
+        <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;" id="neighborTags">
+          <span class="tag" style="padding:2px 10px;border-radius:999px;background:#fef3ef;color:#c8533a;font-size:11px;font-weight:600;">🌻 热心肠</span>
+          <span class="tag" style="padding:2px 10px;border-radius:999px;background:#edf7f0;color:#4a9e6e;font-size:11px;font-weight:600;">🌸 爱分享</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div class="opt-card" onclick="selectGreeting(this,'你好')" style="border-color:#c8533a;background:#fef3ef;">
+          <div class="o-check" style="border-color:#c8533a;background:#c8533a;">✓</div>
+          <div class="o-icon">😊</div>
+          <div class="o-title">"你好！"</div>
+          <div class="o-desc">简单温暖的问候</div>
+        </div>
+        <div class="opt-card" onclick="selectGreeting(this,'加油')">
+          <div class="o-check">✓</div>
+          <div class="o-icon">💪</div>
+          <div class="o-title">"加油！"</div>
+          <div class="o-desc">给对方打气鼓励</div>
+        </div>
+        <div class="opt-card" onclick="selectGreeting(this,'谢谢')">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🙏</div>
+          <div class="o-title">"谢谢你！"</div>
+          <div class="o-desc">表达感谢之情</div>
+        </div>
+        <div class="opt-card" onclick="selectGreeting(this,'需要帮忙吗')">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🤝</div>
+          <div class="o-title">"需要帮忙吗？"</div>
+          <div class="o-desc">主动伸出援手</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选问候：<b id="greetingText">"你好！"</b></span>
+        <button class="btn-send" id="btnM23" onclick="sendGreeting()">👋 打个招呼</button>
+      </div>
+      <div class="result-box" id="rM23">
+        <div class="r-title">💬 问候已发送</div>
+        <div class="r-content" id="rM23Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块24：好事技能交换 ====== -->
+  <div class="module" id="m24">
+    <div class="module-hd">
+      <div class="m-icon teal">🔄</div>
+      <div class="m-info">
+        <h3>好事技能交换 <span class="live-badge">互助</span></h3>
+        <p>用你的技能帮助邻居，也能学到新技能</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div class="opt-card" onclick="toggleSkill(this,'teach')" data-skill="teach">
+          <div class="o-check">✓</div>
+          <div class="o-icon">📱</div>
+          <div class="o-title">教用手机/电脑</div>
+          <div class="o-desc">帮邻居解决手机/电脑问题</div>
+        </div>
+        <div class="opt-card" onclick="toggleSkill(this,'fix')" data-skill="fix">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🔧</div>
+          <div class="o-title">小修小补</div>
+          <div class="o-desc">修水龙头、换灯泡等</div>
+        </div>
+        <div class="opt-card" onclick="toggleSkill(this,'cook')" data-skill="cook">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🍳</div>
+          <div class="o-title">分享美食</div>
+          <div class="o-desc">做多了分享给邻居</div>
+        </div>
+        <div class="opt-card" onclick="toggleSkill(this,'plant')" data-skill="plant">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌱</div>
+          <div class="o-title">园艺/种植</div>
+          <div class="o-desc">分享花草种植经验</div>
+        </div>
+        <div class="opt-card" onclick="toggleSkill(this,'clean')" data-skill="clean">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🧹</div>
+          <div class="o-title">家务帮手</div>
+          <div class="o-desc">帮忙打扫、整理</div>
+        </div>
+        <div class="opt-card" onclick="toggleSkill(this,'baby')" data-skill="baby">
+          <div class="o-check">✓</div>
+          <div class="o-icon">👶</div>
+          <div class="o-title">临时照看</div>
+          <div class="o-desc">帮邻居临时照看孩子/宠物</div>
+        </div>
+      </div>
+      <div id="skillMatchResult" style="display:none;padding:16px;background:linear-gradient(135deg,#edf7f0,#f5faf5);border-radius:12px;border:1px solid #d4e8da;margin-bottom:14px;animation:fadeUp .3s ease;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:#4a9e6e;display:grid;place-items:center;font-size:20px;color:#fff;">🔄</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;" id="skillMatchTitle">找到匹配邻居！</div>
+            <div style="font-size:12px;color:#7a6e66;" id="skillMatchDesc">有邻居也需要你的技能</div>
+          </div>
+        </div>
+        <div id="skillMatchCards" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选技能：<b id="skillCount">0</b> 项</span>
+        <button class="btn-send" id="btnM24" onclick="findSkillMatch()" disabled>🔄 寻找匹配邻居</button>
+      </div>
+      <div class="result-box" id="rM24">
+        <div class="r-title">🤝 技能交换成功</div>
+        <div class="r-content" id="rM24Content"></div>
       </div>
     </div>
   </div>
@@ -2123,6 +2476,337 @@ function recordEmergency() {
   document.getElementById('emergencyCount').textContent = 0;
   document.getElementById('btnM18').disabled = true;
 }
+
+// ===== 模块19：好事决策助手 =====
+var decisionData = { time: null, place: null, energy: null, people: null };
+var decisionCount = 0;
+
+function toggleDecision(el, type) {
+  el.classList.toggle('selected');
+  var isSelected = el.classList.contains('selected');
+  decisionData[type] = isSelected ? el.querySelector('.o-title').textContent.trim() : null;
+  
+  decisionCount = 0;
+  for (var k in decisionData) { if (decisionData[k]) decisionCount++; }
+  document.getElementById('decisionCount').textContent = decisionCount;
+  document.getElementById('btnM19').disabled = decisionCount < 4;
+  
+  document.getElementById('decisionResult').style.display = 'none';
+}
+
+function getDecision() {
+  var recommendations = [
+    { icon: '😊', title: '对邻居微笑问好', desc: '花30秒对遇到的邻居微笑说声"你好"，简单又温暖', time: '30秒', points: '3' },
+    { icon: '🚶', title: '让路先行', desc: '在狭窄通道或门口主动让路，微笑示意对方先过', time: '10秒', points: '2' },
+    { icon: '🗑️', title: '随手捡垃圾', desc: '看到地上的垃圾随手捡起扔进垃圾桶', time: '1分钟', points: '5' },
+    { icon: '📦', title: '帮邻居拿快递', desc: '看到邻居快递在门口，顺手帮忙拿进去', time: '2分钟', points: '8' },
+    { icon: '🚲', title: '整理共享单车', desc: '把路边倒下的共享单车扶正摆好', time: '3分钟', points: '6' },
+    { icon: '🌱', title: '给绿植浇水', desc: '给楼道或办公室的绿植浇浇水', time: '3分钟', points: '5' },
+    { icon: '📚', title: '整理共享书架', desc: '把共享书架上的书整理整齐', time: '5分钟', points: '8' },
+    { icon: '☕', title: '给同事冲杯咖啡', desc: '午休后帮同事冲杯咖啡或倒杯水', time: '2分钟', points: '6' },
+    { icon: '🧹', title: '整理公共区域', desc: '整理茶水间、会议室等公共区域', time: '5分钟', points: '10' },
+    { icon: '📱', title: '教老人用手机', desc: '教社区老人用手机挂号、发微信', time: '10分钟', points: '15' }
+  ];
+  
+  var shuffled = recommendations.sort(function() { return 0.5 - Math.random(); });
+  var picks = shuffled.slice(0, 3);
+  
+  var html = '';
+  picks.forEach(function(item) {
+    html += '<div style="padding:10px 12px;background:#fff;border-radius:8px;border:1px solid #eee8e2;text-align:center;">';
+    html += '<div style="font-size:24px;margin-bottom:4px;">' + item.icon + '</div>';
+    html += '<div style="font-size:13px;font-weight:700;">' + item.title + '</div>';
+    html += '<div style="font-size:11px;color:#7a6e66;margin:2px 0;">' + item.desc + '</div>';
+    html += '<div style="display:flex;gap:6px;justify-content:center;font-size:10px;color:#7a6e66;margin-top:4px;">';
+    html += '<span>⏱ ' + item.time + '</span><span>💛 +' + item.points + '</span></div></div>';
+  });
+  
+  document.getElementById('decisionCards').innerHTML = html;
+  document.getElementById('decisionReason').textContent = '根据你的选择，推荐以下适合你的好事';
+  document.getElementById('decisionResult').style.display = 'block';
+  document.getElementById('rM19').classList.add('show');
+  document.getElementById('rM19Content').innerHTML = '已为你推荐 <b>3</b> 件适合的好事，选一个开始行动吧！';
+  updateStats('m19');
+}
+
+// ===== 模块20：每日好事挑战 =====
+var dcCount = 0;
+var dcTarget = 3;
+var challengeList = [
+  { title: '对 3 个陌生人微笑问好', desc: '微笑是最好的语言，传递温暖从微笑开始', target: 3 },
+  { title: '捡起 5 件路上的垃圾', desc: '看到路上的垃圾随手捡起，让社区更干净', target: 5 },
+  { title: '帮 2 个邻居做一件小事', desc: '帮邻居拿快递、按电梯、提东西', target: 2 },
+  { title: '给 3 个人真诚的赞美', desc: '真诚地赞美身边的人，让他们感受到被看见', target: 3 },
+  { title: '整理共享单车 4 辆', desc: '把路边倒下的共享单车扶正摆好', target: 4 },
+  { title: '给家人一个拥抱', desc: '给家人一个温暖的拥抱，说一声"我爱你"', target: 1 }
+];
+
+function initDailyChallenge() {
+  var c = challengeList[Math.floor(Math.random() * challengeList.length)];
+  document.getElementById('dcTitle').textContent = c.title;
+  document.getElementById('dcDesc').textContent = c.desc;
+  dcTarget = c.target;
+  dcCount = 0;
+  document.getElementById('dcTarget').textContent = dcTarget;
+  updateDcUI();
+}
+
+function completeDc() {
+  if (dcCount < dcTarget) {
+    dcCount++;
+    updateDcUI();
+    if (dcCount >= dcTarget) {
+      showToast('🎉', '今日挑战完成！', '太棒了！点击"领取奖励"获得额外好心值！');
+      document.getElementById('dcPct').textContent = '100';
+    } else {
+      showToast('👍', '已完成一次！', '还剩 ' + (dcTarget - dcCount) + ' 次');
+    }
+    updateStats('m20');
+  }
+}
+
+function updateDcUI() {
+  var pct = (dcCount / dcTarget) * 100;
+  document.getElementById('dcCount').textContent = dcCount;
+  document.getElementById('dcProgress').style.width = pct + '%';
+  document.getElementById('dcPct').textContent = Math.round(pct);
+}
+
+function newChallenge() {
+  var c = challengeList[Math.floor(Math.random() * challengeList.length)];
+  document.getElementById('dcTitle').textContent = c.title;
+  document.getElementById('dcDesc').textContent = c.desc;
+  dcTarget = c.target;
+  dcCount = 0;
+  document.getElementById('dcTarget').textContent = dcTarget;
+  updateDcUI();
+  showToast('🔄', '挑战已更换', '新挑战：' + c.title);
+}
+
+function claimDcReward() {
+  if (dcCount < dcTarget) {
+    showToast('⚠️', '挑战未完成', '请先完成今日挑战再领取奖励！');
+    return;
+  }
+  document.getElementById('rM20').classList.add('show');
+  document.getElementById('rM20Content').innerHTML = '🎉 恭喜完成今日挑战！获得 <b>+20</b> 好心值奖励！<br>🔥 连续打卡 <b>7</b> 天，额外获得 <b>+10</b> 好心值！';
+  document.getElementById('btnM20').disabled = true;
+  document.getElementById('btnM20').style.opacity = '0.5';
+  showToast('🎉', '奖励已领取！', '+30 好心值已到账！');
+  updateStats('m20');
+}
+
+// ===== 模块21：社区暖心广播 =====
+var broadcastCount = 47;
+var broadcastNames = ['3栋张阿姨', '7栋李先生', '5栋小陈', '1栋王爷爷', '6栋刘姐', '2栋赵叔', '8栋小杨', '9栋周姐'];
+var broadcastActions = [
+  { text: '帮邻居收了快递 📦', tag: '互助' },
+  { text: '在地铁口整理了共享单车 🚲', tag: '环保' },
+  { text: '带女儿给楼道绿植浇了水 🌱', tag: '亲子' },
+  { text: '在小区花园修剪了杂草 🌿', tag: '环保' },
+  { text: '给独居老人送了热汤 🍲', tag: '陪伴' },
+  { text: '帮邻居提菜上楼 🛍️', tag: '互助' },
+  { text: '在电梯里对每个人微笑问好 😊', tag: '暖心' },
+  { text: '整理楼道里乱放的鞋子 👟', tag: '随手' }
+];
+
+function addBroadcast() {
+  var name = broadcastNames[Math.floor(Math.random() * broadcastNames.length)];
+  var action = broadcastActions[Math.floor(Math.random() * broadcastActions.length)];
+  var feed = document.getElementById('broadcastFeed');
+  var item = document.createElement('div');
+  item.className = 'broadcast-item';
+  item.style.cssText = 'display:flex;gap:10px;padding:10px 12px;background:#fef3ef;border-radius:10px;margin-bottom:8px;animation:fadeUp .3s ease;';
+  item.innerHTML = '<div style="font-size:24px;">' + name.charAt(0) + '</div><div style="flex:1;"><div style="font-size:13px;"><b>' + name + '</b> ' + action.text + '</div><div style="font-size:11px;color:#7a6e66;margin-top:2px;">刚刚 · ' + action.tag + '</div></div><span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#c8533a;color:#fff;font-weight:600;">NEW</span>';
+  feed.insertBefore(item, feed.firstChild);
+  while (feed.children.length > 10) { feed.removeChild(feed.lastChild); }
+  broadcastCount++;
+  document.getElementById('broadcastCount').textContent = broadcastCount;
+}
+
+function shareBroadcast() {
+  document.getElementById('rM21').classList.add('show');
+  document.getElementById('rM21Content').innerHTML = '📢 你的好事已广播到社区！<br>邻居们都能看到你的暖心行动，继续加油！';
+  addBroadcast();
+  updateStats('m21');
+}
+
+setInterval(addBroadcast, 20000);
+
+// ===== 模块22：好事提醒设置 =====
+var selectedReminderTime = '18:00';
+var selectedReminderMethod = 'push';
+
+function selectReminderTime(el, time) {
+  document.querySelectorAll('#m22 .opt-card[onclick*="selectReminderTime"]').forEach(function(c) {
+    c.classList.remove('selected');
+    c.style.borderColor = '#eee8e2';
+    c.style.background = '#fff';
+    c.querySelector('.o-check').style.borderColor = '#ddd5cc';
+    c.querySelector('.o-check').style.background = 'transparent';
+  });
+  el.classList.add('selected');
+  el.style.borderColor = '#c8533a';
+  el.style.background = '#fef3ef';
+  el.querySelector('.o-check').style.borderColor = '#c8533a';
+  el.querySelector('.o-check').style.background = '#c8533a';
+  selectedReminderTime = time;
+  document.getElementById('reminderTimeDisplay2').textContent = time;
+}
+
+function toggleReminderType(el, type) {
+  document.querySelectorAll('#m22 .opt-card[onclick*="toggleReminderType"]').forEach(function(c) {
+    c.classList.remove('selected');
+    c.querySelector('.o-check').style.borderColor = '#ddd5cc';
+    c.querySelector('.o-check').style.background = 'transparent';
+  });
+  el.classList.add('selected');
+  el.querySelector('.o-check').style.borderColor = '#c8533a';
+  el.querySelector('.o-check').style.background = '#c8533a';
+  selectedReminderMethod = type;
+  var labels = { push: '推送通知', sms: '短信提醒', email: '邮件通知' };
+  document.getElementById('reminderMethodDisplay').textContent = labels[type] || type;
+}
+
+function saveReminderSetting() {
+  document.getElementById('rM22').classList.add('show');
+  document.getElementById('rM22Content').innerHTML = '每天 <b>' + selectedReminderTime + '</b> 会通过 <b>' + document.getElementById('reminderMethodDisplay').textContent + '</b> 提醒你做好事，坚持下去，让好事成为习惯！';
+  showToast('🔔', '提醒设置已保存！', '每天 ' + selectedReminderTime + ' 提醒你做好事 ✨');
+  updateStats('m22');
+}
+
+// ===== 模块23：邻里打招呼 =====
+var neighbors = [
+  { name: '张阿姨', building: '3栋', deeds: 3, avatar: '👩', tags: ['🌻 热心肠', '🌸 爱分享'] },
+  { name: '李先生', building: '7栋', deeds: 5, avatar: '👨', tags: ['🔧 技能达人', '📚 爱读书'] },
+  { name: '小陈', building: '5栋', deeds: 2, avatar: '👧', tags: ['🌱 爱植物', '🎨 爱画画'] },
+  { name: '王爷爷', building: '1栋', deeds: 7, avatar: '👴', tags: ['♟️ 棋艺高手', '📖 故事大王'] },
+  { name: '刘姐', building: '6栋', deeds: 4, avatar: '👩‍🦰', tags: ['🍳 美食家', '🧶 手工达人'] },
+  { name: '赵叔', building: '2栋', deeds: 6, avatar: '👨‍🦱', tags: ['🔨 万能手', '🌿 园艺师'] },
+  { name: '小杨', building: '8栋', deeds: 1, avatar: '🧑', tags: ['🎵 爱音乐', '📸 摄影爱好者'] },
+  { name: '周姐', building: '9栋', deeds: 8, avatar: '👩', tags: ['🏃 运动达人', '🐕 爱动物'] }
+];
+var selectedGreeting = '你好';
+
+function selectGreeting(el, text) {
+  document.querySelectorAll('#m23 .opt-card[onclick*="selectGreeting"]').forEach(function(c) {
+    c.classList.remove('selected');
+    c.style.borderColor = '#eee8e2';
+    c.style.background = '#fff';
+    c.querySelector('.o-check').style.borderColor = '#ddd5cc';
+    c.querySelector('.o-check').style.background = 'transparent';
+  });
+  el.classList.add('selected');
+  el.style.borderColor = '#c8533a';
+  el.style.background = '#fef3ef';
+  el.querySelector('.o-check').style.borderColor = '#c8533a';
+  el.querySelector('.o-check').style.background = '#c8533a';
+  selectedGreeting = text;
+  document.getElementById('greetingText').textContent = '"' + text + '"';
+  // 随机换一位邻居
+  randomNeighbor();
+}
+
+function randomNeighbor() {
+  var n = neighbors[Math.floor(Math.random() * neighbors.length)];
+  document.getElementById('neighborAvatar').textContent = n.avatar;
+  document.getElementById('neighborName').textContent = n.name;
+  document.getElementById('neighborInfo').textContent = n.building + ' · 今日已做 ' + n.deeds + ' 件好事';
+  var tagsHtml = '';
+  n.tags.forEach(function(t) {
+    tagsHtml += '<span style="padding:2px 10px;border-radius:999px;background:#fef3ef;color:#c8533a;font-size:11px;font-weight:600;margin:2px;">' + t + '</span>';
+  });
+  document.getElementById('neighborTags').innerHTML = tagsHtml;
+}
+
+function sendGreeting() {
+  var name = document.getElementById('neighborName').textContent;
+  var responses = [
+    '"你好呀！今天天气不错，一起去散步吗？"',
+    '"谢谢你的问候！你也加油哦 💪"',
+    '"太暖心了！要不要一起做件好事？"',
+    '"你真是个热心的邻居，很高兴认识你！"',
+    '"收到你的问候，今天心情都变好了 😊"'
+  ];
+  var response = responses[Math.floor(Math.random() * responses.length)];
+  document.getElementById('rM23').classList.add('show');
+  document.getElementById('rM23Content').innerHTML = '你对 <b>' + name + '</b> 说：<b style="color:#c8533a;">"' + selectedGreeting + '"</b><br><br>' + name + ' 回复：' + response + '<br><br><span style="font-size:12px;color:#7a6e66;">💛 +5 好心值 · 温暖 +1</span>';
+  showToast('👋', '问候已发送！', '你对 ' + name + ' 说"' + selectedGreeting + '"，收到了温暖的回应！');
+  updateStats('m23');
+  // 换一位邻居
+  setTimeout(randomNeighbor, 2000);
+}
+
+// ===== 模块24：好事技能交换 =====
+var selectedSkills = {};
+
+function toggleSkill(el, skill) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) {
+    selectedSkills[skill] = el.querySelector('.o-title').textContent.trim();
+  } else {
+    delete selectedSkills[skill];
+  }
+  var count = Object.keys(selectedSkills).length;
+  document.getElementById('skillCount').textContent = count;
+  document.getElementById('btnM24').disabled = count === 0;
+  document.getElementById('skillMatchResult').style.display = 'none';
+}
+
+function findSkillMatch() {
+  var skillNames = Object.values(selectedSkills);
+  var skillList = skillNames.join('、');
+  
+  var matchNeighbors = [
+    { name: '赵叔', avatar: '👨‍🦱', skill: '需要帮忙修东西', building: '2栋', match: '教用手机/电脑' },
+    { name: '王爷爷', avatar: '👴', skill: '想学手机挂号', building: '1栋', match: '教用手机/电脑' },
+    { name: '小陈', avatar: '👧', skill: '想学做菜', building: '5栋', match: '分享美食' },
+    { name: '刘姐', avatar: '👩‍🦰', skill: '需要帮忙打扫', building: '6栋', match: '家务帮手' },
+    { name: '张阿姨', avatar: '👩', skill: '需要照看小狗', building: '3栋', match: '临时照看' },
+    { name: '李先生', avatar: '👨', skill: '想学种花', building: '7栋', match: '园艺/种植' }
+  ];
+  
+  // 找匹配的邻居
+  var matched = [];
+  skillNames.forEach(function(s) {
+    matchNeighbors.forEach(function(m) {
+      if (m.match === s && matched.length < 2) {
+        matched.push(m);
+      }
+    });
+  });
+  
+  if (matched.length === 0) {
+    matched = matchNeighbors.slice(0, 2);
+  }
+  
+  var cardsHtml = '';
+  matched.forEach(function(m) {
+    cardsHtml += '<div style="padding:10px;background:#fff;border-radius:8px;border:1px solid #d4e8da;text-align:center;">';
+    cardsHtml += '<div style="font-size:28px;margin-bottom:4px;">' + m.avatar + '</div>';
+    cardsHtml += '<div style="font-size:13px;font-weight:700;">' + m.name + '</div>';
+    cardsHtml += '<div style="font-size:11px;color:#7a6e66;">' + m.building + '</div>';
+    cardsHtml += '<div style="font-size:11px;color:#4a9e6e;font-weight:600;margin-top:4px;">' + m.skill + '</div>';
+    cardsHtml += '<button onclick="acceptSkillMatch(\'' + m.name + '\')" style="margin-top:6px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;background:#4a9e6e;color:#fff;border:none;cursor:pointer;">🤝 交换技能</button>';
+    cardsHtml += '</div>';
+  });
+  
+  document.getElementById('skillMatchCards').innerHTML = cardsHtml;
+  document.getElementById('skillMatchDesc').textContent = '找到了 ' + matched.length + ' 位需要你技能的邻居！';
+  document.getElementById('skillMatchResult').style.display = 'block';
+  document.getElementById('rM24').classList.add('show');
+  document.getElementById('rM24Content').innerHTML = '已找到 <b>' + matched.length + '</b> 位匹配邻居！<br>你的技能：<b>' + skillList + '</b><br>点击上方卡片开始技能交换吧！';
+  showToast('🔄', '找到匹配邻居！', '有 ' + matched.length + ' 位邻居需要你的技能，快去看看吧！');
+  updateStats('m24');
+}
+
+function acceptSkillMatch(name) {
+  showToast('🤝', '技能交换成功！', '你和 ' + name + ' 已成功配对，快去互相帮助吧！💛 +15 好心值');
+  document.getElementById('rM24Content').innerHTML = '🎉 你和 <b>' + name + '</b> 的技能交换已配对成功！<br>记得联系对方，互相帮助，共同成长！';
+  updateStats('m24');
+}
+
+initDailyChallenge();
 </script>
 
 </body>

@@ -367,6 +367,46 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     </div>
   </div>
 
+  <!-- 社区温暖指数 -->
+  <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#fefaf5,#fff8f0);">
+    <div class="card-hd"><h3>🌡️ 社区温暖指数 <span class="live-badge" style="display:inline-block;padding:1px 6px;border-radius:4px;background:#c8533a;color:#fff;font-size:9px;font-weight:700;margin-left:4px;animation:pulse 1.5s ease-in-out infinite;">LIVE</span></h3><span class="more" onclick="showWarmthDetail()">详情 →</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px;">
+      <div style="text-align:center;padding:14px;background:#fff;border-radius:10px;border:1px solid #fde0d6;">
+        <div style="font-size:28px;font-weight:900;color:#c8533a;" id="warmthScore">78</div>
+        <div style="font-size:11px;color:#7a6e66;">温暖指数</div>
+        <div style="font-size:10px;color:#c8533a;font-weight:600;">🔥 +5</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:#fff;border-radius:10px;border:1px solid #d4e8da;">
+        <div style="font-size:28px;font-weight:900;color:#4a9e6e;" id="warmthActs">47</div>
+        <div style="font-size:11px;color:#7a6e66;">今日好事</div>
+        <div style="font-size:10px;color:#4a9e6e;">📈 高峰 10:00</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:#fff;border-radius:10px;border:1px solid #d4e0ec;">
+        <div style="font-size:28px;font-weight:900;color:#3a7abf;" id="warmthPeople">128</div>
+        <div style="font-size:11px;color:#7a6e66;">参与人数</div>
+        <div style="font-size:10px;color:#3a7abf;">👥 18 栋楼</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:#fff;border-radius:10px;border:1px solid #f0e0c8;">
+        <div style="font-size:28px;font-weight:900;color:#c98a2b;" id="warmthRank">3栋</div>
+        <div style="font-size:11px;color:#7a6e66;">最暖楼栋</div>
+        <div style="font-size:10px;color:#c98a2b;">🏠 12 件好事</div>
+      </div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#7a6e66;margin-bottom:2px;">
+        <span>❄️ 冷清</span>
+        <span>🔥 温暖 <span style="color:#c8533a;font-weight:700;" id="warmthPct">78%</span></span>
+      </div>
+      <div style="height:10px;background:#eee8e2;border-radius:999px;overflow:hidden;">
+        <div id="warmthBar" style="width:78%;height:100%;border-radius:999px;background:linear-gradient(90deg,#3a7abf,#4a9e6e,#c98a2b,#c8533a);transition:width 1.5s ease;"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+      <span style="padding:4px 12px;border-radius:999px;background:#fef3ef;color:#c8533a;font-size:11px;font-weight:600;">🔥 已达当日高峰</span>
+      <span style="padding:4px 12px;border-radius:999px;background:#edf7f0;color:#4a9e6e;font-size:11px;font-weight:600;">🎯 下一目标：90 解锁集体成就</span>
+    </div>
+  </div>
+
   <!-- ====== 模块1：社区活动日历 ====== -->
   <div class="card">
     <div class="card-hd"><h3>📅 社区活动日历</h3><span class="more" onclick="showToast('📅','活动日历','查看完整月份')">本月 →</span></div>
@@ -415,6 +455,64 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button onclick="showEmergencyGuide()" style="padding:8px 18px;border-radius:999px;font-size:12px;font-weight:600;background:#fff;color:#c8533a;border:1px solid #c8533a;cursor:pointer;flex:1;">📋 应急指南</button>
       <button onclick="startEmergencyTraining()" style="padding:8px 18px;border-radius:999px;font-size:12px;font-weight:600;background:#c8533a;color:#fff;border:none;cursor:pointer;flex:1;">🎯 应急演练</button>
+    </div>
+  </div>
+
+  <!-- 社区暖心广播站 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-hd"><h3>📢 社区暖心广播站 <span class="live-badge" style="display:inline-block;padding:1px 6px;border-radius:4px;background:#c8533a;color:#fff;font-size:9px;font-weight:700;margin-left:4px;animation:pulse 1.5s ease-in-out infinite;">LIVE</span></h3><span class="more" onclick="showAllBroadcasts()">全部广播 →</span></div>
+    <div id="broadcastFeed" style="max-height:360px;overflow-y:auto;padding-right:4px;">
+      <div class="broadcast-item" style="display:flex;gap:12px;padding:12px;background:#fef3ef;border-radius:10px;margin-bottom:8px;border:1px solid #fde0d6;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#fef3ef;display:grid;place-items:center;font-size:18px;">👩</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;"><b>3栋张阿姨</b> 帮邻居收了快递并送到门口 📦</div>
+          <div style="font-size:11px;color:#7a6e66;margin-top:2px;">2分钟前 · 来自 <b>3栋</b></div>
+        </div>
+        <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#c8533a;color:#fff;font-weight:600;align-self:center;">NEW</span>
+      </div>
+      <div class="broadcast-item" style="display:flex;gap:12px;padding:12px;background:#faf8f6;border-radius:10px;margin-bottom:8px;border:1px solid #eee8e2;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#eef4fa;display:grid;place-items:center;font-size:18px;">👨</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;"><b>7栋李先生</b> 在地铁口整理了 6 辆共享单车 🚲</div>
+          <div style="font-size:11px;color:#7a6e66;margin-top:2px;">8分钟前 · 来自 <b>7栋</b></div>
+        </div>
+      </div>
+      <div class="broadcast-item" style="display:flex;gap:12px;padding:12px;background:#faf8f6;border-radius:10px;margin-bottom:8px;border:1px solid #eee8e2;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#edf7f0;display:grid;place-items:center;font-size:18px;">👧</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;"><b>5栋小陈</b> 带女儿给楼道绿植浇了水，还画了环保宣传画 🌱</div>
+          <div style="font-size:11px;color:#7a6e66;margin-top:2px;">15分钟前 · 来自 <b>5栋</b></div>
+        </div>
+      </div>
+      <div class="broadcast-item" style="display:flex;gap:12px;padding:12px;background:#faf8f6;border-radius:10px;margin-bottom:8px;border:1px solid #eee8e2;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#fef6e8;display:grid;place-items:center;font-size:18px;">👴</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;"><b>1栋王爷爷</b> 在小区花园修剪了杂草，还种了两棵新花 🌿</div>
+          <div style="font-size:11px;color:#7a6e66;margin-top:2px;">22分钟前 · 来自 <b>1栋</b></div>
+        </div>
+      </div>
+      <div class="broadcast-item" style="display:flex;gap:12px;padding:12px;background:#faf8f6;border-radius:10px;margin-bottom:8px;border:1px solid #eee8e2;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#f5f0fa;display:grid;place-items:center;font-size:18px;">👩</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;"><b>6栋刘姐</b> 给独居老人送了热汤和手工饺子 🍲</div>
+          <div style="font-size:11px;color:#7a6e66;margin-top:2px;">30分钟前 · 来自 <b>6栋</b></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px;padding-top:12px;border-top:1px solid #f5f0eb;">
+      <div style="text-align:center;padding:6px 16px;background:#faf8f6;border-radius:8px;">
+        <div style="font-size:11px;color:#7a6e66;">今日播报</div>
+        <div style="font-size:18px;font-weight:800;color:#c8533a;" id="bcCount">47</div>
+      </div>
+      <div style="text-align:center;padding:6px 16px;background:#faf8f6;border-radius:8px;">
+        <div style="font-size:11px;color:#7a6e66;">覆盖邻居</div>
+        <div style="font-size:18px;font-weight:800;color:#4a9e6e;" id="bcPeople">18</div>
+      </div>
+      <div style="text-align:center;padding:6px 16px;background:#faf8f6;border-radius:8px;">
+        <div style="font-size:11px;color:#7a6e66;">广播热度</div>
+        <div style="font-size:18px;font-weight:800;color:#c98a2b;" id="bcHeat">92%</div>
+      </div>
+      <button onclick="addCommunityBroadcast()" style="padding:8px 20px;border-radius:999px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#c8533a,#b0442e);border:none;cursor:pointer;box-shadow:0 2px 8px rgba(200,83,58,.2);">📤 我也要广播</button>
     </div>
   </div>
 
@@ -489,6 +587,76 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 </div><!-- /.wrap -->
 
 <!-- ====== 新增：弹窗容器 ====== -->
+<!-- ====== 邻里实时状态 ====== -->
+<div class="card">
+  <div class="card-hd"><h3>🏘️ 邻里实时状态 <span class="live-badge" style="display:inline-block;padding:1px 6px;border-radius:4px;background:#c8533a;color:#fff;font-size:9px;font-weight:700;margin-left:4px;animation:pulse 1.5s ease-in-out infinite;">LIVE</span></h3><span class="more" onclick="refreshCommunityNeighbors()">刷新 →</span></div>
+  <div id="communityNeighborGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:10px;">
+    <!-- 由 JS 动态生成 -->
+  </div>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+    <span style="font-size:11px;padding:4px 12px;border-radius:999px;background:#fef3ef;color:#c8533a;font-weight:600;">🔥 今日 <b id="communityActiveCount">18</b> 位邻居在线</span>
+    <span style="font-size:11px;padding:4px 12px;border-radius:999px;background:#edf7f0;color:#4a9e6e;font-weight:600;">💛 今日已做 <b id="communityTodayDeeds">47</b> 件好事</span>
+  </div>
+</div>
+
+<!-- ====== 社区公告推送 ====== -->
+<div class="card">
+  <div class="card-hd"><h3>📢 社区公告推送</h3><span class="more" onclick="showAllAnnouncements()">查看全部 →</span></div>
+  <div id="announcementFeed" style="max-height:240px;overflow-y:auto;padding-right:4px;">
+    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f5f0eb;animation:fadeIn .3s ease;">
+      <div style="width:36px;height:36px;border-radius:50%;background:#fef3ef;display:grid;place-items:center;font-size:18px;flex-shrink:0;">📢</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;">社区周末跳蚤市场</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">本周六上午9点在小区广场举办跳蚤市场，欢迎邻居们带闲置物品来交换！</div>
+        <div style="font-size:10px;color:#b5a99e;margin-top:4px;">2小时前 · 社区公告</div>
+      </div>
+      <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#c8533a;color:#fff;font-weight:600;flex-shrink:0;align-self:center;">NEW</span>
+    </div>
+    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f5f0eb;">
+      <div style="width:36px;height:36px;border-radius:50%;background:#eef4fa;display:grid;place-items:center;font-size:18px;flex-shrink:0;">📢</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;">今晚7点邻里茶话会</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">3栋楼下活动室，欢迎大家自带零食来聊天，一起讨论社区建设！</div>
+        <div style="font-size:10px;color:#b5a99e;margin-top:4px;">昨天 · 活动通知</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;padding:10px 0;">
+      <div style="width:36px;height:36px;border-radius:50%;background:#edf7f0;display:grid;place-items:center;font-size:18px;flex-shrink:0;">📢</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:600;">社区花园认领计划</div>
+        <div style="font-size:12px;color:#7a6e66;line-height:1.5;">小区花园的种植区可认领，每个家庭可认领一小块，种花种菜都可以！</div>
+        <div style="font-size:10px;color:#b5a99e;margin-top:4px;">3天前 · 社区公告</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f5f0eb;text-align:center;">
+    <button onclick="simulateNewAnnouncement()" style="padding:6px 18px;border-radius:999px;font-size:12px;font-weight:600;color:#c8533a;border:1px solid #c8533a;background:transparent;cursor:pointer;transition:all .2s;">📢 模拟新公告</button>
+  </div>
+</div>
+
+<!-- ====== 好事提醒设置 ====== -->
+<div class="card">
+  <div class="card-hd"><h3>🔔 社区好事提醒</h3><span class="more" onclick="toggleCommunityReminder()">设置 →</span></div>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#3f7d5b,#5a9e7a);display:grid;place-items:center;font-size:20px;color:#fff;">🔔</div>
+    <div style="flex:1;min-width:120px;">
+      <div style="font-size:13px;font-weight:600;">社区好事提醒</div>
+      <div style="font-size:12px;color:#7a6e66;" id="communityReminderStatus">⏸️ 已暂停</div>
+    </div>
+    <div style="display:flex;gap:6px;">
+      <select id="communityReminderFreq" style="padding:5px 10px;border-radius:8px;border:1px solid #ddd5cc;font-size:12px;background:#fff;outline:none;">
+        <option value="daily">每天一次</option>
+        <option value="weekday">工作日每天</option>
+        <option value="weekend">仅周末</option>
+      </select>
+      <button onclick="toggleCommunityReminder()" id="communityReminderBtn" style="padding:6px 14px;border-radius:999px;font-size:12px;font-weight:700;color:#fff;background:linear-gradient(135deg,#3f7d5b,#4a9e6e);border:none;cursor:pointer;transition:all .2s;">🔕 开启</button>
+    </div>
+  </div>
+  <div id="communityReminderResult" style="display:none;margin-top:10px;padding:10px;background:#edf7f0;border-radius:8px;font-size:12px;color:#3f7d5b;font-weight:600;animation:fadeIn .3s ease;">
+    ✅ 社区好事提醒已开启，<span id="communityReminderFreqDisplay">每天</span>推送社区好事动态
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
   <div class="modal-box" id="modalBox">
     <div class="modal-hd">
@@ -976,6 +1144,167 @@ function showToast(icon, title, desc) {
 var pulseStyle = document.createElement('style');
 pulseStyle.textContent = '@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }';
 document.head.appendChild(pulseStyle);
+
+// ===== 温暖指数 =====
+function showWarmthDetail() {
+  showToast('🌡️', '社区温暖指数详情', '今日 78 分 · 比昨天 +5 · 距离目标 90 还需 12 分 · 最暖楼栋：3栋');
+}
+
+// ===== 暖心广播 =====
+var bcCount = 47;
+var bcNames = ['3栋张阿姨', '7栋李先生', '5栋小陈', '1栋王爷爷', '6栋刘姐', '2栋赵叔', '8栋小杨', '9栋周姐', '10栋孙叔', '4栋小李'];
+var bcActions = [
+  { text: '帮邻居收了快递并送到门口 📦', tag: '邻里互助' },
+  { text: '在地铁口整理了 6 辆共享单车 🚲', tag: '随手环保' },
+  { text: '带女儿给楼道绿植浇了水，还画了环保宣传画 🌱', tag: '家庭亲子' },
+  { text: '在小区花园修剪了杂草，还种了两棵新花 🌿', tag: '美化环境' },
+  { text: '给独居老人送了热汤和手工饺子 🍲', tag: '暖心陪伴' },
+  { text: '帮邻居提菜上楼，还帮忙修好了门锁 🛍️', tag: '技能互助' },
+  { text: '在电梯里对每个人微笑问好，收到好多微笑回应 😊', tag: '传递温暖' },
+  { text: '整理楼道里乱放的鞋子和杂物，整层都变整洁了 👟', tag: '公共维护' },
+  { text: '教楼下奶奶用手机挂号，奶奶说"比亲孙子还耐心" 📱', tag: '数字助老' },
+  { text: '在小区门口帮外卖员指路，还送了瓶水 🚴', tag: '暖心瞬间' }
+];
+
+function addCommunityBroadcast() {
+  var feed = document.getElementById('broadcastFeed');
+  var name = bcNames[Math.floor(Math.random() * bcNames.length)];
+  var action = bcActions[Math.floor(Math.random() * bcActions.length)];
+  var colors = ['#fef3ef','#faf8f6','#edf7f0','#eef4fa','#fef6e8','#f5f0fa'];
+  var bgColor = colors[Math.floor(Math.random() * colors.length)];
+  
+  var item = document.createElement('div');
+  item.className = 'broadcast-item';
+  item.style.cssText = 'display:flex;gap:12px;padding:12px;background:' + bgColor + ';border-radius:10px;margin-bottom:8px;border:1px solid #eee8e2;animation:fadeIn .3s ease;';
+  item.innerHTML = '<div style="width:36px;height:36px;border-radius:50%;background:' + bgColor + ';display:grid;place-items:center;font-size:18px;">' + name.charAt(0) + '</div><div style="flex:1;"><div style="font-size:13px;"><b>' + name + '</b> ' + action.text + '</div><div style="font-size:11px;color:#7a6e66;margin-top:2px;">刚刚 · ' + action.tag + '</div></div><span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#c8533a;color:#fff;font-weight:600;align-self:center;">NEW</span>';
+  feed.insertBefore(item, feed.firstChild);
+  while (feed.children.length > 8) { feed.removeChild(feed.lastChild); }
+  
+  bcCount++;
+  document.getElementById('bcCount').textContent = bcCount;
+  
+  // 更新温暖指数
+  var warmthEl = document.getElementById('warmthScore');
+  if (warmthEl) {
+    var current = parseInt(warmthEl.textContent);
+    if (current < 100) {
+      warmthEl.textContent = Math.min(current + 1, 100);
+      document.getElementById('warmthBar').style.width = warmthEl.textContent + '%';
+      document.getElementById('warmthPct').textContent = warmthEl.textContent + '%';
+    }
+  }
+  
+  showToast('📢', '好事已广播！', '你的好事已分享给全社区，温暖在传递！');
+}
+
+function showAllBroadcasts() {
+  showToast('📢', '社区暖心广播', '今日已播报 ' + bcCount + ' 件好事，覆盖 18 位邻居，热度 92%');
+}
+
+// 每25秒自动新增一条广播
+setInterval(addCommunityBroadcast, 25000);
+
+// ===== 邻里实时状态 =====
+var communityNeighbors = [
+  { avatar: '👩', name: '张阿姨', building: '3栋', status: '在帮邻居收快递 📦', active: true },
+  { avatar: '👨', name: '李先生', building: '7栋', status: '在整理单车 🚲', active: true },
+  { avatar: '👧', name: '小陈', building: '5栋', status: '在花园浇水 🌿', active: true },
+  { avatar: '👴', name: '王爷爷', building: '1栋', status: '在教下棋 ♟️', active: true },
+  { avatar: '👩‍🦰', name: '刘姐', building: '6栋', status: '在送热汤 🍲', active: true },
+  { avatar: '👨‍🦱', name: '赵叔', building: '2栋', status: '在打扫卫生 🧹', active: true },
+  { avatar: '🧑', name: '小杨', building: '8栋', status: '在修水龙头 🔧', active: false },
+  { avatar: '👩', name: '周姐', building: '9栋', status: '在整理书架 📚', active: true }
+];
+
+function initCommunityNeighbors() {
+  refreshCommunityNeighbors();
+  setInterval(function() { refreshCommunityNeighbors(); }, 35000);
+}
+
+function refreshCommunityNeighbors() {
+  var grid = document.getElementById('communityNeighborGrid');
+  if (!grid) return;
+  
+  var html = '';
+  communityNeighbors.forEach(function(n) {
+    var active = Math.random() > 0.3;
+    html += '<div style="padding:12px;border-radius:10px;border:1px solid #eee8e2;text-align:center;background:' + (active ? '#faf8f6' : '#fff') + ';transition:all .2s;">';
+    html += '<div style="font-size:28px;margin-bottom:4px;">' + n.avatar + '</div>';
+    html += '<div style="font-size:13px;font-weight:700;">' + n.name + '</div>';
+    html += '<div style="font-size:10px;color:#7a6e66;">' + n.building + '</div>';
+    html += '<div style="font-size:10px;margin-top:4px;padding:2px 8px;border-radius:999px;background:' + (active ? '#edf7f0' : '#f5f0eb') + ';color:' + (active ? '#4a9e6e' : '#b5a99e') + ';font-weight:600;display:inline-block;">' + (active ? '🟢 在线' : '⚪ 离线') + '</div>';
+    html += '</div>';
+  });
+  grid.innerHTML = html;
+  
+  // 更新计数
+  var countEl = document.getElementById('communityActiveCount');
+  if (countEl) {
+    var active = communityNeighbors.filter(function(n) { return Math.random() > 0.2; }).length;
+    countEl.textContent = Math.max(8, active);
+  }
+}
+
+// ===== 社区公告推送 =====
+var announcementData = [
+  { title: '社区周末跳蚤市场', desc: '本周六上午9点在小区广场举办跳蚤市场，欢迎邻居们带闲置物品来交换！', time: '2小时前', tag: '社区公告' },
+  { title: '今晚7点邻里茶话会', desc: '3栋楼下活动室，欢迎大家自带零食来聊天，一起讨论社区建设！', time: '昨天', tag: '活动通知' },
+  { title: '社区花园认领计划', desc: '小区花园的种植区可认领，每个家庭可认领一小块，种花种菜都可以！', time: '3天前', tag: '社区公告' },
+  { title: '社区爱心义卖活动', desc: '本周日在社区广场举办爱心义卖，所得款项全部用于社区老人关爱项目', time: '5天前', tag: '公益活动' },
+  { title: '邻里互助技能分享会', desc: '本周五晚邀请有技能的邻居分享：手机维修、园艺、烘焙等，欢迎大家报名', time: '1周前', tag: '技能分享' }
+];
+
+function simulateNewAnnouncement() {
+  var feed = document.getElementById('announcementFeed');
+  if (!feed) return;
+  
+  var a = announcementData[Math.floor(Math.random() * announcementData.length)];
+  var colors = ['#fef3ef','#eef4fa','#edf7f0','#fef6e8','#f5f0fa'];
+  var bgColor = colors[Math.floor(Math.random() * colors.length)];
+  
+  var item = document.createElement('div');
+  item.style.cssText = 'display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f5f0eb;animation:fadeIn .3s ease;';
+  item.innerHTML = '<div style="width:36px;height:36px;border-radius:50%;background:' + bgColor + ';display:grid;place-items:center;font-size:18px;flex-shrink:0;">📢</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;">' + a.title + '</div><div style="font-size:12px;color:#7a6e66;line-height:1.5;">' + a.desc + '</div><div style="font-size:10px;color:#b5a99e;margin-top:4px;">刚刚 · ' + a.tag + '</div></div><span style="font-size:10px;padding:2px 8px;border-radius:999px;background:#c8533a;color:#fff;font-weight:600;flex-shrink:0;align-self:center;">NEW</span>';
+  feed.insertBefore(item, feed.firstChild);
+  while (feed.children.length > 5) { feed.removeChild(feed.lastChild); }
+  showToast('📢', '新公告！', a.title + ' · ' + a.desc.substring(0, 20) + '...');
+}
+
+function showAllAnnouncements() {
+  showToast('📢', '社区公告', '共 ' + announcementData.length + ' 条公告，最新一条：' + announcementData[0].title);
+}
+
+// ===== 社区好事提醒 =====
+var communityReminderEnabled = false;
+function toggleCommunityReminder() {
+  communityReminderEnabled = !communityReminderEnabled;
+  var btn = document.getElementById('communityReminderBtn');
+  var status = document.getElementById('communityReminderStatus');
+  var result = document.getElementById('communityReminderResult');
+  var freqDisplay = document.getElementById('communityReminderFreqDisplay');
+  var freqSelect = document.getElementById('communityReminderFreq');
+  
+  if (communityReminderEnabled) {
+    var freq = freqSelect.value;
+    var freqLabels = { daily: '每天', weekday: '工作日每天', weekend: '仅周末' };
+    freqDisplay.textContent = freqLabels[freq] || '每天';
+    btn.textContent = '🔔 已开启';
+    btn.style.background = 'linear-gradient(135deg,#b5a99e,#9a9088)';
+    status.textContent = '✅ 已开启';
+    status.style.color = '#3f7d5b';
+    result.style.display = 'block';
+    showToast('🔔', '社区提醒已开启！', freqLabels[freq] + '推送社区好事动态');
+  } else {
+    btn.textContent = '🔕 开启';
+    btn.style.background = 'linear-gradient(135deg,#3f7d5b,#4a9e6e)';
+    status.textContent = '⏸️ 已暂停';
+    status.style.color = '#7a6e66';
+    result.style.display = 'none';
+    showToast('🔕', '社区提醒已关闭', '随时可以重新开启');
+  }
+}
+
+initCommunityNeighbors();
 </script>
 </body>
 </html>
