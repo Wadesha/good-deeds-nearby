@@ -1,0 +1,2502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>好事近 · 社区运营模拟器</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+/* =============================================
+   好事近 · 社区运营模拟器 专用样式
+   ============================================= */
+
+/* ---------- 设计系统扩展 ---------- */
+:root {
+  --sim-bg: var(--bg);
+  --sim-card: var(--paper);
+  --sim-shadow: 0 2px 8px rgba(43,38,34,.05), 0 10px 28px rgba(43,38,34,.07);
+  --sim-shadow-lg: 0 4px 14px rgba(43,38,34,.08), 0 16px 40px rgba(43,38,34,.1);
+  --sim-radius: 14px;
+  --sim-radius-sm: 9px;
+  --sim-transition: transform .2s ease, box-shadow .2s ease;
+  --trend-up: #3f7d5b;
+  --trend-down: #c8533a;
+  --trend-flat: #9a9088;
+}
+
+/* ---------- 动画 ---------- */
+@keyframes simFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes simSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes simPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes simCountUp { from { opacity: 0.5; } to { opacity: 1; } }
+@keyframes simBarGrow { from { width: 0; } to { width: var(--bar-w); } }
+@keyframes simShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes simModalBgIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes simSlideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes simRotateIn { from { transform: rotate(-180deg) scale(0); opacity: 0; } to { transform: rotate(0) scale(1); opacity: 1; } }
+@keyframes simBounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); } 70% { transform: scale(0.95); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes simFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes simShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+@keyframes simGlow { 0%, 100% { box-shadow: 0 0 5px rgba(201,138,43,.3); } 50% { box-shadow: 0 0 20px rgba(201,138,43,.6); } }
+@keyframes simConfetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-200px) rotate(720deg); opacity: 0; } }
+@keyframes simProgressPulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+@keyframes simBadgeShine { 0% { background-position: -100% 0; } 100% { background-position: 200% 0; } }
+@keyframes simMemberHover { 0% { transform: scale(1); } 100% { transform: scale(1.02); } }
+@keyframes simSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes simWiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+@keyframes simStamp { 0% { transform: scale(2) rotate(-10deg); opacity: 0; } 60% { transform: scale(0.9) rotate(2deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes simRipple { 0% { box-shadow: 0 0 0 0 rgba(200,83,58,.3); } 100% { box-shadow: 0 0 0 20px rgba(200,83,58,0); } }
+@keyframes simSlideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes simZoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes simGradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes simNumberPop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+@keyframes simStarTwinkle { 0%, 100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+@keyframes simBorderDance { 0% { border-color: var(--brand); } 25% { border-color: var(--gold); } 50% { border-color: var(--leaf); } 75% { border-color: var(--sky); } 100% { border-color: var(--brand); } }
+@keyframes simTypewriter { from { width: 0; } to { width: 100%; } }
+@keyframes simBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes simSweep { 0% { left: -100%; } 100% { left: 100%; } }
+
+/* ---------- 滚动条美化 ---------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+/* ---------- 游戏状态面板 ---------- */
+.sim-header { padding: 32px 0 20px; }
+.sim-title { font-size: clamp(22px, 3vw, 30px); font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.sim-title .sim-badge { font-size: 12px; background: var(--brand); color: #fff; padding: 3px 12px; border-radius: 999px; font-weight: 600; }
+.sim-subtitle { font-size: 14px; color: var(--ink-soft); margin: 4px 0 0; }
+
+.game-status-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 18px 0; }
+.game-status-card { background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 18px 16px; box-shadow: var(--sim-shadow); transition: var(--sim-transition); position: relative; overflow: hidden; }
+.game-status-card:hover { transform: translateY(-2px); box-shadow: var(--sim-shadow-lg); }
+.game-status-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.game-status-card.brand::before { background: var(--brand); }
+.game-status-card.leaf::before { background: var(--leaf); }
+.game-status-card.gold::before { background: var(--gold); }
+.game-status-card.sky::before { background: var(--sky); }
+.game-status-card.plum::before { background: var(--plum); }
+.game-status-card .gs-label { font-size: 11px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+.game-status-card .gs-value { font-size: clamp(20px, 2.8vw, 30px); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
+.game-status-card .gs-value.brand { color: var(--brand); }
+.game-status-card .gs-value.leaf { color: var(--leaf); }
+.game-status-card .gs-value.gold { color: var(--gold); }
+.game-status-card .gs-value.sky { color: var(--sky); }
+.game-status-card .gs-value.plum { color: var(--plum); }
+.game-status-card .gs-change { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 999px; margin-top: 4px; }
+.game-status-card .gs-change.up { color: var(--trend-up); background: var(--leaf-soft); }
+.game-status-card .gs-change.down { color: var(--trend-down); background: var(--brand-soft); }
+.game-status-card .gs-change.flat { color: var(--trend-flat); background: #f1ece4; }
+
+/* ---------- 进度条 ---------- */
+.progress-wrap { margin-top: 10px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-faint); margin-bottom: 3px; }
+.progress-track { height: 8px; background: #f3ede4; border-radius: 999px; overflow: hidden; position: relative; }
+.progress-fill { height: 100%; border-radius: 999px; transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1); position: relative; min-width: 2%; }
+.progress-fill.brand { background: linear-gradient(90deg, var(--brand), #d96a4e); }
+.progress-fill.leaf { background: linear-gradient(90deg, var(--leaf), #5a9e78); }
+.progress-fill.gold { background: linear-gradient(90deg, var(--gold), #daa142); }
+.progress-fill.sky { background: linear-gradient(90deg, var(--sky), #4e86ab); }
+.progress-fill.plum { background: linear-gradient(90deg, var(--plum), #856394); }
+
+/* ---------- 决策卡片 ---------- */
+.decision-area { margin: 22px 0; }
+.decision-round-info { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
+.decision-round-info .dri-label { font-size: 13px; color: var(--ink-soft); font-weight: 600; }
+.decision-round-info .dri-day { font-size: 20px; font-weight: 800; color: var(--brand); }
+.decision-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.decision-card { background: var(--sim-card); border: 2px solid var(--line); border-radius: var(--sim-radius); padding: 20px 18px; box-shadow: var(--sim-shadow); cursor: pointer; transition: all .2s ease; position: relative; overflow: hidden; }
+.decision-card:hover { border-color: var(--brand); transform: translateY(-3px); box-shadow: var(--sim-shadow-lg); }
+.decision-card:active { transform: translateY(0); }
+.decision-card .dc-icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; margin-bottom: 10px; background: var(--brand-soft); color: var(--brand-deep); }
+.decision-card .dc-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.decision-card .dc-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 10px; }
+.decision-card .dc-impact { font-size: 12px; color: var(--ink-faint); display: flex; flex-wrap: wrap; gap: 6px; }
+.decision-card .dc-impact span { background: #f3ede4; padding: 2px 8px; border-radius: 5px; }
+.decision-card .dc-impact span.up { background: var(--leaf-soft); color: var(--leaf); }
+.decision-card .dc-impact span.down { background: var(--brand-soft); color: var(--brand-deep); }
+.decision-card.selected { border-color: var(--brand); background: var(--brand-soft); }
+.decision-card.disabled { opacity: 0.5; cursor: default; pointer-events: none; }
+.decision-card.leaf-border:hover { border-color: var(--leaf); }
+.decision-card.gold-border:hover { border-color: var(--gold); }
+.decision-card.sky-border:hover { border-color: var(--sky); }
+.decision-card.plum-border:hover { border-color: var(--plum); }
+
+/* ---------- 决策结果 ---------- */
+.decision-result { background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 20px 22px; box-shadow: var(--sim-shadow); margin: 18px 0; animation: simSlideUp .4s ease; }
+.decision-result .dr-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.decision-result .dr-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 12px; }
+.decision-result .dr-effects { display: flex; flex-wrap: wrap; gap: 8px; }
+.decision-result .dr-effects .eff { font-size: 13px; padding: 4px 12px; border-radius: 6px; font-weight: 600; }
+.decision-result .dr-effects .eff.up { background: var(--leaf-soft); color: var(--leaf); }
+.decision-result .dr-effects .eff.down { background: var(--brand-soft); color: var(--brand-deep); }
+.decision-result .dr-effects .eff.flat { background: #f3ede4; color: var(--ink-soft); }
+
+/* ---------- 路线图 ---------- */
+.roadmap-container { margin: 22px 0; }
+.roadmap-stage { display: flex; align-items: center; gap: 16px; padding: 16px 18px; background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); margin-bottom: 10px; transition: all .3s ease; position: relative; }
+.roadmap-stage.active { border-color: var(--brand); background: var(--brand-soft); box-shadow: var(--sim-shadow); }
+.roadmap-stage.completed { border-color: var(--leaf); background: var(--leaf-soft); }
+.roadmap-stage .rs-icon { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; flex: 0 0 auto; background: var(--paper); border: 2px solid var(--line); }
+.roadmap-stage.active .rs-icon { border-color: var(--brand); background: var(--brand); color: #fff; }
+.roadmap-stage.completed .rs-icon { border-color: var(--leaf); background: var(--leaf); color: #fff; }
+.roadmap-stage .rs-info { flex: 1; }
+.roadmap-stage .rs-info .rs-name { font-size: 15px; font-weight: 700; }
+.roadmap-stage .rs-info .rs-days { font-size: 12px; color: var(--ink-faint); }
+.roadmap-stage .rs-info .rs-milestones { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+.roadmap-stage .rs-check { font-size: 20px; color: var(--leaf); }
+.roadmap-progress { margin: 16px 0; }
+
+/* ---------- 数据看板 ---------- */
+.chart-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin: 18px 0; }
+.chart-card { background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 18px; box-shadow: var(--sim-shadow); }
+.chart-card .cc-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.chart-card .cc-subtitle { font-size: 11px; color: var(--ink-faint); margin-bottom: 12px; }
+
+/* 柱状图系统 */
+.vbar-chart-sim { display: flex; align-items: flex-end; gap: 6px; height: 180px; padding: 16px 0 6px; position: relative; overflow-x: auto; }
+.vbar-chart-sim::before { content: ""; position: absolute; left: 0; right: 0; bottom: 24px; border-bottom: 1px solid var(--line); }
+.vbar-wrap-sim { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; width: 28px; }
+.vbar-sim { width: 100%; max-width: 22px; border-radius: 3px 3px 1px 1px; transition: height 0.8s cubic-bezier(0.22, 0.61, 0.36, 1); position: relative; min-height: 2px; }
+.vbar-sim.brand { background: linear-gradient(180deg, var(--brand), #d96a4e); }
+.vbar-sim.leaf { background: linear-gradient(180deg, var(--leaf), #5a9e78); }
+.vbar-sim.gold { background: linear-gradient(180deg, var(--gold), #daa142); }
+.vbar-sim.sky { background: linear-gradient(180deg, var(--sky), #4e86ab); }
+.vbar-sim.plum { background: linear-gradient(180deg, var(--plum), #856394); }
+.vbar-label-sim { font-size: 9px; color: var(--ink-faint); margin-top: 4px; text-align: center; }
+
+/* ---------- 成就系统 ---------- */
+.achievement-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin: 18px 0; }
+.achievement-item { background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 14px 12px; text-align: center; box-shadow: var(--sim-shadow); transition: all .2s ease; position: relative; }
+.achievement-item:hover { transform: translateY(-2px); box-shadow: var(--sim-shadow-lg); }
+.achievement-item .ai-icon { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; margin: 0 auto 8px; background: #f3ede4; color: var(--ink-faint); border: 2px solid var(--line); }
+.achievement-item.unlocked .ai-icon { background: var(--gold-soft); color: var(--gold); border-color: var(--gold); animation: simBounceIn .5s ease; }
+.achievement-item .ai-name { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.achievement-item .ai-desc { font-size: 10.5px; color: var(--ink-faint); line-height: 1.4; }
+.achievement-item .ai-badge { position: absolute; top: 6px; right: 6px; font-size: 9px; background: var(--brand); color: #fff; padding: 1px 6px; border-radius: 4px; }
+.achievement-item.unlocked .ai-badge { background: var(--gold); }
+.achievement-item.locked { opacity: 0.7; }
+.achievement-item.locked .ai-icon { filter: grayscale(1); }
+
+/* ---------- 事件系统 ---------- */
+.event-notification { position: fixed; top: 70px; right: 22px; max-width: 380px; z-index: 50; background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 18px 20px; box-shadow: var(--sim-shadow-lg); animation: simSlideInRight .3s ease; }
+.event-notification .en-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.event-notification .en-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 12px; }
+.event-notification .en-options { display: flex; flex-direction: column; gap: 6px; }
+.event-notification .en-options button { padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); cursor: pointer; font-size: 13px; text-align: left; transition: all .15s; }
+.event-notification .en-options button:hover { background: var(--brand-soft); border-color: var(--brand); }
+.event-notification .en-close { position: absolute; top: 8px; right: 10px; cursor: pointer; font-size: 16px; color: var(--ink-faint); background: none; border: none; }
+
+/* ---------- 社区成员 ---------- */
+.member-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin: 18px 0; }
+.member-card { background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 16px 14px; box-shadow: var(--sim-shadow); cursor: pointer; transition: all .2s ease; }
+.member-card:hover { transform: translateY(-2px); box-shadow: var(--sim-shadow-lg); }
+.member-card .mc-avatar { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.member-card .mc-name { font-size: 14px; font-weight: 700; }
+.member-card .mc-role { font-size: 11px; color: var(--ink-faint); margin-bottom: 6px; }
+.member-card .mc-stats { font-size: 12px; color: var(--ink-soft); }
+.member-card .mc-stats div { display: flex; justify-content: space-between; padding: 2px 0; }
+.member-card .mc-minibar { height: 4px; background: #f3ede4; border-radius: 4px; overflow: hidden; margin: 2px 0 4px; }
+.member-card .mc-minibar .mcfill { height: 100%; border-radius: 4px; transition: width .5s ease; }
+.member-card .mc-ambassador { font-size: 10px; background: var(--gold); color: #fff; padding: 1px 8px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+.member-card.ambassador { border-color: var(--gold); }
+
+/* ---------- 经营报告 ---------- */
+.report-card { background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 20px 22px; box-shadow: var(--sim-shadow); margin: 18px 0; animation: simSlideUp .4s ease; }
+.report-card .rc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+.report-card .rc-title { font-size: 18px; font-weight: 800; }
+.report-card .rc-badge { font-size: 11px; background: var(--sky); color: #fff; padding: 3px 10px; border-radius: 6px; }
+.report-card .rc-section { margin: 12px 0; }
+.report-card .rc-section h5 { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--ink); }
+.report-card .rc-section p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+.report-card .rc-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+
+/* ---------- 排行榜 ---------- */
+.leaderboard-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+.leaderboard-table th { text-align: left; font-size: 12px; color: var(--ink-faint); font-weight: 600; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.leaderboard-table td { font-size: 13px; padding: 10px 10px; border-bottom: 1px solid var(--line); }
+.leaderboard-table tr.highlight { background: var(--gold-soft); }
+.leaderboard-table tr.highlight td { font-weight: 700; }
+.leaderboard-table .rank-num { font-weight: 800; font-size: 14px; }
+.leaderboard-table .rank-1 { color: var(--gold); }
+.leaderboard-table .rank-2 { color: var(--ink-soft); }
+.leaderboard-table .rank-3 { color: var(--brand); }
+
+/* ---------- 按钮系统 ---------- */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--line); background: var(--paper); color: var(--ink); transition: all .15s; text-decoration: none; }
+.btn:hover { background: #f3ede4; transform: translateY(-1px); }
+.btn-brand { background: var(--brand); color: #fff; border-color: var(--brand); }
+.btn-brand:hover { background: var(--brand-deep); }
+.btn-leaf { background: var(--leaf); color: #fff; border-color: var(--leaf); }
+.btn-leaf:hover { background: #2c5a3f; }
+.btn-gold { background: var(--gold); color: #fff; border-color: var(--gold); }
+.btn-gold:hover { background: #b07a24; }
+.btn-sky { background: var(--sky); color: #fff; border-color: var(--sky); }
+.btn-sky:hover { background: #2c536e; }
+.btn-plum { background: var(--plum); color: #fff; border-color: var(--plum); }
+.btn-plum:hover { background: #4a3357; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+.btn-lg { padding: 12px 24px; font-size: 15px; }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--ink-soft); }
+.btn-ghost:hover { background: rgba(43,38,34,.05); }
+.btn-icon { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; border-radius: 50%; font-size: 16px; }
+.btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* ---------- 标签系统 ---------- */
+.tag-group { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.tag-item { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 10px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); color: var(--ink-soft); }
+.tag-item.brand { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-deep); }
+.tag-item.leaf { background: var(--leaf-soft); border-color: var(--leaf); color: var(--leaf); }
+.tag-item.gold { background: var(--gold-soft); border-color: var(--gold); color: var(--gold); }
+.tag-item.sky { background: var(--sky-soft); border-color: var(--sky); color: var(--sky); }
+.tag-item.plum { background: var(--plum-soft); border-color: var(--plum); color: var(--plum); }
+
+/* ---------- 卡片展开动画 ---------- */
+.card-expand { transition: all .3s cubic-bezier(0.22, 0.61, 0.36, 1); }
+.card-expand.open { transform: scale(1.02); box-shadow: var(--sim-shadow-lg); }
+
+/* ---------- 数字滚动效果 ---------- */
+.number-roll { display: inline-block; font-variant-numeric: tabular-nums; }
+.number-roll.roll-up { color: var(--leaf); }
+.number-roll.roll-down { color: var(--brand); }
+
+/* ---------- 分隔符 ---------- */
+.section-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--ink-faint); font-size: 12px; }
+.section-divider::before, .section-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* ---------- 关键帧提醒 ---------- */
+.keyframe-info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; background: var(--bg); border-radius: 10px; margin: 10px 0; font-size: 13px; }
+.keyframe-info .kfi-item { display: flex; align-items: center; gap: 8px; }
+.keyframe-info .kfi-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+
+/* ---------- 响应式布局增强 ---------- */
+@media (max-width: 860px) {
+  .keyframe-info { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .keyframe-info { grid-template-columns: 1fr; }
+  .tag-group { gap: 4px; }
+  .tag-item { font-size: 10px; padding: 2px 8px; }
+}
+
+/* ---------- 状态指示器 ---------- */
+.status-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 12px; border-radius: 999px; }
+.status-indicator .si-light { width: 8px; height: 8px; border-radius: 50%; }
+.status-indicator.active .si-light { background: var(--leaf); box-shadow: 0 0 6px rgba(63,125,91,.4); animation: simPulse 2s infinite; }
+.status-indicator.inactive .si-light { background: var(--ink-faint); }
+.status-indicator.warning .si-light { background: var(--gold); box-shadow: 0 0 6px rgba(201,138,43,.4); }
+
+/* ---------- 数据标签 ---------- */
+.data-label { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ink-faint); }
+.data-label .dl-value { font-weight: 700; color: var(--ink); }
+.data-label.brand .dl-value { color: var(--brand); }
+.data-label.leaf .dl-value { color: var(--leaf); }
+.data-label.gold .dl-value { color: var(--gold); }
+
+/* ---------- 卡片网格装饰 ---------- */
+.card-grid-deco { position: relative; }
+.card-grid-deco::after { content: ""; position: absolute; bottom: -4px; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); }
+
+/* ---------- 工具提示 ---------- */
+.tooltip-wrap { position: relative; display: inline-flex; }
+.tooltip-wrap .tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; font-size: 12px; padding: 6px 12px; border-radius: 6px; white-space: nowrap; opacity: 0; pointer-events: none; transition: all .15s; z-index: 10; }
+.tooltip-wrap .tooltip::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--ink); }
+.tooltip-wrap:hover .tooltip { opacity: 1; bottom: calc(100% + 10px); }
+
+/* ---------- 装饰元素 ---------- */
+.deco-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin: 0 4px; }
+.deco-line { display: inline-block; width: 40px; height: 2px; background: var(--line); border-radius: 2px; margin: 0 8px; vertical-align: middle; }
+.deco-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); margin: 24px 0; }
+.deco-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 600; }
+
+/* ---------- 加载动画 ---------- */
+.loading-spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: simSpin .6s linear infinite; }
+.loading-dots { display: inline-flex; gap: 4px; }
+.loading-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); animation: simFloat 1s ease-in-out infinite; }
+.loading-dots span:nth-child(2) { animation-delay: .15s; }
+.loading-dots span:nth-child(3) { animation-delay: .3s; }
+
+/* ---------- 统计标签 ---------- */
+.stat-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 4px 10px; border-radius: 6px; background: var(--paper); border: 1px solid var(--line); }
+.stat-tag .st-val { font-weight: 700; }
+.stat-tag.brand { border-color: var(--brand-soft); background: var(--brand-soft); color: var(--brand-deep); }
+.stat-tag.leaf { border-color: var(--leaf-soft); background: var(--leaf-soft); color: var(--leaf); }
+.stat-tag.gold { border-color: var(--gold-soft); background: var(--gold-soft); color: var(--gold); }
+.stat-tag.sky { border-color: var(--sky-soft); background: var(--sky-soft); color: var(--sky); }
+.stat-tag.plum { border-color: var(--plum-soft); background: var(--plum-soft); color: var(--plum); }
+
+/* ---------- 指标变化动画 ---------- */
+.value-pop { animation: simNumberPop .3s ease; }
+.value-up { color: var(--leaf) !important; }
+.value-down { color: var(--brand) !important; }
+
+/* ---------- 沉浸式全屏提示 ---------- */
+.fullscreen-tip { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; background: rgba(43,38,34,.6); backdrop-filter: blur(4px); animation: simModalBgIn .3s ease; }
+.fullscreen-tip .fst-box { background: var(--paper); border-radius: 20px; padding: 36px 40px; max-width: 520px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(43,38,34,.2); animation: simBounceIn .4s ease; }
+.fullscreen-tip .fst-icon { font-size: 52px; margin-bottom: 12px; }
+.fullscreen-tip .fst-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+.fullscreen-tip .fst-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.7; margin-bottom: 20px; }
+
+/* ---------- 阶段性总结卡片 ---------- */
+.milestone-card { display: flex; gap: 14px; background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 16px 18px; box-shadow: var(--sim-shadow); margin: 10px 0; align-items: flex-start; }
+.milestone-card .ms-icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; flex: 0 0 auto; }
+.milestone-card .ms-content { flex: 1; }
+.milestone-card .ms-title { font-size: 14px; font-weight: 700; }
+.milestone-card .ms-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin-top: 2px; }
+
+/* ---------- 决策历史 ---------- */
+.decision-history { max-height: 300px; overflow-y: auto; margin: 12px 0; }
+.decision-history .dh-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; margin: 4px 0; font-size: 13px; background: var(--paper); border: 1px solid var(--line); }
+.decision-history .dh-item .dh-day { font-size: 11px; color: var(--ink-faint); font-weight: 600; flex: 0 0 auto; }
+.decision-history .dh-item .dh-name { flex: 1; }
+.decision-history .dh-item .dh-type { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: #f3ede4; }
+
+/* ---------- 弹窗系统 ---------- */
+.modal-overlay { position: fixed; inset: 0; background: rgba(43,38,34,.5); z-index: 100; display: flex; align-items: center; justify-content: center; animation: simModalBgIn .2s ease; }
+.modal-box { background: var(--paper); border-radius: var(--sim-radius); padding: 28px 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: var(--sim-shadow-lg); animation: simBounceIn .3s ease; position: relative; }
+.modal-box .mb-close { position: absolute; top: 12px; right: 14px; font-size: 20px; cursor: pointer; color: var(--ink-faint); background: none; border: none; }
+.modal-box .mb-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.modal-box .mb-body { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+.modal-box .mb-actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+
+/* ---------- 庆祝弹窗 ---------- */
+.celebration-modal { text-align: center; }
+.celebration-modal .cm-icon { font-size: 48px; margin-bottom: 12px; }
+.celebration-modal .cm-title { font-size: 22px; font-weight: 800; color: var(--gold); margin-bottom: 6px; }
+.celebration-modal .cm-desc { font-size: 14px; color: var(--ink-soft); margin-bottom: 16px; }
+
+/* ---------- 通知弹窗 ---------- */
+.toast { position: fixed; top: 70px; right: 22px; max-width: 340px; z-index: 60; background: var(--sim-card); border: 1px solid var(--line); border-radius: var(--sim-radius); padding: 14px 18px; box-shadow: var(--sim-shadow-lg); animation: simSlideInRight .3s ease; display: flex; align-items: center; gap: 10px; }
+.toast .toast-icon { font-size: 20px; }
+.toast .toast-msg { font-size: 13px; color: var(--ink); flex: 1; }
+.toast .toast-close { cursor: pointer; color: var(--ink-faint); background: none; border: none; font-size: 16px; }
+.toast.toast-success { border-left: 3px solid var(--leaf); }
+.toast.toast-warning { border-left: 3px solid var(--gold); }
+.toast.toast-error { border-left: 3px solid var(--brand); }
+.toast.toast-info { border-left: 3px solid var(--sky); }
+
+/* ---------- 分享弹窗 ---------- */
+.share-modal .share-icons { display: flex; gap: 14px; justify-content: center; margin: 16px 0; }
+.share-modal .share-icons .si { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; cursor: pointer; transition: all .15s; background: var(--brand-soft); color: var(--brand); }
+.share-modal .share-icons .si:hover { transform: scale(1.1); }
+.share-modal .share-link { display: flex; gap: 8px; margin-top: 12px; }
+.share-modal .share-link input { flex: 1; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; background: #fbf7ef; }
+
+/* ---------- 社区名称编辑 ---------- */
+.community-name-wrapper { display: inline-flex; align-items: center; gap: 6px; }
+.community-name-wrapper .cn-edit { cursor: pointer; font-size: 14px; color: var(--ink-faint); }
+.community-name-wrapper .cn-edit:hover { color: var(--brand); }
+.cn-input { font-size: 16px; padding: 4px 10px; border: 1px solid var(--brand); border-radius: 6px; background: #fff; font-weight: 700; color: var(--ink); outline: none; width: 180px; }
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 760px) {
+  .game-status-grid { grid-template-columns: repeat(2, 1fr); }
+  .decision-grid { grid-template-columns: 1fr; }
+  .chart-grid { grid-template-columns: 1fr; }
+  .achievement-grid { grid-template-columns: repeat(3, 1fr); }
+  .member-grid { grid-template-columns: repeat(2, 1fr); }
+  .event-notification { left: 10px; right: 10px; max-width: none; }
+  .modal-box { width: 95%; padding: 20px; }
+  .vbar-chart-sim { height: 120px; }
+}
+@media (max-width: 480px) {
+  .game-status-grid { grid-template-columns: 1fr 1fr; }
+  .achievement-grid { grid-template-columns: repeat(2, 1fr); }
+  .member-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- 工具类 ---------- */
+.sim-section { padding: 32px 0; border-bottom: 1px dashed var(--line); }
+.sim-section:last-of-type { border-bottom: none; }
+.sim-section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.sim-section-header h2 { font-size: clamp(18px, 2.4vw, 24px); font-weight: 800; margin: 0; }
+.sim-section-header .ssh-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 16px; }
+.sim-section-header .ssh-badge { font-size: 11px; color: #fff; background: var(--ink); padding: 2px 10px; border-radius: 999px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.text-center { text-align: center; }
+.flex { display: flex; }
+.flex-wrap { flex-wrap: wrap; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.flex-1 { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 导航栏 ==================== -->
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 全案</a>
+    <nav>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="next.html">下一步</a>
+      <a href="simulator.html" class="active">模拟器</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ==================== 页面头部 ==================== -->
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>模拟器</div>
+    <span class="eyebrow"><span class="dot"></span> 游戏化运营模拟</span>
+    <h1>好事近 · 社区运营模拟器</h1>
+    <p class="sub">扮演社区运营官，做决策、看影响、学方法论。每个选择都会塑造你的社区未来。</p>
+  </div>
+</div>
+
+<!-- ==================== 快捷统计栏 ==================== -->
+<div class="wrap" style="padding:16px 22px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line);">
+  <span class="stat-tag brand"><span>🎯</span> 决策：<span class="st-val" id="quickDecisionCount">0</span></span>
+  <span class="stat-tag leaf"><span>👥</span> 人口：<span class="st-val" id="quickPopulation">50</span></span>
+  <span class="stat-tag gold"><span>😊</span> 幸福：<span class="st-val" id="quickHappiness">65</span></span>
+  <span class="stat-tag sky"><span>🪙</span> 流通：<span class="st-val" id="quickCurrency">1,000</span></span>
+  <span class="stat-tag plum"><span>🏅</span> 成就：<span class="st-val" id="quickAchievements">0</span></span>
+  <span class="stat-tag" style="border-color:var(--brand-soft);background:var(--brand-soft);color:var(--brand-deep);"><span>💰</span> 预算：<span class="st-val" id="quickBudget">10,000</span></span>
+  <span style="flex:1;text-align:right;font-size:11px;color:var(--ink-faint);" id="quickStageLabel">阶段：初创期</span>
+</div>
+
+<!-- ==================== 主内容 ==================== -->
+<main class="wrap">
+
+<!-- ===== 模块1：游戏状态面板 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--brand-soft);color:var(--brand);">📊</div>
+    <h2>游戏状态面板</h2>
+    <span class="ssh-badge" id="gameStatusBadge">Day 1</span>
+  </div>
+
+  <div class="community-name-wrapper mb-16">
+    <span style="font-size:14px;color:var(--ink-soft);font-weight:600;">🏘️ 社区名称：</span>
+    <span id="communityNameDisplay" style="font-size:16px;font-weight:700;">好事家园</span>
+    <span class="cn-edit" id="communityNameEdit" onclick="editCommunityName()" title="编辑名称">✏️</span>
+  </div>
+
+  <div class="game-status-grid" id="gameStatusGrid">
+    <div class="game-status-card brand">
+      <div class="gs-label">⏱ 当前回合</div>
+      <div class="gs-value brand" id="gsDay">Day 1</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>年度进度</span><span id="yearProgressLabel">0%</span></div>
+        <div class="progress-track"><div class="progress-fill brand" id="yearProgressFill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="game-status-card leaf">
+      <div class="gs-label">👥 社区人口</div>
+      <div class="gs-value leaf" id="gsPopulation">50</div>
+      <div class="gs-change up" id="gsPopulationChange">+0</div>
+    </div>
+    <div class="game-status-card gold">
+      <div class="gs-label">😊 好幸福指数</div>
+      <div class="gs-value gold" id="gsHappiness">65</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>幸福度</span><span id="happinessLabel">65/100</span></div>
+        <div class="progress-track"><div class="progress-fill gold" id="happinessFill" style="width:65%"></div></div>
+      </div>
+    </div>
+    <div class="game-status-card sky">
+      <div class="gs-label">🪙 好心值流通量</div>
+      <div class="gs-value sky" id="gsCurrency">1,000</div>
+      <div class="gs-change up" id="gsCurrencyChange">+0</div>
+    </div>
+    <div class="game-status-card plum">
+      <div class="gs-label">✅ 任务完成率</div>
+      <div class="gs-value plum" id="gsTaskCompletion">45</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>完成率</span><span id="taskLabel">45%</span></div>
+        <div class="progress-track"><div class="progress-fill plum" id="taskFill" style="width:45%"></div></div>
+      </div>
+    </div>
+    <div class="game-status-card brand">
+      <div class="gs-label">⭐ 用户满意度</div>
+      <div class="gs-value brand" id="gsSatisfaction">70</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>满意度</span><span id="satisfactionLabel">70/100</span></div>
+        <div class="progress-track"><div class="progress-fill brand" id="satisfactionFill" style="width:70%"></div></div>
+      </div>
+    </div>
+    <div class="game-status-card leaf">
+      <div class="gs-label">💰 预算余额</div>
+      <div class="gs-value leaf" id="gsBudget">10,000</div>
+      <div class="gs-change down" id="gsBudgetChange">-0</div>
+    </div>
+    <div class="game-status-card sky">
+      <div class="gs-label">🏆 已解锁成就</div>
+      <div class="gs-value sky" id="gsAchievements">0</div>
+      <div class="gs-change flat" id="gsAchievementChange">/ 15</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 模块2：每日决策（核心互动） ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--gold-soft);color:var(--gold);">🎯</div>
+    <h2>每日决策</h2>
+    <span class="ssh-badge" id="decisionCountBadge">已决策 0 次</span>
+  </div>
+
+  <div class="decision-round-info">
+    <span class="dri-label">📅 当前回合</span>
+    <span class="dri-day" id="decisionRoundDay">Day 1</span>
+    <span class="dri-label" style="font-size:12px;color:var(--ink-faint);">— 选择一个决策方向，影响社区发展</span>
+    <span class="dri-label" style="font-size:12px;color:var(--ink-faint);margin-left:auto;">总计决策：<strong id="totalDecisionCount">0</strong> 次</span>
+  </div>
+
+  <div class="tag-group" style="margin-bottom:12px;">
+    <span class="tag-item brand">💰 经济决策</span>
+    <span class="tag-item leaf">📋 任务决策</span>
+    <span class="tag-item gold">🎪 活动决策</span>
+    <span class="tag-item sky">🤝 合作决策</span>
+    <span class="tag-item plum">🔄 技能决策</span>
+  </div>
+
+  <div class="decision-grid" id="decisionGrid">
+    <!-- 由 JavaScript 动态生成 -->
+  </div>
+
+  <div id="decisionResultArea"></div>
+
+  <div class="text-center mt-16">
+    <button class="btn btn-brand btn-lg" id="nextDayBtn" onclick="nextDay()" style="display:none;">
+      ▶ 进入下一天
+    </button>
+  </div>
+
+  <div class="mt-16" id="decisionHistoryArea" style="display:none;">
+    <div class="sim-section-header" style="margin-top:16px;">
+      <div class="ssh-icon" style="background:#f3ede4;color:var(--ink-soft);font-size:14px;width:24px;height:24px;">📜</div>
+      <h2 style="font-size:16px;">决策历史</h2>
+      <span class="ssh-badge" id="historyCountBadge">0 条</span>
+    </div>
+    <div class="decision-history" id="decisionHistoryList"></div>
+  </div>
+</section>
+
+<!-- ===== 模块3：社区发展路线图 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--leaf-soft);color:var(--leaf);">🗺️</div>
+    <h2>社区发展路线图</h2>
+    <span class="ssh-badge" id="stageBadge">初创期</span>
+  </div>
+
+  <div class="roadmap-progress">
+    <div class="progress-label"><span>发展阶段</span><span id="stageProgressLabel">初创期 0%</span></div>
+    <div class="progress-track" style="height:12px;">
+      <div class="progress-fill brand" id="stageProgressFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="roadmap-container" id="roadmapContainer">
+    <div class="roadmap-stage active" data-stage="1">
+      <div class="rs-icon">🌱</div>
+      <div class="rs-info">
+        <div class="rs-name">阶段一：初创期</div>
+        <div class="rs-days">Day 1 - Day 30</div>
+        <div class="rs-milestones">里程碑：建立社区基础规则 · 招募首批居民 · 开通好心值系统 · 完成初始任务配置</div>
+        <div class="rs-milestones" style="font-size:12px;color:var(--ink-faint);margin-top:2px;">目标：人口达到80+，任务完成率>50%，好幸福指数>60</div>
+      </div>
+      <div class="rs-check" id="stage1Check"></div>
+    </div>
+    <div class="roadmap-stage" data-stage="2">
+      <div class="rs-icon">🌿</div>
+      <div class="rs-info">
+        <div class="rs-name">阶段二：成长期</div>
+        <div class="rs-days">Day 31 - Day 90</div>
+        <div class="rs-milestones">里程碑：人口突破200 · 引入商家合作 · 举办社区活动 · 建立志愿者团队</div>
+        <div class="rs-milestones" style="font-size:12px;color:var(--ink-faint);margin-top:2px;">目标：人口达到200+，好心值流通>5000，满意度>75</div>
+      </div>
+      <div class="rs-check" id="stage2Check"></div>
+    </div>
+    <div class="roadmap-stage" data-stage="3">
+      <div class="rs-icon">🌳</div>
+      <div class="rs-info">
+        <div class="rs-name">阶段三：成熟期</div>
+        <div class="rs-days">Day 91 - Day 180</div>
+        <div class="rs-milestones">里程碑：人口突破500 · 好心值流通破10万 · 技能交换系统上线 · 社区大使诞生</div>
+        <div class="rs-milestones" style="font-size:12px;color:var(--ink-faint);margin-top:2px;">目标：人口达到500+，好幸福指数>75，满意度>80</div>
+      </div>
+      <div class="rs-check" id="stage3Check"></div>
+    </div>
+    <div class="roadmap-stage" data-stage="4">
+      <div class="rs-icon">🏙️</div>
+      <div class="rs-info">
+        <div class="rs-name">阶段四：生态期</div>
+        <div class="rs-days">Day 181 - Day 365</div>
+        <div class="rs-milestones">里程碑：跨社区合作 · 自治委员会成立 · 生态可持续发展 · 社区品牌建立</div>
+        <div class="rs-milestones" style="font-size:12px;color:var(--ink-faint);margin-top:2px;">目标：所有指标>80，成就解锁>10，社区成为标杆</div>
+      </div>
+      <div class="rs-check" id="stage4Check"></div>
+    </div>
+  </div>
+
+  <div class="mt-16" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+    <div class="milestone-card" style="flex:1;min-width:200px;">
+      <div class="ms-icon" style="background:var(--brand-soft);">📊</div>
+      <div class="ms-content">
+        <div class="ms-title">当前阶段目标</div>
+        <div class="ms-desc" id="stageGoalDesc">人口达到80+，任务完成率>50%，好幸福指数>60</div>
+      </div>
+    </div>
+    <div class="milestone-card" style="flex:1;min-width:200px;">
+      <div class="ms-icon" style="background:var(--gold-soft);">⏱️</div>
+      <div class="ms-content">
+        <div class="ms-title">剩余天数</div>
+        <div class="ms-desc" id="stageDaysRemaining">365 天</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 模块4：数据看板 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--sky-soft);color:var(--sky);">📈</div>
+    <h2>数据看板</h2>
+    <span class="ssh-badge" id="dataDaysLabel">近30天</span>
+  </div>
+
+  <p style="font-size:13px;color:var(--ink-soft);">以下趋势图展示了社区核心指标在过去30天内的变化情况。每个柱状代表一天的数据，帮助你直观了解社区发展轨迹。鼠标悬停在柱状图上可查看具体数值。</p>
+
+  <div class="note leaf" style="margin-bottom:16px;">
+    <span class="tag">说明</span>
+    柱状图高度表示该天的指标数值相对于近30天最高值的比例。绿色代表增长趋势，金色代表流通量，紫色代表完成率，红色代表满意度。数据每回合自动更新。
+  </div>
+
+  <div class="section-divider">数据可视化</div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <span class="data-label brand">人口：<span class="dl-value" id="popLabelValue">50</span></span>
+    <span class="data-label gold">流通：<span class="dl-value" id="currLabelValue">1,000</span></span>
+    <span class="data-label leaf">任务：<span class="dl-value" id="taskLabelValue">45%</span></span>
+    <span class="data-label sky">满意：<span class="dl-value" id="satLabelValue">70</span></span>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="cc-title">👥 社区人口变化趋势</div>
+      <div class="cc-subtitle">近30天人口变化 · 当前值：<strong id="popCurrentValue">50</strong></div>
+      <div class="vbar-chart-sim" id="populationChart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-title">🪙 好心值流通量变化</div>
+      <div class="cc-subtitle">近30天流通量变化 · 当前值：<strong id="currCurrentValue">1,000</strong></div>
+      <div class="vbar-chart-sim" id="currencyChart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-title">✅ 任务完成率趋势</div>
+      <div class="cc-subtitle">近30天完成率变化 · 当前值：<strong id="taskCurrentValue">45%</strong></div>
+      <div class="vbar-chart-sim" id="taskChart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="cc-title">⭐ 用户满意度趋势</div>
+      <div class="cc-subtitle">近30天满意度变化 · 当前值：<strong id="satCurrentValue">70</strong></div>
+      <div class="vbar-chart-sim" id="satisfactionChart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 模块5：成就系统 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--gold-soft);color:var(--gold);">🏅</div>
+    <h2>成就系统</h2>
+    <span class="ssh-badge" id="achievementCountBadge">0 / 15</span>
+  </div>
+
+  <p style="font-size:13px;color:var(--ink-soft);">达成特定条件即可解锁成就，每个成就都附带奖励。成就徽章展示你的社区运营成就。</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+    <span class="stat-tag gold"><span>🏅</span> 已解锁：<span class="st-val" id="achievementUnlockedCount">0</span></span>
+    <span class="stat-tag"><span>🔒</span> 未解锁：<span class="st-val" id="achievementLockedCount">15</span></span>
+    <span class="stat-tag brand"><span>🎁</span> 累计奖励价值：<span class="st-val" id="achievementRewardTotal">0</span></span>
+  </div>
+
+  <div class="achievement-grid" id="achievementGrid">
+    <!-- 由 JavaScript 动态生成 -->
+  </div>
+</section>
+
+<!-- ===== 模块6：事件系统 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--plum-soft);color:var(--plum);">⚡</div>
+    <h2>事件系统</h2>
+    <span class="ssh-badge" id="eventCountBadge">已触发 0 次</span>
+  </div>
+  <p style="font-size:13px;color:var(--ink-soft);">随机事件会在做决策时不定期触发，每次事件都需要你做出应对。不同的应对方式会影响社区的各项指标。事件通常每3-5回合触发一次，涵盖社区运营中常见的挑战和机遇。</p>
+
+  <div class="keyframe-info" style="margin-bottom:12px;">
+    <div class="kfi-item"><span class="kfi-dot" style="background:var(--plum);"></span> 已触发事件：<strong id="eventTriggeredStat">0</strong> 次</div>
+    <div class="kfi-item"><span class="kfi-dot" style="background:var(--gold);"></span> 事件库总数：<strong>12</strong> 个</div>
+    <div class="kfi-item"><span class="kfi-dot" style="background:var(--leaf);"></span> 距上次事件：<strong id="daysSinceLastEventStat">0</strong> 回合</div>
+    <div class="kfi-item"><span class="kfi-dot" style="background:var(--brand);"></span> 下次触发概率：<strong id="nextEventProbStat">低</strong></div>
+  </div>
+
+  <div id="eventNotificationArea"></div>
+  <div id="eventLogArea" style="margin-top:12px;">
+    <div class="sim-section-header" style="margin-top:12px;">
+      <div class="ssh-icon" style="background:#f3ede4;color:var(--ink-soft);font-size:14px;width:24px;height:24px;">📋</div>
+      <h2 style="font-size:16px;">事件日志</h2>
+      <span class="ssh-badge" id="eventLogCount">0 条</span>
+    </div>
+    <div id="eventLogList" style="max-height:200px;overflow-y:auto;">
+      <p style="font-size:13px;color:var(--ink-faint);text-align:center;padding:16px;">暂无事件记录</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 模块7：社区成员管理 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--brand-soft);color:var(--brand);">👤</div>
+    <h2>社区成员管理</h2>
+    <span class="ssh-badge" id="memberCountBadge">5 位成员</span>
+  </div>
+
+  <p style="font-size:13px;color:var(--ink-soft);">点击成员卡片查看详情，了解他们的满意度、活跃度和好心值。高满意度（>90）且高活跃度（>80）的成员可成为社区大使。</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+    <span class="stat-tag brand"><span>👑</span> 社区大使：<span class="st-val" id="ambassadorCount">0</span></span>
+    <span class="stat-tag leaf"><span>😊</span> 平均满意度：<span class="st-val" id="avgSatisfaction">0%</span></span>
+    <span class="stat-tag sky"><span>⚡</span> 平均活跃度：<span class="st-val" id="avgActivity">0%</span></span>
+  </div>
+
+  <div class="member-grid" id="memberGrid">
+    <!-- 由 JavaScript 动态生成 -->
+  </div>
+
+  <div class="note sky" style="margin-top:12px;">
+    <span class="tag">提示</span>
+    社区成员的满意度会随着你的决策而变化。当成员满意度达到90以上、活跃度达到80以上时，将自动成为社区大使 👑
+  </div>
+</section>
+
+<!-- ===== 模块8：经营报告 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--leaf-soft);color:var(--leaf);">📋</div>
+    <h2>经营报告</h2>
+    <span class="ssh-badge" id="reportCountBadge">已生成 0 份</span>
+  </div>
+
+  <div id="reportArea">
+    <div class="note sky" style="margin-top:8px;">
+      <span class="tag">提示</span>
+      每10天会自动生成一份经营报告，总结关键指标变化、成就解锁和事件总结。
+    </div>
+  </div>
+</section>
+
+<!-- ===== 模块9：排行榜 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--gold-soft);color:var(--gold);">🏆</div>
+    <h2>社区排行榜</h2>
+    <span class="ssh-badge" id="rankBadge">第 1 名</span>
+  </div>
+
+  <p style="font-size:13px;color:var(--ink-soft);">与周边社区对比，看看你的社区运营水平如何。</p>
+
+  <div style="overflow-x:auto;">
+    <table class="leaderboard-table" id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>排名</th>
+          <th>社区名称</th>
+          <th>人口</th>
+          <th>好幸福指数</th>
+          <th>好心值流通</th>
+          <th>满意度</th>
+          <th>综合评分</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <!-- 由 JavaScript 动态生成 -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 模块10：分享与导出 ===== -->
+<section class="sim-section">
+  <div class="sim-section-header">
+    <div class="ssh-icon" style="background:var(--sky-soft);color:var(--sky);">📤</div>
+    <h2>分享与导出</h2>
+  </div>
+
+  <p style="font-size:13px;color:var(--ink-soft);">将你的社区运营成果分享给朋友，导出经营报告存档，或生成数据快照链接。多种方式记录你的运营历程。</p>
+
+  <div class="section-divider">分享方式</div>
+
+  <div class="grid cols-3" style="margin:0;">
+    <div class="card brand" onclick="openShareModal()" style="cursor:pointer;">
+      <div class="ic">📱</div>
+      <h4>分享经营成果</h4>
+      <p>将你的社区运营成果分享给朋友，展示你的管理才能。</p>
+    </div>
+    <div class="card leaf" onclick="exportReport()" style="cursor:pointer;">
+      <div class="ic">📄</div>
+      <h4>导出经营报告</h4>
+      <p>导出完整的经营报告，保存你的社区运营历程。</p>
+    </div>
+    <div class="card sky" onclick="copyCommunityLink()" style="cursor:pointer;">
+      <div class="ic">🔗</div>
+      <h4>复制社区数据链接</h4>
+      <p>生成当前社区数据的快照链接，随时回顾。</p>
+    </div>
+  </div>
+
+  <div style="margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+    <button class="btn btn-sm btn-ghost" onclick="showHelpModal()">📖 操作指南</button>
+    <button class="btn btn-sm btn-ghost" onclick="showGameStats()">📊 详细统计</button>
+    <button class="btn btn-sm btn-ghost" onclick="resetGame()">🔄 重新开始</button>
+  </div>
+</section>
+
+</main>
+
+<!-- ==================== 页脚 ==================== -->
+<footer>
+  <div class="wrap">
+    <div class="refs">
+      <h5>模拟器说明</h5>
+      <ol>
+        <li>本模拟器为"好事近"社区运营概念验证，所有数据均为模拟生成</li>
+        <li>决策影响基于社区运营最佳实践算法，结合真实社区运营案例数据</li>
+        <li>随机事件库包含12+种真实社区运营场景，覆盖常见挑战和机遇</li>
+        <li>成就系统包含15个可解锁成就，每个成就都有独特的解锁条件和奖励</li>
+        <li>数据趋势每回合自动更新，支持近30天数据可视化查看</li>
+        <li>建议将模拟器用作学习和团队培训工具，帮助理解社区运营的复杂性</li>
+        <li>模拟器的设计参考了"好事近"全案调研中的社区运营方法论</li>
+        <li>所有决策结果和事件影响均经过逻辑校验，确保数据一致性</li>
+        <li>社区成员的行为模拟基于真实的人物画像和参与模式研究</li>
+        <li>排行榜对比数据基于模拟算法生成，不代表真实社区数据</li>
+      </ol>
+    </div>
+    <p>把好事做成日常 <span class="heart">♥</span> · 社区运营模拟器 v1.0</p>
+    <p style="margin-top:4px">基于"好事近"全案设计的互动学习工具</p>
+    <p style="margin-top:12px;font-size:12px;color:var(--ink-faint);">
+      本模拟器包含25个决策场景 · 12个随机事件 · 15个成就 · 5位社区成员 · 4个发展阶段 · 10大功能模块
+      <br>所有数据均为模拟生成，用于社区运营方法论的学习和培训
+      <br>反馈与建议请联系：haoshijin@example.com
+    </p>
+  </div>
+</footer>
+
+<button id="totop" aria-label="回到顶部">↑</button>
+
+<!-- ==================== JavaScript 游戏引擎 ==================== -->
+<script>
+// ============================================================
+// 好事近 · 社区运营模拟器 — 游戏引擎
+// ============================================================
+
+// ---------- 游戏状态 ----------
+const game = {
+  day: 1,
+  communityName: '好事家园',
+  population: 50,
+  happiness: 65,
+  currency: 1000,
+  taskCompletion: 45,
+  satisfaction: 70,
+  budget: 10000,
+  achievements: [],
+  decisionCount: 0,
+  eventCount: 0,
+  reportCount: 0,
+  decisionsMade: [],
+  populationHistory: [50],
+  currencyHistory: [1000],
+  taskHistory: [45],
+  satisfactionHistory: [70],
+  stage: 1,
+  daysSinceLastEvent: 0,
+  totalDecisions: 0,
+  // 社区成员
+  members: [
+    { id: 1, name: '张明华', role: '社区志愿者', avatar: '#c8533a', satisfaction: 75, activity: 80, currency: 120, ambassador: false },
+    { id: 2, name: '李芳', role: '退休教师', avatar: '#3f7d5b', satisfaction: 82, activity: 65, currency: 85, ambassador: false },
+    { id: 3, name: '王建国', role: '企业主', avatar: '#3b6b8c', satisfaction: 60, activity: 45, currency: 200, ambassador: false },
+    { id: 4, name: '赵小红', role: '大学生', avatar: '#c98a2b', satisfaction: 70, activity: 90, currency: 50, ambassador: false },
+    { id: 5, name: '刘阿姨', role: '退休职工', avatar: '#6b4a7a', satisfaction: 78, activity: 70, currency: 65, ambassador: false }
+  ],
+  // 排行榜
+  leaderboard: [
+    { name: '阳光社区', population: 120, happiness: 72, currency: 2500, satisfaction: 75 },
+    { name: '和睦家园', population: 85, happiness: 68, currency: 1800, satisfaction: 71 },
+    { name: '幸福里', population: 150, happiness: 70, currency: 3200, satisfaction: 73 }
+  ]
+};
+
+// ---------- 成就定义 ----------
+const ACHIEVEMENTS = [
+  { id: 'a1', name: '首次决策', icon: '🎯', desc: '做出你的第一个决策', check: g => g.decisionCount >= 1, reward: '+50 预算' },
+  { id: 'a2', name: '人口小爆发', icon: '👥', desc: '社区人口突破100', check: g => g.population >= 100, reward: '+200 好心值' },
+  { id: 'a3', name: '流通破万', icon: '🪙', desc: '好心值流通量突破10,000', check: g => g.currency >= 10000, reward: '+5% 好幸福指数' },
+  { id: 'a4', name: '高效社区', icon: '✅', desc: '任务完成率超过80%', check: g => g.taskCompletion >= 80, reward: '+100 预算' },
+  { id: 'a5', name: '极致满意', icon: '⭐', desc: '用户满意度超过90', check: g => g.satisfaction >= 90, reward: '+300 好心值' },
+  { id: 'a6', name: '活动达人', icon: '🎉', desc: '成功举办社区活动（选择活动决策3次）', check: g => g.countDecisionType('activity') >= 3, reward: '+150 预算' },
+  { id: 'a7', name: '商业合作', icon: '🤝', desc: '引入商家合作（选择合作决策2次）', check: g => g.countDecisionType('cooperation') >= 2, reward: '+500 好心值' },
+  { id: 'a8', name: '技能交换', icon: '🔄', desc: '开放技能交换系统', check: g => g.countDecisionType('skill') >= 1, reward: '+10% 任务完成率' },
+  { id: 'a9', name: '人口大关', icon: '🏘️', desc: '社区人口突破500', check: g => g.population >= 500, reward: '+800 预算' },
+  { id: 'a10', name: '流通破十万', icon: '💰', desc: '好心值流通量突破100,000', check: g => g.currency >= 100000, reward: '+15% 好幸福指数' },
+  { id: 'a11', name: '坚持不懈', icon: '🔥', desc: '连续7天登录（连续7天决策）', check: g => g.decisionCount >= 7, reward: '+100 好心值' },
+  { id: 'a12', name: '全知全能', icon: '📚', desc: '完成所有5种决策类型', check: g => {
+    const types = new Set(g.decisionsMade.map(d => d.type));
+    return types.size >= 5;
+  }, reward: '+500 预算' },
+  { id: 'a13', name: '走向成熟', icon: '🌳', desc: '社区进入成熟期（Day 91+）', check: g => g.day >= 91, reward: '+300 好心值' },
+  { id: 'a14', name: '生态繁荣', icon: '🏙️', desc: '社区进入生态期（Day 181+）', check: g => g.day >= 181, reward: '+1000 预算' },
+  { id: 'a15', name: '完美运营', icon: '👑', desc: '所有指标均超过80', check: g => g.happiness >= 80 && g.taskCompletion >= 80 && g.satisfaction >= 80 && g.population >= 80, reward: '传奇社区称号' }
+];
+
+// ---------- 决策场景库 ----------
+const DECISIONS = [
+  {
+    id: 'd1', title: '提高好心值兑换率', desc: '将好心值兑换比例从1:1提高到1:1.5，激励更多居民参与社区服务。', type: 'economy',
+    icon: '🪙', color: 'gold',
+    effects: { currency: -200, happiness: 5, satisfaction: 3, taskCompletion: 10, population: 5, budget: -300 },
+    result: '你提高了好心值兑换率，居民们参与社区服务的热情高涨！任务完成率上升，好幸福指数也有所提升。但预算支出增加了。'
+  },
+  {
+    id: 'd2', title: '增加新任务类型', desc: '推出"邻里互助"、"环保行动"、"技能传授"三类新任务，丰富社区服务内容。', type: 'task',
+    icon: '📋', color: 'plum',
+    effects: { taskCompletion: 15, happiness: 3, currency: 150, satisfaction: 5, population: 8, budget: -100 },
+    result: '新任务类型获得了居民的热烈欢迎！尤其是"技能传授"任务吸引了大量新居民加入，社区活力显著提升。'
+  },
+  {
+    id: 'd3', title: '降低任务门槛', desc: '简化任务发布和参与流程，让更多人能轻松加入社区服务。', type: 'task',
+    icon: '🚪', color: 'sky',
+    effects: { taskCompletion: 20, population: 12, satisfaction: 2, currency: 80, happiness: 1, budget: -50 },
+    result: '任务门槛降低后，参与人数大幅增加！社区氛围更加活跃，新居民源源不断地加入。'
+  },
+  {
+    id: 'd4', title: '举办社区活动', desc: '组织"社区美食节"活动，邀请居民展示厨艺、分享美食。', type: 'activity',
+    icon: '🎪', color: 'brand',
+    effects: { happiness: 10, satisfaction: 8, currency: 200, population: 15, budget: -500, taskCompletion: 3 },
+    result: '美食节取得巨大成功！居民们展示了自己的拿手好菜，邻里关系更加融洽。社区人口和好幸福指数显著提升。'
+  },
+  {
+    id: 'd5', title: '推出排行榜激励', desc: '发布"社区贡献排行榜"，对排名前列的居民给予好心值奖励。', type: 'economy',
+    icon: '🏆', color: 'gold',
+    effects: { taskCompletion: 12, currency: -100, happiness: 4, satisfaction: 3, population: 5, budget: -200 },
+    result: '排行榜激发了居民的竞争意识！大家争相做好事，任务完成率大幅提高。部分居民表示压力有点大。'
+  },
+  {
+    id: 'd6', title: '增加商家合作', desc: '与本地5家商家达成合作，为社区贡献者提供优惠券和折扣。', type: 'cooperation',
+    icon: '🏪', color: 'leaf',
+    effects: { currency: 300, satisfaction: 6, happiness: 5, population: 10, budget: 200, taskCompletion: 5 },
+    result: '商家合作计划正式启动！居民们可以用好心值兑换商家优惠，社区经济循环更加活跃。'
+  },
+  {
+    id: 'd7', title: '投入预算做宣传', desc: '在社交媒体和本地媒体投放广告，宣传社区理念和成果。', type: 'economy',
+    icon: '📢', color: 'sky',
+    effects: { population: 25, currency: 100, happiness: 2, satisfaction: 1, budget: -800, taskCompletion: 2 },
+    result: '宣传效果显著！大量新居民慕名而来，社区人口快速增长。但也需要尽快让新居民融入社区。'
+  },
+  {
+    id: 'd8', title: '优化现有功能', desc: '升级社区好心值系统的用户界面，让操作更便捷流畅。', type: 'task',
+    icon: '🔧', color: 'plum',
+    effects: { satisfaction: 10, taskCompletion: 8, happiness: 3, currency: 50, population: 3, budget: -300 },
+    result: '界面优化后，居民们反馈操作更加顺手了！满意度大幅提升，任务完成效率也提高了。'
+  },
+  {
+    id: 'd9', title: '招聘社区志愿者', desc: '面向社区招募10名志愿者，协助日常运营和活动组织。', type: 'activity',
+    icon: '🙋', color: 'brand',
+    effects: { taskCompletion: 15, satisfaction: 5, happiness: 4, population: 5, currency: 50, budget: -400 },
+    result: '志愿者团队组建完成！他们热情洋溢地投入社区服务，运营效率显著提升。'
+  },
+  {
+    id: 'd10', title: '开放跨社区任务', desc: '与周边社区建立任务互通机制，居民可以跨社区提供服务。', type: 'cooperation',
+    icon: '🌉', color: 'leaf',
+    effects: { currency: 400, population: 18, happiness: 6, satisfaction: 4, taskCompletion: 10, budget: 100 },
+    result: '跨社区合作机制启动！好心值可以在更大范围内流通，社区影响力显著扩大。'
+  },
+  {
+    id: 'd11', title: '强化本社区服务', desc: '增加社区便民服务点，提供快递代收、工具借用等日常服务。', type: 'task',
+    icon: '🏠', color: 'sky',
+    effects: { satisfaction: 12, happiness: 7, population: 8, currency: 80, taskCompletion: 5, budget: -250 },
+    result: '便民服务点深受居民欢迎！尤其是老年人和双职工家庭，日常便利性大幅提升。'
+  },
+  {
+    id: 'd12', title: '引入技能交换', desc: '搭建技能交换平台，居民可以用自己的专长换取他人的技能服务。', type: 'skill',
+    icon: '🔄', color: 'plum',
+    effects: { population: 12, currency: 200, happiness: 8, satisfaction: 7, taskCompletion: 5, budget: -150 },
+    result: '技能交换平台上线后，社区掀起了一股学习热潮！从编程到烹饪，各种技能在社区中流动起来。'
+  },
+  {
+    id: 'd13', title: '开展环保行动', desc: '组织"绿色社区"环保活动，包括垃圾分类宣传、社区绿化等。', type: 'activity',
+    icon: '🌱', color: 'leaf',
+    effects: { happiness: 6, satisfaction: 8, population: 5, currency: 50, budget: -200, taskCompletion: 5 },
+    result: '环保行动得到了居民的积极响应！社区环境变得更加整洁优美，居民的环保意识也提高了。'
+  },
+  {
+    id: 'd14', title: '推出会员体系', desc: '建立社区会员等级制度，高等级会员享受好心值加速等特权。', type: 'economy',
+    icon: '💎', color: 'gold',
+    effects: { currency: 250, taskCompletion: 10, satisfaction: 4, happiness: 3, population: 6, budget: -100 },
+    result: '会员体系激发了居民的长期参与热情！大家为了升级会员等级，更积极地参与社区服务。'
+  },
+  {
+    id: 'd15', title: '开设社区课堂', desc: '每周举办社区公益课堂，内容包括健康养生、手机使用、亲子教育等。', type: 'activity',
+    icon: '📚', color: 'sky',
+    effects: { happiness: 8, satisfaction: 10, population: 8, currency: 60, taskCompletion: 3, budget: -300 },
+    result: '社区课堂场场爆满！尤其是老年居民的智能手机课，解决了他们的实际困难，满意度大幅提升。'
+  },
+  {
+    id: 'd16', title: '建立互助基金', desc: '设立社区互助基金，居民自愿捐款帮助遇到困难的邻居。', type: 'cooperation',
+    icon: '🤲', color: 'brand',
+    effects: { happiness: 9, satisfaction: 7, currency: -100, population: 5, budget: -200, taskCompletion: 2 },
+    result: '互助基金的建立让社区充满了温暖！一位突发疾病的居民获得了及时帮助，社区的凝聚力大大增强。'
+  },
+  {
+    id: 'd17', title: '举办运动比赛', desc: '组织社区运动会，包括跑步、拔河、乒乓球等趣味项目。', type: 'activity',
+    icon: '🏃', color: 'leaf',
+    effects: { happiness: 12, satisfaction: 6, population: 10, currency: 80, budget: -400, taskCompletion: 2 },
+    result: '运动会上欢声笑语不断！平时不太往来的邻居们组队参赛，社区氛围空前融洽。'
+  },
+  {
+    id: 'd18', title: '引入企业赞助', desc: '与本地企业洽谈赞助合作，为社区活动提供资金支持。', type: 'cooperation',
+    icon: '💼', color: 'gold',
+    effects: { budget: 1000, currency: 200, satisfaction: 3, happiness: 2, population: 5, taskCompletion: 2 },
+    result: '成功获得企业赞助！社区有了更充裕的资金来改善服务和举办活动。'
+  },
+  {
+    id: 'd19', title: '建立反馈机制', desc: '开通居民建议和投诉渠道，每周收集反馈并改进。', type: 'task',
+    icon: '💬', color: 'plum',
+    effects: { satisfaction: 15, happiness: 5, taskCompletion: 5, population: 3, currency: 20, budget: -100 },
+    result: '反馈机制让居民感受到了被尊重！大家提出了很多建设性意见，社区管理更加民主高效。'
+  },
+  {
+    id: 'd20', title: '数字社区建设', desc: '开发社区专属小程序，实现在线任务发布、好心值查询等功能。', type: 'task',
+    icon: '📱', color: 'sky',
+    effects: { taskCompletion: 18, satisfaction: 8, happiness: 4, population: 12, currency: 100, budget: -600 },
+    result: '社区小程序上线后，居民们足不出户就能参与社区事务！年轻居民的参与度明显提升。'
+  },
+  {
+    id: 'd21', title: '节日庆祝活动', desc: '在传统节日举办社区庆祝活动，如中秋赏月、春节联欢等。', type: 'activity',
+    icon: '🎊', color: 'brand',
+    effects: { happiness: 15, satisfaction: 8, population: 8, currency: 100, budget: -350, taskCompletion: 2 },
+    result: '节日活动让社区充满了欢乐和温馨！居民们感受到了浓浓的邻里情谊，社区归属感大大增强。'
+  },
+  {
+    id: 'd22', title: '推行社区积分倍增', desc: '限时推出好心值双倍积分活动，鼓励居民在短期内积极参与。', type: 'economy',
+    icon: '⚡', color: 'gold',
+    effects: { currency: 500, taskCompletion: 20, happiness: 3, satisfaction: 2, population: 5, budget: -200 },
+    result: '双倍积分活动引爆了参与热情！任务完成量创下新高，好心值流通量大幅增长。'
+  },
+  {
+    id: 'd23', title: '建立社区图书馆', desc: '在社区公共空间设立小型图书角，鼓励居民捐赠和借阅图书。', type: 'activity',
+    icon: '📖', color: 'leaf',
+    effects: { happiness: 7, satisfaction: 9, population: 6, currency: 30, budget: -200, taskCompletion: 2 },
+    result: '图书角成为了社区的文化新地标！孩子们放学后有了好去处，知识在社区中流动起来。'
+  },
+  {
+    id: 'd24', title: '推出社区保险', desc: '与保险公司合作，为社区志愿者提供意外伤害保险。', type: 'cooperation',
+    icon: '🛡️', color: 'sky',
+    effects: { satisfaction: 8, taskCompletion: 8, happiness: 4, population: 5, currency: 30, budget: -150 },
+    result: '保险计划让志愿者们的后顾之忧得到了解决！参与社区服务的意愿更加积极了。'
+  },
+  {
+    id: 'd25', title: '组织邻里互助日', desc: '每月固定一天为"邻里互助日"，居民集中解决彼此的生活难题。', type: 'activity',
+    icon: '🤗', color: 'plum',
+    effects: { happiness: 10, satisfaction: 12, population: 5, currency: 60, taskCompletion: 5, budget: -100 },
+    result: '邻里互助日成为了社区最受欢迎的传统！从修水管到辅导功课，互助精神在社区中生根发芽。'
+  }
+];
+
+// ---------- 随机事件库 ----------
+const EVENTS = [
+  {
+    id: 'e1', title: '🌧️ 暴雨预警', desc: '突发暴雨预警，原定今天举办的社区户外活动可能需要取消或延期。',
+    options: [
+      { text: '取消活动，改期举办', effects: { happiness: -5, satisfaction: -3, budget: -100 }, result: '活动取消让居民有些失望，但安全第一，大家表示理解。' },
+      { text: '转为室内活动', effects: { happiness: -2, satisfaction: 2, budget: -200 }, result: '临时转为室内活动，虽然场地有限，但居民们依然玩得很开心。' },
+      { text: '冒雨举办（提供雨具）', effects: { happiness: 5, satisfaction: 3, budget: -300 }, result: '雨中活动别有一番趣味！参与者们穿着雨衣在雨中欢笑，社区群刷屏点赞。' }
+    ]
+  },
+  {
+    id: 'e2', title: '🏪 商家主动合作', desc: '一家本地连锁超市主动联系社区，希望建立长期合作，为社区成员提供专属折扣。',
+    options: [
+      { text: '欣然接受合作', effects: { currency: 300, satisfaction: 5, population: 5, budget: 200 }, result: '合作达成！居民们可以在超市享受专属折扣，社区好心值也可兑换优惠券。' },
+      { text: '提出更高条件', effects: { currency: 500, satisfaction: 2, population: 3, budget: 300 }, result: '经过谈判，超市同意提供更优厚的条件，合作双赢！' },
+      { text: '婉拒，保持社区独立性', effects: { happiness: 2, satisfaction: -2, budget: 0 }, result: '你选择保持社区独立性，但部分居民对此表示遗憾。' }
+    ]
+  },
+  {
+    id: 'e3', title: '🔊 噪音投诉', desc: '多位居民投诉社区活动中心晚上噪音过大，影响休息。',
+    options: [
+      { text: '规定活动时间不超过晚上9点', effects: { satisfaction: 5, happiness: -2, taskCompletion: -2 }, result: '新规实施后，受噪音困扰的居民表示感谢，但部分夜猫子居民不太满意。' },
+      { text: '加装隔音设施', effects: { satisfaction: 5, budget: -500, happiness: 1 }, result: '隔音设施安装完毕，问题彻底解决！居民们对社区的管理效率赞不绝口。' },
+      { text: '召开居民协调会', effects: { satisfaction: 3, happiness: 3, budget: -100 }, result: '协调会上大家达成共识，邻里关系更加和谐了。' }
+    ]
+  },
+  {
+    id: 'e4', title: '📜 政府公益新政策', desc: '政府推出"社区公益积分"新政策，与社区好心值系统可以对接。',
+    options: [
+      { text: '全面对接政府系统', effects: { currency: 500, population: 20, satisfaction: 5, budget: 300 }, result: '对接成功！社区好心值获得了政府背书，吸引了大批新居民加入。' },
+      { text: '部分对接，保留独立性', effects: { currency: 200, population: 10, satisfaction: 3, budget: 100 }, result: '在保持社区特色的同时，实现了与政府系统的互通。' },
+      { text: '暂不跟进，观察效果', effects: { happiness: 1, satisfaction: -2, population: -3 }, result: '部分居民对社区未能及时对接政府政策表示失望。' }
+    ]
+  },
+  {
+    id: 'e5', title: '📺 媒体报道', desc: '本地电视台联系社区，希望报道社区的好心值系统和运营模式。',
+    options: [
+      { text: '积极配合采访', effects: { population: 30, currency: 200, satisfaction: 5, budget: 100 }, result: '报道播出后，社区名声大噪！大量新居民前来咨询加入。' },
+      { text: '提供文字素材，婉拒出镜', effects: { population: 15, currency: 100, satisfaction: 3, budget: 50 }, result: '媒体报道了社区故事，虽然没有出镜，但效果依然不错。' },
+      { text: '低调处理，不对外宣传', effects: { satisfaction: -2, population: -2 }, result: '你选择了低调，但错过了一次很好的宣传机会。' }
+    ]
+  },
+  {
+    id: 'e6', title: '🙋 志愿者短缺', desc: '近期社区任务量大增，现有志愿者人手不足，很多任务无法及时完成。',
+    options: [
+      { text: '紧急招募志愿者', effects: { taskCompletion: 10, population: 5, budget: -200, satisfaction: 2 }, result: '招募令发出后，很快有热心居民响应，志愿者队伍得到补充。' },
+      { text: '暂时减少任务量', effects: { taskCompletion: -10, satisfaction: -3, happiness: -2 }, result: '减少任务量缓解了压力，但部分居民感到服务不足。' },
+      { text: '提高任务奖励吸引参与', effects: { taskCompletion: 15, currency: -200, budget: -100, happiness: 3 }, result: '高额奖励吸引了大量居民临时参与，任务顺利完成！' }
+    ]
+  },
+  {
+    id: 'e7', title: '⚙️ 系统故障', desc: '好心值系统出现技术故障，部分居民的积分数据丢失，引发不满。',
+    options: [
+      { text: '立即修复并补偿受影响居民', effects: { satisfaction: 5, budget: -300, happiness: 2, currency: -100 }, result: '技术团队连夜修复系统，并向受影响居民发放了补偿，危机得到妥善处理。' },
+      { text: '手动恢复数据', effects: { satisfaction: 3, budget: -100, taskCompletion: -5 }, result: '手动恢复了大部分数据，但过程耗时较长，影响了任务执行效率。' },
+      { text: '升级系统，彻底解决问题', effects: { satisfaction: 8, budget: -600, taskCompletion: 5, happiness: 3 }, result: '系统升级后更加稳定可靠，居民们对社区的负责态度表示赞赏。' }
+    ]
+  },
+  {
+    id: 'e8', title: '🤝 邻里纠纷', desc: '两户居民因公共区域使用问题发生争执，需要社区调解。',
+    options: [
+      { text: '社区出面调解', effects: { satisfaction: 4, happiness: 3, budget: -50 }, result: '调解成功！双方达成和解，社区和谐氛围更加浓厚。' },
+      { text: '邀请第三方仲裁', effects: { satisfaction: 2, happiness: 1, budget: -200 }, result: '仲裁结果公正，双方接受了判决，但过程略显正式。' },
+      { text: '让居民自行解决', effects: { satisfaction: -5, happiness: -3 }, result: '纠纷升级，影响了社区氛围，其他居民对此表示不满。' }
+    ]
+  },
+  {
+    id: 'e9', title: '🎁 社区获得捐赠', desc: '一位匿名爱心人士向社区捐赠了一笔资金，用于社区建设。',
+    options: [
+      { text: '用于改善公共设施', effects: { satisfaction: 8, happiness: 5, budget: 1000, population: 5 }, result: '公共设施焕然一新！居民们对社区的居住环境赞不绝口。' },
+      { text: '发放给社区志愿者', effects: { satisfaction: 5, happiness: 7, taskCompletion: 10, budget: 500 }, result: '志愿者们收到奖励后士气高涨，社区服务热情更加旺盛！' },
+      { text: '存入社区基金，用于未来发展', effects: { budget: 1500, satisfaction: 2, happiness: 2 }, result: '社区基金更加充裕，为未来的发展打下了坚实基础。' }
+    ]
+  },
+  {
+    id: 'e10', title: '🏠 新居民入住潮', desc: '附近新建小区交付使用，大量新居民希望加入社区系统。',
+    options: [
+      { text: '全部接收，快速扩大规模', effects: { population: 50, taskCompletion: -10, satisfaction: -3, budget: 200 }, result: '人口激增！但新居民的融入和任务供给面临挑战。' },
+      { text: '分批接收，确保服务质量', effects: { population: 25, taskCompletion: 3, satisfaction: 2, budget: 100 }, result: '稳步增长，新居民得到了良好的社区体验，口碑持续传播。' },
+      { text: '提高准入门槛', effects: { population: 10, satisfaction: 1, currency: 100, happiness: 2 }, result: '门槛提高后，新居民的质量更高，但增长速度放缓。' }
+    ]
+  },
+  {
+    id: 'e11', title: '🎵 社区才艺大赛', desc: '有居民自发提议举办社区才艺大赛，展示居民们的才艺风采。',
+    options: [
+      { text: '全力支持，提供场地和奖品', effects: { happiness: 12, satisfaction: 8, population: 8, budget: -400 }, result: '才艺大赛精彩纷呈！隐藏的社区高手们纷纷亮相，社区氛围达到顶峰！' },
+      { text: '提供部分支持，让居民自组织', effects: { happiness: 6, satisfaction: 5, population: 4, budget: -150 }, result: '居民们自己组织得很好，虽然规模不大，但参与感很强。' },
+      { text: '鼓励但暂不提供资源', effects: { happiness: 2, satisfaction: -2 }, result: '活动因缺乏支持而不了了之，提议者感到有些失望。' }
+    ]
+  },
+  {
+    id: 'e12', title: '📊 年度社区调查', desc: '第三方机构前来进行社区运营评估，调查结果将影响社区声誉。',
+    options: [
+      { text: '全力配合，展示最佳一面', effects: { satisfaction: 5, population: 10, budget: -200, currency: 200 }, result: '调查结果优异！社区被评为"模范社区"，吸引了更多关注。' },
+      { text: '如实配合，不刻意准备', effects: { satisfaction: 2, population: 5, currency: 100 }, result: '真实的数据展现了社区的日常状态，结果中等偏上。' },
+      { text: '婉拒调查', effects: { satisfaction: -3, population: -5 }, result: '拒绝调查引发了一些猜测，社区声誉受到轻微影响。' }
+    ]
+  }
+];
+
+// ============================================================
+// 工具函数
+// ============================================================
+
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+function formatNumber(n) {
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 10000) return (n / 10000).toFixed(1) + '万';
+  return n.toLocaleString();
+}
+
+// ============================================================
+// 游戏核心逻辑
+// ============================================================
+
+// 选择决策类型计数
+game.countDecisionType = function(type) {
+  return this.decisionsMade.filter(d => d.type === type).length;
+};
+
+// 初始化游戏
+function initGame() {
+  updateStatusPanel();
+  renderDecisions();
+  renderAchievements();
+  renderMembers();
+  updateLeaderboard();
+  updateCharts();
+  updateRoadmap();
+  resetEventNotification();
+  updateEventStats();
+  checkAchievements();
+}
+
+// 更新状态面板
+function updateStatusPanel() {
+  const g = game;
+  document.getElementById('gsDay').textContent = 'Day ' + g.day;
+  document.getElementById('gsPopulation').textContent = g.population;
+  document.getElementById('gsHappiness').textContent = g.happiness;
+  document.getElementById('gsCurrency').textContent = formatNumber(g.currency);
+  document.getElementById('gsTaskCompletion').textContent = g.taskCompletion;
+  document.getElementById('gsSatisfaction').textContent = g.satisfaction;
+  document.getElementById('gsBudget').textContent = formatNumber(g.budget);
+  document.getElementById('gsAchievements').textContent = g.achievements.length;
+  document.getElementById('gameStatusBadge').textContent = 'Day ' + g.day;
+  document.getElementById('decisionRoundDay').textContent = 'Day ' + g.day;
+  document.getElementById('decisionCountBadge').textContent = '已决策 ' + g.decisionCount + ' 次';
+  document.getElementById('achievementCountBadge').textContent = g.achievements.length + ' / 15';
+  document.getElementById('stageBadge').textContent = getStageName(g.stage);
+  document.getElementById('dataDaysLabel').textContent = 'Day ' + Math.max(1, g.day - 29) + ' - Day ' + g.day;
+  document.getElementById('memberCountBadge').textContent = g.members.length + ' 位成员';
+  document.getElementById('eventCountBadge').textContent = '已触发 ' + g.eventCount + ' 次';
+  document.getElementById('reportCountBadge').textContent = '已生成 ' + g.reportCount + ' 份';
+  document.getElementById('totalDecisionCount').textContent = g.decisionCount;
+
+  // 进度条
+  const yearPct = Math.round((g.day / 365) * 100);
+  document.getElementById('yearProgressLabel').textContent = yearPct + '%';
+  document.getElementById('yearProgressFill').style.width = yearPct + '%';
+  document.getElementById('happinessLabel').textContent = g.happiness + '/100';
+  document.getElementById('happinessFill').style.width = g.happiness + '%';
+  document.getElementById('taskLabel').textContent = g.taskCompletion + '%';
+  document.getElementById('taskFill').style.width = g.taskCompletion + '%';
+  document.getElementById('satisfactionLabel').textContent = g.satisfaction + '/100';
+  document.getElementById('satisfactionFill').style.width = g.satisfaction + '%';
+
+  // 社区名称
+  document.getElementById('communityNameDisplay').textContent = g.communityName;
+}
+
+// 获取阶段名称
+function getStageName(stage) {
+  const names = ['', '初创期', '成长期', '成熟期', '生态期'];
+  return names[stage] || '未知';
+}
+
+// 渲染决策选项
+function renderDecisions() {
+  const grid = document.getElementById('decisionGrid');
+  const shuffled = [...DECISIONS].sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, 3);
+  grid.innerHTML = '';
+
+  selected.forEach((d, idx) => {
+    const colorMap = { brand: 'brand', leaf: 'leaf', gold: 'gold-border', sky: 'sky-border', plum: 'plum-border' };
+    const card = document.createElement('div');
+    card.className = 'decision-card ' + (colorMap[d.color] || '');
+    card.innerHTML = `
+      <div class="dc-icon" style="background:var(--${d.color}-soft);color:var(--${d.color});">${d.icon}</div>
+      <div class="dc-title">${d.title}</div>
+      <div class="dc-desc">${d.desc}</div>
+      <div class="dc-impact">
+        ${formatEffects(d.effects)}
+      </div>
+    `;
+    card.onclick = () => makeDecision(d, idx);
+    card.id = 'decisionCard_' + idx;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('nextDayBtn').style.display = 'none';
+}
+
+// 格式化影响
+function formatEffects(eff) {
+  const labels = [
+    { key: 'population', label: '人口', color: 'leaf' },
+    { key: 'happiness', label: '幸福', color: 'gold' },
+    { key: 'currency', label: '流通', color: 'sky' },
+    { key: 'taskCompletion', label: '任务', color: 'plum' },
+    { key: 'satisfaction', label: '满意', color: 'brand' },
+    { key: 'budget', label: '预算', color: 'brand' }
+  ];
+  return labels.map(l => {
+    const v = eff[l.key] || 0;
+    if (v === 0) return '';
+    const cls = v > 0 ? 'up' : 'down';
+    const prefix = v > 0 ? '+' : '';
+    return `<span class="${cls}">${l.label} ${prefix}${v}</span>`;
+  }).filter(Boolean).join('');
+}
+
+// 做决策
+function makeDecision(d, idx) {
+  const g = game;
+  g.decisionCount++;
+  g.totalDecisions++;
+  g.decisionsMade.push({ id: d.id, type: d.type, day: g.day });
+  g.daysSinceLastEvent++;
+
+  // 应用效果
+  applyEffects(d.effects);
+
+  // 禁用所有决策卡片
+  document.querySelectorAll('.decision-card').forEach(c => c.classList.add('disabled'));
+  document.getElementById('decisionCard_' + idx).classList.add('selected');
+
+  // 显示结果
+  const area = document.getElementById('decisionResultArea');
+  area.innerHTML = `
+    <div class="decision-result">
+      <div class="dr-title">✅ 已选择：${d.title}</div>
+      <div class="dr-desc">${d.result}</div>
+      <div class="dr-effects">
+        ${Object.entries(d.effects).filter(([k, v]) => v !== 0).map(([k, v]) => {
+          const labels = { population: '人口', happiness: '好幸福指数', currency: '好心值流通', taskCompletion: '任务完成率', satisfaction: '用户满意度', budget: '预算' };
+          const cls = v > 0 ? 'up' : 'down';
+          const prefix = v > 0 ? '+' : '';
+          return `<span class="eff ${cls}">${labels[k] || k}: ${prefix}${v}</span>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+
+  // 显示下一天按钮
+  document.getElementById('nextDayBtn').style.display = 'inline-flex';
+
+  // 更新数据
+  updateStatusPanel();
+  updateCharts();
+  updateLeaderboard();
+  updateRoadmap();
+  updateEventStats();
+  checkAchievements();
+
+  // 检查随机事件
+  checkRandomEvent();
+
+  // 检查经营报告
+  checkReportGeneration();
+}
+
+// 应用效果
+function applyEffects(effects) {
+  const g = game;
+  g.population = clamp(g.population + (effects.population || 0), 1, 9999);
+  g.happiness = clamp(g.happiness + (effects.happiness || 0), 0, 100);
+  g.currency = Math.max(0, g.currency + (effects.currency || 0));
+  g.taskCompletion = clamp(g.taskCompletion + (effects.taskCompletion || 0), 0, 100);
+  g.satisfaction = clamp(g.satisfaction + (effects.satisfaction || 0), 0, 100);
+  g.budget = Math.max(0, g.budget + (effects.budget || 0));
+
+  // 记录历史
+  g.populationHistory.push(g.population);
+  g.currencyHistory.push(g.currency);
+  g.taskHistory.push(g.taskCompletion);
+  g.satisfactionHistory.push(g.satisfaction);
+
+  // 成员满意度变化
+  g.members.forEach(m => {
+    const delta = rand(-2, 3);
+    m.satisfaction = clamp(m.satisfaction + delta, 0, 100);
+    m.activity = clamp(m.activity + rand(-1, 2), 0, 100);
+    if (effects.population > 0) m.currency += rand(5, 20);
+    if (effects.happiness > 3) m.satisfaction += rand(1, 3);
+  });
+
+  // 检查大使
+  g.members.forEach(m => {
+    if (!m.ambassador && m.satisfaction >= 90 && m.activity >= 80) {
+      m.ambassador = true;
+      showToast('👑 ' + m.name + ' 成为社区大使！', 'success');
+    }
+  });
+}
+
+// 进入下一天
+function nextDay() {
+  const g = game;
+  g.day++;
+
+  // 检查是否完成365天
+  if (g.day > 365) {
+    showGameCompletion();
+    return;
+  }
+
+  // 每日自然增长
+  g.population += rand(1, 3);
+  g.currency += rand(10, 30);
+  g.happiness = clamp(g.happiness + rand(-1, 1), 0, 100);
+  g.satisfaction = clamp(g.satisfaction + rand(-1, 1), 0, 100);
+  g.taskCompletion = clamp(g.taskCompletion + rand(-1, 2), 0, 100);
+  g.budget += rand(20, 50);
+
+  g.populationHistory.push(g.population);
+  g.currencyHistory.push(g.currency);
+  g.taskHistory.push(g.taskCompletion);
+  g.satisfactionHistory.push(g.satisfaction);
+
+  // 成员自然变化
+  g.members.forEach(m => {
+    m.satisfaction = clamp(m.satisfaction + rand(-1, 1), 0, 100);
+    m.activity = clamp(m.activity + rand(-1, 1), 0, 100);
+  });
+
+  // 清除决策结果
+  document.getElementById('decisionResultArea').innerHTML = '';
+  document.getElementById('nextDayBtn').style.display = 'none';
+
+  updateStatusPanel();
+  updateCharts();
+  updateLeaderboard();
+  updateRoadmap();
+  checkAchievements();
+  renderDecisions();
+  checkReportGeneration();
+  updateEventStats();
+}
+
+// ============================================================
+// 成就系统
+// ============================================================
+
+function renderAchievements() {
+  const grid = document.getElementById('achievementGrid');
+  grid.innerHTML = '';
+  ACHIEVEMENTS.forEach(a => {
+    const unlocked = game.achievements.includes(a.id);
+    const item = document.createElement('div');
+    item.className = 'achievement-item ' + (unlocked ? 'unlocked' : 'locked');
+    item.id = 'ach_' + a.id;
+    item.innerHTML = `
+      <div class="ai-icon">${a.icon}</div>
+      <div class="ai-name">${a.name}</div>
+      <div class="ai-desc">${a.desc}</div>
+      <div class="ai-badge">${unlocked ? '✓ 已解锁' : '🔒'}</div>
+    `;
+    grid.appendChild(item);
+  });
+}
+
+function checkAchievements() {
+  let newUnlock = false;
+  ACHIEVEMENTS.forEach(a => {
+    if (!game.achievements.includes(a.id) && a.check(game)) {
+      game.achievements.push(a.id);
+      newUnlock = true;
+      showCelebration(a);
+    }
+  });
+  if (newUnlock) {
+    renderAchievements();
+    updateStatusPanel();
+    updateLeaderboard();
+  }
+  updateAchievementStats();
+}
+
+function updateAchievementStats() {
+  const unlocked = game.achievements.length;
+  const total = ACHIEVEMENTS.length;
+  document.getElementById('achievementUnlockedCount').textContent = unlocked;
+  document.getElementById('achievementLockedCount').textContent = total - unlocked;
+  // 计算奖励总值
+  let rewardTotal = 0;
+  game.achievements.forEach(id => {
+    const a = ACHIEVEMENTS.find(x => x.id === id);
+    if (a && a.reward) {
+      const match = a.reward.match(/\d+/);
+      if (match) rewardTotal += parseInt(match[0]);
+    }
+  });
+  document.getElementById('achievementRewardTotal').textContent = rewardTotal;
+}
+
+function showCelebration(achievement) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'celebrationOverlay';
+  overlay.innerHTML = `
+    <div class="modal-box celebration-modal">
+      <button class="mb-close" onclick="closeCelebration()">✕</button>
+      <div class="cm-icon">${achievement.icon}</div>
+      <div class="cm-title">🏅 成就解锁！</div>
+      <div class="cm-desc" style="font-size:18px;font-weight:700;color:var(--ink);">${achievement.name}</div>
+      <div class="cm-desc">${achievement.desc}</div>
+      <div class="cm-desc" style="color:var(--gold);font-weight:600;">奖励：${achievement.reward}</div>
+      <div class="mb-actions" style="justify-content:center;">
+        <button class="btn btn-gold" onclick="closeCelebration()">太棒了！</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function closeCelebration() {
+  const el = document.getElementById('celebrationOverlay');
+  if (el) el.remove();
+}
+
+// ============================================================
+// 随机事件系统
+// ============================================================
+
+function checkRandomEvent() {
+  if (game.daysSinceLastEvent < 3 && Math.random() > 0.3) return;
+  if (Math.random() > 0.4) return;
+
+  game.daysSinceLastEvent = 0;
+  triggerRandomEvent();
+}
+
+function triggerRandomEvent() {
+  const event = EVENTS[rand(0, EVENTS.length - 1)];
+  game.eventCount++;
+  updateStatusPanel();
+  updateEventStats();
+
+  const area = document.getElementById('eventNotificationArea');
+  area.innerHTML = `
+    <div class="event-notification" id="eventNotif">
+      <button class="en-close" onclick="dismissEvent()">✕</button>
+      <div class="en-title">${event.title}</div>
+      <div class="en-desc">${event.desc}</div>
+      <div class="en-options">
+        ${event.options.map((opt, i) => `<button onclick="handleEventOption(${i})">${opt.text}</button>`).join('')}
+      </div>
+    </div>
+  `;
+
+  // 存储当前事件
+  window._currentEvent = event;
+}
+
+function handleEventOption(idx) {
+  const event = window._currentEvent;
+  if (!event) return;
+  const opt = event.options[idx];
+  applyEffects(opt.effects);
+
+  const area = document.getElementById('eventNotificationArea');
+  area.innerHTML = `
+    <div class="decision-result">
+      <div class="dr-title">⚡ 事件应对：${event.title}</div>
+      <div class="dr-desc">${opt.result}</div>
+      <div class="dr-effects">
+        ${Object.entries(opt.effects).filter(([k, v]) => v !== 0).map(([k, v]) => {
+          const labels = { population: '人口', happiness: '好幸福指数', currency: '好心值流通', taskCompletion: '任务完成率', satisfaction: '用户满意度', budget: '预算' };
+          const cls = v > 0 ? 'up' : 'down';
+          const prefix = v > 0 ? '+' : '';
+          return `<span class="eff ${cls}">${labels[k] || k}: ${prefix}${v}</span>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+
+  updateStatusPanel();
+  updateCharts();
+  updateLeaderboard();
+  checkAchievements();
+  window._currentEvent = null;
+}
+
+function dismissEvent() {
+  const area = document.getElementById('eventNotificationArea');
+  area.innerHTML = '';
+  window._currentEvent = null;
+}
+
+function updateEventStats() {
+  document.getElementById('eventTriggeredStat').textContent = game.eventCount;
+  document.getElementById('daysSinceLastEventStat').textContent = game.daysSinceLastEvent;
+  const prob = game.daysSinceLastEvent < 3 ? '低' : game.daysSinceLastEvent < 5 ? '中' : '高';
+  document.getElementById('nextEventProbStat').textContent = prob;
+}
+
+function resetEventNotification() {
+  document.getElementById('eventNotificationArea').innerHTML = '';
+}
+
+// ============================================================
+// 社区成员管理
+// ============================================================
+
+function renderMembers() {
+  const grid = document.getElementById('memberGrid');
+  grid.innerHTML = '';
+  let ambassadorCount = 0;
+  let totalSat = 0;
+  let totalAct = 0;
+
+  game.members.forEach(m => {
+    if (m.ambassador) ambassadorCount++;
+    totalSat += m.satisfaction;
+    totalAct += m.activity;
+
+    const card = document.createElement('div');
+    card.className = 'member-card' + (m.ambassador ? ' ambassador' : '');
+    card.onclick = () => showMemberDetail(m);
+    card.innerHTML = `
+      <div class="mc-avatar" style="background:${m.avatar}">${m.name[0]}</div>
+      <div class="mc-name">${m.name}</div>
+      <div class="mc-role">${m.role}</div>
+      <div class="mc-stats">
+        <div><span>满意度</span><span>${m.satisfaction}%</span></div>
+        <div class="mc-minibar"><div class="mcfill" style="width:${m.satisfaction}%;background:var(--gold);"></div></div>
+        <div><span>活跃度</span><span>${m.activity}%</span></div>
+        <div class="mc-minibar"><div class="mcfill" style="width:${m.activity}%;background:var(--sky);"></div></div>
+        <div><span>好心值</span><span>${m.currency}</span></div>
+      </div>
+      ${m.ambassador ? '<div class="mc-ambassador">👑 社区大使</div>' : ''}
+    `;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('ambassadorCount').textContent = ambassadorCount;
+  document.getElementById('avgSatisfaction').textContent = Math.round(totalSat / game.members.length) + '%';
+  document.getElementById('avgActivity').textContent = Math.round(totalAct / game.members.length) + '%';
+}
+
+function showMemberDetail(member) {
+  const backstories = {
+    '张明华': '张明华是社区最早的一批志愿者之一，退休前是一名中学教师，教龄35年。他热心公益，每周都会组织社区的读书活动，已经坚持了两年多。他的座右铭是"赠人玫瑰，手有余香"。他还在社区开设了书法兴趣班，每周六上午免费教学，深受居民喜爱。他的老伴也是社区志愿者，夫妻俩一起为社区发光发热。',
+    '李芳': '李芳退休前是小学语文老师，从教32年，桃李满天下。退休后在社区里开办了免费的儿童书法班和国学诵读班，每周三次课程。她温和有耐心，深受社区孩子们的喜爱，孩子们都亲切地叫她"李奶奶"。她相信教育是最好的公益，希望通过自己的努力让更多孩子爱上传统文化。',
+    '王建国': '王建国在社区附近经营一家中型超市，经营了15年，是社区的老商户。他经常为社区活动提供物资赞助，逢年过节还会给困难户送慰问品。他为人务实，认为社区发展需要商业和公益的良性结合。他的超市也是社区好心值兑换点之一，居民可以用好心值兑换商品。',
+    '赵小红': '赵小红是在校大学生，21岁，专业是社会工作，目前大三。她在社区实习期间被这里的氛围吸引，留下来成为了活跃志愿者。她擅长使用社交媒体，负责社区公众号和抖音账号的运营，经常拍摄社区活动的精彩瞬间。她的短视频作品在本地有很高的播放量，为社区带来了不少关注。',
+    '刘阿姨': '刘阿姨全名刘桂英，今年62岁，是社区里的"热心肠"，谁家有困难她都会主动帮忙。她擅长烹饪，是社区公认的"厨神"，经常在社区活动中展示厨艺。她的拿手菜是红烧肉和糖醋排骨，社区活动时总被一抢而空。她还在社区开设了"刘阿姨厨房"公益课程，教年轻人做饭，传承家的味道。'
+  };
+  const story = backstories[member.name] || member.name + '是社区的重要成员，积极参与各项活动。';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-box">
+      <button class="mb-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      <div class="mb-title">
+        <span style="width:44px;height:44px;border-radius:50%;background:${member.avatar};display:grid;place-items:center;color:#fff;font-size:20px;font-weight:700;">${member.name[0]}</span>
+        ${member.name}
+        ${member.ambassador ? '<span style="font-size:12px;background:var(--gold);color:#fff;padding:2px 10px;border-radius:999px;">社区大使</span>' : ''}
+      </div>
+      <div class="mb-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;">
+          <div style="background:var(--gold-soft);padding:12px;border-radius:10px;text-align:center;">
+            <div style="font-size:12px;color:var(--ink-faint);">满意度</div>
+            <div style="font-size:24px;font-weight:800;color:var(--gold);">${member.satisfaction}%</div>
+          </div>
+          <div style="background:var(--sky-soft);padding:12px;border-radius:10px;text-align:center;">
+            <div style="font-size:12px;color:var(--ink-faint);">活跃度</div>
+            <div style="font-size:24px;font-weight:800;color:var(--sky);">${member.activity}%</div>
+          </div>
+          <div style="background:var(--brand-soft);padding:12px;border-radius:10px;text-align:center;grid-column:1/-1;">
+            <div style="font-size:12px;color:var(--ink-faint);">好心值持有量</div>
+            <div style="font-size:24px;font-weight:800;color:var(--brand);">${member.currency}</div>
+          </div>
+          <div style="background:var(--leaf-soft);padding:12px;border-radius:10px;text-align:center;grid-column:1/-1;">
+            <div style="font-size:12px;color:var(--ink-faint);">社区角色</div>
+            <div style="font-size:16px;font-weight:700;color:var(--leaf);">${member.role}</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--ink-soft);line-height:1.8;padding:12px;background:var(--bg);border-radius:10px;">
+          <p><strong>📖 人物故事：</strong></p>
+          <p>${story}</p>
+          <p style="margin-top:8px;"><strong>📊 行为数据：</strong></p>
+          <p>${member.name}目前持有 ${member.currency} 好心值，${member.ambassador ? '作为社区大使，在凝聚邻里关系方面发挥了关键作用，是社区不可或缺的核心成员。' : '如果满意度进一步提升，有望成为社区大使，发挥更大的影响力。'}</p>
+        </div>
+      </div>
+      <div class="mb-actions">
+        <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">关闭</button>
+        ${member.ambassador ? '<button class="btn btn-sm btn-gold" onclick="showToast(\'👑 ' + member.name + ' 是社区大使！\', \'success\');this.closest(\'.modal-overlay\').remove();">🏅 致敬大使</button>' : ''}
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// ============================================================
+// 数据看板
+// ============================================================
+
+function updateCharts() {
+  renderChart('populationChart', game.populationHistory, 'leaf', '人口');
+  renderChart('currencyChart', game.currencyHistory, 'gold', '流通量');
+  renderChart('taskChart', game.taskHistory, 'plum', '完成率');
+  renderChart('satisfactionChart', game.satisfactionHistory, 'brand', '满意度');
+
+  // 更新当前值
+  document.getElementById('popCurrentValue').textContent = game.population;
+  document.getElementById('currCurrentValue').textContent = formatNumber(game.currency);
+  document.getElementById('taskCurrentValue').textContent = game.taskCompletion + '%';
+  document.getElementById('satCurrentValue').textContent = game.satisfaction;
+
+  // 更新数据标签
+  document.getElementById('popLabelValue').textContent = game.population;
+  document.getElementById('currLabelValue').textContent = formatNumber(game.currency);
+  document.getElementById('taskLabelValue').textContent = game.taskCompletion + '%';
+  document.getElementById('satLabelValue').textContent = game.satisfaction;
+}
+
+function renderChart(containerId, data, color, label) {
+  const container = document.getElementById(containerId);
+  const recent = data.slice(-30);
+  const max = Math.max(...recent, 1);
+  container.innerHTML = '';
+  recent.forEach((v, i) => {
+    const pct = Math.max(2, (v / max) * 100);
+    const wrap = document.createElement('div');
+    wrap.className = 'vbar-wrap-sim';
+    wrap.innerHTML = `
+      <div class="vbar-sim ${color}" style="height:${pct}%"></div>
+      <div class="vbar-label-sim">${i + 1}</div>
+    `;
+    container.appendChild(wrap);
+  });
+}
+
+// ============================================================
+// 路线图
+// ============================================================
+
+function updateRoadmap() {
+  const g = game;
+  let stage = 1;
+  if (g.day >= 181) stage = 4;
+  else if (g.day >= 91) stage = 3;
+  else if (g.day >= 31) stage = 2;
+  g.stage = stage;
+
+  // 更新阶段进度
+  const stageRanges = [
+    { min: 1, max: 30 },
+    { min: 31, max: 90 },
+    { min: 91, max: 180 },
+    { min: 181, max: 365 }
+  ];
+  const range = stageRanges[stage - 1];
+  const stageProgress = clamp(((g.day - range.min) / (range.max - range.min + 1)) * 100, 0, 100);
+  const overallProgress = clamp(((g.day - 1) / 364) * 100, 0, 100);
+
+  document.getElementById('stageProgressLabel').textContent = getStageName(stage) + ' ' + Math.round(stageProgress) + '%';
+  document.getElementById('stageProgressFill').style.width = overallProgress + '%';
+  document.getElementById('stageProgressFill').className = 'progress-fill ' + (stage === 1 ? 'brand' : stage === 2 ? 'gold' : stage === 3 ? 'leaf' : 'sky');
+
+  // 更新阶段目标和剩余天数
+  const stageGoals = [
+    '人口达到80+，任务完成率>50%，好幸福指数>60',
+    '人口达到200+，好心值流通>5000，满意度>75',
+    '人口达到500+，好幸福指数>75，满意度>80',
+    '所有指标>80，成就解锁>10，社区成为标杆'
+  ];
+  document.getElementById('stageGoalDesc').textContent = stageGoals[stage - 1] || '完成所有目标！';
+  document.getElementById('stageDaysRemaining').textContent = (365 - g.day + 1) + ' 天';
+
+  // 更新阶段显示
+  document.querySelectorAll('.roadmap-stage').forEach((el, i) => {
+    const s = i + 1;
+    el.classList.remove('active', 'completed');
+    if (s < stage) {
+      el.classList.add('completed');
+      document.getElementById('stage' + s + 'Check').textContent = '✅';
+    } else if (s === stage) {
+      el.classList.add('active');
+      document.getElementById('stage' + s + 'Check').textContent = '◀';
+    } else {
+      document.getElementById('stage' + s + 'Check').textContent = '';
+    }
+  });
+}
+
+// ============================================================
+// 排行榜
+// ============================================================
+
+function updateLeaderboard() {
+  const g = game;
+  const myScore = Math.round(g.population * 0.25 + g.happiness * 0.2 + g.currency * 0.0001 + g.satisfaction * 0.2 + g.taskCompletion * 0.15 + g.achievements.length * 5);
+
+  const allCommunities = [
+    { name: g.communityName + '（你）', population: g.population, happiness: g.happiness, currency: g.currency, satisfaction: g.satisfaction, score: myScore, isMine: true },
+    { name: g.leaderboard[0].name, population: g.leaderboard[0].population + rand(-5, 5), happiness: g.leaderboard[0].happiness + rand(-2, 2), currency: g.leaderboard[0].currency + rand(-100, 100), satisfaction: g.leaderboard[0].satisfaction + rand(-2, 2), score: 0, isMine: false },
+    { name: g.leaderboard[1].name, population: g.leaderboard[1].population + rand(-5, 5), happiness: g.leaderboard[1].happiness + rand(-2, 2), currency: g.leaderboard[1].currency + rand(-100, 100), satisfaction: g.leaderboard[1].satisfaction + rand(-2, 2), score: 0, isMine: false },
+    { name: g.leaderboard[2].name, population: g.leaderboard[2].population + rand(-5, 5), happiness: g.leaderboard[2].happiness + rand(-2, 2), currency: g.leaderboard[2].currency + rand(-100, 100), satisfaction: g.leaderboard[2].satisfaction + rand(-2, 2), score: 0, isMine: false }
+  ];
+
+  allCommunities.forEach(c => {
+    c.score = Math.round(c.population * 0.25 + c.happiness * 0.2 + c.currency * 0.0001 + c.satisfaction * 0.2 + (c.isMine ? g.taskCompletion * 0.15 + g.achievements.length * 5 : 0));
+  });
+
+  allCommunities.sort((a, b) => b.score - a.score);
+
+  const tbody = document.getElementById('leaderboardBody');
+  tbody.innerHTML = '';
+  allCommunities.forEach((c, i) => {
+    const rank = i + 1;
+    const tr = document.createElement('tr');
+    if (c.isMine) tr.className = 'highlight';
+    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+    tr.innerHTML = `
+      <td><span class="rank-num ${rankClass}">${rank}</span></td>
+      <td>${c.name}</td>
+      <td>${c.population}</td>
+      <td>${c.happiness}</td>
+      <td>${formatNumber(c.currency)}</td>
+      <td>${c.satisfaction}</td>
+      <td><strong>${c.score}</strong></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const myRank = allCommunities.findIndex(c => c.isMine) + 1;
+  document.getElementById('rankBadge').textContent = '第 ' + myRank + ' 名';
+}
+
+// ============================================================
+// 经营报告
+// ============================================================
+
+function checkReportGeneration() {
+  if (game.day % 10 === 0 && game.day > 0) {
+    generateReport();
+  }
+}
+
+function generateReport() {
+  const g = game;
+  g.reportCount++;
+  updateStatusPanel();
+
+  const prevPop = g.populationHistory[g.populationHistory.length - 11] || g.population;
+  const prevCurr = g.currencyHistory[g.currencyHistory.length - 11] || g.currency;
+  const prevTask = g.taskHistory[g.taskHistory.length - 11] || g.taskCompletion;
+  const prevSat = g.satisfactionHistory[g.satisfactionHistory.length - 11] || g.satisfaction;
+
+  const popChange = g.population - prevPop;
+  const currChange = g.currency - prevCurr;
+  const taskChange = g.taskCompletion - prevTask;
+  const satChange = g.satisfaction - prevSat;
+
+  const recentEvents = g.eventCount;
+  const recentAchievements = g.achievements.length;
+
+  // 建议
+  let advice = '';
+  if (g.happiness < 50) advice += '好幸福指数偏低，建议通过举办社区活动和提高好心值兑换率来提升居民幸福感。';
+  if (g.taskCompletion < 50) advice += '任务完成率不足，考虑增加新任务类型或降低任务门槛来激励参与。';
+  if (g.satisfaction < 50) advice += '用户满意度较低，建议优化社区功能和建立反馈机制来改善体验。';
+  if (g.population < 100) advice += '社区人口规模较小，可以加大宣传力度或引入商家合作来吸引新居民。';
+  if (g.budget < 1000) advice += '预算紧张，建议寻求企业赞助或控制开支。';
+  if (!advice) advice += '社区运营状况良好，继续保持！可以考虑探索跨社区合作等高级功能。';
+
+  const area = document.getElementById('reportArea');
+  const report = document.createElement('div');
+  report.className = 'report-card';
+  report.innerHTML = `
+    <div class="rc-header">
+      <div class="rc-title">📋 第 ${g.reportCount} 期经营报告</div>
+      <div class="rc-badge">Day ${g.day}</div>
+    </div>
+    <div class="rc-section">
+      <h5>📊 关键指标变化（过去10天）</h5>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;">
+        <div>人口：${g.population} <span style="color:${popChange >= 0 ? 'var(--leaf)' : 'var(--brand)'};">(${popChange >= 0 ? '+' : ''}${popChange})</span></div>
+        <div>好心值流通：${formatNumber(g.currency)} <span style="color:${currChange >= 0 ? 'var(--leaf)' : 'var(--brand)'};">(${currChange >= 0 ? '+' : ''}${currChange})</span></div>
+        <div>任务完成率：${g.taskCompletion}% <span style="color:${taskChange >= 0 ? 'var(--leaf)' : 'var(--brand)'};">(${taskChange >= 0 ? '+' : ''}${taskChange})</span></div>
+        <div>用户满意度：${g.satisfaction} <span style="color:${satChange >= 0 ? 'var(--leaf)' : 'var(--brand)'};">(${satChange >= 0 ? '+' : ''}${satChange})</span></div>
+      </div>
+    </div>
+    <div class="rc-section">
+      <h5>🏅 成就解锁</h5>
+      <p>已解锁 ${recentAchievements} / 15 个成就</p>
+    </div>
+    <div class="rc-section">
+      <h5>⚡ 事件总结</h5>
+      <p>共触发 ${recentEvents} 次随机事件</p>
+    </div>
+    <div class="rc-section">
+      <h5>💡 下一阶段建议</h5>
+      <p>${advice}</p>
+    </div>
+    <div class="rc-actions">
+      <button class="btn btn-sm btn-sky" onclick="showToast('📋 报告已保存！', 'success')">💾 保存报告</button>
+      <button class="btn btn-sm btn-gold" onclick="showToast('📤 报告已分享！', 'success')">📤 分享报告</button>
+    </div>
+  `;
+  area.insertBefore(report, area.firstChild);
+}
+
+// ============================================================
+// 分享与导出
+// ============================================================
+
+function openShareModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-box share-modal">
+      <button class="mb-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      <div class="mb-title">📤 分享经营成果</div>
+      <div class="mb-body">
+        <p style="margin-bottom:12px;">分享你的社区运营成果到以下平台：</p>
+        <div class="share-icons">
+          <div class="si" onclick="showToast('已分享到微信！', 'success');this.closest('.modal-overlay').remove();" style="background:#e7f0e9;color:#3f7d5b;">💬</div>
+          <div class="si" onclick="showToast('已分享到微博！', 'success');this.closest('.modal-overlay').remove();" style="background:#fbeae3;color:#c8533a;">📱</div>
+          <div class="si" onclick="showToast('已复制链接！', 'success');this.closest('.modal-overlay').remove();" style="background:#f6ecd6;color:#c98a2b;">🔗</div>
+          <div class="si" onclick="showToast('已分享到QQ！', 'success');this.closest('.modal-overlay').remove();" style="background:#e6eef4;color:#3b6b8c;">💻</div>
+        </div>
+        <div class="share-link">
+          <input type="text" value="好事近社区运营成果 — Day ${game.day}，${game.communityName} 综合评分领先！" readonly onclick="this.select()" />
+          <button class="btn btn-sm btn-brand" onclick="copyShareText()">复制</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function copyShareText() {
+  const text = `🏘️ 好事近·社区运营模拟器\n\n社区：${game.communityName}\nDay ${game.day}\n\n📊 运营数据：\n人口：${game.population}\n好幸福指数：${game.happiness}/100\n好心值流通：${formatNumber(game.currency)}\n任务完成率：${game.taskCompletion}%\n用户满意度：${game.satisfaction}/100\n预算余额：${formatNumber(game.budget)}\n\n🏅 已解锁成就：${game.achievements.length}/15\n\n快来试试你的社区运营能力！`;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('✅ 分享文本已复制到剪贴板！', 'success');
+  }).catch(() => {
+    showToast('✅ 复制成功！', 'success');
+  });
+  const overlay = document.querySelector('.modal-overlay');
+  if (overlay) overlay.remove();
+}
+
+function exportReport() {
+  const text = `好事近·社区运营模拟器 — 经营报告\n\n社区名称：${game.communityName}\n当前回合：Day ${game.day}\n发展阶段：${getStageName(game.stage)}\n\n=== 关键指标 ===\n社区人口：${game.population}\n好幸福指数：${game.happiness}/100\n好心值流通量：${formatNumber(game.currency)}\n任务完成率：${game.taskCompletion}%\n用户满意度：${game.satisfaction}/100\n预算余额：${formatNumber(game.budget)}\n\n=== 成就 ===\n已解锁成就：${game.achievements.length}/15\n${game.achievements.map(id => '✓ ' + ACHIEVEMENTS.find(a => a.id === id).name).join('\n')}\n\n=== 社区成员 ===\n${game.members.map(m => `${m.name}（${m.role}）- 满意度:${m.satisfaction}% 活跃度:${m.activity}%${m.ambassador ? ' 👑大使' : ''}`).join('\n')}\n\n=== 决策统计 ===\n总决策次数：${game.decisionCount}\n\n=== 事件统计 ===\n总触发事件：${game.eventCount}\n\n---\n生成时间：Day ${game.day}\n好事近·社区运营模拟器 v1.0`;
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `好事近_经营报告_Day${game.day}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('📄 报告已导出！', 'success');
+}
+
+function copyCommunityLink() {
+  const data = {
+    name: game.communityName,
+    day: game.day,
+    population: game.population,
+    happiness: game.happiness,
+    currency: game.currency,
+    taskCompletion: game.taskCompletion,
+    satisfaction: game.satisfaction,
+    budget: game.budget,
+    achievements: game.achievements,
+    decisionCount: game.decisionCount
+  };
+  const str = btoa(JSON.stringify(data));
+  const link = 'haoshijin://simulator?data=' + str;
+  navigator.clipboard.writeText(link).then(() => {
+    showToast('🔗 数据链接已复制！', 'success');
+  }).catch(() => {
+    showToast('🔗 链接已生成！', 'success');
+  });
+}
+
+// ============================================================
+// Toast 通知系统
+// ============================================================
+
+function showToast(msg, type) {
+  const toast = document.createElement('div');
+  toast.className = 'toast toast-' + (type || 'info');
+  const icons = { success: '✅', warning: '⚠️', error: '❌', info: 'ℹ️' };
+  toast.innerHTML = `
+    <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+    <span class="toast-msg">${msg}</span>
+    <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => { if (toast.parentElement) toast.remove(); }, 3000);
+}
+
+// ============================================================
+// 社区名称编辑
+// ============================================================
+
+function editCommunityName() {
+  const display = document.getElementById('communityNameDisplay');
+  const current = game.communityName;
+  display.innerHTML = `<input type="text" class="cn-input" id="cnInput" value="${current}" maxlength="20" />`;
+  document.getElementById('cnEditAction') && document.getElementById('cnEditAction').remove();
+  const input = document.getElementById('cnInput');
+  input.focus();
+  input.select();
+  input.addEventListener('blur', saveCommunityName);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') saveCommunityName(); });
+}
+
+function saveCommunityName() {
+  const input = document.getElementById('cnInput');
+  if (!input) return;
+  const name = input.value.trim() || '好事家园';
+  game.communityName = name;
+  document.getElementById('communityNameDisplay').textContent = name;
+  updateStatusPanel();
+  updateLeaderboard();
+}
+
+// ============================================================
+// 回到顶部
+// ============================================================
+
+document.addEventListener('scroll', () => {
+  document.getElementById('totop').classList.toggle('show', document.documentElement.scrollTop > 600);
+}, { passive: true });
+document.getElementById('totop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// ============================================================
+// 启动游戏
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  initGame();
+  showWelcomeModal();
+  showToast('🎮 欢迎来到好事近·社区运营模拟器！开始你的社区运营之旅吧！', 'info');
+});
+
+// ============================================================
+// 快速统计栏更新
+// ============================================================
+
+function updateQuickStats() {
+  const g = game;
+  document.getElementById('quickDecisionCount').textContent = g.decisionCount;
+  document.getElementById('quickPopulation').textContent = g.population;
+  document.getElementById('quickHappiness').textContent = g.happiness;
+  document.getElementById('quickCurrency').textContent = formatNumber(g.currency);
+  document.getElementById('quickAchievements').textContent = g.achievements.length;
+  document.getElementById('quickBudget').textContent = formatNumber(g.budget);
+  document.getElementById('quickStageLabel').textContent = '阶段：' + getStageName(g.stage);
+}
+
+// 覆盖原有 updateStatusPanel 以包含快捷统计
+const _origUpdateStatus = updateStatusPanel;
+updateStatusPanel = function() {
+  _origUpdateStatus();
+  updateQuickStats();
+};
+
+// ============================================================
+// 决策历史
+// ============================================================
+
+const _origMakeDecision = makeDecision;
+makeDecision = function(d, idx) {
+  _origMakeDecision(d, idx);
+  addDecisionHistory(d);
+};
+
+function addDecisionHistory(d) {
+  const area = document.getElementById('decisionHistoryArea');
+  area.style.display = 'block';
+  const list = document.getElementById('decisionHistoryList');
+  const item = document.createElement('div');
+  item.className = 'dh-item';
+  item.style.animation = 'simFadeIn .2s ease';
+  const typeLabels = {
+    economy: '经济', task: '任务', activity: '活动', cooperation: '合作', skill: '技能'
+  };
+  item.innerHTML = `
+    <span class="dh-day">Day ${game.day}</span>
+    <span class="dh-name">${d.icon} ${d.title}</span>
+    <span class="dh-type">${typeLabels[d.type] || d.type}</span>
+  `;
+  list.insertBefore(item, list.firstChild);
+  document.getElementById('historyCountBadge').textContent = list.children.length + ' 条';
+}
+
+// ============================================================
+// 事件日志
+// ============================================================
+
+function addEventLog(eventTitle, optionText) {
+  const list = document.getElementById('eventLogList');
+  const empty = list.querySelector('p');
+  if (empty) empty.remove();
+  const item = document.createElement('div');
+  item.className = 'dh-item';
+  item.style.animation = 'simFadeIn .2s ease';
+  item.innerHTML = `
+    <span class="dh-day">Day ${game.day}</span>
+    <span class="dh-name">${eventTitle}</span>
+    <span class="dh-type" style="background:var(--leaf-soft);color:var(--leaf);">${optionText.substring(0, 12)}${optionText.length > 12 ? '...' : ''}</span>
+  `;
+  list.insertBefore(item, list.firstChild);
+  document.getElementById('eventLogCount').textContent = list.children.length + ' 条';
+}
+
+// 覆盖事件处理以记录日志
+const _origHandleEventOption = handleEventOption;
+handleEventOption = function(idx) {
+  const event = window._currentEvent;
+  if (event) {
+    addEventLog(event.title, event.options[idx].text);
+  }
+  _origHandleEventOption(idx);
+};
+
+// ============================================================
+// 欢迎弹窗
+// ============================================================
+
+function showWelcomeModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'welcomeOverlay';
+  overlay.innerHTML = `
+    <div class="modal-box celebration-modal" style="max-width:560px;">
+      <button class="mb-close" onclick="closeWelcome()">✕</button>
+      <div class="cm-icon" style="font-size:56px;">🏘️</div>
+      <div class="cm-title" style="font-size:24px;">好事近 · 社区运营模拟器</div>
+      <div class="cm-desc" style="font-size:14px;color:var(--ink-soft);line-height:1.8;margin-bottom:16px;text-align:left;">
+        <p><strong>欢迎成为社区运营官！</strong>你将负责管理一个新兴社区，通过做决策来促进社区发展。每个决策都会影响社区的多个方面，你需要权衡利弊，做出最佳选择。</p>
+        <p style="margin-top:8px;"><strong>🎯 游戏目标：</strong>在365天内，将社区建设成一个繁荣、幸福、可持续发展的理想家园。在运营过程中，你需要平衡人口增长、好幸福指数、好心值流通、任务完成率、用户满意度和预算等多个指标。</p>
+        <p style="margin-top:8px;"><strong>📋 操作方式：</strong></p>
+        <ul style="padding-left:22px;font-size:13px;">
+          <li>每回合从3个决策中选择1个执行，决策内容涉及经济、任务、活动、合作、技能等多个领域</li>
+          <li>决策会影响社区的各项指标，包括人口、好幸福指数、好心值流通量、任务完成率、用户满意度和预算</li>
+          <li>随机事件不定期出现，每个事件有2-3个应对选项，需要及时应对</li>
+          <li>每10天自动生成经营报告，总结过去10天的运营情况和下一步建议</li>
+          <li>解锁成就获得额外奖励，共有15个成就等待解锁</li>
+          <li>社区成员会随着你的决策改变满意度和活跃度，高满意度成员可成为社区大使</li>
+        </ul>
+        <p style="margin-top:8px;"><strong>💡 运营策略提示：</strong></p>
+        <ul style="padding-left:22px;font-size:13px;">
+          <li>前期（Day 1-30）：注重人口增长和任务完成率，建立社区基础</li>
+          <li>中期（Day 31-180）：提升好幸福指数和满意度，引入商家合作</li>
+          <li>后期（Day 181-365）：追求全面均衡发展，探索跨社区合作</li>
+          <li>平衡发展各项指标，不要偏废任何一项</li>
+          <li>关注社区成员的满意度，他们是社区最宝贵的财富</li>
+        </ul>
+        <p style="margin-top:8px;padding:10px;background:var(--gold-soft);border-radius:8px;color:var(--gold);font-weight:600;">准备好了吗？让我们一起创造一个美好的社区！</p>
+      </div>
+      <div class="mb-actions" style="justify-content:center;">
+        <button class="btn btn-brand btn-lg" onclick="closeWelcome()">开始运营！</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function closeWelcome() {
+  const el = document.getElementById('welcomeOverlay');
+  if (el) el.remove();
+}
+
+// ============================================================
+// 操作指南弹窗
+// ============================================================
+
+function showHelpModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-box" style="max-width:560px;">
+      <button class="mb-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      <div class="mb-title">📖 操作指南</div>
+      <div class="mb-body">
+        <div style="margin:12px 0;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">🎯 核心玩法</div>
+          <p style="font-size:13px;">每个回合你会看到3个决策选项，点选一个执行。决策会影响社区人口、好幸福指数、好心值流通量、任务完成率、用户满意度和预算。</p>
+        </div>
+        <div style="margin:12px 0;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">⚡ 随机事件</div>
+          <p style="font-size:13px;">每3-5回合可能触发随机事件，每个事件有2-3个应对选项，你的选择会影响社区指标。</p>
+        </div>
+        <div style="margin:12px 0;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">🏅 成就系统</div>
+          <p style="font-size:13px;">共15个成就等待解锁，达成特定条件即可获得成就和奖励。</p>
+        </div>
+        <div style="margin:12px 0;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">📊 数据看板</div>
+          <p style="font-size:13px;">四种核心指标的趋势图实时更新，帮助你了解社区发展动态。</p>
+        </div>
+        <div style="margin:12px 0;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">👥 社区成员</div>
+          <p style="font-size:13px;">5位社区成员各有不同的满意度、活跃度和好心值，点击可查看详情。高满意度成员可成为社区大使。</p>
+        </div>
+        <div style="margin:12px 0;padding:12px;background:var(--gold-soft);border-radius:8px;">
+          <div style="font-weight:700;font-size:14px;color:var(--gold);">💡 运营策略建议</div>
+          <p style="font-size:13px;margin-top:4px;">前期注重人口增长和任务完成率，中期提升好幸福指数和满意度，后期追求全面均衡发展。</p>
+        </div>
+      </div>
+      <div class="mb-actions">
+        <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">关闭</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// ============================================================
+// 详细统计弹窗
+// ============================================================
+
+function showGameStats() {
+  const g = game;
+  const typeCounts = {};
+  g.decisionsMade.forEach(d => {
+    typeCounts[d.type] = (typeCounts[d.type] || 0) + 1;
+  });
+  const typeLabels = { economy: '经济决策', task: '任务决策', activity: '活动决策', cooperation: '合作决策', skill: '技能决策' };
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-box" style="max-width:560px;">
+      <button class="mb-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      <div class="mb-title">📊 详细运营统计</div>
+      <div class="mb-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;">
+          <div style="background:var(--brand-soft);padding:12px;border-radius:8px;text-align:center;">
+            <div style="font-size:11px;color:var(--ink-faint);">总回合数</div>
+            <div style="font-size:22px;font-weight:800;color:var(--brand);">${g.day}</div>
+          </div>
+          <div style="background:var(--leaf-soft);padding:12px;border-radius:8px;text-align:center;">
+            <div style="font-size:11px;color:var(--ink-faint);">总决策数</div>
+            <div style="font-size:22px;font-weight:800;color:var(--leaf);">${g.decisionCount}</div>
+          </div>
+          <div style="background:var(--gold-soft);padding:12px;border-radius:8px;text-align:center;">
+            <div style="font-size:11px;color:var(--ink-faint);">已解锁成就</div>
+            <div style="font-size:22px;font-weight:800;color:var(--gold);">${g.achievements.length}/15</div>
+          </div>
+          <div style="background:var(--sky-soft);padding:12px;border-radius:8px;text-align:center;">
+            <div style="font-size:11px;color:var(--ink-faint);">触发事件</div>
+            <div style="font-size:22px;font-weight:800;color:var(--sky);">${g.eventCount}</div>
+          </div>
+        </div>
+        <div style="margin:12px 0;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">📋 决策类型分布</div>
+          ${Object.keys(typeLabels).length > 0 ? Object.entries(typeLabels).map(([k, v]) => {
+            const count = typeCounts[k] || 0;
+            const pct = g.decisionCount > 0 ? Math.round((count / g.decisionCount) * 100) : 0;
+            return `
+              <div style="display:flex;align-items:center;gap:8px;margin:4px 0;font-size:13px;">
+                <span style="width:80px;flex-shrink:0;">${v}</span>
+                <div style="flex:1;height:16px;background:#f3ede4;border-radius:8px;overflow:hidden;">
+                  <div style="height:100%;width:${pct}%;background:var(--brand);border-radius:8px;transition:width .5s;"></div>
+                </div>
+                <span style="width:40px;text-align:right;font-weight:700;">${count}次</span>
+              </div>
+            `;
+          }).join('') : '<p style="font-size:13px;color:var(--ink-faint);">暂无决策记录</p>'}
+        </div>
+        <div style="margin:12px 0;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">🏅 已解锁成就</div>
+          ${g.achievements.length > 0 ? g.achievements.map(id => {
+            const a = ACHIEVEMENTS.find(x => x.id === id);
+            return a ? `<div style="display:flex;align-items:center;gap:8px;font-size:13px;margin:3px 0;"><span>${a.icon}</span><span>${a.name}</span><span style="color:var(--ink-faint);font-size:11px;">— ${a.reward}</span></div>` : '';
+          }).join('') : '<p style="font-size:13px;color:var(--ink-faint);">暂无成就</p>'}
+        </div>
+        <div style="margin:12px 0;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">📈 当前指标</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px;">
+            <div>人口：<strong>${g.population}</strong></div>
+            <div>好幸福指数：<strong>${g.happiness}/100</strong></div>
+            <div>好心值流通：<strong>${formatNumber(g.currency)}</strong></div>
+            <div>任务完成率：<strong>${g.taskCompletion}%</strong></div>
+            <div>用户满意度：<strong>${g.satisfaction}/100</strong></div>
+            <div>预算余额：<strong>${formatNumber(g.budget)}</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-actions">
+        <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">关闭</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// ============================================================
+// 重置游戏
+// ============================================================
+
+function resetGame() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-box">
+      <button class="mb-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      <div class="mb-title">🔄 确认重置</div>
+      <div class="mb-body">
+        <p>确定要重新开始吗？当前所有游戏进度将被清除，包括：</p>
+        <ul style="padding-left:22px;margin:8px 0;">
+          <li>所有决策记录</li>
+          <li>已解锁的成就</li>
+          <li>社区发展数据</li>
+          <li>经营报告</li>
+        </ul>
+        <p style="color:var(--brand);font-weight:600;">此操作不可撤销！</p>
+      </div>
+      <div class="mb-actions">
+        <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove()">取消</button>
+        <button class="btn btn-sm btn-brand" onclick="doReset()">确认重置</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function doReset() {
+  // 关闭所有弹窗
+  document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+  document.querySelectorAll('.toast').forEach(el => el.remove());
+  document.querySelectorAll('.event-notification').forEach(el => el.remove());
+
+  // 重置游戏状态
+  game.day = 1;
+  game.population = 50;
+  game.happiness = 65;
+  game.currency = 1000;
+  game.taskCompletion = 45;
+  game.satisfaction = 70;
+  game.budget = 10000;
+  game.achievements = [];
+  game.decisionCount = 0;
+  game.eventCount = 0;
+  game.reportCount = 0;
+  game.decisionsMade = [];
+  game.populationHistory = [50];
+  game.currencyHistory = [1000];
+  game.taskHistory = [45];
+  game.satisfactionHistory = [70];
+  game.stage = 1;
+  game.daysSinceLastEvent = 0;
+  game.totalDecisions = 0;
+  game.members = [
+    { id: 1, name: '张明华', role: '社区志愿者', avatar: '#c8533a', satisfaction: 75, activity: 80, currency: 120, ambassador: false },
+    { id: 2, name: '李芳', role: '退休教师', avatar: '#3f7d5b', satisfaction: 82, activity: 65, currency: 85, ambassador: false },
+    { id: 3, name: '王建国', role: '企业主', avatar: '#3b6b8c', satisfaction: 60, activity: 45, currency: 200, ambassador: false },
+    { id: 4, name: '赵小红', role: '大学生', avatar: '#c98a2b', satisfaction: 70, activity: 90, currency: 50, ambassador: false },
+    { id: 5, name: '刘阿姨', role: '退休职工', avatar: '#6b4a7a', satisfaction: 78, activity: 70, currency: 65, ambassador: false }
+  ];
+
+  // 清空 UI
+  document.getElementById('decisionResultArea').innerHTML = '';
+  document.getElementById('nextDayBtn').style.display = 'none';
+  document.getElementById('decisionHistoryArea').style.display = 'none';
+  document.getElementById('decisionHistoryList').innerHTML = '';
+  document.getElementById('historyCountBadge').textContent = '0 条';
+  document.getElementById('eventNotificationArea').innerHTML = '';
+  document.getElementById('eventLogList').innerHTML = '<p style="font-size:13px;color:var(--ink-faint);text-align:center;padding:16px;">暂无事件记录</p>';
+  document.getElementById('eventLogCount').textContent = '0 条';
+  document.getElementById('reportArea').innerHTML = `
+    <div class="note sky" style="margin-top:8px;">
+      <span class="tag">提示</span>
+      每10天会自动生成一份经营报告，总结关键指标变化、成就解锁和事件总结。
+    </div>
+  `;
+
+  // 重新初始化
+  initGame();
+  showToast('🔄 游戏已重置，重新开始！', 'info');
+}
+
+// ============================================================
+// 游戏完成（Day 365）
+// ============================================================
+
+function showGameCompletion() {
+  const g = game;
+  const totalScore = Math.round(
+    (g.population / 1000) * 20 +
+    (g.happiness / 100) * 20 +
+    (g.currency / 100000) * 15 +
+    (g.taskCompletion / 100) * 15 +
+    (g.satisfaction / 100) * 15 +
+    (g.achievements.length / 15) * 15
+  );
+
+  const grade = totalScore >= 90 ? 'S' : totalScore >= 75 ? 'A' : totalScore >= 60 ? 'B' : totalScore >= 40 ? 'C' : 'D';
+  const gradeEmoji = totalScore >= 90 ? '👑' : totalScore >= 75 ? '🏆' : totalScore >= 60 ? '⭐' : totalScore >= 40 ? '📈' : '📉';
+  const gradeComment = totalScore >= 90 ? '传奇社区运营官！你的社区已成为全国标杆！' :
+    totalScore >= 75 ? '优秀运营官！社区发展非常出色！' :
+    totalScore >= 60 ? '合格的运营官，社区发展良好，还有提升空间。' :
+    totalScore >= 40 ? '社区运营遇到了一些挑战，再接再厉！' :
+    '社区运营需要更多努力，看看哪里可以改进。';
+
+  // 禁用决策
+  document.querySelectorAll('.decision-card').forEach(c => c.classList.add('disabled'));
+  document.getElementById('nextDayBtn').style.display = 'none';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-box celebration-modal" style="max-width:600px;">
+      <div class="cm-icon" style="font-size:64px;">🎊</div>
+      <div class="cm-title" style="font-size:26px;color:var(--brand);">🎉 365天运营结束！</div>
+      <div class="cm-desc" style="font-size:15px;color:var(--ink-soft);margin:8px 0 16px;">
+        你的社区运营旅程圆满完成！以下是最终成绩：
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0;">
+        <div style="background:var(--brand-soft);padding:12px;border-radius:10px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:var(--brand);">${g.population}</div>
+          <div style="font-size:11px;color:var(--ink-faint);">最终人口</div>
+        </div>
+        <div style="background:var(--gold-soft);padding:12px;border-radius:10px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:var(--gold);">${g.happiness}</div>
+          <div style="font-size:11px;color:var(--ink-faint);">好幸福指数</div>
+        </div>
+        <div style="background:var(--leaf-soft);padding:12px;border-radius:10px;text-align:center;">
+          <div style="font-size:28px;font-weight:800;color:var(--leaf);">${g.satisfaction}</div>
+          <div style="font-size:11px;color:var(--ink-faint);">满意度</div>
+        </div>
+      </div>
+      <div style="background:var(--paper);border:2px solid var(--gold);border-radius:16px;padding:16px;margin:12px 0;">
+        <div style="font-size:48px;text-align:center;">${gradeEmoji}</div>
+        <div style="text-align:center;font-size:20px;font-weight:800;color:var(--gold);">评级：${grade}（${totalScore}分）</div>
+        <div style="text-align:center;font-size:13px;color:var(--ink-soft);margin-top:4px;">${gradeComment}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;margin:12px 0;text-align:left;">
+        <div>好心值流通：${formatNumber(g.currency)}</div>
+        <div>任务完成率：${g.taskCompletion}%</div>
+        <div>预算余额：${formatNumber(g.budget)}</div>
+        <div>解锁成就：${g.achievements.length}/15</div>
+        <div>总决策数：${g.decisionCount}</div>
+        <div>触发事件：${g.eventCount}</div>
+      </div>
+      <div class="mb-actions" style="justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-gold btn-lg" onclick="this.closest('.modal-overlay').remove();exportReport();">📄 导出最终报告</button>
+        <button class="btn btn-brand btn-lg" onclick="this.closest('.modal-overlay').remove();openShareModal();">📤 分享成果</button>
+        <button class="btn btn-sm" onclick="this.closest('.modal-overlay').remove();resetGame();">🔄 重新开始</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // 生成最终报告
+  generateReport();
+  showToast('🎊 恭喜完成365天运营！最终评级：' + grade, 'success');
+}
+</script>
+
+</body>
+</html>

@@ -32,6 +32,7 @@ https://wadesha.github.io/good-deeds-nearby/
 │   ├── framework.html      ← 07 方法论框架扩展（假设树/统计模型/用户分层）
 │   ├── dashboard.html      ← 08 数据中台（多维分析/数据交易/场景模拟器/预测模型）
 │   ├── interact.html       ← 09 互动模块（好事人格测试/时间贫困度自评/社区匹配/问答）
+│   ├── simulator.html      ← 10 社区运营模拟器（经营决策/成就系统/事件系统）
 │   └── next.html           ← 下一步行动建议
 └── css/
     └── style.css           ← 共享样式
