@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>互动广场 · 好事近</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #faf8f6; color: #2b2622; }
+
+/* 导航增强 */
+.topbar { background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #eee8e2; position: sticky; top: 0; z-index: 1000; }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; max-width: 1200px; margin: 0 auto; height: 56px; }
+.topbar .logo { font-size: 18px; font-weight: 800; text-decoration: none; color: #2b2622; }
+.topbar .logo span { color: #c8533a; }
+.topbar nav { display: flex; gap: 4px; overflow-x: auto; }
+.topbar nav a { padding: 6px 12px; font-size: 13px; font-weight: 600; color: #7a6e66; text-decoration: none; border-radius: 6px; white-space: nowrap; transition: all .15s; }
+.topbar nav a:hover { color: #2b2622; background: #f5f0eb; }
+.topbar nav a.active { color: #c8533a; background: #fef3ef; }
+
+/* 页面头部 */
+.page-hd { background: linear-gradient(135deg, #fef3ef, #fff8f0); padding: 36px 24px 28px; text-align: center; border-bottom: 1px solid #eee8e2; }
+.page-hd h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+.page-hd p { font-size: 14px; color: #7a6e66; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+.wrap { max-width: 900px; margin: 0 auto; padding: 20px 16px 100px; }
+
+/* 模块卡片 */
+.module { background: #fff; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(43,38,34,.04), 0 4px 20px rgba(43,38,34,.06); overflow: hidden; border: 1px solid #eee8e2; transition: box-shadow .2s; }
+.module:hover { box-shadow: 0 2px 6px rgba(43,38,34,.06), 0 8px 32px rgba(43,38,34,.08); }
+.module-hd { padding: 20px 24px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f5f0eb; }
+.module-hd .m-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0; }
+.module-hd .m-icon.pink { background: #fef3ef; }
+.module-hd .m-icon.green { background: #edf7f0; }
+.module-hd .m-icon.blue { background: #eef4fa; }
+.module-hd .m-icon.purple { background: #f5f0fa; }
+.module-hd .m-icon.orange { background: #fef6e8; }
+.module-hd .m-icon.teal { background: #e8f6f5; }
+.module-hd .m-info { flex: 1; }
+.module-hd .m-info h3 { font-size: 17px; font-weight: 700; }
+.module-hd .m-info p { font-size: 13px; color: #7a6e66; margin-top: 2px; }
+.module-bd { padding: 16px 24px 20px; }
+
+/* 选项网格 */
+.opt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.opt-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 16px 12px; border-radius: 12px; border: 2px solid #eee8e2;
+  cursor: pointer; transition: all .2s; user-select: none; position: relative;
+  background: #fff;
+}
+.opt-card:hover { border-color: #ddd5cc; background: #faf8f6; }
+.opt-card.selected { border-color: #c8533a; background: #fef3ef; }
+.opt-card .o-icon { font-size: 28px; margin-bottom: 6px; }
+.opt-card .o-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.opt-card .o-desc { font-size: 12px; color: #7a6e66; line-height: 1.4; }
+.opt-card .o-check {
+  position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid #ddd5cc; display: grid; place-items: center;
+  font-size: 10px; color: #fff; font-weight: 700; transition: all .2s;
+}
+.opt-card.selected .o-check { border-color: #c8533a; background: #c8533a; }
+
+/* 操作栏 */
+.act-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #f5f0eb; flex-wrap: wrap; }
+.act-bar .count { font-size: 13px; color: #7a6e66; }
+.act-bar .count b { color: #c8533a; }
+.btn-send {
+  padding: 9px 24px; border-radius: 999px; font-size: 14px; font-weight: 700;
+  color: #fff; background: linear-gradient(135deg, #c8533a, #b0442e);
+  border: none; cursor: pointer; transition: all .2s; box-shadow: 0 2px 8px rgba(200,83,58,.2);
+}
+.btn-send:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(200,83,58,.3); }
+.btn-send:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-send:active { transform: scale(.97); }
+
+/* 结果区域 */
+.result-box { margin-top: 16px; padding: 16px; border-radius: 12px; background: #faf8f6; border: 1px solid #eee8e2; display: none; }
+.result-box.show { display: block; animation: fadeUp .3s ease; }
+.result-box .r-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.result-box .r-content { font-size: 13px; color: #2b2622; line-height: 1.7; }
+.result-box .r-content .tag { display: inline-block; padding: 2px 10px; border-radius: 999px; background: #fef3ef; color: #c8533a; font-size: 12px; font-weight: 600; margin: 2px 3px; }
+
+/* 进度条模块 */
+.progress-bar { height: 6px; background: #eee8e2; border-radius: 999px; overflow: hidden; margin: 12px 0 8px; }
+.progress-bar .fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #c8533a, #da7a4a); transition: width .6s ease; }
+
+/* 统计条 */
+.stat-strip { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; justify-content: center; }
+.stat-strip .s-item { text-align: center; padding: 10px 20px; background: #fff; border-radius: 12px; border: 1px solid #eee8e2; min-width: 100px; }
+.stat-strip .s-item .s-num { font-size: 22px; font-weight: 800; color: #c8533a; }
+.stat-strip .s-item .s-label { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+
+/* 反馈弹窗 */
+.toast-box { position: fixed; top: 72px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  background: #fff; border: 1px solid #eee8e2; border-left: 4px solid #4a9e6e;
+  border-radius: 10px; padding: 14px 18px; box-shadow: 0 8px 32px rgba(43,38,34,.12);
+  display: flex; align-items: center; gap: 10px; max-width: 380px;
+  animation: slideIn .3s ease;
+}
+.toast .t-icon { font-size: 22px; }
+.toast .t-title { font-size: 14px; font-weight: 700; }
+.toast .t-desc { font-size: 12px; color: #7a6e66; margin-top: 1px; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+
+@media (max-width: 640px) {
+  .opt-grid { grid-template-columns: repeat(2, 1fr); }
+  .module-hd { padding: 16px 16px 12px; }
+  .module-bd { padding: 12px 16px 16px; }
+  .stat-strip .s-item { min-width: 70px; padding: 8px 12px; }
+  .stat-strip .s-item .s-num { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo">好事近 <span>·</span> 全案</a>
+    <nav>
+      <a href="../index.html">平台首页</a>
+      <a href="project.html">项目总览</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="simulator.html">模拟器</a>
+      <a href="choose.html">选择器</a>
+      <a href="cases.html">好事库</a>
+      <a href="interact2.html" class="active">互动广场</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<!-- 页面头部 -->
+<div class="page-hd">
+  <h1>🧩 社区互动广场</h1>
+  <p>每一个选择都很具体，每一个行动都贴近日常。选你想做的，一键发送。</p>
+</div>
+
+<div class="wrap">
+
+  <!-- 统计条 -->
+  <div class="stat-strip">
+    <div class="s-item"><div class="s-num" id="sTotal">47</div><div class="s-label">今日参与</div></div>
+    <div class="s-item"><div class="s-num" id="sActs">128</div><div class="s-label">今日好事</div></div>
+    <div class="s-item"><div class="s-num" id="sPoints">3,640</div><div class="s-label">好心值流通</div></div>
+    <div class="s-item"><div class="s-num" id="sMatches">23</div><div class="s-label">互助配对</div></div>
+  </div>
+
+  <!-- ====== 模块1：今日好事签到 ====== -->
+  <div class="module" id="m1">
+    <div class="module-hd">
+      <div class="m-icon pink">☀️</div>
+      <div class="m-info">
+        <h3>今日好事签到</h3>
+        <p>你今天是什么状态？打算做哪种好事？选好一键签到</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div style="font-size:13px;font-weight:700;color:#7a6e66;margin-bottom:8px;">① 你今天的状态</div>
+      <div class="opt-grid" id="moodGrid">
+        <div class="opt-card" data-mood="energetic" onclick="toggleMood(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">⚡</div>
+          <div class="o-title">精力充沛</div>
+          <div class="o-desc">今天状态很好，可以多做一些</div>
+        </div>
+        <div class="opt-card" data-mood="normal" onclick="toggleMood(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🙂</div>
+          <div class="o-title">普通日常</div>
+          <div class="o-desc">正常状态，做点顺手的小事</div>
+        </div>
+        <div class="opt-card" data-mood="tired" onclick="toggleMood(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">😌</div>
+          <div class="o-title">有点累</div>
+          <div class="o-desc">今天累了，做件不费力的好事</div>
+        </div>
+        <div class="opt-card" data-mood="rainy" onclick="toggleMood(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌧️</div>
+          <div class="o-title">雨天宅家</div>
+          <div class="o-desc">下雨不出门，做点线上能帮的</div>
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:#7a6e66;margin:12px 0 8px;">② 今天打算做的</div>
+      <div class="opt-grid" id="dailyActGrid">
+        <div class="opt-card" data-act="help" onclick="toggleDailyAct(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🤝</div>
+          <div class="o-title">帮邻居一个忙</div>
+          <div class="o-desc">取快递、提东西、看宠物</div>
+        </div>
+        <div class="opt-card" data-act="green" onclick="toggleDailyAct(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌿</div>
+          <div class="o-title">做件环保小事</div>
+          <div class="o-desc">分类垃圾、捡拾、整理单车</div>
+        </div>
+        <div class="opt-card" data-act="smile" onclick="toggleDailyAct(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">😊</div>
+          <div class="o-title">传递一个微笑</div>
+          <div class="o-desc">跟保安问好、夸同事、给家人拥抱</div>
+        </div>
+        <div class="opt-card" data-act="share" onclick="toggleDailyAct(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🔄</div>
+          <div class="o-title">分享一个东西</div>
+          <div class="o-desc">分享零食、知识、工具、好心情</div>
+        </div>
+        <div class="opt-card" data-act="quiet" onclick="toggleDailyAct(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🤫</div>
+          <div class="o-title">默默做件好事</div>
+          <div class="o-desc">不让人知道，自己心里开心</div>
+        </div>
+        <div class="opt-card" data-act="learn" onclick="toggleDailyAct(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">📖</div>
+          <div class="o-title">学习一个公益知识</div>
+          <div class="o-desc">了解垃圾分类、急救知识等</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选：状态 <b id="moodCount">0</b> · 行动 <b id="dailyActCount">0</b></span>
+        <button class="btn-send" id="btnM1" disabled onclick="submitM1()">📤 一键签到</button>
+      </div>
+      <div class="result-box" id="rM1">
+        <div class="r-title">✅ 签到成功</div>
+        <div class="r-content" id="rM1Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块2：社区互助速配 ====== -->
+  <div class="module" id="m2">
+    <div class="module-hd">
+      <div class="m-icon green">🤝</div>
+      <div class="m-info">
+        <h3>社区互助速配</h3>
+        <p>邻居们正在需要这些帮助，选你能做的，一键接下</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div class="opt-grid" id="helpGrid">
+        <div class="opt-card" data-help="elderly" onclick="toggleHelp(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">👴</div>
+          <div class="o-title">陪独居老人聊10分钟</div>
+          <div class="o-desc">3号楼王奶奶，每天下午最需要人陪</div>
+        </div>
+        <div class="opt-card" data-help="package" onclick="toggleHelp(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">📦</div>
+          <div class="o-title">帮取大件快递</div>
+          <div class="o-desc">5号楼李姐，快递太大搬不动，晚上7点前</div>
+        </div>
+        <div class="opt-card" data-help="dog" onclick="toggleHelp(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🐕</div>
+          <div class="o-title">傍晚帮遛狗</div>
+          <div class="o-desc">7号楼张先生出差，需要遛狗15分钟</div>
+        </div>
+        <div class="opt-card" data-help="print" onclick="toggleHelp(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🖨️</div>
+          <div class="o-title">帮打印作业</div>
+          <div class="o-desc">2号楼刘姐家打印机坏了，孩子作业今晚要交</div>
+        </div>
+        <div class="opt-card" data-help="trash" onclick="toggleHelp(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🗑️</div>
+          <div class="o-title">帮扔垃圾</div>
+          <div class="o-desc">6号楼行动不便的赵叔，垃圾已打包好放门口</div>
+        </div>
+        <div class="opt-card" data-help="teach" onclick="toggleHelp(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">📱</div>
+          <div class="o-title">教老人用手机挂号</div>
+          <div class="o-desc">1号楼陈爷爷，需要教线上预约挂号</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选 <b id="helpCount">0</b> 项互助</span>
+        <button class="btn-send" id="btnM2" disabled onclick="submitM2()">📤 一键接下</button>
+      </div>
+      <div class="result-box" id="rM2">
+        <div class="r-title">🤝 互助已接下</div>
+        <div class="r-content" id="rM2Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块3：好事挑战选秀 ====== -->
+  <div class="module" id="m3">
+    <div class="module-hd">
+      <div class="m-icon blue">🏆</div>
+      <div class="m-info">
+        <h3>好事挑战选秀</h3>
+        <p>选一个你今天想挑战的好事，难度不同，完成后的成就感也不同</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div class="opt-grid" id="challengeGrid">
+        <div class="opt-card" data-challenge="easy" onclick="toggleChallenge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌟</div>
+          <div class="o-title">⭐ 入门级</div>
+          <div class="o-desc">今天跟5个不同的人微笑问好，让楼道变暖</div>
+        </div>
+        <div class="opt-card" data-challenge="medium" onclick="toggleChallenge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">⭐⭐</div>
+          <div class="o-title">⭐⭐ 进阶级</div>
+          <div class="o-desc">今天主动帮一个邻居做件小事，不限形式</div>
+        </div>
+        <div class="opt-card" data-challenge="hard" onclick="toggleChallenge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">⭐⭐⭐</div>
+          <div class="o-title">⭐⭐⭐ 高手级</div>
+          <div class="o-desc">今天做一件"没有人知道是你做的"好事</div>
+        </div>
+        <div class="opt-card" data-challenge="extreme" onclick="toggleChallenge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🔥</div>
+          <div class="o-title">🔥 连续挑战</div>
+          <div class="o-desc">从今天起，连续7天每天做一件好事并记录</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选 <b id="challengeCount">0</b></span>
+        <button class="btn-send" id="btnM3" disabled onclick="submitM3()">📤 接受挑战</button>
+      </div>
+      <div class="result-box" id="rM3">
+        <div class="r-title">🏆 挑战已接受</div>
+        <div class="r-content" id="rM3Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块4：社区心愿投递 ====== -->
+  <div class="module" id="m4">
+    <div class="module-hd">
+      <div class="m-icon purple">✨</div>
+      <div class="m-info">
+        <h3>社区心愿投递</h3>
+        <p>你希望社区里增加什么？选一个最想要的，一键投递心愿</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div class="opt-grid" id="wishGrid">
+        <div class="opt-card" data-wish="bench" onclick="toggleWish(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🪑</div>
+          <div class="o-title">小区加装休闲长椅</div>
+          <div class="o-desc">老人散步累了没地方坐，已有32人支持</div>
+        </div>
+        <div class="opt-card" data-wish="light" onclick="toggleWish(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">💡</div>
+          <div class="o-title">楼道感应灯维修</div>
+          <div class="o-desc">3、5、7号楼多层楼道灯不亮，已有18人支持</div>
+        </div>
+        <div class="opt-card" data-wish="garden" onclick="toggleWish(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌻</div>
+          <div class="o-title">社区小花园认养</div>
+          <div class="o-desc">居民认养花坛，轮流浇水维护，已有25人支持</div>
+        </div>
+        <div class="opt-card" data-wish="book" onclick="toggleWish(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">📚</div>
+          <div class="o-title">楼道图书角</div>
+          <div class="o-desc">每栋楼设一个共享书架，邻里换书看，已有41人支持</div>
+        </div>
+        <div class="opt-card" data-wish="tool" onclick="toggleWish(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🔧</div>
+          <div class="o-title">共享工具墙</div>
+          <div class="o-desc">钻头、扳手、梯子等工具共用，随借随还，已有15人支持</div>
+        </div>
+        <div class="opt-card" data-wish="skill" onclick="toggleWish(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🎓</div>
+          <div class="o-title">邻里技能小课堂</div>
+          <div class="o-desc">邻居之间互相教技能：手机课、编织、书法，已有37人支持</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选 <b id="wishCount">0</b> 个心愿 · 总支持人数 <b id="wishTotal">0</b></span>
+        <button class="btn-send" id="btnM4" disabled onclick="submitM4()">📤 投递心愿</button>
+      </div>
+      <div class="result-box" id="rM4">
+        <div class="r-title">✨ 心愿已投递</div>
+        <div class="r-content" id="rM4Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块5：好心值消费计划 ====== -->
+  <div class="module" id="m5">
+    <div class="module-hd">
+      <div class="m-icon orange">💛</div>
+      <div class="m-info">
+        <h3>好心值消费计划</h3>
+        <p>你攒了 <b style="color:#c8533a;">360</b> 好心值，打算怎么用？选一个方案</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div class="opt-grid" id="pointGrid">
+        <div class="opt-card" data-point="coffee" onclick="togglePoint(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">☕</div>
+          <div class="o-title">换一杯暖心咖啡</div>
+          <div class="o-desc">消耗50好心值，合作咖啡店兑换一杯</div>
+        </div>
+        <div class="opt-card" data-point="donate" onclick="togglePoint(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🎁</div>
+          <div class="o-title">捐给社区老人</div>
+          <div class="o-desc">消耗100好心值，为独居老人换一份生活包</div>
+        </div>
+        <div class="opt-card" data-point="coupon" onclick="togglePoint(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🎫</div>
+          <div class="o-title">换一张便民服务券</div>
+          <div class="o-desc">消耗80好心值，兑换一次上门维修/保洁</div>
+        </div>
+        <div class="opt-card" data-point="plant" onclick="togglePoint(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🪴</div>
+          <div class="o-title">领一盆绿植</div>
+          <div class="o-desc">消耗30好心值，领一盆多肉/绿植回家</div>
+        </div>
+        <div class="opt-card" data-point="book" onclick="togglePoint(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">📖</div>
+          <div class="o-title">换一本二手书</div>
+          <div class="o-desc">消耗20好心值，从社区图书角换一本书</div>
+        </div>
+        <div class="opt-card" data-point="save" onclick="togglePoint(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🏦</div>
+          <div class="o-title">先攒着，以后再用</div>
+          <div class="o-desc">继续攒好心值，等有更好的兑换选项</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选 <b id="pointCount">0</b> · 消耗 <b id="pointCost">0</b> 好心值</span>
+        <button class="btn-send" id="btnM5" disabled onclick="submitM5()">📤 确认兑换</button>
+      </div>
+      <div class="result-box" id="rM5">
+        <div class="r-title">💛 兑换成功</div>
+        <div class="r-content" id="rM5Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块6：今日好事记录 ====== -->
+  <div class="module" id="m6">
+    <div class="module-hd">
+      <div class="m-icon teal">📝</div>
+      <div class="m-info">
+        <h3>今日好事记录</h3>
+        <p>你今天已经做了什么好事？选出来，记录你的善意轨迹</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div class="opt-grid" id="recordGrid">
+        <div class="opt-card" data-record="helped" onclick="toggleRecord(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🤝</div>
+          <div class="o-title">帮了邻居一个忙</div>
+          <div class="o-desc">取快递、提东西、开门等</div>
+        </div>
+        <div class="opt-card" data-record="greeted" onclick="toggleRecord(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">😄</div>
+          <div class="o-title">主动跟人打招呼</div>
+          <div class="o-desc">对保安、保洁、邻居微笑问好</div>
+        </div>
+        <div class="opt-card" data-record="sorted" onclick="toggleRecord(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🗑️</div>
+          <div class="o-title">垃圾分类/捡垃圾</div>
+          <div class="o-desc">正确分类或捡起地上垃圾</div>
+        </div>
+        <div class="opt-card" data-record="shared" onclick="toggleRecord(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🍪</div>
+          <div class="o-title">分享了食物/东西</div>
+          <div class="o-desc">跟同事/邻居分享零食、工具等</div>
+        </div>
+        <div class="opt-card" data-record="patient" onclick="toggleRecord(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🧘</div>
+          <div class="o-title">对别人保持了耐心</div>
+          <div class="o-desc">排队、堵车、沟通时保持了耐心</div>
+        </div>
+        <div class="opt-card" data-record="thanked" onclick="toggleRecord(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🙏</div>
+          <div class="o-title">真诚地感谢了某人</div>
+          <div class="o-desc">对帮助过你的人说声谢谢</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已记录 <b id="recordCount">0</b> 件好事 · 今日累计 <b id="totalRecorded">0</b> 件</span>
+        <button class="btn-send" id="btnM6" disabled onclick="submitM6()">📤 保存记录</button>
+      </div>
+      <div class="result-box" id="rM6">
+        <div class="r-title">📝 已记录</div>
+        <div class="r-content" id="rM6Content"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.wrap -->
+
+<!-- 页脚 -->
+<footer style="margin-top:0;padding:24px;text-align:center;color:#7a6e66;font-size:13px;border-top:1px solid #eee8e2;background:#fff;">
+  <p>好事近 · 互动广场 &mdash; 每一个选择，都是让社区变好的一小步 <span style="color:#c8533a;">♥</span></p>
+</footer>
+
+<!-- Toast -->
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ==================== 通用 ====================
+function showToast(icon, title, desc) {
+  var box = document.getElementById('toastBox');
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '<span class="t-icon">' + icon + '</span><div><div class="t-title">' + title + '</div><div class="t-desc">' + desc + '</div></div>';
+  box.appendChild(t);
+  setTimeout(function() {
+    t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; t.style.transition = 'all .3s ease';
+    setTimeout(function() { t.remove(); }, 300);
+  }, 3500);
+}
+
+// 通用选择器
+function makeToggle(gridId, countId, btnId, getSelected) {
+  return function() {
+    var count = document.querySelectorAll('#' + gridId + ' .opt-card.selected').length;
+    document.getElementById(countId).textContent = count;
+    document.getElementById(btnId).disabled = count === 0;
+  };
+}
+
+// ==================== 模块1：今日签到 ====================
+var selectedMood = null;
+var selectedDailyAct = null;
+
+function toggleMood(el) {
+  document.querySelectorAll('#moodGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedMood = el.dataset.mood;
+  document.getElementById('moodCount').textContent = 1;
+  checkM1();
+}
+
+function toggleDailyAct(el) {
+  document.querySelectorAll('#dailyActGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedDailyAct = el.dataset.act;
+  document.getElementById('dailyActCount').textContent = 1;
+  checkM1();
+}
+
+function checkM1() {
+  document.getElementById('btnM1').disabled = !(selectedMood && selectedDailyAct);
+}
+
+var moodMap = { energetic:'精力充沛 ⚡', normal:'普通日常 🙂', tired:'有点累 😌', rainy:'雨天宅家 🌧️' };
+var actMap = { help:'帮邻居一个忙', green:'做件环保小事', smile:'传递一个微笑', share:'分享一个东西', quiet:'默默做件好事', learn:'学习公益知识' };
+
+function submitM1() {
+  var mood = moodMap[selectedMood] || '未知';
+  var act = actMap[selectedDailyAct] || '未知';
+  var box = document.getElementById('rM1');
+  box.classList.add('show');
+  document.getElementById('rM1Content').innerHTML = '今日状态：<span class="tag">' + mood + '</span> · 今日计划：<span class="tag">' + act + '</span><br>签到时间：' + new Date().toLocaleString('zh-CN', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) + ' · 已获得 <b style="color:#c8533a;">+10 好心值</b>';
+  showToast('☀️', '签到成功！', '今日状态：' + mood + '，计划：' + act + '，+10好心值');
+  updateStats();
+  selectedMood = null; selectedDailyAct = null;
+  document.querySelectorAll('#moodGrid .opt-card, #dailyActGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('moodCount').textContent = 0;
+  document.getElementById('dailyActCount').textContent = 0;
+  document.getElementById('btnM1').disabled = true;
+}
+
+// ==================== 模块2：互助速配 ====================
+var helpMap = {
+  elderly:'陪独居老人聊10分钟 —— 3号楼王奶奶 👴',
+  package:'帮取大件快递 —— 5号楼李姐 📦',
+  dog:'傍晚帮遛狗 —— 7号楼张先生 🐕',
+  print:'帮打印作业 —— 2号楼刘姐 🖨️',
+  trash:'帮扔垃圾 —— 6号楼赵叔 🗑️',
+  teach:'教老人用手机挂号 —— 1号楼陈爷爷 📱'
+};
+
+function toggleHelp(el) {
+  el.classList.toggle('selected');
+  var count = document.querySelectorAll('#helpGrid .opt-card.selected').length;
+  document.getElementById('helpCount').textContent = count;
+  document.getElementById('btnM2').disabled = count === 0;
+}
+
+function submitM2() {
+  var selected = [];
+  document.querySelectorAll('#helpGrid .opt-card.selected').forEach(function(c) {
+    selected.push(helpMap[c.dataset.help] || c.dataset.help);
+  });
+  var box = document.getElementById('rM2');
+  box.classList.add('show');
+  document.getElementById('rM2Content').innerHTML = '你已接下以下互助请求：<br><br>' + selected.map(function(s) { return '· ' + s; }).join('<br>') + '<br><br>📍 请尽快联系对方，完成互助后记得点"标记完成"';
+  showToast('🤝', '互助已接下！', '共 ' + selected.length + ' 项，尽快联系邻居完成');
+  updateStats();
+  document.querySelectorAll('#helpGrid .opt-card.selected').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('helpCount').textContent = 0;
+  document.getElementById('btnM2').disabled = true;
+}
+
+// ==================== 模块3：挑战 ====================
+var challengeMap = {
+  easy:'⭐ 入门级 — 今天跟5个不同的人微笑问好',
+  medium:'⭐⭐ 进阶级 — 主动帮一个邻居做件小事',
+  hard:'⭐⭐⭐ 高手级 — 做一件没人知道是你做的好事',
+  extreme:'🔥 连续挑战 — 连续7天每天做一件好事'
+};
+
+function toggleChallenge(el) {
+  document.querySelectorAll('#challengeGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  document.getElementById('challengeCount').textContent = 1;
+  document.getElementById('btnM3').disabled = false;
+}
+
+function submitM3() {
+  var el = document.querySelector('#challengeGrid .opt-card.selected');
+  if (!el) return;
+  var name = challengeMap[el.dataset.challenge] || '未知挑战';
+  var box = document.getElementById('rM3');
+  box.classList.add('show');
+  document.getElementById('rM3Content').innerHTML = '你接受了：<span class="tag">' + name + '</span><br><br>💪 挑战规则：<br>· 完成挑战后回来打卡<br>· 连续挑战需每天记录<br>· 完成可获得 <b style="color:#c8533a;">+50 好心值</b> 奖励';
+  showToast('🏆', '挑战已接受！', name + '，加油！');
+  updateStats();
+  document.querySelectorAll('#challengeGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('challengeCount').textContent = 0;
+  document.getElementById('btnM3').disabled = true;
+}
+
+// ==================== 模块4：心愿 ====================
+var wishData = { bench:{n:'小区加装休闲长椅',s:32}, light:{n:'楼道感应灯维修',s:18}, garden:{n:'社区小花园认养',s:25}, book:{n:'楼道图书角',s:41}, tool:{n:'共享工具墙',s:15}, skill:{n:'邻里技能小课堂',s:37} };
+
+function toggleWish(el) {
+  el.classList.toggle('selected');
+  var count = document.querySelectorAll('#wishGrid .opt-card.selected').length;
+  document.getElementById('wishCount').textContent = count;
+  var total = 0;
+  document.querySelectorAll('#wishGrid .opt-card.selected').forEach(function(c) { total += wishData[c.dataset.wish].s + 1; });
+  document.getElementById('wishTotal').textContent = total;
+  document.getElementById('btnM4').disabled = count === 0;
+}
+
+function submitM4() {
+  var selected = [];
+  document.querySelectorAll('#wishGrid .opt-card.selected').forEach(function(c) {
+    var w = wishData[c.dataset.wish];
+    selected.push(w.n + '（支持人数：' + (w.s + 1) + '）');
+  });
+  var box = document.getElementById('rM4');
+  box.classList.add('show');
+  document.getElementById('rM4Content').innerHTML = '你投递了以下心愿：<br><br>' + selected.map(function(s) { return '· ' + s; }).join('<br>') + '<br><br>📊 你的支持已计入统计，当某个心愿达到50人支持时，平台将推动落地。';
+  showToast('✨', '心愿已投递！', '共 ' + selected.length + ' 个心愿，感谢你的参与');
+  updateStats();
+  document.querySelectorAll('#wishGrid .opt-card.selected').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('wishCount').textContent = 0;
+  document.getElementById('wishTotal').textContent = 0;
+  document.getElementById('btnM4').disabled = true;
+}
+
+// ==================== 模块5：好心值消费 ====================
+var pointMap = { coffee:'☕ 暖心咖啡（50值）', donate:'🎁 捐给社区老人（100值）', coupon:'🎫 便民服务券（80值）', plant:'🪴 绿植一盆（30值）', book:'📖 二手书（20值）', save:'🏦 先攒着（0值）' };
+var pointCostMap = { coffee:50, donate:100, coupon:80, plant:30, book:20, save:0 };
+
+function togglePoint(el) {
+  document.querySelectorAll('#pointGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  document.getElementById('pointCount').textContent = 1;
+  document.getElementById('pointCost').textContent = pointCostMap[el.dataset.point] || 0;
+  document.getElementById('btnM5').disabled = false;
+}
+
+function submitM5() {
+  var el = document.querySelector('#pointGrid .opt-card.selected');
+  if (!el) return;
+  var name = pointMap[el.dataset.point] || '未知';
+  var cost = pointCostMap[el.dataset.point] || 0;
+  var box = document.getElementById('rM5');
+  box.classList.add('show');
+  var remaining = 360 - cost;
+  document.getElementById('rM5Content').innerHTML = '兑换内容：<span class="tag">' + name + '</span><br>消耗：<b style="color:#c8533a;">' + cost + '</b> 好心值 · 剩余：<b style="color:#c8533a;">' + remaining + '</b> 好心值<br><br>📌 兑换方式：到社区服务中心出示本页面即可领取。';
+  showToast('💛', '兑换成功！', name + '，消耗 ' + cost + ' 好心值，剩余 ' + remaining);
+  updateStats();
+  document.querySelectorAll('#pointGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('pointCount').textContent = 0;
+  document.getElementById('pointCost').textContent = 0;
+  document.getElementById('btnM5').disabled = true;
+}
+
+// ==================== 模块6：好事记录 ====================
+var recordCount = 0;
+var recordMap = { helped:'帮了邻居一个忙', greeted:'主动跟人打招呼', sorted:'垃圾分类/捡垃圾', shared:'分享了食物/东西', patient:'对别人保持了耐心', thanked:'真诚地感谢了某人' };
+
+function toggleRecord(el) {
+  el.classList.toggle('selected');
+  var count = document.querySelectorAll('#recordGrid .opt-card.selected').length;
+  document.getElementById('recordCount').textContent = count;
+  document.getElementById('btnM6').disabled = count === 0;
+}
+
+function submitM6() {
+  var selected = [];
+  document.querySelectorAll('#recordGrid .opt-card.selected').forEach(function(c) {
+    selected.push(recordMap[c.dataset.record] || c.dataset.record);
+  });
+  recordCount += selected.length;
+  document.getElementById('totalRecorded').textContent = recordCount;
+  var box = document.getElementById('rM6');
+  box.classList.add('show');
+  var now = new Date().toLocaleString('zh-CN', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('rM6Content').innerHTML = '本次记录：<br>' + selected.map(function(s) { return '· <span class="tag">' + s + '</span>'; }).join('') + '<br><br>记录时间：' + now + ' · 今日累计：<b style="color:#c8533a;">' + recordCount + '</b> 件好事 · 已获得 <b style="color:#c8533a;">+' + (selected.length * 5) + '</b> 好心值';
+  showToast('📝', '已记录！', '本次记录 ' + selected.length + ' 件好事，+' + (selected.length * 5) + ' 好心值');
+  updateStats();
+  document.querySelectorAll('#recordGrid .opt-card.selected').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('recordCount').textContent = 0;
+  document.getElementById('btnM6').disabled = true;
+}
+
+// ==================== 统计更新 ====================
+function updateStats() {
+  var s = document.getElementById('sTotal');
+  s.textContent = parseInt(s.textContent) + 1;
+  var a = document.getElementById('sActs');
+  a.textContent = parseInt(a.textContent) + 3;
+  var p = document.getElementById('sPoints');
+  p.textContent = parseInt(p.textContent.replace(',','')) + 50;
+  if (parseInt(p.textContent) > 9999) { p.textContent = parseInt(p.textContent).toLocaleString(); }
+}
+
+// 初始统计
+document.getElementById('sTotal').textContent = 47;
+document.getElementById('sActs').textContent = 128;
+document.getElementById('sPoints').textContent = '3,640';
+document.getElementById('sMatches').textContent = 23;
+</script>
+
+</body>
+</html>

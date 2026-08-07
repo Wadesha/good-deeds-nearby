@@ -36,6 +36,7 @@ https://wadesha.github.io/good-deeds-nearby/
 │   ├── simulator.html      ← 10 社区运营模拟器（经营决策/成就系统/事件系统）
 │   ├── choose.html         ← 11 好事选择器（6大互动模块/一键发送）
 │   ├── cases.html          ← 12 日常好事库（63个日常微好事模板/分类筛选/一键发起）
+│   ├── interact2.html      ← 13 互动广场（6大互动模块/签到/互助/挑战/心愿/兑换/记录）
 │   └── next.html           ← 下一步行动建议
 └── css/
     └── style.css           ← 共享样式
