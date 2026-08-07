@@ -2,388 +2,1532 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>好事近 · 泛公益参与调研全案 | 项目展示</title>
-<meta name="description" content="把泛公益拆成15分钟、顺路、就近的轻量任务，用非金钱的'好心值+时间币'替代工资，让忙人也能把好事做成日常。" />
-<link rel="stylesheet" href="css/style.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>好事近 · 把好事做成日常 | 泛公益参与平台</title>
+<meta name="description" content="好事近 - 把公益拆成15分钟、顺路、就近的轻量任务，用非金钱的'好心值+时间币'替代工资，让忙人也能把好事做成日常。" />
+<meta name="theme-color" content="#c8533a" />
 <style>
-  /* 看板统计 */
-  .dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:30px 0}
-  .metric{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
-    box-shadow:var(--shadow);text-align:center;position:relative;overflow:hidden}
-  .metric .num{font-size:clamp(32px,4vw,48px);font-weight:800;letter-spacing:-.02em;line-height:1}
-  .metric .num.brand{color:var(--brand)}
-  .metric .num.gold{color:var(--gold)}
-  .metric .num.leaf{color:var(--leaf)}
-  .metric .num.sky{color:var(--sky)}
-  .metric .num.plum{color:var(--plum)}
-  .metric .label{font-size:13px;color:var(--ink-soft);margin-top:6px}
-  .metric .sub{font-size:11.5px;color:var(--ink-faint);margin-top:2px}
+/* ===== CSS Variables ===== */
+:root {
+  --bg: #fbf7ef;
+  --paper: #ffffff;
+  --ink: #2b2622;
+  --ink-soft: #6b6258;
+  --ink-faint: #9a9088;
+  --line: #ece4d6;
+  --brand: #c8533a;
+  --brand-deep: #9e3b25;
+  --brand-soft: #fbeae3;
+  --leaf: #3f7d5b;
+  --leaf-soft: #e7f0e9;
+  --gold: #c98a2b;
+  --gold-soft: #f6ecd6;
+  --sky: #3b6b8c;
+  --sky-soft: #e6eef4;
+  --plum: #6b4a7a;
+  --plum-soft: #efe6f1;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --shadow: 0 1px 2px rgba(43,38,34,.04), 0 8px 24px rgba(43,38,34,.06);
+  --shadow-hover: 0 4px 8px rgba(43,38,34,.06), 0 16px 40px rgba(43,38,34,.1);
+  --transition: all .3s cubic-bezier(.4,0,.2,1);
+}
 
-  /* 模拟柱状图 */
-  .bar-chart{display:flex;align-items:flex-end;gap:10px;height:220px;padding:20px 0 10px;position:relative}
-  .bar-chart::before{content:"";position:absolute;left:0;right:0;bottom:30px;border-bottom:1px solid var(--line)}
-  .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
-  .bar{width:100%;max-width:52px;border-radius:5px 5px 2px 2px;transition:height .6s ease;position:relative;min-height:4px}
-  .bar .val{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;white-space:nowrap}
-  .bar-label{font-size:11px;color:var(--ink-faint);margin-top:8px;text-align:center;line-height:1.3;max-width:80px}
-  .bar.brand{background:var(--brand)}
-  .bar.leaf{background:var(--leaf)}
-  .bar.gold{background:var(--gold)}
-  .bar.sky{background:var(--sky)}
-  .bar.plum{background:var(--plum)}
-  .bar.brand .val{color:var(--brand-deep)}
-  .bar.leaf .val{color:var(--leaf)}
-  .bar.gold .val{color:var(--gold)}
-  .bar.sky .val{color:var(--sky)}
-  .bar.plum .val{color:var(--plum)}
+/* ===== Reset & Base ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{cursor:pointer;font-family:inherit;border:none;background:none;font-size:inherit}
+ul,ol{list-style:none}
 
-  /* 环形进度 */
-  .ring{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;position:relative}
-  .ring::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--brand) 0deg 312deg,var(--line) 312deg 360deg)}
-  .ring::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--paper)}
-  .ring .pct{position:relative;z-index:1;font-size:20px;font-weight:800;color:var(--brand)}
-  .ring.leaf::before{background:conic-gradient(var(--leaf) 0deg 259deg,var(--line) 259deg 360deg)}
-  .ring.leaf .pct{color:var(--leaf)}
-  .ring.gold::before{background:conic-gradient(var(--gold) 0deg 234deg,var(--line) 234deg 360deg)}
-  .ring.gold .pct{color:var(--gold)}
-  .ring.sky::before{background:conic-gradient(var(--sky) 0deg 288deg,var(--line) 288deg 360deg)}
-  .ring.sky .pct{color:var(--sky)}
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-faint)}
 
-  /* 发现卡片 */
-  .findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:20px 0}
-  .finding{border:1px solid var(--line);border-radius:12px;padding:20px;background:var(--paper);box-shadow:var(--shadow)}
-  .finding .icon{font-size:28px;margin-bottom:8px}
-  .finding h4{margin:0 0 6px;font-size:15px}
-  .finding p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.65}
-  .finding .stat{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px}
-  .finding .stat.brand{background:var(--brand-soft);color:var(--brand-deep)}
-  .finding .stat.leaf{background:var(--leaf-soft);color:var(--leaf)}
-  .finding .stat.gold{background:var(--gold-soft);color:var(--gold)}
+/* ===== Layout ===== */
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+.section{padding:60px 0}
+.section-title{text-align:center;margin-bottom:40px}
+.section-title h2{font-size:clamp(24px,3.5vw,32px);font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.section-title p{font-size:15px;color:var(--ink-soft);margin-top:8px}
 
-  /* 模拟用户评价 */
-  .testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0}
-  .tweet{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
-  .tweet .avatar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-  .tweet .avatar .pic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:700;color:#fff}
-  .tweet .avatar .name{font-size:14px;font-weight:600}
-  .tweet .avatar .role{font-size:11.5px;color:var(--ink-faint)}
-  .tweet .text{font-size:13.5px;color:var(--ink-soft);line-height:1.7;font-style:italic}
-  .tweet .text::before{content:"\201C";color:var(--brand);font-size:20px;font-weight:700;margin-right:2px}
-  .tweet .text::after{content:"\201D";color:var(--brand);font-size:20px;font-weight:700;margin-left:2px}
+/* ===== Navigation ===== */
+.navbar{position:sticky;top:0;z-index:1000;background:rgba(251,247,239,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);transition:var(--transition)}
+.navbar .wrap{display:flex;align-items:center;height:64px;justify-content:space-between}
+.navbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:22px;color:var(--brand);letter-spacing:-.03em}
+.navbar .logo .logo-icon{width:32px;height:32px;background:var(--brand);border-radius:8px;display:grid;place-items:center;color:#fff;font-size:18px;font-weight:900}
+.navbar .logo span{background:linear-gradient(135deg,var(--brand),var(--brand-deep));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.navbar nav{display:flex;align-items:center;gap:4px}
+.navbar nav a{padding:8px 16px;border-radius:999px;font-size:14px;font-weight:500;color:var(--ink-soft);transition:var(--transition);position:relative}
+.navbar nav a:hover,.navbar nav a.active{color:var(--brand);background:var(--brand-soft)}
+.navbar nav a.active{font-weight:700}
+.navbar .auth-btns{display:flex;align-items:center;gap:8px}
+.navbar .auth-btns .btn-login{padding:8px 20px;border-radius:999px;font-size:14px;font-weight:600;color:var(--brand);border:1.5px solid var(--brand);transition:var(--transition)}
+.navbar .auth-btns .btn-login:hover{background:var(--brand-soft)}
+.navbar .auth-btns .btn-register{padding:8px 20px;border-radius:999px;font-size:14px;font-weight:600;color:#fff;background:var(--brand);transition:var(--transition)}
+.navbar .auth-btns .btn-register:hover{background:var(--brand-deep);transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,83,58,.3)}
+.navbar .menu-toggle{display:none;width:36px;height:36px;border-radius:8px;background:var(--brand-soft);align-items:center;justify-content:center;font-size:20px;color:var(--brand)}
 
-  /* 假设状态 */
-  .hyp-status{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
-  .hyp-tag{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600}
-  .hyp-tag.pass{background:var(--leaf-soft);color:var(--leaf)}
-  .hyp-tag.verify{background:var(--gold-soft);color:var(--gold)}
-  .hyp-tag.unknown{background:#f1ece4;color:var(--ink-faint)}
+/* ===== Hero Section ===== */
+.hero{text-align:center;padding:60px 0 40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(200,83,58,.06) 0%,transparent 70%);pointer-events:none}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:var(--brand-soft);border-radius:999px;font-size:13px;font-weight:600;color:var(--brand-deep);margin-bottom:20px}
+.hero .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--brand);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-.03em;line-height:1.15;color:var(--ink);margin-bottom:12px}
+.hero h1 .hl{background:linear-gradient(135deg,var(--brand),var(--brand-deep));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{font-size:clamp(15px,2vw,18px);color:var(--ink-soft);max-width:640px;margin:0 auto 24px;line-height:1.7}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.hero .meta .chip{padding:6px 14px;background:var(--paper);border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:500;color:var(--ink-soft);display:inline-flex;align-items:center;gap:4px;box-shadow:var(--shadow)}
 
-  /* 阶段进度条 */
-  .phase-strip{display:flex;gap:2px;margin:20px 0;border-radius:8px;overflow:hidden}
-  .phase-strip .seg{flex:1;padding:14px 10px;text-align:center;font-size:12px;font-weight:600;color:rgba(255,255,255,.8);position:relative}
-  .phase-strip .seg.done{background:var(--brand)}
-  .phase-strip .seg.curr{background:var(--gold)}
-  .phase-strip .seg.next{background:var(--line);color:var(--ink-faint)}
-  .phase-strip .seg .phs{display:block;font-size:10px;font-weight:400;opacity:.7;margin-top:4px}
+/* ===== Task Picker ===== */
+.task-picker{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.task-picker .pick-header{text-align:center;margin-bottom:24px}
+.task-picker .pick-header h3{font-size:clamp(20px,2.5vw,24px);font-weight:800;color:var(--ink)}
+.task-picker .pick-header p{font-size:14px;color:var(--ink-soft);margin-top:4px}
+.task-picker .pick-header .highlight{color:var(--brand);font-weight:700}
+.task-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:24px}
+.task-card{position:relative;padding:16px;border:2px solid var(--line);border-radius:var(--radius);cursor:pointer;transition:var(--transition);background:var(--paper);user-select:none}
+.task-card:hover{border-color:var(--brand-soft);transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.task-card.selected{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 4px rgba(200,83,58,.1)}
+.task-card .task-icon{font-size:28px;margin-bottom:8px;display:block}
+.task-card .task-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.task-card .task-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:var(--ink-soft)}
+.task-card .task-meta .tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:999px;font-weight:600}
+.task-card .task-meta .tag.time{background:var(--sky-soft);color:var(--sky)}
+.task-card .task-meta .tag.value{background:var(--gold-soft);color:var(--gold)}
+.task-card .check-mark{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;color:transparent;transition:var(--transition)}
+.task-card.selected .check-mark{border-color:var(--brand);background:var(--brand);color:#fff}
+.pick-actions{text-align:center}
+.pick-actions .btn-claim{padding:14px 48px;border-radius:999px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-deep));transition:var(--transition);box-shadow:0 4px 16px rgba(200,83,58,.25);display:inline-flex;align-items:center;gap:8px}
+.pick-actions .btn-claim:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(200,83,58,.35)}
+.pick-actions .btn-claim:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.pick-actions .btn-claim .count-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.25);font-size:13px;font-weight:700}
+
+/* ===== Data Dashboard ===== */
+.dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}
+.metric{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px 16px;box-shadow:var(--shadow);text-align:center;position:relative;overflow:hidden;transition:var(--transition)}
+.metric:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.metric .metric-icon{font-size:24px;margin-bottom:6px}
+.metric .num{font-size:clamp(28px,3.5vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.metric .num.brand{color:var(--brand)}
+.metric .num.leaf{color:var(--leaf)}
+.metric .num.gold{color:var(--gold)}
+.metric .num.sky{color:var(--sky)}
+.metric .num.plum{color:var(--plum)}
+.metric .label{font-size:13px;color:var(--ink-soft);margin-top:6px;font-weight:500}
+.metric .sub{font-size:11.5px;color:var(--ink-faint);margin-top:2px}
+
+/* ===== Feed ===== */
+.feed{display:flex;flex-direction:column;gap:12px}
+.feed-item{display:flex;align-items:flex-start;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);transition:var(--transition);animation:feed-in .5s ease both}
+@keyframes feed-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.feed-item .feed-avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0}
+.feed-item .feed-body{flex:1;min-width:0}
+.feed-item .feed-body .feed-name{font-size:14px;font-weight:700;color:var(--ink)}
+.feed-item .feed-body .feed-name .badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;margin-left:4px;vertical-align:middle}
+.feed-item .feed-body .feed-name .badge.brand{background:var(--brand-soft);color:var(--brand-deep)}
+.feed-item .feed-body .feed-name .badge.leaf{background:var(--leaf-soft);color:var(--leaf)}
+.feed-item .feed-body .feed-name .badge.gold{background:var(--gold-soft);color:var(--gold)}
+.feed-item .feed-body .feed-name .badge.sky{background:var(--sky-soft);color:var(--sky)}
+.feed-item .feed-body .feed-name .badge.plum{background:var(--plum-soft);color:var(--plum)}
+.feed-item .feed-body .feed-text{font-size:13.5px;color:var(--ink-soft);margin-top:2px;line-height:1.5}
+.feed-item .feed-body .feed-time{font-size:11.5px;color:var(--ink-faint);margin-top:4px}
+.feed-item .feed-like{display:flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;color:var(--ink-faint);border:1px solid var(--line);transition:var(--transition);flex-shrink:0;margin-top:2px;background:var(--paper)}
+.feed-item .feed-like:hover{border-color:var(--brand-soft);color:var(--brand)}
+.feed-item .feed-like.liked{background:var(--brand-soft);color:var(--brand);border-color:var(--brand-soft)}
+.feed-item .feed-like .like-heart{display:inline-block;transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.feed-item .feed-like.liked .like-heart{animation:like-pop .4s ease}
+@keyframes like-pop{0%{transform:scale(1)}30%{transform:scale(1.4)}60%{transform:scale(.9)}100%{transform:scale(1)}}
+
+/* ===== Recommended Tasks ===== */
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.rec-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:var(--transition);position:relative;overflow:hidden}
+.rec-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.rec-card .rec-tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:10px}
+.rec-card .rec-tag.brand{background:var(--brand-soft);color:var(--brand-deep)}
+.rec-card .rec-tag.leaf{background:var(--leaf-soft);color:var(--leaf)}
+.rec-card .rec-tag.gold{background:var(--gold-soft);color:var(--gold)}
+.rec-card .rec-tag.sky{background:var(--sky-soft);color:var(--sky)}
+.rec-card .rec-tag.plum{background:var(--plum-soft);color:var(--plum)}
+.rec-card h4{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.rec-card p{font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:12px}
+.rec-card .rec-meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.rec-card .rec-meta .rec-meta-item{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ink-faint);padding:3px 8px;background:var(--bg);border-radius:6px}
+.rec-card .rec-btn{width:100%;padding:10px;border-radius:999px;font-size:14px;font-weight:600;color:var(--brand);border:1.5px solid var(--brand);transition:var(--transition);text-align:center}
+.rec-card .rec-btn:hover{background:var(--brand-soft)}
+.rec-card .rec-btn.claimed{background:var(--leaf-soft);color:var(--leaf);border-color:var(--leaf);cursor:default}
+
+/* ===== Profile Panel ===== */
+.profile-panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);max-width:500px;margin:0 auto}
+.profile-panel .profile-header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.profile-panel .profile-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--gold));display:grid;place-items:center;color:#fff;font-size:24px;font-weight:800;flex-shrink:0}
+.profile-panel .profile-info .profile-name{font-size:18px;font-weight:800;color:var(--ink)}
+.profile-panel .profile-info .profile-level{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;background:var(--gold-soft);color:var(--gold);font-size:12px;font-weight:700;margin-top:4px}
+.profile-panel .profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.profile-panel .profile-stat{text-align:center;padding:12px;background:var(--bg);border-radius:var(--radius-sm)}
+.profile-panel .profile-stat .pstat-num{font-size:20px;font-weight:800;color:var(--ink)}
+.profile-panel .profile-stat .pstat-num.leaf{color:var(--leaf)}
+.profile-panel .profile-stat .pstat-num.gold{color:var(--gold)}
+.profile-panel .profile-stat .pstat-num.sky{color:var(--sky)}
+.profile-panel .profile-stat .pstat-label{font-size:12px;color:var(--ink-soft);margin-top:2px}
+.profile-panel .profile-progress{background:var(--bg);border-radius:999px;height:8px;overflow:hidden;position:relative}
+.profile-panel .profile-progress .progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--gold));transition:width 1.5s ease}
+.profile-panel .profile-progress .progress-text{position:absolute;right:0;top:-18px;font-size:11px;color:var(--ink-faint);font-weight:600}
+
+/* ===== Features ===== */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.feature-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow);transition:var(--transition);text-align:center}
+.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover)}
+.feature-card .feat-icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;margin:0 auto 16px;font-size:26px}
+.feature-card .feat-icon.brand{background:var(--brand-soft)}
+.feature-card .feat-icon.leaf{background:var(--leaf-soft)}
+.feature-card .feat-icon.gold{background:var(--gold-soft)}
+.feature-card h3{font-size:18px;font-weight:800;color:var(--ink);margin-bottom:8px}
+.feature-card p{font-size:14px;color:var(--ink-soft);line-height:1.7}
+
+/* ===== About ===== */
+.about-section{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:40px;box-shadow:var(--shadow);margin:0 auto;max-width:800px;text-align:center}
+.about-section h3{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:12px}
+.about-section p{font-size:15px;color:var(--ink-soft);line-height:1.8;max-width:600px;margin:0 auto 20px}
+.about-section .about-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.about-section .about-links a{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;transition:var(--transition)}
+.about-section .about-links a.about-link-brand{background:var(--brand-soft);color:var(--brand-deep)}
+.about-section .about-links a.about-link-brand:hover{background:var(--brand);color:#fff;transform:translateY(-2px)}
+.about-section .about-links a.about-link-leaf{background:var(--leaf-soft);color:var(--leaf)}
+.about-section .about-links a.about-link-leaf:hover{background:var(--leaf);color:#fff;transform:translateY(-2px)}
+.about-section .about-links a.about-link-sky{background:var(--sky-soft);color:var(--sky)}
+.about-section .about-links a.about-link-sky:hover{background:var(--sky);color:#fff;transform:translateY(-2px)}
+
+/* ===== Footer ===== */
+.footer{background:var(--paper);border-top:1px solid var(--line);padding:40px 0 24px;margin-top:60px}
+.footer .wrap{text-align:center}
+.footer .footer-links{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px}
+.footer .footer-links a{padding:4px 12px;font-size:13px;color:var(--ink-soft);transition:var(--transition)}
+.footer .footer-links a:hover{color:var(--brand)}
+.footer .footer-brand{font-size:18px;font-weight:800;color:var(--brand);margin-bottom:8px}
+.footer .footer-tagline{font-size:13px;color:var(--ink-soft);margin-bottom:12px}
+.footer .footer-disclaimer{padding:8px 16px;background:var(--bg);border-radius:8px;font-size:11.5px;color:var(--ink-faint);display:inline-block;margin-bottom:12px}
+.footer .footer-copy{font-size:12px;color:var(--ink-faint)}
+
+/* ===== Modal ===== */
+.modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(43,38,34,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;animation:fade-in .25s ease}
+.modal-overlay.show{display:flex}
+.modal{background:var(--paper);border-radius:var(--radius-lg);padding:32px;max-width:480px;width:100%;box-shadow:0 24px 64px rgba(43,38,34,.15);animation:modal-in .3s cubic-bezier(.4,0,.2,1);max-height:80vh;overflow-y:auto}
+@keyframes modal-in{from{opacity:0;transform:scale(.92) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+.modal .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.modal .modal-header h3{font-size:20px;font-weight:800;color:var(--ink)}
+.modal .modal-close{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:18px;color:var(--ink-faint);transition:var(--transition);background:var(--bg)}
+.modal .modal-close:hover{background:var(--line);color:var(--ink)}
+.modal .modal-body .modal-task-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.modal .modal-body .modal-task-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg);border-radius:var(--radius-sm);font-size:14px}
+.modal .modal-body .modal-task-item .mt-name{font-weight:600;color:var(--ink)}
+.modal .modal-body .modal-task-item .mt-value{font-weight:700;color:var(--gold)}
+.modal .modal-body .modal-total{display:flex;justify-content:space-between;padding:14px 16px;background:var(--gold-soft);border-radius:var(--radius-sm);font-size:15px;font-weight:700;margin-bottom:20px}
+.modal .modal-body .modal-total .mt-total-val{color:var(--gold)}
+.modal .modal-body .modal-total .mt-total-val .num{font-size:22px}
+.modal .modal-actions{display:flex;gap:10px}
+.modal .modal-actions .mbtn{flex:1;padding:12px;border-radius:999px;font-size:15px;font-weight:700;transition:var(--transition);text-align:center}
+.modal .modal-actions .mbtn-cancel{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line)}
+.modal .modal-actions .mbtn-cancel:hover{background:var(--line)}
+.modal .modal-actions .mbtn-confirm{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;box-shadow:0 4px 12px rgba(200,83,58,.25)}
+.modal .modal-actions .mbtn-confirm:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,83,58,.3)}
+
+/* ===== Toast ===== */
+.toast-container{position:fixed;top:24px;right:24px;z-index:3000;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;box-shadow:0 8px 32px rgba(43,38,34,.12);display:flex;align-items:center;gap:12px;animation:toast-in .4s cubic-bezier(.4,0,.2,1);max-width:360px}
+.toast.success{border-left:4px solid var(--leaf)}
+.toast.info{border-left:4px solid var(--sky)}
+@keyframes toast-in{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+.toast .toast-icon{font-size:22px;flex-shrink:0}
+.toast .toast-body .toast-title{font-size:14px;font-weight:700;color:var(--ink)}
+.toast .toast-body .toast-desc{font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+.toast .toast-close{font-size:16px;color:var(--ink-faint);padding:4px;cursor:pointer;flex-shrink:0;transition:var(--transition)}
+.toast .toast-close:hover{color:var(--ink)}
+
+/* ===== Scroll to Top ===== */
+#totop{position:fixed;bottom:32px;right:32px;width:44px;height:44px;border-radius:50%;background:var(--brand);color:#fff;font-size:20px;font-weight:700;display:grid;place-items:center;box-shadow:0 4px 16px rgba(200,83,58,.3);z-index:999;opacity:0;transform:translateY(20px);pointer-events:none;transition:var(--transition)}
+#totop.show{opacity:1;transform:translateY(0);pointer-events:auto}
+#totop:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(200,83,58,.4)}
+
+/* ===== Mobile Nav ===== */
+.mobile-nav{position:fixed;inset:0;z-index:1500;background:rgba(43,38,34,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:24px}
+.mobile-nav.show{display:flex}
+.mobile-nav .mobile-nav-inner{background:var(--paper);border-radius:var(--radius-lg);padding:32px;width:100%;max-width:320px;animation:modal-in .3s ease}
+.mobile-nav .mobile-nav-inner .mobile-nav-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.mobile-nav .mobile-nav-inner .mobile-nav-header .mn-title{font-size:18px;font-weight:800;color:var(--brand)}
+.mobile-nav .mobile-nav-inner .mobile-nav-header .mn-close{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--bg);font-size:18px;color:var(--ink-faint)}
+.mobile-nav .mobile-nav-inner .mobile-links{display:flex;flex-direction:column;gap:4px}
+.mobile-nav .mobile-nav-inner .mobile-links a{padding:12px 16px;border-radius:var(--radius-sm);font-size:15px;font-weight:600;color:var(--ink-soft);transition:var(--transition)}
+.mobile-nav .mobile-nav-inner .mobile-links a:hover,.mobile-nav .mobile-nav-inner .mobile-links a.active{background:var(--brand-soft);color:var(--brand)}
+.mobile-nav .mobile-nav-inner .mobile-auth{display:flex;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.mobile-nav .mobile-nav-inner .mobile-auth a{flex:1;padding:10px;border-radius:999px;font-size:14px;font-weight:600;text-align:center;transition:var(--transition)}
+.mobile-nav .mobile-nav-inner .mobile-auth .mob-login{color:var(--brand);border:1.5px solid var(--brand)}
+.mobile-nav .mobile-nav-inner .mobile-auth .mob-register{color:#fff;background:var(--brand)}
+
+/* ===== Responsive ===== */
+@media(max-width:768px){
+  .navbar nav{display:none}
+  .navbar .auth-btns{display:none}
+  .navbar .menu-toggle{display:flex}
+  .hero{padding:40px 0 24px}
+  .task-picker{padding:20px;border-radius:var(--radius)}
+  .task-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .task-card{padding:12px}
+  .task-card .task-icon{font-size:22px}
+  .task-card .task-name{font-size:13px}
+  .dashboard{grid-template-columns:repeat(2,1fr)}
+  .profile-panel .profile-stats{grid-template-columns:repeat(3,1fr)}
+  .rec-grid{grid-template-columns:1fr}
+  .features{grid-template-columns:1fr}
+  .about-section{padding:24px}
+  .modal{padding:24px;margin:16px}
+  .section{padding:40px 0}
+  .toast-container{right:16px;left:16px}
+  .toast{max-width:100%}
+  .feed-item .feed-like{padding:4px 8px;font-size:11px}
+}
+
+@media(max-width:480px){
+  .dashboard{grid-template-columns:repeat(2,1fr);gap:10px}
+  .metric{padding:16px 12px}
+  .metric .num{font-size:24px}
+  .task-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .task-card{padding:10px}
+  .task-card .task-meta .tag{font-size:10px;padding:1px 6px}
+  .profile-panel .profile-stats{grid-template-columns:repeat(3,1fr);gap:8px}
+  .profile-panel .profile-stat{padding:8px}
+  .profile-panel .profile-stat .pstat-num{font-size:16px}
+  .hero h1{font-size:28px}
+  .pick-actions .btn-claim{padding:12px 32px;font-size:14px}
+}
+
+/* ===== Extra Animations & Utilities ===== */
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@keyframes bounce-in{0%{opacity:0;transform:scale(.3)}50%{transform:scale(1.05)}70%{transform:scale(.9)}100%{opacity:1;transform:scale(1)}}
+@keyframes glow{0%,100%{box-shadow:0 0 8px rgba(200,83,58,.2)}50%{box-shadow:0 0 20px rgba(200,83,58,.4)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse-glow{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes confetti-fall{0%{transform:translateY(-100px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes ripple{0%{transform:scale(0);opacity:.5}100%{transform:scale(4);opacity:0}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes count-pop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+.animate-shake{animation:shake .5s ease}
+.animate-bounce-in{animation:bounce-in .6s cubic-bezier(.4,0,.2,1)}
+.animate-glow{animation:glow 2s ease-in-out infinite}
+.animate-float{animation:float 3s ease-in-out infinite}
+.animate-pulse{animation:pulse-glow 2s ease-in-out infinite}
+.text-gradient{background:linear-gradient(135deg,var(--brand),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.shimmer-bg{background:linear-gradient(90deg,var(--bg) 0%,var(--line) 50%,var(--bg) 100%);background-size:200% 100%;animation:shimmer 2s infinite}
+
+/* ===== Leaderboard ===== */
+.leaderboard{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow);max-width:600px;margin:0 auto}
+.leaderboard .lb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.leaderboard .lb-header h3{font-size:16px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:6px}
+.leaderboard .lb-header .lb-period{font-size:12px;color:var(--ink-faint);padding:4px 10px;background:var(--bg);border-radius:999px}
+.leaderboard .lb-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);transition:var(--transition)}
+.leaderboard .lb-item:hover{background:var(--bg)}
+.leaderboard .lb-item .lb-rank{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;flex-shrink:0}
+.leaderboard .lb-item .lb-rank.gold{background:var(--gold-soft);color:var(--gold)}
+.leaderboard .lb-item .lb-rank.silver{background:#f0ece4;color:#8a7e72}
+.leaderboard .lb-item .lb-rank.bronze{background:#f5e6d6;color:#b87333}
+.leaderboard .lb-item .lb-rank.normal{background:var(--bg);color:var(--ink-faint);font-size:12px}
+.leaderboard .lb-item .lb-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.leaderboard .lb-item .lb-info{flex:1;min-width:0}
+.leaderboard .lb-item .lb-info .lb-name{font-size:14px;font-weight:700;color:var(--ink)}
+.leaderboard .lb-item .lb-info .lb-desc{font-size:11.5px;color:var(--ink-faint);margin-top:1px}
+.leaderboard .lb-item .lb-score{font-size:15px;font-weight:800;color:var(--gold);flex-shrink:0}
+.leaderboard .lb-item .lb-score .lb-label{font-size:10px;font-weight:600;color:var(--ink-faint);display:block;text-align:right}
+
+/* ===== FAQ ===== */
+.faq{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.faq-item{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--paper);box-shadow:var(--shadow);transition:var(--transition)}
+.faq-item:hover{border-color:var(--brand-soft)}
+.faq-item .faq-q{padding:16px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:600;color:var(--ink);transition:var(--transition);user-select:none}
+.faq-item .faq-q:hover{color:var(--brand)}
+.faq-item .faq-q .faq-arrow{font-size:12px;color:var(--ink-faint);transition:var(--transition)}
+.faq-item.open .faq-q .faq-arrow{transform:rotate(180deg);color:var(--brand)}
+.faq-item .faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:all .3s ease;font-size:13.5px;color:var(--ink-soft);line-height:1.7}
+.faq-item.open .faq-a{padding:0 20px 16px;max-height:300px}
+
+/* ===== Task Categories Filter ===== */
+.cat-tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
+.cat-tab{padding:8px 18px;border-radius:999px;font-size:13px;font-weight:600;color:var(--ink-soft);background:var(--paper);border:1px solid var(--line);transition:var(--transition);cursor:pointer}
+.cat-tab:hover{color:var(--brand);border-color:var(--brand-soft);background:var(--brand-soft)}
+.cat-tab.active{color:#fff;background:var(--brand);border-color:var(--brand)}
+
+/* ===== Stats Mini ===== */
+.stats-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.stats-mini .sm-item{text-align:center;padding:12px 8px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:var(--shadow)}
+.stats-mini .sm-item .sm-num{font-size:18px;font-weight:800}
+.stats-mini .sm-item .sm-label{font-size:11px;color:var(--ink-faint);margin-top:2px}
+
+/* ===== Contribution Chart ===== */
+.contrib-chart{display:flex;gap:4px;align-items:flex-end;height:80px;padding:8px 0}
+.contrib-chart .cc-bar{flex:1;border-radius:3px 3px 1px 1px;min-height:4px;transition:height .8s ease;position:relative}
+.contrib-chart .cc-bar:hover{opacity:.8}
+.contrib-chart .cc-bar .cc-tip{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;color:var(--ink-soft);white-space:nowrap;margin-bottom:4px;opacity:0;transition:opacity .2s}
+.contrib-chart .cc-bar:hover .cc-tip{opacity:1}
+
+/* ===== Floating Particles ===== */
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;opacity:.08;animation:float-particle linear infinite}
+@keyframes float-particle{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:.08}90%{opacity:.08}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
 </style>
 </head>
 <body>
 
-<div class="topbar">
+<!-- ===== Floating Particles ===== -->
+<div class="particles" id="particles"></div>
+
+<!-- ===== Navigation Bar ===== -->
+<header class="navbar" id="navbar">
   <div class="wrap">
-    <a href="index.html" class="logo"><span>好事近</span> · 项目展示</a>
+    <a href="index.html" class="logo">
+      <span class="logo-icon">近</span>
+      <span>好事近</span>
+    </a>
     <nav>
-      <a href="index.html" class="active">首页</a>
-      <a href="pages/thesis.html">立论</a>
-      <a href="pages/market.html">市场</a>
-      <a href="pages/research.html">调研产品</a>
-      <a href="pages/mvp.html">MVP</a>
-      <a href="pages/roadmap.html">递进</a>
-      <a href="pages/risks.html">风险</a>
-      <a href="pages/ecosystem.html">生态模拟</a>
-      <a href="pages/framework.html">框架</a>
-      <a href="pages/dashboard.html">数据</a>
-      <a href="pages/interact.html">互动</a>
-      <a href="pages/simulator.html">模拟器</a>
-      <a href="pages/next.html">下一步</a>
+      <a href="index.html" class="active">发现好事</a>
+      <a href="#tasks">任务市场</a>
+      <a href="#profile">好心值</a>
+      <a href="#about">关于项目</a>
     </nav>
+    <div class="auth-btns">
+      <button class="btn-login" onclick="showToast('info','登录提示','功能开发中，敬请期待')">登录</button>
+      <button class="btn-register" onclick="showToast('info','注册提示','功能开发中，敬请期待')">注册</button>
+    </div>
+    <button class="menu-toggle" onclick="toggleMobileNav()" aria-label="菜单">☰</button>
+  </div>
+</header>
+
+<!-- ===== Mobile Navigation ===== -->
+<div class="mobile-nav" id="mobileNav">
+  <div class="mobile-nav-inner">
+    <div class="mobile-nav-header">
+      <span class="mn-title">好事近</span>
+      <button class="mn-close" onclick="toggleMobileNav()">✕</button>
+    </div>
+    <div class="mobile-links">
+      <a href="index.html" class="active" onclick="toggleMobileNav()">发现好事</a>
+      <a href="#tasks" onclick="toggleMobileNav()">任务市场</a>
+      <a href="#profile" onclick="toggleMobileNav()">好心值</a>
+      <a href="#about" onclick="toggleMobileNav()">关于项目</a>
+    </div>
+    <div class="mobile-auth">
+      <a href="#" class="mob-login" onclick="showToast('info','登录提示','功能开发中，敬请期待');return false">登录</a>
+      <a href="#" class="mob-register" onclick="showToast('info','注册提示','功能开发中，敬请期待');return false">注册</a>
+    </div>
   </div>
 </div>
 
-<!-- ============ HERO ============ -->
-<div class="hero">
+<!-- ===== Hero Section ===== -->
+<section class="hero">
   <div class="wrap">
-    <span class="eyebrow"><span class="dot"></span> 好事近 · 泛公益调研产品全案</span>
-    <h1>时间紧、仍想做点好事的人<br/><span class="hl">把好事做成日常</span></h1>
-    <p class="sub">一个被现有志愿服务体系系统性忽略的细分人群——"时间贫困 × 意愿充足 × 非金钱驱动 × 强地域性"。<br/>以下是 Phase 0 验证阶段基于 <strong>模拟数据</strong> 的项目展示。</p>
+    <div class="eyebrow"><span class="dot"></span> 把好事做成日常</div>
+    <h1>时间紧，仍想做点好事？<br/><span class="hl">好事近，让公益触手可及</span></h1>
+    <p class="sub">把公益拆成15分钟、顺路、就近的轻量任务，用非金钱的"好心值+时间币"替代工资，<br/>让忙人也能把好事做成日常。</p>
     <div class="meta">
-      <span class="chip">📊 N=612 模拟样本</span>
-      <span class="chip">🏙️ 覆盖 35 个城市</span>
-      <span class="chip">📅 2025–2026 调研</span>
-      <span class="chip">✅ H1–H5 验证中</span>
+      <span class="chip">🏙️ 覆盖 12 个社区</span>
+      <span class="chip">👥 2,847 位热心邻居</span>
+      <span class="chip">🎯 6,523 件好事已完成</span>
+      <span class="chip">💛 好心值流通中</span>
     </div>
   </div>
-</div>
+</section>
 
-<main class="wrap">
-
-  <!-- ============ 数据看板 ============ -->
-  <section>
-    <div class="sec-head"><span class="sec-num">01</span><h2>项目总览 · 模拟数据看板</h2></div>
-    <p class="muted">以下数据基于 Phase 0 调研模拟，用于展示项目逻辑与验证框架。实际数据以真实调研结果为准。</p>
-
-    <div class="dashboard">
-      <div class="metric">
-        <div class="num brand">612</div>
-        <div class="label">有效问卷样本量</div>
-        <div class="sub">N=612，超目标 600</div>
-      </div>
-      <div class="metric">
-        <div class="num gold">58%</div>
-        <div class="label">男性受访者占比</div>
-        <div class="sub">刻意 oversample 验证 H4</div>
-      </div>
-      <div class="metric">
-        <div class="num leaf">87%</div>
-        <div class="label">碎片化参与意愿</div>
-        <div class="sub">任务 ≤15min 时愿意参与</div>
-      </div>
-      <div class="metric">
-        <div class="num sky">72%</div>
-        <div class="label">"就近"排入前 2 驱动力</div>
-        <div class="sub">验证 H2 通过</div>
-      </div>
-      <div class="metric">
-        <div class="num plum">35</div>
-        <div class="label">覆盖城市数</div>
-        <div class="sub">一线 + 新一线 ≥ 65%</div>
-      </div>
-      <div class="metric">
-        <div class="num brand">68%</div>
-        <div class="label">行为探针活跃率</div>
-        <div class="sub">2 周微信群主动参与率</div>
+<!-- ===== Task Picker Section ===== -->
+<section class="wrap section" id="tasks">
+  <div class="section-title">
+    <h2>今天想做什么好事？</h2>
+    <p>选择你想做的任务，<span class="highlight">多选</span>，一键领取</p>
+  </div>
+  <div class="task-picker">
+    <div class="pick-header">
+      <h3>💛 附近的好事清单</h3>
+      <p>已选 <span class="highlight" id="selectedCount">0</span> 件好事，累计 <span class="highlight" id="totalValue">0</span> 好心值</p>
+      <p style="font-size:12px;color:var(--ink-faint);margin-top:8px" id="dailyTip">💡 帮邻居取快递只要5分钟，赚8好心值</p>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+        <button onclick="selectAllTasks()" style="padding:4px 14px;border-radius:999px;font-size:12px;font-weight:600;color:var(--brand);border:1px solid var(--brand-soft);background:var(--brand-soft);transition:var(--transition);cursor:pointer">全选</button>
+        <button onclick="deselectAllTasks()" style="padding:4px 14px;border-radius:999px;font-size:12px;font-weight:600;color:var(--ink-soft);border:1px solid var(--line);background:var(--paper);transition:var(--transition);cursor:pointer">取消</button>
       </div>
     </div>
-
-    <!-- 假设验证进度 -->
-    <div class="hyp-status">
-      <span class="hyp-tag pass">✅ H1 时间贫困者有意愿 — 通过</span>
-      <span class="hyp-tag pass">✅ H2 就近+碎片是驱动力 — 通过</span>
-      <span class="hyp-tag verify">🔄 H3 非金钱激励可行 — 验证中</span>
-      <span class="hyp-tag pass">✅ H4 男性/职场人是缺口 — 通过</span>
-      <span class="hyp-tag verify">🔄 H5 LBS 是关键匹配 — 验证中</span>
-    </div>
-  </section>
-
-  <!-- ============ 调研发现 ============ -->
-  <section>
-    <div class="sec-head"><span class="sec-num">02</span><h2>核心发现（模拟数据）</h2></div>
-
-    <h3>驱动力排序（联合分析）</h3>
-    <p class="muted">受访者对 6 项参与理由按重要性排序，得分越高越优先。</p>
-    <div class="bar-chart">
-      <div class="bar-wrap"><div class="bar brand" style="height:186px"><span class="val">92%</span></div><div class="bar-label">离家/公司近<br/>&lt;1km</div></div>
-      <div class="bar-wrap"><div class="bar gold" style="height:170px"><span class="val">84%</span></div><div class="bar-label">只要 15 分钟<br/>顺路就能做</div></div>
-      <div class="bar-wrap"><div class="bar leaf" style="height:120px"><span class="val">62%</span></div><div class="bar-label">有"好心值/信用"<br/>可积累</div></div>
-      <div class="bar-wrap"><div class="bar sky" style="height:94px"><span class="val">48%</span></div><div class="bar-label">能认识附近<br/>同频的人</div></div>
-      <div class="bar-wrap"><div class="bar plum" style="height:74px"><span class="val">38%</span></div><div class="bar-label">有官方时长<br/>认证/证书</div></div>
-      <div class="bar-wrap"><div class="bar" style="height:52px;background:var(--ink-faint)"><span class="val" style="color:var(--ink-faint)">28%</span></div><div class="bar-label">能存时间<br/>将来取服务</div></div>
-    </div>
-    <div class="note leaf"><span class="tag">解 读</span>"就近 + 碎片"以压倒性优势占据前两位，验证 H2 成立。传统时间银行的"存时间取服务"排在末位，说明年轻人对时间银行模式接纳度低，需要游戏化改造。</div>
-
-    <h3 style="margin-top:32px">非金钱激励接受度</h3>
-    <div class="grid cols-4">
-      <div style="text-align:center;padding:16px">
-        <div class="ring"><span class="pct">87%</span></div>
-        <p style="font-size:13px;font-weight:700;margin:0">社区荣誉</p>
-        <p style="font-size:11.5px;color:var(--ink-faint);margin:0">最受欢迎</p>
-      </div>
-      <div style="text-align:center;padding:16px">
-        <div class="ring leaf"><span class="pct">72%</span></div>
-        <p style="font-size:13px;font-weight:700;margin:0">技能交换</p>
-        <p style="font-size:11.5px;color:var(--ink-faint);margin:0">用时间币互教</p>
-      </div>
-      <div style="text-align:center;padding:16px">
-        <div class="ring gold"><span class="pct">65%</span></div>
-        <p style="font-size:13px;font-weight:700;margin:0">商家折扣</p>
-        <p style="font-size:11.5px;color:var(--ink-faint);margin:0">好心值兑换</p>
-      </div>
-      <div style="text-align:center;padding:16px">
-        <div class="ring sky"><span class="pct">43%</span></div>
-        <p style="font-size:13px;font-weight:700;margin:0">时间银行</p>
-        <p style="font-size:11.5px;color:var(--ink-faint);margin:0">存时间取服务</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 用户画像 ============ -->
-  <section>
-    <div class="sec-head"><span class="sec-num">03</span><h2>核心人群画像（模拟）</h2></div>
-    <div class="findings">
-      <div class="finding">
-        <div class="icon">👩‍💼</div>
-        <h4>典型用户：林女士 · 28 岁 · 互联网运营</h4>
-        <p>通勤单程 45 分钟，午休 1 小时，周整块自由时间 &lt; 4h。做过蚂蚁森林和捐步，但觉得"线上太虚、没有真实感"。希望有"下楼就能做、15 分钟搞定"的好事入口。</p>
-        <span class="stat brand">H1 匹配度 92%</span>
-      </div>
-      <div class="finding">
-        <div class="icon">👨‍💻</div>
-        <h4>典型用户：张先生 · 35 岁 · 程序员</h4>
-        <p>996 工作制，周末只想休息。想做公益但"找不到门路"，觉得志愿汇界面太复杂。对"好心值 + 信用分"感兴趣，如果能在社区里顺手做点事，愿意试试。</p>
-        <span class="stat leaf">H4 供给侧缺口验证</span>
-      </div>
-      <div class="finding">
-        <div class="icon">👵</div>
-        <h4>典型用户：王阿姨 · 62 岁 · 退休教师</h4>
-        <p>时间充裕，在社区做志愿 3 年。但社区里年轻人太少，很多体力活没人做。愿意"带带年轻人"一起做，也希望年轻人能帮自己解决智能手机之类的问题。</p>
-        <span class="stat gold">跨代际匹配需求</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 用户评价模拟 ============ -->
-  <section>
-    <div class="sec-head"><span class="sec-num">04</span><h2>行为探针 · 真实反馈集锦</h2></div>
-    <p class="muted">2 周微信群人工撮合"就近轻量好事"行为探针 (N=50)，参与者的真实反馈模拟。</p>
-    <div class="testimonials">
-      <div class="tweet">
-        <div class="avatar">
-          <div class="pic" style="background:var(--brand)">小</div>
-          <div><div class="name">小鹿</div><div class="role">28 岁 · 产品经理</div></div>
+    <div class="task-grid" id="taskGrid">
+      <div class="task-card" data-value="8" data-name="帮邻居取快递" data-index="0">
+        <span class="check-mark">✓</span>
+        <span class="task-icon">📦</span>
+        <div class="task-name">帮邻居取快递</div>
+        <div class="task-meta">
+          <span class="tag time">⏱️ 5分钟</span>
+          <span class="tag value">💛 +8</span>
         </div>
-        <div class="text">帮楼下大爷搬了箱水果上楼，就 5 分钟的事。以前觉得做好事要专门去敬老院，现在发现顺路就能做，反而更真实。</div>
       </div>
-      <div class="tweet">
-        <div class="avatar">
-          <div class="pic" style="background:var(--leaf)">老</div>
-          <div><div class="name">老张</div><div class="role">35 岁 · 程序员</div></div>
+      <div class="task-card" data-value="20" data-name="垃圾分类引导" data-index="1">
+        <span class="check-mark">✓</span>
+        <span class="task-icon">♻️</span>
+        <div class="task-name">垃圾分类引导</div>
+        <div class="task-meta">
+          <span class="tag time">⏱️ 15分钟</span>
+          <span class="tag value">💛 +20</span>
         </div>
-        <div class="text">之前觉得公益是"有闲有钱的人做的"，没想到还能用代码帮社区整理垃圾分类数据。下次还来。</div>
       </div>
-      <div class="tweet">
-        <div class="avatar">
-          <div class="pic" style="background:var(--gold)">阿</div>
-          <div><div class="name">阿杰</div><div class="role">24 岁 · 研究生</div></div>
+      <div class="task-card" data-value="25" data-name="教老人用手机" data-index="2">
+        <span class="check-mark">✓</span>
+        <span class="task-icon">📱</span>
+        <div class="task-name">教老人用手机</div>
+        <div class="task-meta">
+          <span class="tag time">⏱️ 20分钟</span>
+          <span class="tag value">💛 +25</span>
         </div>
-        <div class="text">和同小区的人一起巡逻 20 分钟，边散步边聊天顺便做了好事。比刷手机有意思多了，还认识了邻居。</div>
+      </div>
+      <div class="task-card" data-value="18" data-name="陪老人散步" data-index="3">
+        <span class="check-mark">✓</span>
+        <span class="task-icon">👴</span>
+        <div class="task-name">陪老人散步</div>
+        <div class="task-meta">
+          <span class="tag time">⏱️ 15分钟</span>
+          <span class="tag value">💛 +18</span>
+        </div>
+      </div>
+      <div class="task-card" data-value="22" data-name="整理共享书架" data-index="4">
+        <span class="check-mark">✓</span>
+        <span class="task-icon">📚</span>
+        <div class="task-name">整理共享书架</div>
+        <div class="task-meta">
+          <span class="tag time">⏱️ 20分钟</span>
+          <span class="tag value">💛 +22</span>
+        </div>
+      </div>
+      <div class="task-card" data-value="15" data-name="社区花园浇水" data-index="5">
+        <span class="check-mark">✓</span>
+        <span class="task-icon">🌿</span>
+        <div class="task-name">社区花园浇水</div>
+        <div class="task-meta">
+          <span class="tag time">⏱️ 15分钟</span>
+          <span class="tag value">💛 +15</span>
+        </div>
+      </div>
+      <div class="task-card" data-value="20" data-name="帮遛狗" data-index="6">
+        <span class="check-mark">✓</span>
+        <span class="task-icon">🐕</span>
+        <div class="task-name">帮遛狗</div>
+        <div class="task-meta">
+          <span class="tag time">⏱️ 15分钟</span>
+          <span class="tag value">💛 +20</span>
+        </div>
+      </div>
+      <div class="task-card" data-value="25" data-name="社区巡逻" data-index="7">
+        <span class="check-mark">✓</span>
+        <span class="task-icon">🏪</span>
+        <div class="task-name">社区巡逻</div>
+        <div class="task-meta">
+          <span class="tag time">⏱️ 20分钟</span>
+          <span class="tag value">💛 +25</span>
+        </div>
       </div>
     </div>
-  </section>
-
-  <!-- ============ 阶段进度 ============ -->
-  <section>
-    <div class="sec-head"><span class="sec-num">05</span><h2>项目进展与路线图</h2></div>
-    <div class="phase-strip">
-      <div class="seg done">Phase 0<span class="phs">验证</span></div>
-      <div class="seg curr">Phase 1<span class="phs">MVP · 当前</span></div>
-      <div class="seg next">Phase 2<span class="phs">正循环</span></div>
-      <div class="seg next">Phase 3<span class="phs">网络效应</span></div>
-      <div class="seg next">Phase 4<span class="phs">生态</span></div>
+    <div class="pick-actions">
+      <button class="btn-claim" id="btnClaim" disabled onclick="openClaimModal()">
+        <span>一键领取任务</span>
+        <span class="count-badge" id="claimBadge">0</span>
+      </button>
     </div>
-    <div class="grid cols-2" style="margin-top:16px">
-      <div class="card brand"><div class="ic">✅</div><h4>Phase 0 验证 · 已完成</h4><p>问卷 N=612 + 深度访谈 30 人 + 2 周行为探针。H1, H2, H4 通过，H3, H5 验证中。核心假设初步成立。</p></div>
-      <div class="card gold"><div class="ic">🔄</div><h4>Phase 1 MVP · 进行中</h4><p>微信小程序原型 + LBS 轻量任务匹配 + 好心值系统。首城首社区选址中，预计 3 个月内上线内测。</p></div>
+  </div>
+</section>
+
+<!-- ===== Data Dashboard Section ===== -->
+<section class="wrap section">
+  <div class="section-title">
+    <h2>平台数据看板</h2>
+    <p>好事近社区运营实时数据</p>
+  </div>
+  <div class="dashboard" id="dashboard">
+    <div class="metric">
+      <div class="metric-icon">👥</div>
+      <div class="num brand" data-target="2847" id="metric1">0</div>
+      <div class="label">注册用户</div>
+      <div class="sub">活跃社区成员</div>
     </div>
-  </section>
-
-  <!-- ============ 站点地图 ============ -->
-  <section>
-    <div class="sec-head"><span class="sec-num">06</span><h2>完整方案 · 子站导航</h2></div>
-    <p class="muted">以下子站详细展开全案各个模块，从立论到行动建议。</p>
-    <div class="site-map">
-      <a href="pages/thesis.html" class="brand">
-        <span class="sm-num">00</span>
-        <span class="sm-title">一句话立论</span>
-        <span class="sm-desc">四件事叠加，构成一个被系统性忽略的细分人群。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/market.html" class="gold">
-        <span class="sm-num">01</span>
-        <span class="sm-title">市场与需求现状</span>
-        <span class="sm-desc">大盘数据、人群画像、竞品分析、核心矛盾。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/research.html" class="leaf">
-        <span class="sm-num">02</span>
-        <span class="sm-title">需求假设与验证框架</span>
-        <span class="sm-desc">5 个核心假设、混合方法论、问卷/访谈提纲。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/mvp.html" class="sky">
-        <span class="sm-num">03</span>
-        <span class="sm-title">产品 MVP 规划</span>
-        <span class="sm-desc">价值主张"好事近"、5 大核心功能、正循环设计。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/roadmap.html" class="plum">
-        <span class="sm-num">04</span>
-        <span class="sm-title">叠加递进路径</span>
-        <span class="sm-desc">Phase 0→4，每一层以上一层为地基搭乐高。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/risks.html" class="brand">
-        <span class="sm-num">05</span>
-        <span class="sm-title">风险与直话</span>
-        <span class="sm-desc">非金钱≠无成本、时间银行旧坑、伪需求风险。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/ecosystem.html" class="brand">
-        <span class="sm-num">06</span>
-        <span class="sm-title">生态模拟平台</span>
-        <span class="sm-desc">好心值 + 时间币社区经济循环模拟，任务市场、权益商城、排行榜。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/framework.html" class="gold">
-        <span class="sm-num">07</span>
-        <span class="sm-title">方法论框架扩展</span>
-        <span class="sm-desc">假设树（30+ 子假设）、12 个统计模型、8 层用户分层、A/B 测试框架。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/dashboard.html" class="leaf">
-        <span class="sm-num">08</span>
-        <span class="sm-title">数据中台 · 交易模拟</span>
-        <span class="sm-desc">多维数据分析看板、数据交易市场、场景模拟器、预测模型展示。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/interact.html" class="plum">
-        <span class="sm-num">09</span>
-        <span class="sm-title">互动 · 好事人格测试</span>
-        <span class="sm-desc">好事人格测试、时间贫困度自评、社区匹配模拟器、知识问答。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/simulator.html" class="brand">
-        <span class="sm-num">10</span>
-        <span class="sm-title">社区运营模拟器</span>
-        <span class="sm-desc">扮演社区运营官，做决策、看影响、解锁成就。游戏化学习方法论。</span>
-        <span class="sm-arrow">→</span>
-      </a>
-      <a href="pages/next.html" style="grid-column:1/-1">
-        <span class="sm-num">→</span>
-        <span class="sm-title">下一步建议</span>
-        <span class="sm-desc">1 周定稿工具 → 2–3 社区引荐 → 50 人行为探针。</span>
-        <span class="sm-arrow">→</span>
-      </a>
+    <div class="metric">
+      <div class="metric-icon">🎯</div>
+      <div class="num leaf" data-target="6523" id="metric2">0</div>
+      <div class="label">已完成好事</div>
+      <div class="sub">累计完成公益任务</div>
     </div>
-  </section>
+    <div class="metric">
+      <div class="metric-icon">💛</div>
+      <div class="num gold" data-target="1284600" id="metric3">0</div>
+      <div class="label">好心值流通</div>
+      <div class="sub">社区经济总循环量</div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon">🏘️</div>
+      <div class="num sky" data-target="12" id="metric4">0</div>
+      <div class="label">社区覆盖</div>
+      <div class="sub">已入驻社区数量</div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon">📈</div>
+      <div class="num plum" data-target="673" id="metric5">0</div>
+      <div class="label">活跃率</div>
+      <div class="sub">月活跃用户占比</div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon">⭐</div>
+      <div class="num brand" data-target="920" id="metric6">0</div>
+      <div class="label">用户满意度</div>
+      <div class="sub">任务完成评价好评率</div>
+    </div>
+  </div>
+</section>
 
-</main>
+<!-- ===== Nearby Good Deeds Feed ===== -->
+<section class="wrap section" style="padding-top:0">
+  <div class="section-title">
+    <h2>📡 附近好事动态</h2>
+    <p>看看邻居们最近做了什么好事</p>
+  </div>
+  <div class="feed" id="feedContainer"></div>
+</section>
 
-<footer>
+<!-- ===== Recommended Tasks Section ===== -->
+<section class="wrap section" style="padding-top:0">
+  <div class="section-title">
+    <h2>今日推荐任务</h2>
+    <p>基于你的位置和好心值推荐</p>
+  </div>
+  <div class="rec-grid" id="recGrid">
+    <div class="rec-card">
+      <span class="rec-tag brand">🌿 环保</span>
+      <h4>社区花园维护</h4>
+      <p>参与社区花园的日常维护，浇水、除草、修剪，为社区增添一抹绿色。</p>
+      <div class="rec-meta">
+        <span class="rec-meta-item">📍 距您 300m</span>
+        <span class="rec-meta-item">⏱️ 20分钟</span>
+        <span class="rec-meta-item">💛 +18 好心值</span>
+      </div>
+      <button class="rec-btn" onclick="claimRecTask(this)">领取任务</button>
+    </div>
+    <div class="rec-card">
+      <span class="rec-tag leaf">📚 教育</span>
+      <h4>四点半课堂辅导</h4>
+      <p>为社区小学生提供课后作业辅导，帮助他们解决学习中的难题。</p>
+      <div class="rec-meta">
+        <span class="rec-meta-item">📍 距您 500m</span>
+        <span class="rec-meta-item">⏱️ 30分钟</span>
+        <span class="rec-meta-item">💛 +30 好心值</span>
+      </div>
+      <button class="rec-btn" onclick="claimRecTask(this)">领取任务</button>
+    </div>
+    <div class="rec-card">
+      <span class="rec-tag gold">🏪 社区</span>
+      <h4>社区共享市集服务</h4>
+      <p>协助社区周末共享市集的摊位布置、引导和秩序维护，感受邻里烟火气。</p>
+      <div class="rec-meta">
+        <span class="rec-meta-item">📍 距您 200m</span>
+        <span class="rec-meta-item">⏱️ 25分钟</span>
+        <span class="rec-meta-item">💛 +22 好心值</span>
+      </div>
+      <button class="rec-btn" onclick="claimRecTask(this)">领取任务</button>
+    </div>
+    <div class="rec-card">
+      <span class="rec-tag sky">👴 助老</span>
+      <h4>智能手机教学</h4>
+      <p>教社区老年人使用智能手机，包括微信聊天、扫码支付、预约挂号等实用功能。</p>
+      <div class="rec-meta">
+        <span class="rec-meta-item">📍 距您 350m</span>
+        <span class="rec-meta-item">⏱️ 20分钟</span>
+        <span class="rec-meta-item">💛 +25 好心值</span>
+      </div>
+      <button class="rec-btn" onclick="claimRecTask(this)">领取任务</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Profile Panel Section ===== -->
+<section class="wrap section" id="profile" style="padding-top:0">
+  <div class="section-title">
+    <h2>🧑 我的好心值</h2>
+    <p>你的公益足迹在这里积累</p>
+  </div>
+  <div class="profile-panel">
+    <div class="profile-header">
+      <div class="profile-avatar">好</div>
+      <div class="profile-info">
+        <div class="profile-name">热心邻居</div>
+        <div class="profile-level">🏅 LV3 · 社区热心人</div>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="profile-stat">
+        <div class="pstat-num brand" id="heartValue">2,580</div>
+        <div class="pstat-label">好心值余额</div>
+      </div>
+      <div class="profile-stat">
+        <div class="pstat-num sky" id="timeCoin">46</div>
+        <div class="pstat-label">时间币（小时）</div>
+      </div>
+      <div class="profile-stat">
+        <div class="pstat-num leaf" id="weeklyEarned">+320</div>
+        <div class="pstat-label">本周获得</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;position:relative;padding-top:20px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);margin-bottom:6px">
+        <span>LV2 社区好邻居</span>
+        <span>LV4 社区带头人</span>
+      </div>
+      <div class="profile-progress">
+        <div class="progress-fill" id="levelProgress" style="width:62%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-faint);margin-top:10px">
+        <span>当前等级</span>
+        <span>距下一级还差 380 好心值</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Community Leaderboard Section ===== -->
+<section class="wrap section" style="padding-top:0">
+  <div class="section-title">
+    <h2>🏆 社区好心值排行榜</h2>
+    <p>本周好心值最高的热心邻居</p>
+  </div>
+  <div class="leaderboard">
+    <div class="lb-header">
+      <h3>🏅 本周热心榜</h3>
+      <span class="lb-period">本周更新</span>
+    </div>
+    <div class="lb-item">
+      <div class="lb-rank gold">🥇</div>
+      <div class="lb-avatar" style="background:linear-gradient(135deg,#c8533a,#c98a2b)">陈</div>
+      <div class="lb-info">
+        <div class="lb-name">陈老师</div>
+        <div class="lb-desc">已坚持参与 24 天 · 社区带头人</div>
+      </div>
+      <div class="lb-score">2,580 <span class="lb-label">好心值</span></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-rank silver">🥈</div>
+      <div class="lb-avatar" style="background:var(--sky)">王</div>
+      <div class="lb-info">
+        <div class="lb-name">王阿姨</div>
+        <div class="lb-desc">已坚持参与 18 天 · 社区导师</div>
+      </div>
+      <div class="lb-score">2,150 <span class="lb-label">好心值</span></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-rank bronze">🥉</div>
+      <div class="lb-avatar" style="background:var(--leaf)">李</div>
+      <div class="lb-info">
+        <div class="lb-name">小李</div>
+        <div class="lb-desc">已坚持参与 15 天 · 环保达人</div>
+      </div>
+      <div class="lb-score">1,890 <span class="lb-label">好心值</span></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-rank normal">4</div>
+      <div class="lb-avatar" style="background:var(--brand)">赵</div>
+      <div class="lb-info">
+        <div class="lb-name">赵叔</div>
+        <div class="lb-desc">已坚持参与 12 天 · 社区导师</div>
+      </div>
+      <div class="lb-score">1,620 <span class="lb-label">好心值</span></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-rank normal">5</div>
+      <div class="lb-avatar" style="background:var(--plum)">林</div>
+      <div class="lb-info">
+        <div class="lb-name">林女士</div>
+        <div class="lb-desc">已坚持参与 10 天 · 热心邻居</div>
+      </div>
+      <div class="lb-score">1,440 <span class="lb-label">好心值</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Platform Features Section ===== -->
+<section class="wrap section" style="padding-top:0">
+  <div class="section-title">
+    <h2>为什么是好事近？</h2>
+    <p>我们重新定义了公益参与方式</p>
+  </div>
+  <div class="features">
+    <div class="feature-card">
+      <div class="feat-icon brand">⏱️</div>
+      <h3>15分钟就好</h3>
+      <p>碎片时间也能做好事。下楼取个快递、顺手垃圾分类，15分钟完成一件好事，忙人也能轻松参与。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon leaf">📍</div>
+      <h3>就近匹配</h3>
+      <p>基于LBS技术精准推送附近任务。打开地图，看到家楼下、公司旁的好事，顺路就能做，不用特意跑远路。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon gold">💛</div>
+      <h3>好心值循环</h3>
+      <p>非金钱激励正循环。做好事赚好心值，好心值兑换社区服务或商家折扣，让善意在社区里流动起来。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Contribution Activity Section ===== -->
+<section class="wrap section" style="padding-top:0">
+  <div class="section-title">
+    <h2>📊 本周贡献活跃度</h2>
+    <p>过去7天社区好心值贡献趋势</p>
+  </div>
+  <div class="stats-mini" style="max-width:600px;margin:0 auto 16px">
+    <div class="sm-item">
+      <div class="sm-num" style="color:var(--brand)">43</div>
+      <div class="sm-label">今日参与人数</div>
+    </div>
+    <div class="sm-item">
+      <div class="sm-num" style="color:var(--leaf)">156</div>
+      <div class="sm-label">今日完成好事</div>
+    </div>
+    <div class="sm-item">
+      <div class="sm-num" style="color:var(--gold)">28</div>
+      <div class="sm-label">今日新用户</div>
+    </div>
+    <div class="sm-item">
+      <div class="sm-num" style="color:var(--sky)">3.2k</div>
+      <div class="sm-label">今日好心值流通</div>
+    </div>
+  </div>
+  <div class="contrib-chart" id="contribChart" style="max-width:600px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow)">
+    <div class="cc-bar" style="height:60%;background:var(--brand)" data-day="周一"><span class="cc-tip">周一</span></div>
+    <div class="cc-bar" style="height:45%;background:var(--brand-soft)" data-day="周二"><span class="cc-tip">周二</span></div>
+    <div class="cc-bar" style="height:75%;background:var(--brand)" data-day="周三"><span class="cc-tip">周三</span></div>
+    <div class="cc-bar" style="height:55%;background:var(--brand-soft)" data-day="周四"><span class="cc-tip">周四</span></div>
+    <div class="cc-bar" style="height:85%;background:var(--brand)" data-day="周五"><span class="cc-tip">周五</span></div>
+    <div class="cc-bar" style="height:70%;background:var(--brand-soft)" data-day="周六"><span class="cc-tip">周六</span></div>
+    <div class="cc-bar" style="height:90%;background:var(--brand)" data-day="周日"><span class="cc-tip">周日</span></div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:16px;margin-top:12px;font-size:11px;color:var(--ink-faint)">
+    <span>周一 43件</span><span>周二 32件</span><span>周三 54件</span><span>周四 40件</span><span>周五 61件</span><span>周六 50件</span><span>周日 65件</span>
+  </div>
+</section>
+
+<!-- ===== FAQ Section ===== -->
+<section class="wrap section" style="padding-top:0">
+  <div class="section-title">
+    <h2>❓ 常见问题</h2>
+    <p>关于好事近，你可能想问的</p>
+  </div>
+  <div class="faq">
+    <div class="faq-item open">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>好事近是什么？</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">好事近是一个泛公益参与平台，核心理念是把公益拆成15分钟、顺路、就近的轻量任务，用非金钱的"好心值+时间币"替代工资，让忙人也能把好事做成日常。我们通过LBS技术匹配附近的好事任务，让公益变得触手可及。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>好心值有什么用？</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">好心值是好事近平台的核心激励体系。你可以用好心值兑换社区服务（如技能交换、场地借用）、商家折扣券、社区荣誉勋章等。好心值只增不减，永久有效，伴随你的公益足迹不断积累。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>时间币和好心值有什么区别？</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">好心值反映你的公益贡献总量，是"荣誉积分"；时间币是你的服务时间存折，1小时服务=1时间币，可以用来兑换别人的服务。好心值不能转让，时间币可以捐赠给社区需要帮助的人。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>一次需要做多久？</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">好事近的任务设计为5-30分钟的轻量任务。我们的理念是"15分钟就好"——取快递5分钟、垃圾分类15分钟、陪老人散步15分钟。碎片时间就够，不用专门腾出半天时间。</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <span>任务安全吗？如何保障？</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">我们采用多重安全保障：实名认证、社区信用体系、任务完成拍照留证、紧急联系人机制。所有任务都在社区范围内，且有详细的记录和评价体系。如遇问题，社区管理员会及时介入协调。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== About Section ===== -->
+<section class="wrap section" id="about" style="padding-top:0">
+  <div class="about-section">
+    <h3>关于好事近</h3>
+    <p>好事近是一个泛公益参与平台，核心理念是把公益拆成15分钟、顺路、就近的轻量任务，用非金钱的"好心值+时间币"替代工资，让忙人也能把好事做成日常。我们相信，公益不是远方的宏大叙事，而是身边的举手之劳。</p>
+    <div class="about-links">
+      <a href="pages/project.html" class="about-link-brand">📋 项目完整方案</a>
+      <a href="pages/ecosystem.html" class="about-link-leaf">🌐 生态模拟平台</a>
+      <a href="pages/interact.html" class="about-link-sky">🎮 互动测试</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
   <div class="wrap">
-    <p>把好事做成日常 <span class="heart">♥</span> · 个人兴趣探索方案</p>
-    <p style="margin-top:4px">泛公益参与需求调研 + 调研产品规划 + MVP 与递进路线（全案）</p>
-    <p style="margin-top:12px;font-size:11.5px;color:var(--ink-faint)">
-      ⚠️ 页面展示数据为模拟数据，用于演示项目逻辑与验证框架。实际数据以真实调研结果为准。
-    </p>
+    <div class="footer-brand">好事近</div>
+    <div class="footer-tagline">把好事做成日常 · 让公益触手可及</div>
+    <div class="footer-links">
+      <a href="index.html">发现好事</a>
+      <a href="#tasks">任务市场</a>
+      <a href="#profile">好心值</a>
+      <a href="#about">关于项目</a>
+      <a href="pages/project.html">完整方案</a>
+      <a href="pages/ecosystem.html">生态模拟</a>
+      <a href="pages/interact.html">互动测试</a>
+    </div>
+    <div class="footer-disclaimer">
+      ⚠️ 页面展示数据为模拟数据，用于演示平台逻辑与交互体验。实际数据以真实运营结果为准。
+    </div>
+    <div class="footer-copy">
+      &copy; 2026 好事近 · 泛公益参与平台 · 个人兴趣探索方案
+    </div>
   </div>
 </footer>
 
+<!-- ===== Claim Modal ===== -->
+<div class="modal-overlay" id="claimModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📋 确认领取任务</h3>
+      <button class="modal-close" onclick="closeClaimModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-task-list" id="modalTaskList"></div>
+      <div class="modal-total">
+        <span>合计好心值奖励</span>
+        <span class="mt-total-val">💛 <span class="num" id="modalTotalValue">0</span></span>
+      </div>
+      <div class="modal-actions">
+        <button class="mbtn mbtn-cancel" onclick="closeClaimModal()">再想想</button>
+        <button class="mbtn mbtn-confirm" onclick="confirmClaim()">确认领取 ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Toast Container ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ===== Scroll to Top ===== -->
 <button id="totop" aria-label="回到顶部">↑</button>
+
 <script>
-  const totop = document.getElementById('totop');
-  document.addEventListener('scroll', () => { totop.classList.toggle('show', document.documentElement.scrollTop > 600); }, {passive: true});
-  totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+/* ============================================================
+   JavaScript: 好事近 · 全站交互逻辑
+   ============================================================ */
+
+// ===== 1. Task Picker — 选择/取消选择任务 =====
+const taskCards = document.querySelectorAll('.task-card');
+const selectedCount = document.getElementById('selectedCount');
+const totalValue = document.getElementById('totalValue');
+const btnClaim = document.getElementById('btnClaim');
+const claimBadge = document.getElementById('claimBadge');
+
+let selectedTasks = new Map();
+
+taskCards.forEach(card => {
+  card.addEventListener('click', function() {
+    const index = parseInt(this.dataset.index);
+    const name = this.dataset.name;
+    const value = parseInt(this.dataset.value);
+
+    if (selectedTasks.has(index)) {
+      selectedTasks.delete(index);
+      this.classList.remove('selected');
+    } else {
+      selectedTasks.set(index, { name, value });
+      this.classList.add('selected');
+    }
+
+    updatePickUI();
+  });
+});
+
+function updatePickUI() {
+  const count = selectedTasks.size;
+  const total = Array.from(selectedTasks.values()).reduce((sum, t) => sum + t.value, 0);
+  selectedCount.textContent = count;
+  totalValue.textContent = total;
+  claimBadge.textContent = count;
+  btnClaim.disabled = count === 0;
+}
+
+// ===== 2. Claim Modal =====
+function openClaimModal() {
+  if (selectedTasks.size === 0) return;
+  const modal = document.getElementById('claimModal');
+  const list = document.getElementById('modalTaskList');
+  const totalEl = document.getElementById('modalTotalValue');
+
+  list.innerHTML = '';
+  let total = 0;
+  selectedTasks.forEach((task, index) => {
+    total += task.value;
+    const item = document.createElement('div');
+    item.className = 'modal-task-item';
+    item.innerHTML = '<span class="mt-name">' + getTaskIcon(index) + ' ' + task.name + '</span><span class="mt-value">💛 +' + task.value + '</span>';
+    list.appendChild(item);
+  });
+
+  totalEl.textContent = total;
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeClaimModal() {
+  document.getElementById('claimModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function confirmClaim() {
+  let total = 0;
+  selectedTasks.forEach(task => { total += task.value; });
+
+  // Update heart value
+  const heartEl = document.getElementById('heartValue');
+  let currentVal = parseInt(heartEl.textContent.replace(/,/g, ''));
+  let newVal = currentVal + total;
+  heartEl.textContent = newVal.toLocaleString();
+
+  // Update weekly earned
+  const weeklyEl = document.getElementById('weeklyEarned');
+  let weeklyVal = parseInt(weeklyEl.textContent.replace('+', '').replace(/,/g, ''));
+  weeklyEl.textContent = '+' + (weeklyVal + total).toLocaleString();
+
+  // Scroll up metrics
+  animateMetricIncrement('metric2', 6523, total);
+
+  closeClaimModal();
+
+  // Confetti celebration
+  createConfetti();
+
+  // Show success toast
+  const taskNames = Array.from(selectedTasks.values()).map(t => t.name).join('、');
+  showToast('success', '🎉 任务领取成功！', '你领取了 ' + selectedTasks.size + ' 件好事，获得 💛' + total + ' 好心值：' + taskNames);
+
+  // Clear selection
+  selectedTasks.clear();
+  taskCards.forEach(c => c.classList.remove('selected'));
+  updatePickUI();
+}
+
+function getTaskIcon(index) {
+  const icons = ['📦','♻️','📱','👴','📚','🌿','🐕','🏪'];
+  return icons[index] || '📌';
+}
+
+// ===== 3. Toast Notifications =====
+function showToast(type, title, desc) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  const iconMap = { success: '✅', info: 'ℹ️', error: '❌' };
+  toast.innerHTML = '<span class="toast-icon">' + (iconMap[type] || 'ℹ️') + '</span>' +
+    '<div class="toast-body"><div class="toast-title">' + title + '</div><div class="toast-desc">' + desc + '</div></div>' +
+    '<button class="toast-close" onclick="this.parentElement.remove()">✕</button>';
+  container.appendChild(toast);
+  setTimeout(() => { if (toast.parentElement) { toast.style.opacity = '0'; toast.style.transform = 'translateX(40px)'; toast.style.transition = 'all .4s ease'; setTimeout(() => toast.remove(), 400); } }, 4000);
+}
+
+// ===== 4. Feed Items — 动态信息流 =====
+const feedData = [
+  { avatar: '小', bg: '#c8533a', name: '小鹿', badge: 'brand', badgeText: '热心邻居', text: '帮楼下大爷搬了箱水果上楼，就5分钟的事。大爷还非要给我倒水喝 😊', time: '2分钟前', likes: 18 },
+  { avatar: '张', bg: '#3f7d5b', name: '老张', badge: 'leaf', badgeText: '环保达人', text: '垃圾分类引导站值了15分钟班，好几个人主动问怎么分类，感觉社区越来越好了！', time: '5分钟前', likes: 12 },
+  { avatar: '阿', bg: '#c98a2b', name: '阿杰', badge: 'gold', badgeText: '社区新星', text: '和同小区的人一起巡逻20分钟，边散步边聊天顺便做了好事，比刷手机有意思多了', time: '8分钟前', likes: 24 },
+  { avatar: '王', bg: '#3b6b8c', name: '王阿姨', badge: 'sky', badgeText: '社区导师', text: '教楼上的小年轻用手机挂号，孩子说"阿姨您比我妈教得耐心多了"，心里暖暖的', time: '12分钟前', likes: 31 },
+  { avatar: '林', bg: '#6b4a7a', name: '林女士', badge: 'plum', badgeText: '热心邻居', text: '下班顺路帮邻居取了快递，放门口拍了照。邻居发微信说谢谢，感觉这一天都值了', time: '15分钟前', likes: 9 },
+  { avatar: '陈', bg: '#c8533a', name: '陈老师', badge: 'brand', badgeText: '社区带头人', text: '整理共享书架的时候发现好多好书，拍了照发群里，好几个人说周末要来借！', time: '20分钟前', likes: 15 },
+  { avatar: '李', bg: '#3f7d5b', name: '小李', badge: 'leaf', badgeText: '环保达人', text: '给社区花园浇了水，看到之前种的花都开了，成就感满满 🌸', time: '25分钟前', likes: 20 },
+  { avatar: '周', bg: '#c98a2b', name: '周同学', badge: 'gold', badgeText: '社区新星', text: '帮邻居遛了15分钟狗，狗狗超乖，主人还给了瓶水。又赚了好心值又锻炼了身体！', time: '30分钟前', likes: 14 },
+  { avatar: '吴', bg: '#3b6b8c', name: '吴姐', badge: 'sky', badgeText: '热心邻居', text: '今天在社区巡逻发现一处消防通道堆了杂物，拍照上报了，社区很快安排清理了', time: '35分钟前', likes: 22 },
+  { avatar: '赵', bg: '#6b4a7a', name: '赵叔', badge: 'plum', badgeText: '社区导师', text: '退休了没事做，每周三下午在社区教孩子们写毛笔字，孩子们叫我"书法爷爷" 😄', time: '40分钟前', likes: 27 },
+];
+
+function buildFeed() {
+  const container = document.getElementById('feedContainer');
+  container.innerHTML = '';
+  feedData.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'feed-item';
+    el.style.animationDelay = (i * 0.08) + 's';
+    el.innerHTML =
+      '<div class="feed-avatar" style="background:' + item.bg + '">' + item.avatar + '</div>' +
+      '<div class="feed-body">' +
+        '<div class="feed-name">' + item.name + ' <span class="badge ' + item.badge + '">' + item.badgeText + '</span></div>' +
+        '<div class="feed-text">' + item.text + '</div>' +
+        '<div class="feed-time">' + item.time + '</div>' +
+      '</div>' +
+      '<button class="feed-like" onclick="toggleLike(this)"><span class="like-heart">♡</span> <span class="like-count">' + item.likes + '</span></button>';
+    container.appendChild(el);
+  });
+}
+
+function toggleLike(btn) {
+  btn.classList.toggle('liked');
+  const countEl = btn.querySelector('.like-count');
+  let count = parseInt(countEl.textContent);
+  const heart = btn.querySelector('.like-heart');
+  if (btn.classList.contains('liked')) {
+    count++;
+    heart.textContent = '♥';
+    heart.style.color = '#c8533a';
+  } else {
+    count--;
+    heart.textContent = '♡';
+    heart.style.color = '';
+  }
+  countEl.textContent = count;
+  // Re-trigger animation
+  heart.style.animation = 'none';
+  void heart.offsetHeight;
+  heart.style.animation = '';
+}
+
+// ===== 5. Scroll-triggered Feed Animation =====
+let feedAnimated = false;
+function checkFeedVisibility() {
+  const container = document.getElementById('feedContainer');
+  if (!container) return;
+  const rect = container.getBoundingClientRect();
+  if (rect.top < window.innerHeight && !feedAnimated) {
+    feedAnimated = true;
+    const items = container.querySelectorAll('.feed-item');
+    items.forEach((item, i) => {
+      item.style.animationDelay = (i * 0.08) + 's';
+      item.style.animation = 'feed-in .5s ease both';
+      item.style.animationDelay = (i * 0.08) + 's';
+    });
+  }
+}
+
+// ===== 6. Recommended Tasks — 领取交互 =====
+function claimRecTask(btn) {
+  if (btn.classList.contains('claimed')) return;
+  btn.classList.add('claimed');
+  btn.textContent = '✓ 已领取';
+  // Get the card title
+  const card = btn.closest('.rec-card');
+  const title = card.querySelector('h4').textContent;
+  const valueEl = card.querySelector('.rec-meta-item:last-child');
+  const value = valueEl ? valueEl.textContent.replace(/[^0-9]/g, '') : '0';
+  showToast('success', '✅ 任务已领取', '你领取了「' + title + '」，完成可获得 💛' + value + ' 好心值');
+}
+
+// ===== 7. Number Scroll Animation =====
+function animateNumbers() {
+  const metrics = document.querySelectorAll('.metric .num');
+  metrics.forEach(metric => {
+    const target = parseInt(metric.dataset.target);
+    if (isNaN(target)) return;
+    const duration = 2000;
+    const start = performance.now();
+    const isDecimal = metric.dataset.target && metric.dataset.target.length >= 3 && target > 1000;
+
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      let current = Math.round(eased * target);
+
+      if (target === 673) {
+        metric.textContent = (current / 10).toFixed(1) + '%';
+      } else if (target === 920) {
+        metric.textContent = (current / 10).toFixed(1) + '%';
+      } else if (target === 12) {
+        metric.textContent = current;
+      } else {
+        metric.textContent = current.toLocaleString();
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        // Final value
+        if (target === 673) metric.textContent = '67.3%';
+        else if (target === 920) metric.textContent = '92%';
+        else if (target === 12) metric.textContent = '12';
+        else metric.textContent = target.toLocaleString();
+      }
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+function animateMetricIncrement(id, base, increment) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const target = base + increment;
+  const start = parseInt(el.textContent.replace(/,/g, '')) || base;
+  const duration = 1000;
+  const begin = performance.now();
+
+  function update(now) {
+    const elapsed = now - begin;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(start + (target - start) * eased);
+    el.textContent = current.toLocaleString();
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = target.toLocaleString();
+  }
+  requestAnimationFrame(update);
+}
+
+// ===== 8. Intersection Observer for Dashboard =====
+let numbersAnimated = false;
+function setupDashboardObserver() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !numbersAnimated) {
+        numbersAnimated = true;
+        animateNumbers();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  const dashboard = document.getElementById('dashboard');
+  if (dashboard) observer.observe(dashboard);
+}
+
+// ===== 9. Mobile Navigation =====
+function toggleMobileNav() {
+  document.getElementById('mobileNav').classList.toggle('show');
+  document.body.style.overflow = document.getElementById('mobileNav').classList.contains('show') ? 'hidden' : '';
+}
+
+// ===== 10. Scroll to Top =====
+const totop = document.getElementById('totop');
+document.addEventListener('scroll', () => {
+  totop.classList.toggle('show', document.documentElement.scrollTop > 600);
+}, { passive: true });
+totop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// ===== 11. Navbar Shadow on Scroll =====
+const navbar = document.getElementById('navbar');
+document.addEventListener('scroll', () => {
+  navbar.style.boxShadow = document.documentElement.scrollTop > 10 ? '0 1px 4px rgba(43,38,34,.06)' : 'none';
+}, { passive: true });
+
+// ===== 12. Floating Particles =====
+function createParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#c8533a','#3f7d5b','#c98a2b','#3b6b8c','#6b4a7a'];
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 6 + Math.random() * 14;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (20 + Math.random() * 30) + 's';
+    p.style.animationDelay = (Math.random() * 20) + 's';
+    container.appendChild(p);
+  }
+}
+
+// ===== 13. Smooth Scroll for Nav Links =====
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', function(e) {
+    const id = this.getAttribute('href');
+    if (id === '#') return;
+    e.preventDefault();
+    const target = document.querySelector(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// ===== 14. Keyboard — Escape to close modals =====
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('claimModal');
+    if (modal.classList.contains('show')) closeClaimModal();
+    const mobileNav = document.getElementById('mobileNav');
+    if (mobileNav.classList.contains('show')) toggleMobileNav();
+  }
+});
+
+// ===== 15. Click Outside Modal to Close =====
+document.getElementById('claimModal').addEventListener('click', function(e) {
+  if (e.target === this) closeClaimModal();
+});
+
+// ===== 16. Auto-refresh Feed (simulated real-time) =====
+let feedRefreshTimer = null;
+function startFeedRefresh() {
+  let idx = 0;
+  feedRefreshTimer = setInterval(() => {
+    const container = document.getElementById('feedContainer');
+    if (!container) return;
+    const firstItem = container.querySelector('.feed-item');
+    if (firstItem) {
+      firstItem.style.opacity = '0';
+      firstItem.style.transform = 'translateY(-12px)';
+      firstItem.style.transition = 'all .4s ease';
+      setTimeout(() => {
+        if (firstItem.parentElement) {
+          container.appendChild(firstItem);
+          setTimeout(() => {
+            firstItem.style.opacity = '1';
+            firstItem.style.transform = 'translateY(0)';
+          }, 50);
+        }
+      }, 400);
+    }
+  }, 8000);
+}
+
+// ===== 17. FAQ Toggle =====
+function toggleFaq(el) {
+  const item = el.closest('.faq-item');
+  if (!item) return;
+  const isOpen = item.classList.contains('open');
+  // Close all others
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ===== 18. Contribution Chart Animation =====
+function animateChart() {
+  const bars = document.querySelectorAll('.cc-bar');
+  bars.forEach(bar => {
+    const targetHeight = bar.style.height;
+    bar.style.height = '0%';
+    setTimeout(() => {
+      bar.style.height = targetHeight;
+    }, 200);
+  });
+}
+
+// ===== 19. Confetti Effect on Task Claim =====
+function createConfetti() {
+  const colors = ['#c8533a','#3f7d5b','#c98a2b','#3b6b8c','#6b4a7a','#fbeae3'];
+  for (let i = 0; i < 30; i++) {
+    const confetti = document.createElement('div');
+    confetti.style.cssText = 'position:fixed;width:8px;height:8px;border-radius:2px;background:' + colors[Math.floor(Math.random()*colors.length)] + ';left:' + (Math.random()*100) + '%;top:-10px;z-index:4000;pointer-events:none;animation:confetti-fall ' + (2+Math.random()*2) + 's ease-in forwards;animation-delay:' + (Math.random()*0.5) + 's';
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 4000);
+  }
+}
+
+// ===== 20. Interactive Stats Mini Hover =====
+document.querySelectorAll('.sm-item').forEach(item => {
+  item.addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-2px)';
+    this.style.boxShadow = 'var(--shadow-hover)';
+    this.style.transition = 'all .3s ease';
+  });
+  item.addEventListener('mouseleave', function() {
+    this.style.transform = '';
+    this.style.boxShadow = '';
+  });
+});
+
+// ===== 21. Hero Stats Counter (small) =====
+function animateHeroStats() {
+  const heroChips = document.querySelectorAll('.hero .meta .chip');
+  // Simple flash effect on load
+  heroChips.forEach((chip, i) => {
+    chip.style.animation = 'slide-up .4s ease both';
+    chip.style.animationDelay = (0.3 + i * 0.1) + 's';
+  });
+}
+
+// ===== 22. Task Card Hover Sound Effect (visual only) =====
+taskCards.forEach(card => {
+  card.addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-3px)';
+  });
+  card.addEventListener('mouseleave', function() {
+    if (!this.classList.contains('selected')) {
+      this.style.transform = '';
+    }
+  });
+});
+
+// ===== 23. Navbar Link Active State on Scroll =====
+function updateActiveNav() {
+  const sections = [
+    { id: 'tasks', link: 'a[href="#tasks"]' },
+    { id: 'profile', link: 'a[href="#profile"]' },
+    { id: 'about', link: 'a[href="#about"]' }
+  ];
+  let current = 'index.html';
+  sections.forEach(s => {
+    const el = document.getElementById(s.id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < 300 && rect.bottom > 200) {
+        current = s.id;
+      }
+    }
+  });
+  document.querySelectorAll('.navbar nav a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current || (current === 'index.html' && a.getAttribute('href') === 'index.html'));
+  });
+}
+
+// ===== 24. Mobile Bottom Sheet Interaction =====
+// (handled via toggleMobileNav)
+
+// ===== 25. Task Select All / Deselect All =====
+function selectAllTasks() {
+  taskCards.forEach(card => {
+    const index = parseInt(card.dataset.index);
+    const name = card.dataset.name;
+    const value = parseInt(card.dataset.value);
+    if (!selectedTasks.has(index)) {
+      selectedTasks.set(index, { name, value });
+      card.classList.add('selected');
+    }
+  });
+  updatePickUI();
+  showToast('info', '已全选所有任务', '共 ' + taskCards.length + ' 件好事，累计 ' + Array.from(selectedTasks.values()).reduce((s,t) => s + t.value, 0) + ' 好心值');
+}
+
+function deselectAllTasks() {
+  selectedTasks.clear();
+  taskCards.forEach(c => c.classList.remove('selected'));
+  updatePickUI();
+  showToast('info', '已取消所有选择', '已清空所有已选任务');
+}
+
+// ===== 26. Daily Tip Rotation =====
+const dailyTips = [
+  '💡 帮邻居取快递只要5分钟，赚8好心值',
+  '💡 垃圾分类引导是社区最受欢迎的好事之一',
+  '💡 教老人用手机，一次20分钟，收获满满成就感',
+  '💡 陪老人散步15分钟，既锻炼身体又做好事',
+  '💡 整理共享书架，让知识和善意一起流动',
+  '💡 社区花园浇水，看着花开心情也会变好',
+  '💡 帮遛狗15分钟，狗狗开心你也开心',
+  '💡 社区巡逻20分钟，守护家园人人有责'
+];
+let tipIndex = 0;
+function rotateTip() {
+  const tipEl = document.getElementById('dailyTip');
+  if (!tipEl) return;
+  tipIndex = (tipIndex + 1) % dailyTips.length;
+  tipEl.style.opacity = '0';
+  tipEl.style.transform = 'translateY(8px)';
+  setTimeout(() => {
+    tipEl.textContent = dailyTips[tipIndex];
+    tipEl.style.opacity = '1';
+    tipEl.style.transform = 'translateY(0)';
+  }, 300);
+}
+
+// ===== 27. Window Resize Handler =====
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    // Re-check layout if needed
+  }, 250);
+});
+
+// ===== 28. Keyboard Shortcuts =====
+document.addEventListener('keydown', (e) => {
+  // Ctrl+A to select all tasks when task picker is visible
+  if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+    const taskPicker = document.querySelector('.task-picker');
+    if (taskPicker && taskPicker.getBoundingClientRect().top < window.innerHeight && taskPicker.getBoundingClientRect().bottom > 0) {
+      e.preventDefault();
+      selectAllTasks();
+    }
+  }
+});
+
+// ===== Initialize =====
+document.addEventListener('DOMContentLoaded', () => {
+  buildFeed();
+  createParticles();
+  setupDashboardObserver();
+  checkFeedVisibility();
+  startFeedRefresh();
+  animateHeroStats();
+
+  // Start daily tip rotation
+  setInterval(rotateTip, 8000);
+
+  // Animate contribution chart on scroll
+  const chartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateChart();
+        chartObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+  const chart = document.getElementById('contribChart');
+  if (chart) chartObserver.observe(chart);
+
+  // Animate level progress bar on scroll
+  const progressObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const bar = document.getElementById('levelProgress');
+        if (bar) bar.style.width = '62%';
+        progressObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+  const progressBar = document.getElementById('levelProgress');
+  if (progressBar) {
+    progressBar.style.width = '0%';
+    progressObserver.observe(progressBar.closest('.profile-panel'));
+  }
+
+  // Metric number animation also on scroll
+  const metricObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !numbersAnimated) {
+        numbersAnimated = true;
+        animateNumbers();
+        metricObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.2 });
+  const dashboard = document.getElementById('dashboard');
+  if (dashboard) metricObserver.observe(dashboard);
+
+  // Active nav on scroll
+  document.addEventListener('scroll', updateActiveNav, { passive: true });
+
+  // Animate leaderboard items on scroll
+  const lbObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const items = entry.target.querySelectorAll('.lb-item');
+        items.forEach((item, i) => {
+          item.style.animation = 'slide-up .4s ease both';
+          item.style.animationDelay = (i * 0.1) + 's';
+        });
+        lbObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  const leaderboard = document.querySelector('.leaderboard');
+  if (leaderboard) lbObserver.observe(leaderboard);
+});
 </script>
 </body>
 </html>

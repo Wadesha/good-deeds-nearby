@@ -20,8 +20,9 @@ https://wadesha.github.io/good-deeds-nearby/
 ## 站点结构
 
 ```
-├── index.html              ← 项目展示首页（含模拟数据看板）
+├── index.html              ← 公益服务平台首页（今日好事选择器/数据看板/动态/任务）
 ├── pages/
+│   ├── project.html        ← 项目总览首页（原index.html，含模拟数据看板）
 │   ├── thesis.html         ← 00 一句话立论
 │   ├── market.html         ← 01 市场与需求现状
 │   ├── research.html       ← 02 需求假设与验证框架
