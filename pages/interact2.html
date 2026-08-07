@@ -184,6 +184,63 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 /* 滚动数字 */
 .scroll-num { display: inline-block; transition: all .3s ease; }
 }
+
+/* ====== 模块25-27样式 ====== */
+
+/* 模块25：好事反馈 */
+.fb-neighbor {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 12px 8px; border-radius: 12px; border: 2px solid #eee8e2;
+  cursor: pointer; transition: all .2s; user-select: none; background: #fff;
+}
+.fb-neighbor:hover { border-color: #ddd5cc; background: #faf8f6; }
+.fb-neighbor.selected { border-color: #c8533a; background: #fef3ef; }
+.fb-avatar { font-size: 28px; margin-bottom: 4px; }
+.fb-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.fb-deed { font-size: 11px; color: #4a9e6e; font-weight: 600; }
+.fb-time { font-size: 10px; color: #7a6e66; margin-top: 2px; }
+.star-rating .star { font-size: 28px; cursor: pointer; color: #ddd5cc; transition: all .2s; user-select: none; }
+.star-rating .star:hover { transform: scale(1.15); }
+.star-rating .star.active { color: #f0b040; text-shadow: 0 0 6px rgba(240,176,64,.3); }
+
+/* 模块26：好事计划 */
+.plan-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+.plan-tab {
+  padding: 8px 16px; border-radius: 999px; border: 2px solid #eee8e2;
+  background: #fff; cursor: pointer; font-size: 13px; font-weight: 600;
+  transition: all .2s; user-select: none;
+}
+.plan-tab:hover { border-color: #ddd5cc; background: #faf8f6; }
+.plan-tab.selected { border-color: #c8533a; background: #fef3ef; color: #c8533a; }
+.plan-input {
+  width: 100%; padding: 10px 14px; border-radius: 10px; border: 2px solid #eee8e2;
+  font-size: 14px; font-family: inherit; transition: border-color .2s; background: #faf8f6; box-sizing: border-box;
+}
+.plan-input:focus { outline: none; border-color: #c8533a; background: #fff; }
+.plan-custom-tag {
+  display: inline-block; padding: 4px 12px; border-radius: 999px;
+  background: #eef4fa; border: 1px solid #d4e0ec; font-size: 12px; font-weight: 600;
+  animation: fadeUp .2s ease;
+}
+.plan-custom-tag .remove { cursor: pointer; margin-left: 4px; color: #7a6e66; font-weight: 700; }
+.plan-custom-tag .remove:hover { color: #c8533a; }
+
+/* 模块27：趣味问答 */
+.quiz-option {
+  padding: 14px 18px; border-radius: 12px; border: 2px solid #eee8e2;
+  cursor: pointer; font-size: 14px; font-weight: 600; transition: all .2s;
+  user-select: none; background: #fff; text-align: left;
+}
+.quiz-option:hover { border-color: #ddd5cc; background: #faf8f6; }
+.quiz-option.selected { border-color: #c8533a; background: #fef3ef; }
+.quiz-option.correct { border-color: #4a9e6e; background: #edf7f0; color: #2b6e4a; }
+.quiz-option.wrong { border-color: #c8533a; background: #fef0ee; color: #a84430; }
+.quiz-option.disabled { pointer-events: none; opacity: .8; }
+.quiz-detail-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; font-size: 13px; border-bottom: 1px solid #f0ece8; }
+.quiz-detail-item:last-child { border-bottom: none; }
+.quiz-detail-item .qdi-status { font-size: 16px; flex-shrink: 0; }
+.quiz-detail-item .qdi-q { font-weight: 600; margin-bottom: 2px; }
+.quiz-detail-item .qdi-a { color: #7a6e66; }
 </style>
 </head>
 <body>
@@ -1441,6 +1498,166 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
       <div class="result-box" id="rM24">
         <div class="r-title">🤝 技能交换成功</div>
         <div class="r-content" id="rM24Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块25：好事反馈 ====== -->
+  <div class="module" id="m25">
+    <div class="module-hd">
+      <div class="m-icon pink">💬</div>
+      <div class="m-info">
+        <h3>好事反馈 <span class="live-badge">感恩</span></h3>
+        <p>给帮助过你的邻居一个真诚的反馈</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div style="font-size:14px;font-weight:700;margin-bottom:10px;">🙏 选择一位帮助过你的邻居</div>
+      <div id="feedbackNeighborGrid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+        <div class="fb-neighbor" data-fbn="1" onclick="selectFeedbackNeighbor(this)">
+          <div class="fb-avatar">👩</div>
+          <div class="fb-name">李阿姨</div>
+          <div class="fb-deed">帮收快递 📦</div>
+          <div class="fb-time">昨天 15:30</div>
+        </div>
+        <div class="fb-neighbor" data-fbn="2" onclick="selectFeedbackNeighbor(this)">
+          <div class="fb-avatar">👨</div>
+          <div class="fb-name">王叔叔</div>
+          <div class="fb-deed">帮忙修水管 🔧</div>
+          <div class="fb-time">前天 10:00</div>
+        </div>
+        <div class="fb-neighbor" data-fbn="3" onclick="selectFeedbackNeighbor(this)">
+          <div class="fb-avatar">👧</div>
+          <div class="fb-name">小陈</div>
+          <div class="fb-deed">教用手机挂号 📱</div>
+          <div class="fb-time">3天前 14:20</div>
+        </div>
+        <div class="fb-neighbor" data-fbn="4" onclick="selectFeedbackNeighbor(this)">
+          <div class="fb-avatar">👴</div>
+          <div class="fb-name">张爷爷</div>
+          <div class="fb-deed">分享自家种的菜 🥬</div>
+          <div class="fb-time">4天前 08:00</div>
+        </div>
+        <div class="fb-neighbor" data-fbn="5" onclick="selectFeedbackNeighbor(this)">
+          <div class="fb-avatar">👩‍🦰</div>
+          <div class="fb-name">刘姐</div>
+          <div class="fb-deed">帮忙照看孩子 👶</div>
+          <div class="fb-time">5天前 16:45</div>
+        </div>
+        <div class="fb-neighbor" data-fbn="6" onclick="selectFeedbackNeighbor(this)">
+          <div class="fb-avatar">👨‍🦱</div>
+          <div class="fb-name">赵叔</div>
+          <div class="fb-deed">帮忙搬重物 💪</div>
+          <div class="fb-time">6天前 09:30</div>
+        </div>
+      </div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:8px;">⭐ 评分</div>
+      <div id="starRating" class="star-rating" style="margin-bottom:14px;">
+        <span class="star" data-star="1" onclick="rateStar(this)">☆</span>
+        <span class="star" data-star="2" onclick="rateStar(this)">☆</span>
+        <span class="star" data-star="3" onclick="rateStar(this)">☆</span>
+        <span class="star" data-star="4" onclick="rateStar(this)">☆</span>
+        <span class="star" data-star="5" onclick="rateStar(this)">☆</span>
+        <span id="starLabel" style="font-size:13px;color:#7a6e66;margin-left:8px;">点击评分</span>
+      </div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px;">✏️ 反馈留言</div>
+      <textarea class="diary-textarea" id="feedbackMsg" placeholder="说说你的感谢和感受……（选填）" style="min-height:60px;margin-bottom:14px;"></textarea>
+      <div class="act-bar">
+        <span class="count">已选邻居：<b id="feedbackNeighborCount">0</b> · 评分：<b id="feedbackStarCount">0</b></span>
+        <button class="btn-send" id="btnM25" disabled onclick="sendFeedback()">💌 发送反馈</button>
+      </div>
+      <div class="result-box" id="rM25">
+        <div class="r-title">💛 反馈已发送</div>
+        <div class="r-content" id="rM25Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块26：好事计划 ====== -->
+  <div class="module" id="m26">
+    <div class="module-hd">
+      <div class="m-icon blue">📋</div>
+      <div class="m-info">
+        <h3>好事计划 <span class="live-badge">规划</span></h3>
+        <p>规划一周的好事，让善意成为习惯</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div class="plan-tabs" id="planTabs">
+        <span class="plan-tab selected" data-day="0" onclick="switchPlanDay(this)">周一</span>
+        <span class="plan-tab" data-day="1" onclick="switchPlanDay(this)">周二</span>
+        <span class="plan-tab" data-day="2" onclick="switchPlanDay(this)">周三</span>
+        <span class="plan-tab" data-day="3" onclick="switchPlanDay(this)">周四</span>
+        <span class="plan-tab" data-day="4" onclick="switchPlanDay(this)">周五</span>
+        <span class="plan-tab" data-day="5" onclick="switchPlanDay(this)">周六</span>
+        <span class="plan-tab" data-day="6" onclick="switchPlanDay(this)">周日</span>
+      </div>
+      <div id="planDayContent" style="margin-bottom:14px;">
+        <div style="font-size:14px;font-weight:700;margin-bottom:8px;">💡 推荐好事</div>
+        <div class="opt-grid" id="planSuggestGrid" style="grid-template-columns:1fr 1fr;"></div>
+        <div style="margin-top:10px;">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">✏️ 自定义好事</div>
+          <input type="text" class="plan-input" id="planCustomInput" placeholder="输入你想做的事……" onkeydown="if(event.key==='Enter')addCustomDeed()" />
+          <button class="btn-send" style="padding:6px 16px;font-size:13px;margin-top:6px;" onclick="addCustomDeed()">➕ 添加</button>
+        </div>
+        <div id="planCustomList" style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
+      <div style="padding:12px;border-radius:10px;background:#fef8f3;border:1px solid #f0d5c8;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:6px;">📊 本周计划概览</div>
+        <div id="planSummary" style="font-size:12px;color:#7a6e66;line-height:1.6;">暂无计划，开始规划吧！</div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已规划：<b id="planCount">0</b> 件事</span>
+        <button class="btn-send" id="btnM26" disabled onclick="savePlan()">💾 保存计划</button>
+      </div>
+      <div class="result-box" id="rM26">
+        <div class="r-title">📋 计划已保存</div>
+        <div class="r-content" id="rM26Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块27：趣味问答 ====== -->
+  <div class="module" id="m27">
+    <div class="module-hd">
+      <div class="m-icon purple">🎯</div>
+      <div class="m-info">
+        <h3>趣味问答 <span class="live-badge">挑战</span></h3>
+        <p>测试你的社区公益知识，赢取好心值</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div id="quizStart" style="text-align:center;padding:20px 0;">
+        <div style="font-size:48px;margin-bottom:12px;">🧠</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:6px;">社区公益知识挑战</div>
+        <div style="font-size:13px;color:#7a6e66;margin-bottom:14px;">共5道题，看看你能答对几道！</div>
+        <button class="btn-send" onclick="startQuiz()">🎯 开始答题</button>
+      </div>
+      <div id="quizPlay" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:600;color:#7a6e66;" id="quizProgress">第 1/5 题</span>
+          <span style="font-size:13px;font-weight:600;color:#c8533a;" id="quizScoreDisplay">✅ 0 分</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:14px;">
+          <div class="fill" id="quizProgressBar" style="width:20%;"></div>
+        </div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:14px;line-height:1.5;" id="quizQuestion"></div>
+        <div id="quizOptions" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+        <div class="act-bar" style="margin-top:0;">
+          <span class="count" id="quizFeedback" style="font-size:13px;"></span>
+          <button class="btn-send" id="btnQuizNext" onclick="nextQuizQuestion()" disabled>下一题 →</button>
+        </div>
+      </div>
+      <div id="quizResult" style="display:none;text-align:center;padding:10px 0;">
+        <div style="font-size:48px;margin-bottom:8px;" id="quizResultEmoji">🏆</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:4px;" id="quizResultTitle">太棒了！</div>
+        <div style="font-size:13px;color:#7a6e66;margin-bottom:12px;" id="quizResultDesc">你答对了 5/5 题！</div>
+        <div id="quizDetailList" style="text-align:left;margin-bottom:14px;padding:10px;background:#faf8f6;border-radius:10px;border:1px solid #eee8e2;"></div>
+        <button class="btn-send" style="background:linear-gradient(135deg,#7a6e66,#5a4e46);" onclick="resetQuiz()">🔄 重新开始</button>
+      </div>
+      <div class="result-box" id="rM27">
+        <div class="r-title">🎉 答题完成</div>
+        <div class="r-content" id="rM27Content"></div>
       </div>
     </div>
   </div>
@@ -2807,6 +3024,333 @@ function acceptSkillMatch(name) {
 }
 
 initDailyChallenge();
+
+// ===== 模块25：好事反馈 =====
+var selectedFeedbackNeighbor = null;
+var selectedFeedbackStar = 0;
+var feedbackNameMap = {
+  '1': { name: '李阿姨', deed: '帮收快递' },
+  '2': { name: '王叔叔', deed: '帮忙修水管' },
+  '3': { name: '小陈', deed: '教用手机挂号' },
+  '4': { name: '张爷爷', deed: '分享自家种的菜' },
+  '5': { name: '刘姐', deed: '帮忙照看孩子' },
+  '6': { name: '赵叔', deed: '帮忙搬重物' }
+};
+
+function selectFeedbackNeighbor(el) {
+  document.querySelectorAll('#feedbackNeighborGrid .fb-neighbor').forEach(function(c) {
+    c.classList.remove('selected');
+  });
+  el.classList.add('selected');
+  selectedFeedbackNeighbor = el.dataset.fbn;
+  document.getElementById('feedbackNeighborCount').textContent = 1;
+  checkFeedbackBtn();
+}
+
+function rateStar(el) {
+  var val = parseInt(el.dataset.star);
+  selectedFeedbackStar = val;
+  var stars = document.querySelectorAll('#starRating .star');
+  stars.forEach(function(s, i) {
+    if (i < val) {
+      s.classList.add('active');
+      s.textContent = '★';
+    } else {
+      s.classList.remove('active');
+      s.textContent = '☆';
+    }
+  });
+  var labels = ['', '😞 不满意', '😐 一般', '😊 还不错', '😄 很满意', '🥰 非常感动'];
+  document.getElementById('starLabel').textContent = labels[val];
+  document.getElementById('feedbackStarCount').textContent = val;
+  checkFeedbackBtn();
+}
+
+function checkFeedbackBtn() {
+  document.getElementById('btnM25').disabled = !(selectedFeedbackNeighbor && selectedFeedbackStar > 0);
+}
+
+function sendFeedback() {
+  var info = feedbackNameMap[selectedFeedbackNeighbor];
+  var msg = document.getElementById('feedbackMsg').value.trim();
+  var starLabels = ['', '⭐', '⭐⭐', '⭐⭐⭐', '⭐⭐⭐⭐', '⭐⭐⭐⭐⭐'];
+  var content = '给 <b>' + info.name + '</b> 的反馈：<br>';
+  content += '评分：<span style="color:#f0b040;font-size:18px;">' + starLabels[selectedFeedbackStar] + '</span><br>';
+  content += '感谢 <b>' + info.name + '</b> 帮忙' + info.deed + '！';
+  if (msg) {
+    content += '<br>留言：<span style="color:#c8533a;">"' + msg + '"</span>';
+  }
+  content += '<br><br><span style="font-size:12px;color:#7a6e66;">💛 你的反馈会传递给 ' + info.name + ' · +5 好心值</span>';
+  document.getElementById('rM25').classList.add('show');
+  document.getElementById('rM25Content').innerHTML = content;
+  showToast('💛', '反馈已发送！', '感谢你给 ' + info.name + ' 的反馈，温暖 +1 💛');
+  updateStats('m25');
+  // 重置
+  document.querySelectorAll('#feedbackNeighborGrid .fb-neighbor').forEach(function(c) { c.classList.remove('selected'); });
+  selectedFeedbackNeighbor = null;
+  selectedFeedbackStar = 0;
+  document.getElementById('feedbackNeighborCount').textContent = 0;
+  document.getElementById('feedbackStarCount').textContent = 0;
+  document.getElementById('feedbackMsg').value = '';
+  document.querySelectorAll('#starRating .star').forEach(function(s) {
+    s.classList.remove('active');
+    s.textContent = '☆';
+  });
+  document.getElementById('starLabel').textContent = '点击评分';
+  document.getElementById('btnM25').disabled = true;
+}
+
+// ===== 模块26：好事计划 =====
+var planDayNames = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+var planCurrentDay = 0;
+var planData = {};
+var planSuggestions = {
+  0: [{ icon: '🚇', text: '地铁让座' }, { icon: '🗑️', text: '随手捡垃圾' }],
+  1: [{ icon: '📱', text: '教老人用手机' }, { icon: '☕', text: '给同事带咖啡' }],
+  2: [{ icon: '🚲', text: '整理共享单车' }, { icon: '👋', text: '主动向邻居问好' }],
+  3: [{ icon: '🌱', text: '给小区绿植浇水' }, { icon: '📦', text: '帮邻居取快递' }],
+  4: [{ icon: '🧹', text: '打扫楼道卫生' }, { icon: '💬', text: '陪独居老人聊天' }],
+  5: [{ icon: '🍳', text: '做美食分享给邻居' }, { icon: '👶', text: '帮邻居临时照看孩子' }],
+  6: [{ icon: '🌳', text: '参加社区环保活动' }, { icon: '📚', text: '捐赠旧书到社区图书角' }]
+};
+
+function switchPlanDay(el) {
+  document.querySelectorAll('#planTabs .plan-tab').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  planCurrentDay = parseInt(el.dataset.day);
+  renderPlanDay(planCurrentDay);
+}
+
+function renderPlanDay(day) {
+  var grid = document.getElementById('planSuggestGrid');
+  var html = '';
+  planSuggestions[day].forEach(function(s) {
+    var key = 'sug_' + day + '_' + s.text;
+    var selected = planData[day] && planData[day].indexOf(s.text) !== -1;
+    html += '<div class="opt-card' + (selected ? ' selected' : '') + '" onclick="togglePlanSuggestion(this, \'' + s.text + '\')">';
+    html += '<div class="o-check">✓</div>';
+    html += '<div class="o-icon">' + s.icon + '</div>';
+    html += '<div class="o-title">' + s.text + '</div>';
+    html += '</div>';
+  });
+  grid.innerHTML = html;
+  
+  // 渲染自定义列表
+  var customList = document.getElementById('planCustomList');
+  var customHtml = '';
+  if (planData[day] && planData[day].custom) {
+    planData[day].custom.forEach(function(c, i) {
+      customHtml += '<span class="plan-custom-tag">' + c + ' <span class="remove" onclick="removeCustomDeed(' + i + ')">×</span></span>';
+    });
+  }
+  customList.innerHTML = customHtml;
+  updatePlanSummary();
+}
+
+function togglePlanSuggestion(el, text) {
+  el.classList.toggle('selected');
+  if (!planData[planCurrentDay]) {
+    planData[planCurrentDay] = [];
+  }
+  var idx = planData[planCurrentDay].indexOf(text);
+  if (idx === -1) {
+    planData[planCurrentDay].push(text);
+  } else {
+    planData[planCurrentDay].splice(idx, 1);
+  }
+  updatePlanSummary();
+}
+
+function addCustomDeed() {
+  var input = document.getElementById('planCustomInput');
+  var text = input.value.trim();
+  if (!text) return;
+  if (!planData[planCurrentDay]) {
+    planData[planCurrentDay] = [];
+  }
+  if (!planData[planCurrentDay].custom) {
+    planData[planCurrentDay].custom = [];
+  }
+  planData[planCurrentDay].custom.push(text);
+  input.value = '';
+  renderPlanDay(planCurrentDay);
+}
+
+function removeCustomDeed(index) {
+  if (planData[planCurrentDay] && planData[planCurrentDay].custom) {
+    planData[planCurrentDay].custom.splice(index, 1);
+    renderPlanDay(planCurrentDay);
+  }
+}
+
+function updatePlanSummary() {
+  var total = 0;
+  var parts = [];
+  planDayNames.forEach(function(name, i) {
+    var items = planData[i] || [];
+    var count = items.length + (items.custom ? items.custom.length : 0);
+    if (count > 0) {
+      total += count;
+      parts.push(name + '：' + count + '项');
+    }
+  });
+  var summary = document.getElementById('planSummary');
+  if (total === 0) {
+    summary.textContent = '暂无计划，开始规划吧！';
+  } else {
+    summary.innerHTML = parts.join(' · ') + '<br>本周共 <b style="color:#c8533a;">' + total + '</b> 件好事计划';
+  }
+  document.getElementById('planCount').textContent = total;
+  document.getElementById('btnM26').disabled = total === 0;
+}
+
+function savePlan() {
+  var total = 0;
+  var parts = [];
+  planDayNames.forEach(function(name, i) {
+    var items = planData[i] || [];
+    var count = items.length + (items.custom ? items.custom.length : 0);
+    if (count > 0) {
+      total += count;
+      parts.push(name + ' ' + count + '项');
+    }
+  });
+  var content = '📋 本周好事计划已保存！<br><br>';
+  content += parts.join('<br>');
+  content += '<br><br>共 <b style="color:#c8533a;">' + total + '</b> 件好事<br>';
+  content += '<span style="font-size:12px;color:#7a6e66;">💪 坚持执行，让善意成为习惯！</span>';
+  document.getElementById('rM26').classList.add('show');
+  document.getElementById('rM26Content').innerHTML = content;
+  showToast('📋', '计划已保存！', '本周共 ' + total + ' 件好事，加油！');
+  updateStats('m26');
+}
+
+// ===== 模块27：趣味问答 =====
+var quizQuestions = [
+  { q: '以下哪项是"好事近"平台的核心理念？', options: ['做大事才能改变社区', '从身边小事做起，传递善意', '只有捐款才算做好事'], answer: 1 },
+  { q: '在社区中，以下哪种行为属于"随手公益"？', options: ['特意去很远的地方做志愿者', '等车时随手捡起地上的垃圾', '只在纪念日做好事'], answer: 1 },
+  { q: '当你看到邻居提着重物上楼时，最好的做法是？', options: ['假装没看见', '主动询问是否需要帮忙', '拍下来发朋友圈'], answer: 1 },
+  { q: '社区里独居老人最需要的是什么？', options: ['物质上的帮助', '陪伴和关心', '替他做所有事情'], answer: 1 },
+  { q: '在"好事近"平台，积累的"好心值"可以做什么？', options: ['兑换现金', '换取社区服务和物品', '只能看不能用'], answer: 1 }
+];
+var quizCurrentIndex = 0;
+var quizScore = 0;
+var quizAnswered = false;
+var quizResults = [];
+
+function startQuiz() {
+  document.getElementById('quizStart').style.display = 'none';
+  document.getElementById('quizPlay').style.display = 'block';
+  document.getElementById('quizResult').style.display = 'none';
+  quizCurrentIndex = 0;
+  quizScore = 0;
+  quizResults = [];
+  quizAnswered = false;
+  showQuizQuestion();
+}
+
+function showQuizQuestion() {
+  var q = quizQuestions[quizCurrentIndex];
+  document.getElementById('quizProgress').textContent = '第 ' + (quizCurrentIndex + 1) + '/' + quizQuestions.length + ' 题';
+  document.getElementById('quizScoreDisplay').textContent = '✅ ' + quizScore + ' 分';
+  document.getElementById('quizProgressBar').style.width = ((quizCurrentIndex + 1) / quizQuestions.length * 100) + '%';
+  document.getElementById('quizQuestion').textContent = q.q;
+  
+  var optsHtml = '';
+  q.options.forEach(function(o, i) {
+    optsHtml += '<div class="quiz-option" data-opt="' + i + '" onclick="selectQuizOption(this, ' + i + ')">' + o + '</div>';
+  });
+  document.getElementById('quizOptions').innerHTML = optsHtml;
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('btnQuizNext').disabled = true;
+  quizAnswered = false;
+}
+
+function selectQuizOption(el, idx) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  
+  var q = quizQuestions[quizCurrentIndex];
+  var options = document.querySelectorAll('#quizOptions .quiz-option');
+  options.forEach(function(o) { o.classList.add('disabled'); });
+  
+  var correct = idx === q.answer;
+  if (correct) {
+    quizScore++;
+    el.classList.add('correct');
+    document.getElementById('quizFeedback').textContent = '✅ 回答正确！';
+  } else {
+    el.classList.add('wrong');
+    options[q.answer].classList.add('correct');
+    document.getElementById('quizFeedback').textContent = '❌ 回答错误，正确答案已标出。';
+  }
+  
+  quizResults.push({
+    question: q.q,
+    correct: correct,
+    userAnswer: q.options[idx],
+    correctAnswer: q.options[q.answer]
+  });
+  
+  document.getElementById('quizScoreDisplay').textContent = '✅ ' + quizScore + ' 分';
+  document.getElementById('btnQuizNext').disabled = false;
+}
+
+function nextQuizQuestion() {
+  quizCurrentIndex++;
+  if (quizCurrentIndex >= quizQuestions.length) {
+    showQuizResult();
+  } else {
+    showQuizQuestion();
+  }
+}
+
+function showQuizResult() {
+  document.getElementById('quizPlay').style.display = 'none';
+  document.getElementById('quizResult').style.display = 'block';
+  document.getElementById('quizResult').style.animation = 'fadeUp .3s ease';
+  
+  var pct = quizScore / quizQuestions.length;
+  var emoji, title, desc;
+  if (pct === 1) {
+    emoji = '🏆'; title = '满分！太棒了！'; desc = '你是社区公益达人！答对了 ' + quizScore + '/' + quizQuestions.length + ' 题！';
+  } else if (pct >= 0.8) {
+    emoji = '🎉'; title = '非常优秀！'; desc = '你对社区公益了解很多！答对了 ' + quizScore + '/' + quizQuestions.length + ' 题！';
+  } else if (pct >= 0.6) {
+    emoji = '👏'; title = '不错哦！'; desc = '继续加油，答对了 ' + quizScore + '/' + quizQuestions.length + ' 题！';
+  } else {
+    emoji = '💪'; title = '再接再厉！'; desc = '多参加社区活动，答对了 ' + quizScore + '/' + quizQuestions.length + ' 题！';
+  }
+  
+  document.getElementById('quizResultEmoji').textContent = emoji;
+  document.getElementById('quizResultTitle').textContent = title;
+  document.getElementById('quizResultDesc').textContent = desc;
+  
+  var detailHtml = '';
+  quizResults.forEach(function(r) {
+    var status = r.correct ? '✅' : '❌';
+    detailHtml += '<div class="quiz-detail-item">';
+    detailHtml += '<div class="qdi-status">' + status + '</div>';
+    detailHtml += '<div><div class="qdi-q">' + r.question + '</div>';
+    detailHtml += '<div class="qdi-a">你的回答：' + r.userAnswer;
+    if (!r.correct) {
+      detailHtml += ' · 正确答案：<span style="color:#4a9e6e;font-weight:600;">' + r.correctAnswer + '</span>';
+    }
+    detailHtml += '</div></div></div>';
+  });
+  document.getElementById('quizDetailList').innerHTML = detailHtml;
+  
+  document.getElementById('rM27').classList.add('show');
+  document.getElementById('rM27Content').innerHTML = '🏆 ' + title + ' 答对 <b style="color:#c8533a;">' + quizScore + '/' + quizQuestions.length + '</b> 题，获得 <b style="color:#c8533a;">+' + (quizScore * 5) + '</b> 好心值！';
+  showToast('🎯', '答题完成！', title + ' 答对 ' + quizScore + '/' + quizQuestions.length + ' 题，+' + (quizScore * 5) + ' 好心值');
+  updateStats('m27');
+}
+
+function resetQuiz() {
+  document.getElementById('quizResult').style.display = 'none';
+  document.getElementById('quizStart').style.display = 'block';
+  document.getElementById('rM27').classList.remove('show');
+}
 </script>
 
 </body>

@@ -683,6 +683,155 @@ ul,ol{list-style:none}
   .journey-step .js-connector{top:13px}
   .weather-rec .wr-header .wr-left .wr-weather-icon{font-size:32px;width:44px;height:44px}
 }
+
+/* ===== 好事反馈墙 ===== */
+.feedback-wall{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.feedback-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.feedback-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:20px;transition:var(--transition);position:relative}
+.feedback-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.feedback-card .fc-helper{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.feedback-card .fc-helper .fc-h-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.feedback-card .fc-helper .fc-h-info{flex:1}
+.feedback-card .fc-helper .fc-h-info .fc-h-name{font-size:13px;font-weight:700;color:var(--ink)}
+.feedback-card .fc-helper .fc-h-info .fc-h-deed{font-size:11px;color:var(--ink-faint);margin-top:1px}
+.feedback-card .fc-giver{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.feedback-card .fc-giver .fc-g-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.feedback-card .fc-giver .fc-g-name{font-size:12px;font-weight:600;color:var(--ink-soft)}
+.feedback-card .fc-text{font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:10px;font-style:italic}
+.feedback-card .fc-text::before{content:'"';color:var(--brand);font-size:18px;font-weight:700;margin-right:2px}
+.feedback-card .fc-text::after{content:'"';color:var(--brand);font-size:18px;font-weight:700;margin-left:2px}
+.feedback-card .fc-footer{display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.feedback-card .fc-footer .fc-rating{color:var(--brand);font-size:14px;letter-spacing:2px}
+.feedback-card .fc-footer .fc-time{color:var(--ink-faint);font-size:11px}
+.feedback-btn-wrap{text-align:center;margin-top:24px}
+.feedback-btn-wrap .btn-feedback{padding:12px 36px;border-radius:999px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-deep));transition:var(--transition);box-shadow:0 4px 16px rgba(200,83,58,.2);display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:none}
+.feedback-btn-wrap .btn-feedback:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,83,58,.3)}
+.feedback-modal-overlay{position:fixed;inset:0;z-index:3500;background:rgba(43,38,34,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;animation:fade-in .25s ease}
+.feedback-modal-overlay.show{display:flex}
+.feedback-modal{background:var(--paper);border-radius:var(--radius-lg);padding:32px;max-width:460px;width:100%;box-shadow:0 24px 64px rgba(43,38,34,.15);animation:modal-in .3s cubic-bezier(.4,0,.2,1);max-height:85vh;overflow-y:auto}
+.feedback-modal .fm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.feedback-modal .fm-header h3{font-size:18px;font-weight:800;color:var(--ink)}
+.feedback-modal .fm-close{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:16px;color:var(--ink-faint);background:var(--bg);cursor:pointer;transition:var(--transition)}
+.feedback-modal .fm-close:hover{background:var(--line);color:var(--ink)}
+.feedback-modal .fm-field{margin-bottom:16px}
+.feedback-modal .fm-field label{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.feedback-modal .fm-field select,.feedback-modal .fm-field textarea,.feedback-modal .fm-field input{width:100%;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--line);font-size:14px;font-family:inherit;background:var(--bg);color:var(--ink);transition:var(--transition);outline:none}
+.feedback-modal .fm-field select:focus,.feedback-modal .fm-field textarea:focus,.feedback-modal .fm-field input:focus{border-color:var(--brand)}
+.feedback-modal .fm-field textarea{resize:vertical;min-height:80px}
+.feedback-modal .fm-rating{display:flex;gap:6px;margin-top:4px}
+.feedback-modal .fm-rating .fm-star{font-size:28px;cursor:pointer;transition:var(--transition);color:var(--line);user-select:none}
+.feedback-modal .fm-rating .fm-star.active{color:var(--brand);transform:scale(1.1)}
+.feedback-modal .fm-rating .fm-star:hover{transform:scale(1.2)}
+.feedback-modal .fm-submit{width:100%;padding:12px;border-radius:999px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-deep));border:none;cursor:pointer;transition:var(--transition);box-shadow:0 4px 12px rgba(200,83,58,.2)}
+.feedback-modal .fm-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,83,58,.3)}
+
+/* ===== 好事计划本 ===== */
+.planner-section{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.planner-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.planner-header .pl-h-left h3{font-size:clamp(18px,2.5vw,22px);font-weight:800;color:var(--ink)}
+.planner-header .pl-h-left p{font-size:13px;color:var(--ink-soft);margin-top:2px}
+.planner-header .pl-h-right{text-align:right}
+.planner-header .pl-h-right .pl-week-num{font-size:28px;font-weight:800;color:var(--brand)}
+.planner-header .pl-h-right .pl-week-label{font-size:12px;color:var(--ink-faint);display:block}
+.planner-progress{background:var(--bg);border-radius:999px;height:10px;overflow:hidden;margin-bottom:24px;position:relative}
+.planner-progress .pp-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--gold));transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0%}
+.planner-progress .pp-text{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--ink-faint)}
+.planner-days{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.planner-day{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:14px 10px;transition:var(--transition);min-height:140px;display:flex;flex-direction:column}
+.planner-day:hover{border-color:var(--brand-soft);box-shadow:var(--shadow)}
+.planner-day .pd-header{text-align:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.planner-day .pd-header .pd-icon{font-size:22px;display:block;margin-bottom:2px}
+.planner-day .pd-header .pd-day{font-size:13px;font-weight:700;color:var(--ink)}
+.planner-day .pd-header .pd-date{font-size:10px;color:var(--ink-faint);display:block;margin-top:1px}
+.planner-day .pd-tags{display:flex;flex-direction:column;gap:4px;flex:1;margin-bottom:8px}
+.planner-day .pd-tags .pd-tag{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;background:var(--brand-soft);color:var(--brand-deep);line-height:1.3}
+.planner-day .pd-tags .pd-tag.leaf{background:var(--leaf-soft);color:var(--leaf)}
+.planner-day .pd-tags .pd-tag.sky{background:var(--sky-soft);color:var(--sky)}
+.planner-day .pd-tags .pd-tag.gold{background:var(--gold-soft);color:var(--gold)}
+.planner-day .pd-add{width:100%;padding:6px;border-radius:8px;font-size:12px;font-weight:600;color:var(--brand);border:1.5px dashed var(--brand-soft);background:transparent;cursor:pointer;transition:var(--transition);text-align:center;margin-top:auto}
+.planner-day .pd-add:hover{background:var(--brand-soft)}
+.planner-day.today{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 3px rgba(200,83,58,.1)}
+.planner-day.today .pd-header .pd-day{color:var(--brand)}
+.planner-day.past{opacity:.6}
+
+/* ===== 社区趣味问答 ===== */
+.quiz-section{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.quiz-header{text-align:center;margin-bottom:28px}
+.quiz-header h3{font-size:clamp(20px,2.5vw,24px);font-weight:800;color:var(--ink)}
+.quiz-header p{font-size:14px;color:var(--ink-soft);margin-top:4px}
+.quiz-header .quiz-score{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:6px 18px;background:var(--gold-soft);border-radius:999px;font-size:14px;font-weight:700;color:var(--gold)}
+.quiz-header .quiz-score .qs-num{font-size:20px}
+.quiz-question{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:14px;transition:var(--transition)}
+.quiz-question .qq-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.quiz-question .qq-header .qq-num{width:26px;height:26px;border-radius:50%;background:var(--brand-soft);color:var(--brand-deep);display:grid;place-items:center;font-size:13px;font-weight:800;flex-shrink:0}
+.quiz-question .qq-header .qq-text{font-size:15px;font-weight:700;color:var(--ink)}
+.quiz-question .qq-options{display:flex;flex-direction:column;gap:8px}
+.quiz-question .qq-option{padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--line);background:var(--paper);font-size:14px;color:var(--ink);cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:8px;user-select:none}
+.quiz-question .qq-option:hover{border-color:var(--brand-soft);background:var(--brand-soft)}
+.quiz-question .qq-option .qq-opt-letter{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ink-faint);flex-shrink:0;transition:var(--transition)}
+.quiz-question .qq-option.selected{border-color:var(--brand);background:var(--brand-soft)}
+.quiz-question .qq-option.selected .qq-opt-letter{border-color:var(--brand);background:var(--brand);color:#fff}
+.quiz-question .qq-option.correct{border-color:var(--leaf);background:var(--leaf-soft);animation:bounce-in .4s ease}
+.quiz-question .qq-option.correct .qq-opt-letter{border-color:var(--leaf);background:var(--leaf);color:#fff}
+.quiz-question .qq-option.wrong{border-color:var(--brand);background:var(--brand-soft);animation:shake .5s ease}
+.quiz-question .qq-option.wrong .qq-opt-letter{border-color:var(--brand);background:var(--brand);color:#fff}
+.quiz-question .qq-option.disabled{pointer-events:none;opacity:.7}
+.quiz-question .qq-option.disabled.correct{opacity:1}
+.quiz-question .qq-option.show-correct{border-color:var(--leaf);background:var(--leaf-soft)}
+.quiz-question .qq-option.show-correct .qq-opt-letter{border-color:var(--leaf);background:var(--leaf);color:#fff}
+.quiz-question .qq-feedback{display:none;margin-top:10px;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;line-height:1.5}
+.quiz-question .qq-feedback.show{display:block;animation:slide-up .3s ease}
+.quiz-question .qq-feedback.correct{background:var(--leaf-soft);color:var(--leaf);border-left:3px solid var(--leaf)}
+.quiz-question .qq-feedback.wrong{background:var(--brand-soft);color:var(--brand-deep);border-left:3px solid var(--brand)}
+.quiz-restart{text-align:center;margin-top:20px}
+.quiz-restart .btn-quiz-restart{padding:10px 28px;border-radius:999px;font-size:14px;font-weight:700;color:var(--brand);border:1.5px solid var(--brand);background:transparent;cursor:pointer;transition:var(--transition)}
+.quiz-restart .btn-quiz-restart:hover{background:var(--brand-soft)}
+
+/* ===== 邻里互助故事 ===== */
+.stories-section{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.stories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.story-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:var(--transition);display:flex;flex-direction:column}
+.story-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.story-card .sc-banner{height:6px;flex-shrink:0}
+.story-card .sc-body{padding:20px 20px 16px;flex:1;display:flex;flex-direction:column}
+.story-card .sc-body .sc-author{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.story-card .sc-body .sc-author .sc-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
+.story-card .sc-body .sc-author .sc-info{flex:1}
+.story-card .sc-body .sc-author .sc-info .sc-name{font-size:13px;font-weight:700;color:var(--ink)}
+.story-card .sc-body .sc-author .sc-info .sc-location{font-size:11px;color:var(--ink-faint)}
+.story-card .sc-body h4{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:8px;line-height:1.4}
+.story-card .sc-body .sc-preview{font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:12px;flex:1}
+.story-card .sc-body .sc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.story-card .sc-body .sc-tags .sc-tag{padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.story-card .sc-body .sc-tags .sc-tag.brand{background:var(--brand-soft);color:var(--brand-deep)}
+.story-card .sc-body .sc-tags .sc-tag.leaf{background:var(--leaf-soft);color:var(--leaf)}
+.story-card .sc-body .sc-tags .sc-tag.sky{background:var(--sky-soft);color:var(--sky)}
+.story-card .sc-body .sc-tags .sc-tag.gold{background:var(--gold-soft);color:var(--gold)}
+.story-card .sc-body .sc-tags .sc-tag.plum{background:var(--plum-soft);color:var(--plum)}
+.story-card .sc-body .sc-stats{display:flex;gap:14px;font-size:12px;color:var(--ink-faint);padding-top:10px;border-top:1px solid var(--line)}
+.story-card .sc-body .sc-stats span{display:inline-flex;align-items:center;gap:4px}
+.story-btn-wrap{text-align:center;margin-top:24px}
+.story-btn-wrap .btn-story{display:inline-flex;align-items:center;gap:8px;padding:12px 36px;border-radius:999px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-deep));transition:var(--transition);box-shadow:0 4px 16px rgba(200,83,58,.2);cursor:pointer;border:none}
+.story-btn-wrap .btn-story:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,83,58,.3)}
+
+/* ===== Responsive for new modules ===== */
+@media(max-width:768px){
+  .feedback-grid{grid-template-columns:1fr}
+  .planner-days{grid-template-columns:repeat(4,1fr);gap:8px}
+  .planner-section{padding:20px;border-radius:var(--radius)}
+  .quiz-section{padding:20px;border-radius:var(--radius)}
+  .stories-grid{grid-template-columns:1fr}
+  .stories-section{padding:20px;border-radius:var(--radius)}
+  .feedback-wall{padding:20px;border-radius:var(--radius)}
+  .feedback-modal{padding:24px;margin:16px}
+}
+@media(max-width:480px){
+  .planner-days{grid-template-columns:repeat(2,1fr);gap:6px}
+  .planner-day{min-height:120px;padding:10px 8px}
+  .planner-day .pd-header .pd-icon{font-size:18px}
+  .quiz-question{padding:16px}
+  .quiz-question .qq-option{padding:8px 12px;font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -1826,6 +1975,465 @@ ul,ol{list-style:none}
             <div style="font-size:14px;font-weight:700;color:var(--leaf);">🎉 分享成功！</div>
             <div style="font-size:13px;color:var(--ink-soft);margin-top:4px;">你的好事已分享到社区，已有 <b id="shareLikes" style="color:var(--brand);">0</b> 位邻居点赞！</div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 好事反馈墙 ===== -->
+  <div class="section" style="padding:40px 0;">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>💬 好事反馈墙</h2>
+        <p>受助邻居对好心人的感谢与反馈，让每一份善意都有回响</p>
+      </div>
+      <div class="feedback-wall">
+        <div class="feedback-grid" id="feedbackGrid">
+          <div class="feedback-card">
+            <div class="fc-helper">
+              <div class="fc-h-avatar" style="background:var(--brand);">王</div>
+              <div class="fc-h-info">
+                <div class="fc-h-name">王阿姨</div>
+                <div class="fc-h-deed">帮取快递 📦</div>
+              </div>
+            </div>
+            <div class="fc-giver">
+              <div class="fc-g-avatar" style="background:var(--gold);">小</div>
+              <span class="fc-g-name">来自 小鹿 的反馈</span>
+            </div>
+            <div class="fc-text">王阿姨特别热心，不仅帮我收了快递，还放到我家门口拍了照片发我，太感动了！</div>
+            <div class="fc-footer">
+              <span class="fc-rating">❤️❤️❤️❤️❤️</span>
+              <span class="fc-time">10分钟前</span>
+            </div>
+          </div>
+          <div class="feedback-card">
+            <div class="fc-helper">
+              <div class="fc-h-avatar" style="background:var(--leaf);">老</div>
+              <div class="fc-h-info">
+                <div class="fc-h-name">老张</div>
+                <div class="fc-h-deed">垃圾分类引导 ♻️</div>
+              </div>
+            </div>
+            <div class="fc-giver">
+              <div class="fc-g-avatar" style="background:var(--sky);">李</div>
+              <span class="fc-g-name">来自 李女士 的反馈</span>
+            </div>
+            <div class="fc-text">老张在垃圾站耐心教大家分类，我本来嫌麻烦，现在学会了，感觉为环保做了贡献！</div>
+            <div class="fc-footer">
+              <span class="fc-rating">❤️❤️❤️❤️❤️</span>
+              <span class="fc-time">25分钟前</span>
+            </div>
+          </div>
+          <div class="feedback-card">
+            <div class="fc-helper">
+              <div class="fc-h-avatar" style="background:var(--gold);">阿</div>
+              <div class="fc-h-info">
+                <div class="fc-h-name">阿杰</div>
+                <div class="fc-h-deed">社区巡逻 🏪</div>
+              </div>
+            </div>
+            <div class="fc-giver">
+              <div class="fc-g-avatar" style="background:var(--plum);">赵</div>
+              <span class="fc-g-name">来自 赵叔 的反馈</span>
+            </div>
+            <div class="fc-text">小伙子巡逻很认真，发现楼道堆物及时上报，住在这里感觉更安心了！</div>
+            <div class="fc-footer">
+              <span class="fc-rating">❤️❤️❤️❤️</span>
+              <span class="fc-time">1小时前</span>
+            </div>
+          </div>
+          <div class="feedback-card">
+            <div class="fc-helper">
+              <div class="fc-h-avatar" style="background:var(--sky);">林</div>
+              <div class="fc-h-info">
+                <div class="fc-h-name">林女士</div>
+                <div class="fc-h-deed">教用手机 📱</div>
+              </div>
+            </div>
+            <div class="fc-giver">
+              <div class="fc-g-avatar" style="background:var(--brand);">陈</div>
+              <span class="fc-g-name">来自 陈爷爷 的反馈</span>
+            </div>
+            <div class="fc-text">小林教我用手机挂号，讲了四五遍都没不耐烦，现在我终于学会自己挂号了！</div>
+            <div class="fc-footer">
+              <span class="fc-rating">❤️❤️❤️❤️❤️</span>
+              <span class="fc-time">2小时前</span>
+            </div>
+          </div>
+          <div class="feedback-card">
+            <div class="fc-helper">
+              <div class="fc-h-avatar" style="background:var(--plum);">吴</div>
+              <div class="fc-h-info">
+                <div class="fc-h-name">吴姐</div>
+                <div class="fc-h-deed">花园浇水 🌿</div>
+              </div>
+            </div>
+            <div class="fc-giver">
+              <div class="fc-g-avatar" style="background:var(--gold);">周</div>
+              <span class="fc-g-name">来自 周同学 的反馈</span>
+            </div>
+            <div class="fc-text">吴姐每天给花园浇水，花开了特别美，路过的邻居都说心情变好了！</div>
+            <div class="fc-footer">
+              <span class="fc-rating">❤️❤️❤️❤️</span>
+              <span class="fc-time">3小时前</span>
+            </div>
+          </div>
+          <div class="feedback-card">
+            <div class="fc-helper">
+              <div class="fc-h-avatar" style="background:var(--brand);">陈</div>
+              <div class="fc-h-info">
+                <div class="fc-h-name">陈老师</div>
+                <div class="fc-h-deed">整理共享书架 📚</div>
+              </div>
+            </div>
+            <div class="fc-giver">
+              <div class="fc-g-avatar" style="background:var(--leaf);">小</div>
+              <span class="fc-g-name">来自 小李 的反馈</span>
+            </div>
+            <div class="fc-text">陈老师把书架整理得井井有条，还贴了分类标签，找书方便多了！</div>
+            <div class="fc-footer">
+              <span class="fc-rating">❤️❤️❤️❤️❤️</span>
+              <span class="fc-time">4小时前</span>
+            </div>
+          </div>
+        </div>
+        <div class="feedback-btn-wrap">
+          <button class="btn-feedback" onclick="openFeedbackModal()">✍️ 发布反馈</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 反馈发布弹窗 ===== -->
+  <div class="feedback-modal-overlay" id="feedbackModal">
+    <div class="feedback-modal">
+      <div class="fm-header">
+        <h3>✍️ 发布反馈</h3>
+        <button class="fm-close" onclick="closeFeedbackModal()">✕</button>
+      </div>
+      <div class="fm-field">
+        <label>感谢哪位好心人？</label>
+        <select id="fmHelper">
+          <option value="小鹿">小鹿 - 帮取快递</option>
+          <option value="老张">老张 - 垃圾分类引导</option>
+          <option value="阿杰">阿杰 - 社区巡逻</option>
+          <option value="林女士">林女士 - 教用手机</option>
+          <option value="吴姐">吴姐 - 花园浇水</option>
+          <option value="陈老师">陈老师 - 整理共享书架</option>
+        </select>
+      </div>
+      <div class="fm-field">
+        <label>你的反馈</label>
+        <textarea id="fmText" placeholder="说说你得到的帮助和感受…"></textarea>
+      </div>
+      <div class="fm-field">
+        <label>你的评分</label>
+        <div class="fm-rating" id="fmRating">
+          <span class="fm-star" data-val="1" onclick="setFmRating(1)">❤️</span>
+          <span class="fm-star" data-val="2" onclick="setFmRating(2)">❤️</span>
+          <span class="fm-star" data-val="3" onclick="setFmRating(3)">❤️</span>
+          <span class="fm-star" data-val="4" onclick="setFmRating(4)">❤️</span>
+          <span class="fm-star" data-val="5" onclick="setFmRating(5)">❤️</span>
+        </div>
+      </div>
+      <div class="fm-field">
+        <label>你的称呼</label>
+        <input type="text" id="fmName" placeholder="如：张阿姨" />
+      </div>
+      <button class="fm-submit" onclick="submitFeedback()">提交反馈</button>
+    </div>
+  </div>
+
+  <!-- ===== 好事计划本 ===== -->
+  <div class="section" style="padding:40px 0;">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>📋 好事计划本</h2>
+        <p>规划未来7天的好事，让善意更有条理</p>
+      </div>
+      <div class="planner-section">
+        <div class="planner-header">
+          <div class="pl-h-left">
+            <h3>📅 本周计划</h3>
+            <p id="plannerWeekLabel">第 32 周 · 8月3日 - 8月9日</p>
+          </div>
+          <div class="pl-h-right">
+            <span class="pl-week-num" id="plannerTotal">6</span>
+            <span class="pl-week-label">件好事已计划</span>
+          </div>
+        </div>
+        <div class="planner-progress">
+          <div class="pp-fill" id="plannerProgress" style="width:43%;"></div>
+          <span class="pp-text">6/14</span>
+        </div>
+        <div class="planner-days" id="plannerDays">
+          <div class="planner-day past" data-day="1">
+            <div class="pd-header">
+              <span class="pd-icon">🌞</span>
+              <span class="pd-day">周一</span>
+              <span class="pd-date">8/3</span>
+            </div>
+            <div class="pd-tags">
+              <span class="pd-tag">📦 帮取快递</span>
+            </div>
+            <button class="pd-add" onclick="addPlannerPlan(this)">+ 添加计划</button>
+          </div>
+          <div class="planner-day past" data-day="2">
+            <div class="pd-header">
+              <span class="pd-icon">☀️</span>
+              <span class="pd-day">周二</span>
+              <span class="pd-date">8/4</span>
+            </div>
+            <div class="pd-tags">
+              <span class="pd-tag leaf">♻️ 垃圾分类</span>
+            </div>
+            <button class="pd-add" onclick="addPlannerPlan(this)">+ 添加计划</button>
+          </div>
+          <div class="planner-day past" data-day="3">
+            <div class="pd-header">
+              <span class="pd-icon">⛅</span>
+              <span class="pd-day">周三</span>
+              <span class="pd-date">8/5</span>
+            </div>
+            <div class="pd-tags">
+              <span class="pd-tag sky">📱 教用手机</span>
+              <span class="pd-tag">👴 陪老人散步</span>
+            </div>
+            <button class="pd-add" onclick="addPlannerPlan(this)">+ 添加计划</button>
+          </div>
+          <div class="planner-day today" data-day="4">
+            <div class="pd-header">
+              <span class="pd-icon">🌤️</span>
+              <span class="pd-day">周四</span>
+              <span class="pd-date">8/6</span>
+            </div>
+            <div class="pd-tags">
+              <span class="pd-tag">🌿 花园浇水</span>
+            </div>
+            <button class="pd-add" onclick="addPlannerPlan(this)">+ 添加计划</button>
+          </div>
+          <div class="planner-day" data-day="5">
+            <div class="pd-header">
+              <span class="pd-icon">🌦️</span>
+              <span class="pd-day">周五</span>
+              <span class="pd-date">8/7</span>
+            </div>
+            <div class="pd-tags">
+              <span class="pd-tag gold">🏪 社区巡逻</span>
+            </div>
+            <button class="pd-add" onclick="addPlannerPlan(this)">+ 添加计划</button>
+          </div>
+          <div class="planner-day" data-day="6">
+            <div class="pd-header">
+              <span class="pd-icon">☁️</span>
+              <span class="pd-day">周六</span>
+              <span class="pd-date">8/8</span>
+            </div>
+            <div class="pd-tags"></div>
+            <button class="pd-add" onclick="addPlannerPlan(this)">+ 添加计划</button>
+          </div>
+          <div class="planner-day" data-day="7">
+            <div class="pd-header">
+              <span class="pd-icon">🌈</span>
+              <span class="pd-day">周日</span>
+              <span class="pd-date">8/9</span>
+            </div>
+            <div class="pd-tags"></div>
+            <button class="pd-add" onclick="addPlannerPlan(this)">+ 添加计划</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 社区趣味问答 ===== -->
+  <div class="section" style="padding:40px 0;">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>🎯 社区趣味问答</h2>
+        <p>测试一下你对社区公益的了解程度，答对有惊喜！</p>
+      </div>
+      <div class="quiz-section">
+        <div class="quiz-header">
+          <h3>🧠 公益知识小测验</h3>
+          <p>每题选择一个答案，看看你能得几分</p>
+          <div class="quiz-score">
+            🏆 得分：<span class="qs-num" id="quizScore">0</span> / 3
+          </div>
+        </div>
+        <div id="quizContainer">
+          <div class="quiz-question" data-qidx="0">
+            <div class="qq-header">
+              <span class="qq-num">1</span>
+              <span class="qq-text">在"好事近"平台，完成一件好事最少可以获得多少好心值？</span>
+            </div>
+            <div class="qq-options">
+              <div class="qq-option" data-opt="A" onclick="selectQuizAnswer(this, 0, 'A')">
+                <span class="qq-opt-letter">A</span>
+                <span>1 好心值</span>
+              </div>
+              <div class="qq-option" data-opt="B" onclick="selectQuizAnswer(this, 0, 'B')">
+                <span class="qq-opt-letter">B</span>
+                <span>5 好心值</span>
+              </div>
+              <div class="qq-option" data-opt="C" onclick="selectQuizAnswer(this, 0, 'C')">
+                <span class="qq-opt-letter">C</span>
+                <span>10 好心值</span>
+              </div>
+            </div>
+            <div class="qq-feedback" id="quizFb0"></div>
+          </div>
+          <div class="quiz-question" data-qidx="1">
+            <div class="qq-header">
+              <span class="qq-num">2</span>
+              <span class="qq-text">以下哪种行为不属于"好事近"推荐的顺路公益？</span>
+            </div>
+            <div class="qq-options">
+              <div class="qq-option" data-opt="A" onclick="selectQuizAnswer(this, 1, 'A')">
+                <span class="qq-opt-letter">A</span>
+                <span>帮邻居取快递</span>
+              </div>
+              <div class="qq-option" data-opt="B" onclick="selectQuizAnswer(this, 1, 'B')">
+                <span class="qq-opt-letter">B</span>
+                <span>去国外做志愿者</span>
+              </div>
+              <div class="qq-option" data-opt="C" onclick="selectQuizAnswer(this, 1, 'C')">
+                <span class="qq-opt-letter">C</span>
+                <span>整理共享单车</span>
+              </div>
+            </div>
+            <div class="qq-feedback" id="quizFb1"></div>
+          </div>
+          <div class="quiz-question" data-qidx="2">
+            <div class="qq-header">
+              <span class="qq-num">3</span>
+              <span class="qq-text">"好事近"平台的核心价值主张是什么？</span>
+            </div>
+            <div class="qq-options">
+              <div class="qq-option" data-opt="A" onclick="selectQuizAnswer(this, 2, 'A')">
+                <span class="qq-opt-letter">A</span>
+                <span>把好事做成日常</span>
+              </div>
+              <div class="qq-option" data-opt="B" onclick="selectQuizAnswer(this, 2, 'B')">
+                <span class="qq-opt-letter">B</span>
+                <span>捐最多的钱</span>
+              </div>
+              <div class="qq-option" data-opt="C" onclick="selectQuizAnswer(this, 2, 'C')">
+                <span class="qq-opt-letter">C</span>
+                <span>做最难的公益</span>
+              </div>
+            </div>
+            <div class="qq-feedback" id="quizFb2"></div>
+          </div>
+        </div>
+        <div class="quiz-restart">
+          <button class="btn-quiz-restart" onclick="restartQuiz()">🔄 重新答题</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 邻里互助故事 ===== -->
+  <div class="section" style="padding:40px 0;">
+    <div class="wrap">
+      <div class="section-title">
+        <h2>📖 邻里互助故事</h2>
+        <p>每一个温暖的故事，都是社区最美的风景</p>
+      </div>
+      <div class="stories-section">
+        <div class="stories-grid">
+          <div class="story-card">
+            <div class="sc-banner" style="background:linear-gradient(90deg,var(--brand),var(--gold));"></div>
+            <div class="sc-body">
+              <div class="sc-author">
+                <div class="sc-avatar" style="background:var(--brand);">鹿</div>
+                <div class="sc-info">
+                  <div class="sc-name">小鹿</div>
+                  <div class="sc-location">3栋 · 热心邻居</div>
+                </div>
+              </div>
+              <h4>一把伞，温暖了整个雨天</h4>
+              <div class="sc-preview">那天突然下大雨，看到楼下大爷没带伞在门口躲雨，我撑着伞把他送回了家。大爷非要给我泡茶，聊了半小时才知道他年轻时也是社区志愿者...</div>
+              <div class="sc-tags">
+                <span class="sc-tag brand">#邻里互助</span>
+                <span class="sc-tag leaf">#暖心瞬间</span>
+              </div>
+              <div class="sc-stats">
+                <span>❤️ 42</span>
+                <span>💬 8</span>
+              </div>
+            </div>
+          </div>
+          <div class="story-card">
+            <div class="sc-banner" style="background:linear-gradient(90deg,var(--leaf),var(--sky));"></div>
+            <div class="sc-body">
+              <div class="sc-author">
+                <div class="sc-avatar" style="background:var(--leaf);">张</div>
+                <div class="sc-info">
+                  <div class="sc-name">老张</div>
+                  <div class="sc-location">5栋 · 环保达人</div>
+                </div>
+              </div>
+              <h4>从垃圾分类到社区花园</h4>
+              <div class="sc-preview">一开始只是做垃圾分类引导，后来发现小区里有块荒地，就和几个邻居一起把它改造成了小花园。现在那里成了大家最爱去的地方...</div>
+              <div class="sc-tags">
+                <span class="sc-tag leaf">#环保行动</span>
+                <span class="sc-tag sky">#社区改造</span>
+              </div>
+              <div class="sc-stats">
+                <span>❤️ 68</span>
+                <span>💬 15</span>
+              </div>
+            </div>
+          </div>
+          <div class="story-card">
+            <div class="sc-banner" style="background:linear-gradient(90deg,var(--gold),var(--plum));"></div>
+            <div class="sc-body">
+              <div class="sc-author">
+                <div class="sc-avatar" style="background:var(--gold);">周</div>
+                <div class="sc-info">
+                  <div class="sc-name">周同学</div>
+                  <div class="sc-location">2栋 · 社区新星</div>
+                </div>
+              </div>
+              <h4>帮邻居遛狗，交到了最好的朋友</h4>
+              <div class="sc-preview">帮楼上的奶奶遛狗，刚开始只是想做件好事。没想到狗狗特别黏我，奶奶也很信任我，现在每周都约好一起遛狗，还经常去她家吃饭...</div>
+              <div class="sc-tags">
+                <span class="sc-tag gold">#宠物友好</span>
+                <span class="sc-tag brand">#邻里情</span>
+              </div>
+              <div class="sc-stats">
+                <span>❤️ 35</span>
+                <span>💬 10</span>
+              </div>
+            </div>
+          </div>
+          <div class="story-card">
+            <div class="sc-banner" style="background:linear-gradient(90deg,var(--sky),var(--plum));"></div>
+            <div class="sc-body">
+              <div class="sc-author">
+                <div class="sc-avatar" style="background:var(--plum);">陈</div>
+                <div class="sc-info">
+                  <div class="sc-name">陈老师</div>
+                  <div class="sc-location">1栋 · 社区带头人</div>
+                </div>
+              </div>
+              <h4>退休后，我成了社区的"书法爷爷"</h4>
+              <div class="sc-preview">退休后闲着也是闲着，就在社区开了个免费书法班。没想到这么多孩子来学，家长们都说孩子变得更专注了。现在每周三下午是我最期待的时光...</div>
+              <div class="sc-tags">
+                <span class="sc-tag plum">#文化传承</span>
+                <span class="sc-tag sky">#老少同乐</span>
+              </div>
+              <div class="sc-stats">
+                <span>❤️ 89</span>
+                <span>💬 23</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="story-btn-wrap">
+          <button class="btn-story" onclick="showToast('info', '分享故事', '功能即将上线，敬请期待！')">📝 分享我的故事</button>
         </div>
       </div>
     </div>
@@ -3873,7 +4481,155 @@ function shareAchievement() {
   }, 5000);
 }
 
-// ===== 初始化 =====
+// ===== 好事反馈墙 - 弹窗控制 =====
+var fmRatingVal = 5;
+function openFeedbackModal() {
+  document.getElementById('feedbackModal').classList.add('show');
+}
+function closeFeedbackModal() {
+  document.getElementById('feedbackModal').classList.remove('show');
+}
+function setFmRating(val) {
+  fmRatingVal = val;
+  var stars = document.querySelectorAll('#fmRating .fm-star');
+  for (var i = 0; i < stars.length; i++) {
+    stars[i].classList.toggle('active', i < val);
+  }
+}
+function submitFeedback() {
+  var helper = document.getElementById('fmHelper').value;
+  var text = document.getElementById('fmText').value.trim();
+  var name = document.getElementById('fmName').value.trim();
+  if (!text) {
+    showToast('error', '请填写反馈内容', '说说你得到的帮助和感受吧');
+    return;
+  }
+  if (!name) {
+    showToast('error', '请填写你的称呼', '让我们知道你是谁');
+    return;
+  }
+  closeFeedbackModal();
+  showToast('success', '🎉 反馈已发布', '感谢 ' + name + ' 的反馈，' + helper + ' 会收到你的感谢！');
+  document.getElementById('fmText').value = '';
+  document.getElementById('fmName').value = '';
+  setFmRating(5);
+}
+
+// 点击弹窗外部关闭
+document.addEventListener('click', function(ev) {
+  var overlay = document.getElementById('feedbackModal');
+  if (ev.target === overlay) closeFeedbackModal();
+});
+
+// ===== 好事计划本 - 交互逻辑 =====
+var plannerDeedOptions = [
+  '📦 帮取快递', '♻️ 垃圾分类', '📱 教用手机', '👴 陪老人散步',
+  '📚 整理书架', '🌿 花园浇水', '🐕 帮遛狗', '🏪 社区巡逻',
+  '🚲 整理单车', '😊 微笑问好', '🗑️ 清理垃圾', '🔍 安全巡查'
+];
+
+function addPlannerPlan(btn) {
+  var dayCard = btn.closest('.planner-day');
+  var tagsContainer = dayCard.querySelector('.pd-tags');
+  var deed = plannerDeedOptions[Math.floor(Math.random() * plannerDeedOptions.length)];
+  var tag = document.createElement('span');
+  tag.className = 'pd-tag';
+  var colors = ['', 'leaf', 'sky', 'gold'];
+  tag.classList.add(colors[Math.floor(Math.random() * colors.length)]);
+  tag.textContent = deed;
+  tagsContainer.appendChild(tag);
+  updatePlannerStats();
+  showToast('success', '📋 已添加计划', '已添加「' + deed + '」到计划中');
+}
+
+function updatePlannerStats() {
+  var allTags = document.querySelectorAll('.pd-tags .pd-tag');
+  var total = allTags.length;
+  document.getElementById('plannerTotal').textContent = total;
+  var progress = document.getElementById('plannerProgress');
+  var max = 14;
+  var pct = Math.min(Math.round((total / max) * 100), 100);
+  progress.style.width = pct + '%';
+  progress.parentElement.querySelector('.pp-text').textContent = total + '/' + max;
+}
+
+// ===== 社区趣味问答 - 交互逻辑 =====
+var quizAnswers = ['B', 'B', 'A'];
+var quizExplanations = [
+  '在好事近平台，完成一件好事最少可获得 <b>5 好心值</b>，比如帮邻居取快递、微笑问好等简单任务。',
+  '<b>去国外做志愿者</b> 不属于"顺路公益"的范畴。好事近提倡的是在日常通勤、散步、排队等场景中顺手完成的公益。',
+  '好事近的核心价值主张是 <b>"把好事做成日常"</b>，让公益不再是负担，而是融入生活的习惯。'
+];
+var quizAnswered = [false, false, false];
+var quizScore = 0;
+
+function selectQuizAnswer(el, qidx, selected) {
+  if (quizAnswered[qidx]) return;
+  quizAnswered[qidx] = true;
+  var question = el.closest('.quiz-question');
+  var options = question.querySelectorAll('.qq-option');
+  // Disable all options
+  for (var i = 0; i < options.length; i++) {
+    options[i].classList.add('disabled');
+  }
+  // Mark selected
+  el.classList.add('selected');
+  var correct = quizAnswers[qidx];
+  var fb = document.getElementById('quizFb' + qidx);
+  if (selected === correct) {
+    el.classList.add('correct');
+    fb.className = 'qq-feedback show correct';
+    fb.innerHTML = '✅ 回答正确！' + quizExplanations[qidx];
+    quizScore++;
+  } else {
+    el.classList.add('wrong');
+    fb.className = 'qq-feedback show wrong';
+    fb.innerHTML = '❌ 回答错误。' + quizExplanations[qidx];
+    // Show correct answer
+    for (var j = 0; j < options.length; j++) {
+      if (options[j].dataset.opt === correct) {
+        options[j].classList.add('show-correct');
+      }
+    }
+  }
+  document.getElementById('quizScore').textContent = quizScore;
+  if (quizScore === 3) {
+    setTimeout(function() {
+      showToast('success', '🏆 满分！', '太厉害了！你对好事近非常了解！');
+    }, 500);
+  } else if (quizAnswered.every(function(v) { return v; })) {
+    setTimeout(function() {
+      showToast('info', '📊 答题完成', '你答对了 ' + quizScore + ' 题，再接再厉！');
+    }, 500);
+  }
+}
+
+function restartQuiz() {
+  quizAnswered = [false, false, false];
+  quizScore = 0;
+  document.getElementById('quizScore').textContent = '0';
+  var questions = document.querySelectorAll('.quiz-question');
+  for (var i = 0; i < questions.length; i++) {
+    var options = questions[i].querySelectorAll('.qq-option');
+    for (var j = 0; j < options.length; j++) {
+      options[j].className = 'qq-option';
+    }
+    var fb = document.getElementById('quizFb' + i);
+    fb.className = 'qq-feedback';
+    fb.innerHTML = '';
+  }
+  showToast('info', '🔄 已重置', '所有题目已重置，重新开始答题吧！');
+}
+
+// ===== 初始化新模块 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 设置反馈墙默认评分
+  setFmRating(5);
+  // 更新计划本统计
+  updatePlannerStats();
+});
+
+// ===== 初始化 =====原代码保留勿删
 document.addEventListener('DOMContentLoaded', function() {
   initGreeting();
   initChallenge();

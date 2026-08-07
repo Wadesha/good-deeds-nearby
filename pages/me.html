@@ -282,6 +282,77 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .rec-card .rc-btn { margin-top: 6px; padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; border: 1px solid #c8533a; color: #c8533a; background: transparent; cursor: pointer; transition: all .2s; }
 .rec-card .rc-btn:hover { background: #c8533a; color: #fff; }
 .rec-card .rc-btn.done { background: #4a9e6e; border-color: #4a9e6e; color: #fff; cursor: default; }
+
+/* ========== 好事反馈记录 ========== */
+.feedback-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 14px; }
+.feedback-stat { text-align: center; padding: 12px; background: #fefaf5; border-radius: 10px; border: 1px solid #fde0d6; }
+.feedback-stat .fs-value { font-size: 22px; font-weight: 800; color: #c8533a; }
+.feedback-stat .fs-label { font-size: 11px; color: #7a6e66; margin-top: 2px; }
+.fb-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f0eb; align-items: flex-start; }
+.fb-item:last-child { border-bottom: none; }
+.fb-item .fb-avatar { width: 36px; height: 36px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+.fb-item .fb-body { flex: 1; min-width: 0; }
+.fb-item .fb-body .fb-name { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.fb-item .fb-body .fb-text { font-size: 12px; color: #7a6e66; margin-top: 2px; line-height: 1.5; background: #faf8f6; padding: 6px 10px; border-radius: 8px; position: relative; }
+.fb-item .fb-body .fb-text::before { content: '💬'; margin-right: 4px; }
+.fb-item .fb-body .fb-meta { font-size: 11px; color: #b5a99e; margin-top: 4px; display: flex; align-items: center; gap: 8px; }
+.fb-item .fb-stars { font-size: 12px; color: #f5a623; flex-shrink: 0; }
+
+/* ========== 好事计划管理 ========== */
+.plan-today { margin-bottom: 14px; }
+.plan-today .pt-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.plan-today .pt-header h4 { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+.plan-today .pt-header .pt-date { font-size: 11px; color: #b5a99e; }
+.plan-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f0eb; }
+.plan-item:last-child { border-bottom: none; }
+.plan-item .p-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ddd5cc; display: grid; place-items: center; cursor: pointer; transition: all .2s; flex-shrink: 0; font-size: 10px; color: #fff; }
+.plan-item .p-check.done { background: #4a9e6e; border-color: #4a9e6e; }
+.plan-item .p-info { flex: 1; }
+.plan-item .p-info .p-title { font-size: 13px; font-weight: 600; }
+.plan-item .p-info .p-desc { font-size: 11px; color: #7a6e66; }
+.plan-item .p-time { font-size: 10px; color: #b5a99e; white-space: nowrap; }
+.plan-weekly { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f5f0eb; }
+.plan-weekly h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+.weekly-cal { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.wcal-day { text-align: center; padding: 6px 2px; border-radius: 8px; background: #faf8f6; border: 1px solid #eee8e2; font-size: 11px; }
+.wcal-day .wd-name { font-size: 10px; color: #b5a99e; margin-bottom: 2px; }
+.wcal-day .wd-num { font-size: 14px; font-weight: 700; color: #2b2622; }
+.wcal-day .wd-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-top: 3px; }
+.wcal-day .wd-dot.done { background: #4a9e6e; }
+.wcal-day .wd-dot.pending { background: #f5a623; }
+.wcal-day.today { border-color: #c8533a; background: #fef3ef; }
+.wcal-day.today .wd-num { color: #c8533a; }
+.plan-add-btn { margin-top: 10px; text-align: center; }
+.plan-add-btn button { padding: 8px 24px; border-radius: 999px; font-size: 13px; font-weight: 700; color: #fff; background: linear-gradient(135deg,#c8533a,#da7a4a); border: none; cursor: pointer; transition: all .2s; }
+.plan-add-btn button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,83,58,.3); }
+
+/* ========== 邻里私信 ========== */
+.msg-thread { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f0eb; align-items: center; cursor: pointer; transition: all .15s; }
+.msg-thread:last-child { border-bottom: none; }
+.msg-thread:hover { background: #faf8f6; margin: 0 -10px; padding: 10px; border-radius: 10px; }
+.msg-thread .mt-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 18px; flex-shrink: 0; }
+.msg-thread .mt-body { flex: 1; min-width: 0; }
+.msg-thread .mt-body .mt-top { display: flex; align-items: center; justify-content: space-between; }
+.msg-thread .mt-body .mt-top .mt-name { font-size: 13px; font-weight: 600; }
+.msg-thread .mt-body .mt-top .mt-time { font-size: 10px; color: #b5a99e; }
+.msg-thread .mt-body .mt-preview { font-size: 12px; color: #7a6e66; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg-thread .mt-unread { width: 18px; height: 18px; border-radius: 50%; background: #c8533a; color: #fff; font-size: 10px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+.msg-thread .mt-unread.zero { display: none; }
+.chat-panel { display: none; margin-top: 10px; border-top: 1px solid #f5f0eb; padding-top: 10px; animation: fadeIn .25s ease; }
+.chat-panel.show { display: block; }
+.chat-msgs { max-height: 240px; overflow-y: auto; padding-right: 4px; margin-bottom: 8px; }
+.chat-msg { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+.chat-msg .cm-avatar { width: 28px; height: 28px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 13px; flex-shrink: 0; }
+.chat-msg .cm-bubble { max-width: 75%; padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.5; }
+.chat-msg.incoming .cm-bubble { background: #f5f0eb; color: #2b2622; border-bottom-left-radius: 4px; }
+.chat-msg.outgoing { flex-direction: row-reverse; }
+.chat-msg.outgoing .cm-bubble { background: #fef3ef; color: #2b2622; border-bottom-right-radius: 4px; }
+.chat-msg .cm-time { font-size: 10px; color: #b5a99e; margin-top: 2px; }
+.chat-input-bar { display: flex; gap: 8px; }
+.chat-input-bar input { flex: 1; padding: 8px 12px; border-radius: 999px; border: 1px solid #ddd5cc; font-size: 12px; outline: none; background: #faf8f6; }
+.chat-input-bar input:focus { border-color: #c8533a; }
+.chat-input-bar button { padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; background: #c8533a; border: none; cursor: pointer; transition: all .2s; }
+.chat-input-bar button:hover { background: #b0442e; }
 </style>
 </head>
 <body>
@@ -835,6 +906,49 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     </div>
   </div>
 
+  <!-- 好事反馈记录 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-hd"><h3>💬 好事反馈记录</h3><span class="more" onclick="showToast('💬','反馈记录','查看全部邻居反馈')">查看全部 →</span></div>
+    <div class="feedback-stats" id="feedbackStats">
+      <div class="feedback-stat"><div class="fs-value" id="fbCount">24</div><div class="fs-label">收到反馈数</div></div>
+      <div class="feedback-stat"><div class="fs-value" id="fbRate">96%</div><div class="fs-label">好评率</div></div>
+      <div class="feedback-stat"><div class="fs-value" id="fbThanks">18</div><div class="fs-label">感谢条数</div></div>
+    </div>
+    <div id="feedbackList"></div>
+  </div>
+
+  <!-- 好事计划管理 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-hd"><h3>📋 好事计划管理</h3><span class="more" onclick="showToast('📋','计划管理','管理你的好事计划')">管理 →</span></div>
+    <div class="plan-today">
+      <div class="pt-header">
+        <h4>📅 今日计划</h4>
+        <span class="pt-date" id="todayDate"></span>
+      </div>
+      <div id="todayPlanList"></div>
+    </div>
+    <div class="plan-weekly">
+      <h4>📆 本周计划</h4>
+      <div class="weekly-cal" id="weeklyCal"></div>
+    </div>
+    <div class="plan-add-btn">
+      <button onclick="addPlan()">＋ 添加计划</button>
+    </div>
+  </div>
+
+  <!-- 邻里私信 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-hd"><h3>✉️ 邻里私信</h3><span class="more" onclick="showToast('✉️','私信','给邻居写消息')">写消息 →</span></div>
+    <div id="msgThreadList"></div>
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-msgs" id="chatMsgs"></div>
+      <div class="chat-input-bar">
+        <input type="text" id="chatInput" placeholder="输入消息..." onkeydown="if(event.key==='Enter') sendChatMsg()">
+        <button onclick="sendChatMsg()">发送</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 好事成就分享 -->
   <div class="card">
     <div class="card-hd"><h3>📤 好事成就分享</h3><span class="more" onclick="shareAchievementMe()">分享 →</span></div>
@@ -1325,6 +1439,177 @@ function shareAchievementMe() {
     document.getElementById('shareMeResult').style.display = 'none';
   }, 5000);
 }
+
+// ==================== 好事反馈记录 ====================
+var feedbackData = [
+  { avatar:'👩', name:'王阿姨', text:'谢谢你帮我取快递，还送到家门口，太暖心了！', rating:5, time:'30分钟前' },
+  { avatar:'👨', name:'李先生', text:'谢谢你教我修手机，现在终于会用了！', rating:5, time:'2小时前' },
+  { avatar:'👧', name:'小陈', text:'你放的共享雨伞帮了大忙，突然下雨正愁没伞呢', rating:4, time:'昨天' },
+  { avatar:'👴', name:'刘爷爷', text:'谢谢你帮我提菜上楼，现在的年轻人真有爱心', rating:5, time:'2天前' },
+];
+
+function renderFeedback() {
+  var container = document.getElementById('feedbackList');
+  if (!container) return;
+  container.innerHTML = feedbackData.map(function(f) {
+    var stars = '';
+    for (var i = 0; i < 5; i++) {
+      stars += i < f.rating ? '★' : '☆';
+    }
+    return '<div class="fb-item"><div class="fb-avatar">' + f.avatar + '</div><div class="fb-body"><div class="fb-name">' + f.name + '</div><div class="fb-text">' + f.text + '</div><div class="fb-meta"><span class="fb-stars">' + stars + '</span><span>' + f.time + '</span></div></div></div>';
+  }).join('');
+}
+renderFeedback();
+
+// ==================== 好事计划管理 ====================
+var weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+
+var todayPlans = [
+  { title:'帮邻居取快递', desc:'3号楼李姐有大件快递', time:'10:00', done:true },
+  { title:'楼道图书角整理', desc:'整理共享图书，更新书目', time:'15:00', done:false },
+  { title:'垃圾分类督导', desc:'在垃圾投放点协助分类', time:'18:30', done:false },
+];
+
+var weekPlanData = [
+  { dayOffset:0, count:3, done:1 },
+  { dayOffset:1, count:2, done:0 },
+  { dayOffset:2, count:1, done:0 },
+  { dayOffset:3, count:0, done:0 },
+  { dayOffset:4, count:2, done:0 },
+  { dayOffset:5, count:1, done:0 },
+  { dayOffset:6, count:0, done:0 },
+];
+
+function renderTodayPlans() {
+  var container = document.getElementById('todayPlanList');
+  if (!container) return;
+  var now = new Date();
+  var dateStr = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 周' + weekDays[now.getDay()];
+  document.getElementById('todayDate').textContent = dateStr;
+  container.innerHTML = todayPlans.map(function(p, i) {
+    var doneCls = p.done ? 'done' : '';
+    return '<div class="plan-item"><div class="p-check ' + doneCls + '" onclick="togglePlan(' + i + ', this)">' + (p.done ? '✓' : '') + '</div><div class="p-info"><div class="p-title">' + p.title + '</div><div class="p-desc">' + p.desc + '</div></div><div class="p-time">' + p.time + '</div></div>';
+  }).join('');
+}
+
+function togglePlan(idx, el) {
+  todayPlans[idx].done = !todayPlans[idx].done;
+  if (todayPlans[idx].done) {
+    el.classList.add('done');
+    el.textContent = '✓';
+    showToast('✅', '计划完成！', '已完成：' + todayPlans[idx].title);
+  } else {
+    el.classList.remove('done');
+    el.textContent = '';
+  }
+}
+
+function renderWeeklyCal() {
+  var container = document.getElementById('weeklyCal');
+  if (!container) return;
+  var now = new Date();
+  var today = now.getDay();
+  var html = '';
+  for (var i = 0; i < 7; i++) {
+    var d = new Date(now);
+    d.setDate(now.getDate() - today + i);
+    var dayName = weekDays[i];
+    var dayNum = d.getDate();
+    var isToday = i === today ? ' today' : '';
+    var data = weekPlanData[i] || { count:0, done:0 };
+    var dotCls = data.count > 0 ? (data.done === data.count ? 'done' : 'pending') : '';
+    html += '<div class="wcal-day' + isToday + '"><div class="wd-name">' + dayName + '</div><div class="wd-num">' + dayNum + '</div>' + (dotCls ? '<div class="wd-dot ' + dotCls + '"></div>' : '<div style="height:9px;"></div>') + '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function addPlan() {
+  var title = prompt('请输入计划标题：', '');
+  if (!title) return;
+  var desc = prompt('请输入计划描述：', '');
+  if (!desc) desc = '';
+  todayPlans.push({ title:title, desc:desc, time:'待定', done:false });
+  renderTodayPlans();
+  showToast('📋', '计划已添加', '已添加计划：' + title);
+}
+
+renderTodayPlans();
+renderWeeklyCal();
+
+// ==================== 邻里私信 ====================
+var msgThreads = [
+  { avatar:'👩', name:'王阿姨', lastMsg:'谢谢你帮我取了快递，太感谢了！', time:'10:32', unread:2, online:true },
+  { avatar:'👨', name:'李先生', lastMsg:'好的，那我们下午三点见', time:'昨天', unread:0, online:false },
+  { avatar:'👧', name:'小陈', lastMsg:'你推荐的共享雨伞角太棒了！', time:'昨天', unread:1, online:true },
+  { avatar:'👴', name:'刘爷爷', lastMsg:'小暖，明天有空帮我看看手机吗？', time:'3天前', unread:0, online:false },
+];
+
+var chatMessages = {};
+var currentChatIdx = -1;
+
+function renderMsgThreads() {
+  var container = document.getElementById('msgThreadList');
+  if (!container) return;
+  container.innerHTML = msgThreads.map(function(t, i) {
+    var unreadCls = t.unread === 0 ? 'zero' : '';
+    return '<div class="msg-thread" onclick="openChat(' + i + ')"><div class="mt-avatar">' + t.avatar + '</div><div class="mt-body"><div class="mt-top"><span class="mt-name">' + t.name + '</span><span class="mt-time">' + t.time + '</span></div><div class="mt-preview">' + t.lastMsg + '</div></div><div class="mt-unread ' + unreadCls + '">' + (t.unread > 0 ? t.unread : '') + '</div></div>';
+  }).join('');
+}
+
+function openChat(idx) {
+  currentChatIdx = idx;
+  var panel = document.getElementById('chatPanel');
+  panel.classList.add('show');
+  if (!chatMessages[idx]) {
+    chatMessages[idx] = [
+      { from:'them', text:'你好呀！', time:'10:00' },
+      { from:'me', text:'你好！有什么需要帮忙的吗？', time:'10:02' },
+      { from:'them', text:msgThreads[idx].lastMsg, time:'10:05' },
+    ];
+    if (msgThreads[idx].unread > 0) {
+      msgThreads[idx].unread = 0;
+      renderMsgThreads();
+    }
+  }
+  renderChat();
+}
+
+function renderChat() {
+  var container = document.getElementById('chatMsgs');
+  if (!container || currentChatIdx < 0) return;
+  var msgs = chatMessages[currentChatIdx] || [];
+  container.innerHTML = msgs.map(function(m) {
+    var cls = m.from === 'me' ? 'outgoing' : 'incoming';
+    var avatar = m.from === 'me' ? '🙋' : msgThreads[currentChatIdx].avatar;
+    return '<div class="chat-msg ' + cls + '"><div class="cm-avatar">' + avatar + '</div><div class="cm-bubble">' + m.text + '<div class="cm-time">' + m.time + '</div></div></div>';
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendChatMsg() {
+  var input = document.getElementById('chatInput');
+  var text = input.value.trim();
+  if (!text || currentChatIdx < 0) return;
+  input.value = '';
+  if (!chatMessages[currentChatIdx]) chatMessages[currentChatIdx] = [];
+  var now = new Date();
+  var timeStr = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+  chatMessages[currentChatIdx].push({ from:'me', text:text, time:timeStr });
+  renderChat();
+  // 模拟对方回复
+  setTimeout(function() {
+    var replies = [
+      '好的，我知道了！', '太感谢你了！', '好的，到时候联系~', '你真好！',
+      '没问题，那就这么说定了', '谢谢你呀！', '好的好的，我记住了'
+    ];
+    var reply = replies[Math.floor(Math.random() * replies.length)];
+    chatMessages[currentChatIdx].push({ from:'them', text:reply, time:now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes() });
+    renderChat();
+    showToast('✉️', '新消息', msgThreads[currentChatIdx].name + ' 回复了你');
+  }, 1500);
+}
+
+renderMsgThreads();
 </script>
 
 </body>

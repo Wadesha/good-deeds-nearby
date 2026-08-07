@@ -288,6 +288,74 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 /* 数据更新动画 */
 .data-pulse { animation:pulse .6s ease; }
 @keyframes pulse { 0%{background:transparent} 50%{background:rgba(200,83,58,.08)} 100%{background:transparent} }
+
+/* ====== 模块9：社区荣誉墙 ====== */
+.honor-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media(max-width:768px) { .honor-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:480px) { .honor-grid { grid-template-columns: 1fr; } }
+.honor-card {
+  padding: 16px; border-radius: 12px; text-align: center; transition: all .2s; cursor: default;
+  position: relative; overflow: hidden;
+}
+.honor-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(43,38,34,.08); }
+.honor-card .hc-badge { position: absolute; top: 8px; right: 8px; font-size: 20px; }
+.honor-card .hc-avatar { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 8px; display: grid; place-items: center; font-size: 24px; background: rgba(255,255,255,.6); }
+.honor-card .hc-name { font-size: 14px; font-weight: 700; }
+.honor-card .hc-title { font-size: 11px; font-weight: 600; color: #fff; display: inline-block; padding: 2px 10px; border-radius: 999px; margin-top: 4px; background: rgba(255,255,255,.25); }
+.honor-card .hc-achievement { font-size: 12px; color: rgba(255,255,255,.85); margin-top: 6px; line-height: 1.4; }
+.honor-card .hc-like-btn {
+  margin-top: 8px; padding: 4px 14px; border-radius: 999px; font-size: 11px; font-weight: 600;
+  border: none; cursor: pointer; transition: all .2s; background: rgba(255,255,255,.35); color: #fff;
+}
+.honor-card .hc-like-btn:hover { background: rgba(255,255,255,.55); }
+.honor-card .hc-like-btn.liked { background: rgba(255,255,255,.8); color: #c8533a; }
+.honor-more { text-align: center; margin-top: 12px; }
+.honor-more a { font-size: 12px; color: #c8533a; font-weight: 600; cursor: pointer; text-decoration: none; }
+.honor-more a:hover { text-decoration: underline; }
+
+/* ====== 模块10：邻里互助故事分享 ====== */
+.story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:640px) { .story-grid { grid-template-columns: 1fr; } }
+.story-card {
+  padding: 14px; border-radius: 10px; border: 1px solid #eee8e2; transition: all .2s; cursor: pointer;
+}
+.story-card:hover { border-color: #c8533a; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(200,83,58,.08); }
+.story-card .sc-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.story-card .sc-avatar { width: 28px; height: 28px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 12px; flex-shrink: 0; }
+.story-card .sc-name { font-size: 12px; font-weight: 600; }
+.story-card .sc-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.story-card .sc-preview { font-size: 12px; color: #7a6e66; line-height: 1.5; }
+.story-card .sc-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.story-card .sc-tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 600; }
+.story-card .sc-tag.warm { background: #fef3ef; color: #c8533a; }
+.story-card .sc-tag.help { background: #edf7f0; color: #4a9e6e; }
+.story-card .sc-tag.touch { background: #fef6e8; color: #c98a2b; }
+.story-card .sc-stats { display: flex; gap: 10px; margin-top: 8px; font-size: 11px; color: #b5a99e; }
+.story-card .sc-stats span { display: flex; align-items: center; gap: 3px; }
+.story-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+.story-btn { padding: 8px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all .2s; }
+.story-btn.primary { background: #c8533a; color: #fff; }
+.story-btn.primary:hover { background: #b0442e; }
+.story-btn.secondary { background: #f5f0eb; color: #7a6e66; }
+.story-btn.secondary:hover { background: #eee8e2; color: #2b2622; }
+
+/* ====== 模块11：社区趣味活动 ====== */
+.activity-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media(max-width:768px) { .activity-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:480px) { .activity-grid { grid-template-columns: 1fr; } }
+.activity-card {
+  padding: 20px 14px; border-radius: 12px; text-align: center; transition: all .2s; cursor: pointer;
+  border: 1px solid #eee8e2;
+}
+.activity-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(43,38,34,.08); }
+.activity-card .ac-icon { font-size: 36px; margin-bottom: 8px; }
+.activity-card .ac-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.activity-card .ac-desc { font-size: 12px; color: #7a6e66; line-height: 1.5; }
+.activity-card .ac-btn {
+  margin-top: 10px; padding: 6px 20px; border-radius: 999px; font-size: 12px; font-weight: 700;
+  border: none; cursor: pointer; transition: all .2s; color: #fff;
+}
+.activity-card .ac-btn:hover { transform: scale(1.05); }
 </style>
 </head>
 <body>
@@ -582,6 +650,27 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
   <div class="card">
     <div class="card-hd"><h3>🎯 你可能感兴趣的活动</h3><span class="more" onclick="showToast('🎯','推荐','刷新推荐活动')">换一批 →</span></div>
     <div id="recommendActContainer"></div>
+  </div>
+
+<!-- ====== 模块9：社区荣誉墙 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🏆 社区荣誉墙</h3><span class="more" onclick="showToast('🏆','荣誉墙','查看全部荣誉邻居')">查看更多荣誉邻居 →</span></div>
+    <div class="honor-grid" id="honorGrid"></div>
+  </div>
+
+  <!-- ====== 模块10：邻里互助故事分享 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📖 邻里互助故事分享</h3><span class="more" onclick="showToast('📖','故事分享','查看全部故事')">📖 更多故事 →</span></div>
+    <div class="story-grid" id="storyGrid"></div>
+    <div class="story-actions">
+      <button class="story-btn primary" onclick="openStoryForm()">📝 分享我的故事</button>
+    </div>
+  </div>
+
+  <!-- ====== 模块11：社区趣味活动 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🎮 社区趣味活动</h3><span class="more" onclick="showToast('🎮','趣味活动','更多趣味活动开发中')">更多 →</span></div>
+    <div class="activity-grid" id="activityGrid"></div>
   </div>
 
 </div><!-- /.wrap -->
@@ -1305,6 +1394,99 @@ function toggleCommunityReminder() {
 }
 
 initCommunityNeighbors();
+
+// ====== 模块9：社区荣誉墙 ======
+var honorData = [
+  { avatar: '👩', name: '赵姐', title: '本月暖心之星', achievement: '累计做好事 47 件，帮助邻居 23 次', badge: '🌟', likes: 128, liked: false, bg: 'linear-gradient(135deg,#c8533a,#e07a5f)' },
+  { avatar: '👨', name: '张哥', title: '技能达人', achievement: '免费为邻居维修家电 15 次，随叫随到', badge: '🔧', likes: 96, liked: false, bg: 'linear-gradient(135deg,#3a7abf,#5a9adf)' },
+  { avatar: '👧', name: '小雅', title: '环保先锋', achievement: '组织社区环保活动 8 次，清理垃圾 30+ 袋', badge: '🌿', likes: 85, liked: false, bg: 'linear-gradient(135deg,#4a9e6e,#6abe8e)' },
+  { avatar: '👴', name: '王爷爷', title: '银发楷模', achievement: '坚持每天清扫楼道，义务修剪花园花草', badge: '🌺', likes: 112, liked: false, bg: 'linear-gradient(135deg,#c98a2b,#e8aa4a)' },
+  { avatar: '👩', name: '刘姐', title: '暖心厨神', achievement: '每月为独居老人做爱心餐，已坚持 6 个月', badge: '🍲', likes: 74, liked: false, bg: 'linear-gradient(135deg,#b04a5e,#d06a7e)' },
+  { avatar: '🧑', name: '小王', title: '数字助老之星', achievement: '教 20 位老人使用智能手机，耐心细致', badge: '📱', likes: 63, liked: false, bg: 'linear-gradient(135deg,#7b4a8c,#9b6aac)' },
+];
+function renderHonor() {
+  var grid = document.getElementById('honorGrid');
+  if (!grid) return;
+  grid.innerHTML = honorData.map(function(h) {
+    var likedClass = h.liked ? ' liked' : '';
+    return '<div class="honor-card" style="background:' + h.bg + ';"><div class="hc-badge">' + h.badge + '</div><div class="hc-avatar">' + h.avatar + '</div><div class="hc-name" style="color:#fff;">' + h.name + '</div><div class="hc-title">' + h.title + '</div><div class="hc-achievement">' + h.achievement + '</div><button class="hc-like-btn' + likedClass + '" onclick="toggleHonorLike(this)">👍 点赞 ' + h.likes + '</button></div>';
+  }).join('');
+}
+function toggleHonorLike(btn) {
+  if (btn.classList.contains('liked')) {
+    btn.classList.remove('liked');
+    var n = parseInt(btn.textContent.match(/\d+/)[0]) - 1;
+    btn.innerHTML = '👍 点赞 ' + n;
+  } else {
+    btn.classList.add('liked');
+    var n = parseInt(btn.textContent.match(/\d+/)[0]) + 1;
+    btn.innerHTML = '👍 点赞 ' + n;
+    showToast('🏆', '点赞成功！', '感谢你的认可，邻居收到了一份温暖 ❤️');
+  }
+}
+renderHonor();
+
+// ====== 模块10：邻里互助故事分享 ======
+var storyData = [
+  { avatar: '👩', name: '赵姐', title: '一把雨伞的温暖传递', preview: '那天突然下大雨，看见楼下快递员没带伞，我赶紧拿了两把伞下去……', tags: ['暖心','互助'], likes: 56, comments: 12 },
+  { avatar: '👨', name: '张哥', title: '深夜的修电脑电话', preview: '凌晨12点接到邻居电话说电脑坏了，明天要交方案。我二话不说就过去了……', tags: ['互助','感人'], likes: 89, comments: 24 },
+  { avatar: '👧', name: '小雅', title: '我们楼里的"共享厨房"', preview: '自从在楼道放了共享调料架，邻居们经常互相送菜送饭，楼道里都是饭菜香……', tags: ['暖心','创意'], likes: 43, comments: 8 },
+  { avatar: '👴', name: '王爷爷', title: '教老伙计用手机，我成了"网红"', preview: '退休后没事干，开始在小区教老人用手机，没想到越教越多人，还拍了短视频……', tags: ['互助','感人'], likes: 67, comments: 15 },
+];
+function renderStories() {
+  var grid = document.getElementById('storyGrid');
+  if (!grid) return;
+  grid.innerHTML = storyData.map(function(s) {
+    var tagColors = { '暖心': 'warm', '互助': 'help', '感人': 'touch', '创意': 'warm' };
+    var tagsHtml = s.tags.map(function(t) { return '<span class="sc-tag ' + (tagColors[t] || 'warm') + '">' + t + '</span>'; }).join('');
+    return '<div class="story-card"><div class="sc-header"><div class="sc-avatar">' + s.avatar + '</div><div class="sc-name">' + s.name + '</div></div><div class="sc-title">' + s.title + '</div><div class="sc-preview">' + s.preview + '</div><div class="sc-tags">' + tagsHtml + '</div><div class="sc-stats"><span>❤️ ' + s.likes + '</span><span>💬 ' + s.comments + '</span></div></div>';
+  }).join('');
+}
+function openStoryForm() {
+  var bodyHtml = '<div class="form-group"><label class="form-label">故事标题</label><input class="form-input" id="storyTitleInput" placeholder="给你的故事起个名字" /></div><div class="form-group"><label class="form-label">你的故事</label><textarea class="form-input" id="storyContentInput" rows="4" placeholder="分享你身边的暖心故事……" style="resize:none;"></textarea></div><div class="form-group"><label class="form-label">标签（可多选）</label><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;"><span class="sc-tag warm" style="cursor:pointer;padding:4px 12px;font-size:12px;" onclick="toggleStoryTag(this)">暖心</span><span class="sc-tag help" style="cursor:pointer;padding:4px 12px;font-size:12px;" onclick="toggleStoryTag(this)">互助</span><span class="sc-tag touch" style="cursor:pointer;padding:4px 12px;font-size:12px;" onclick="toggleStoryTag(this)">感人</span><span class="sc-tag warm" style="cursor:pointer;padding:4px 12px;font-size:12px;" onclick="toggleStoryTag(this)">创意</span></div></div>';
+  var footHtml = '<button class="modal-btn secondary" onclick="closeModal()">取消</button><button class="modal-btn primary" onclick="submitStory()">发布故事</button>';
+  openModal('📝 分享我的故事', bodyHtml, footHtml);
+}
+var selectedStoryTags = [];
+function toggleStoryTag(el) {
+  el.classList.toggle('active');
+  var tag = el.textContent.trim();
+  var idx = selectedStoryTags.indexOf(tag);
+  if (idx === -1) selectedStoryTags.push(tag);
+  else selectedStoryTags.splice(idx, 1);
+}
+function submitStory() {
+  var title = document.getElementById('storyTitleInput').value.trim();
+  var content = document.getElementById('storyContentInput').value.trim();
+  if (!title) { showToast('📝', '请输入故事标题', '给故事起个名字吧'); return; }
+  if (!content) { showToast('📝', '请分享故事内容', '写写你身边的暖心故事'); return; }
+  var tags = selectedStoryTags.length > 0 ? selectedStoryTags.slice() : ['暖心'];
+  var preview = content.length > 30 ? content.substring(0, 30) + '……' : content;
+  storyData.unshift({ avatar: '🙋', name: '我', title: title, preview: preview, tags: tags, likes: 0, comments: 0 });
+  renderStories();
+  selectedStoryTags = [];
+  closeModal();
+  showToast('📖', '故事发布成功！', '你的暖心故事已分享给全社区，感谢你的分享 ❤️');
+}
+renderStories();
+
+// ====== 模块11：社区趣味活动 ======
+var activityData = [
+  { icon: '🧠', title: '好事知识问答', desc: '测试你对社区好事的了解程度，答对还能赢取好心值！', btnColor: '#c8533a', bg: '#fef3ef' },
+  { icon: '🔗', title: '社区连连看', desc: '将邻居和他们的好事配对，看看你对社区有多了解', btnColor: '#4a9e6e', bg: '#edf7f0' },
+  { icon: '🧩', title: '暖心拼图', desc: '完成一幅社区暖心瞬间的拼图，感受邻里温情', btnColor: '#3a7abf', bg: '#eef4fa' },
+];
+function renderActivities() {
+  var grid = document.getElementById('activityGrid');
+  if (!grid) return;
+  grid.innerHTML = activityData.map(function(a) {
+    return '<div class="activity-card" style="background:' + a.bg + ';"><div class="ac-icon">' + a.icon + '</div><div class="ac-title">' + a.title + '</div><div class="ac-desc">' + a.desc + '</div><button class="ac-btn" style="background:' + a.btnColor + ';" onclick="startActivity(\'' + a.title + '\')">开始</button></div>';
+  }).join('');
+}
+function startActivity(title) {
+  showToast('🎮', '活动已启动', '「' + title + '」正在加载，准备开始挑战吧！');
+}
+renderActivities();
 </script>
 </body>
 </html>
