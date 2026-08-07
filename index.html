@@ -832,6 +832,252 @@ ul,ol{list-style:none}
   .quiz-question{padding:16px}
   .quiz-question .qq-option{padding:8px 12px;font-size:13px}
 }
+
+/* ===== v2.0 新功能样式 ===== */
+
+/* 通知中心 */
+.notif-bell{position:relative;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:18px;cursor:pointer;transition:all .2s;background:var(--bg);border:1px solid var(--line);color:var(--ink-soft)}
+.notif-bell:hover{background:var(--brand-soft);color:var(--brand);border-color:var(--brand-soft)}
+.notif-bell .nb-dot{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--brand);animation:pulse-dot 1.5s ease-in-out infinite;border:1.5px solid #fff}
+.notif-panel{position:absolute;top:calc(100% + 8px);right:0;width:340px;max-height:420px;background:var(--paper);border-radius:var(--radius);border:1px solid var(--line);box-shadow:0 8px 32px rgba(43,38,34,.12);overflow:hidden;display:none;z-index:2000;animation:modal-in .2s ease}
+.notif-panel.show{display:block}
+.notif-panel .np-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+.notif-panel .np-header h4{font-size:14px;font-weight:700}
+.notif-panel .np-header .np-clear{font-size:11px;color:var(--brand);cursor:pointer;font-weight:600}
+.notif-panel .np-list{overflow-y:auto;max-height:340px;padding:4px 0}
+.notif-panel .np-item{display:flex;gap:10px;padding:10px 16px;transition:all .15s;cursor:pointer;border-bottom:1px solid #f8f5f0}
+.notif-panel .np-item:hover{background:var(--brand-soft)}
+.notif-panel .np-item .np-icon{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:16px;flex-shrink:0}
+.notif-panel .np-item .np-body{flex:1;min-width:0}
+.notif-panel .np-item .np-body .np-title{font-size:13px;font-weight:600;color:var(--ink)}
+.notif-panel .np-item .np-body .np-desc{font-size:12px;color:var(--ink-soft);margin-top:1px;line-height:1.4}
+.notif-panel .np-item .np-body .np-time{font-size:10px;color:var(--ink-faint);margin-top:3px}
+.notif-panel .np-item .np-badge{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;flex-shrink:0;align-self:center}
+
+/* 智能助手 */
+.assistant-btn{position:fixed;bottom:100px;right:24px;z-index:999;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;display:grid;place-items:center;font-size:24px;box-shadow:0 4px 16px rgba(200,83,58,.3);cursor:pointer;transition:all .3s;border:none;animation:float 3s ease-in-out infinite}
+.assistant-btn:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(200,83,58,.4);animation:none}
+.assistant-panel{position:fixed;bottom:170px;right:24px;width:320px;max-height:400px;background:var(--paper);border-radius:var(--radius-lg);border:1px solid var(--line);box-shadow:0 8px 32px rgba(43,38,34,.12);overflow:hidden;display:none;z-index:998;animation:modal-in .3s ease}
+.assistant-panel.show{display:flex;flex-direction:column}
+.assistant-panel .ap-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,var(--brand-soft),#fff8f0)}
+.assistant-panel .ap-header .ap-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--gold));display:grid;place-items:center;font-size:16px;color:#fff}
+.assistant-panel .ap-header .ap-info{flex:1}
+.assistant-panel .ap-header .ap-info .ap-name{font-size:13px;font-weight:700;color:var(--ink)}
+.assistant-panel .ap-header .ap-info .ap-status{font-size:11px;color:var(--leaf);font-weight:600}
+.assistant-panel .ap-close{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:14px;color:var(--ink-faint);cursor:pointer;transition:all .2s}
+.assistant-panel .ap-close:hover{background:var(--bg);color:var(--ink)}
+.assistant-panel .ap-body{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:280px}
+.assistant-panel .ap-body .ap-msg{max-width:85%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5;animation:fadeIn .3s ease}
+.assistant-panel .ap-body .ap-msg.bot{background:var(--bg);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px}
+.assistant-panel .ap-body .ap-msg.user{background:var(--brand);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.assistant-panel .ap-footer{display:flex;align-items:center;gap:8px;padding:10px 14px;border-top:1px solid var(--line)}
+.assistant-panel .ap-footer input{flex:1;padding:8px 12px;border-radius:999px;border:1px solid var(--line);font-size:13px;outline:none;background:var(--bg);color:var(--ink)}
+.assistant-panel .ap-footer input:focus{border-color:var(--brand)}
+.assistant-panel .ap-footer .ap-send{width:32px;height:32px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:14px;cursor:pointer;border:none;transition:all .2s}
+.assistant-panel .ap-footer .ap-send:hover{background:var(--brand-deep)}
+
+/* 好事完成流程 */
+.deed-flow-overlay{position:fixed;inset:0;z-index:4000;background:rgba(43,38,34,.6);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;animation:fade-in .25s ease}
+.deed-flow-overlay.show{display:flex}
+.deed-flow-modal{background:var(--paper);border-radius:var(--radius-lg);padding:32px;max-width:480px;width:100%;box-shadow:0 24px 64px rgba(43,38,34,.15);animation:modal-in .3s cubic-bezier(.4,0,.2,1)}
+.deed-flow-modal .dfm-header{text-align:center;margin-bottom:24px}
+.deed-flow-modal .dfm-header .dfm-icon{font-size:48px;display:block;margin-bottom:8px}
+.deed-flow-modal .dfm-header h3{font-size:20px;font-weight:800;color:var(--ink)}
+.deed-flow-modal .dfm-header p{font-size:13px;color:var(--ink-soft);margin-top:4px}
+.deed-flow-modal .dfm-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.deed-flow-modal .dfm-step{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1.5px solid var(--line);transition:all .3s;cursor:pointer}
+.deed-flow-modal .dfm-step:hover{border-color:var(--brand-soft)}
+.deed-flow-modal .dfm-step.done{background:var(--leaf-soft);border-color:var(--leaf)}
+.deed-flow-modal .dfm-step.done .dfs-num{background:var(--leaf);color:#fff}
+.deed-flow-modal .dfm-step.active{background:var(--brand-soft);border-color:var(--brand);animation:glow 2s ease-in-out infinite}
+.deed-flow-modal .dfm-step.active .dfs-num{background:var(--brand);color:#fff}
+.deed-flow-modal .dfm-step .dfs-num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--line);color:var(--ink-faint);flex-shrink:0;transition:all .2s}
+.deed-flow-modal .dfm-step .dfs-content{flex:1}
+.deed-flow-modal .dfm-step .dfs-content .dfs-title{font-size:14px;font-weight:700;color:var(--ink)}
+.deed-flow-modal .dfm-step .dfs-content .dfs-desc{font-size:12px;color:var(--ink-soft);margin-top:2px}
+.deed-flow-modal .dfm-step .dfs-check{font-size:18px;color:var(--leaf)}
+.deed-flow-modal .dfm-actions{display:flex;gap:10px}
+.deed-flow-modal .dfm-actions .dfm-btn{flex:1;padding:12px;border-radius:999px;font-size:14px;font-weight:700;text-align:center;cursor:pointer;transition:all .2s}
+.deed-flow-modal .dfm-actions .dfm-btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;box-shadow:0 4px 12px rgba(200,83,58,.2)}
+.deed-flow-modal .dfm-actions .dfm-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,83,58,.3)}
+.deed-flow-modal .dfm-actions .dfm-btn-secondary{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line)}
+.deed-flow-modal .dfm-actions .dfm-btn-secondary:hover{background:var(--line)}
+
+/* 邻里聊天 */
+.chat-btn{position:fixed;bottom:168px;right:24px;z-index:998;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--leaf),#4a9e6e);color:#fff;display:grid;place-items:center;font-size:20px;box-shadow:0 4px 12px rgba(74,158,110,.3);cursor:pointer;transition:all .3s;border:none}
+.chat-btn:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(74,158,110,.4)}
+.chat-btn .cb-dot{position:absolute;top:0;right:0;width:10px;height:10px;border-radius:50%;background:var(--brand);border:2px solid #fff;animation:pulse-dot 1.5s ease-in-out infinite}
+.chat-panel{position:fixed;bottom:226px;right:24px;width:300px;max-height:380px;background:var(--paper);border-radius:var(--radius-lg);border:1px solid var(--line);box-shadow:0 8px 32px rgba(43,38,34,.12);overflow:hidden;display:none;z-index:997;animation:modal-in .3s ease}
+.chat-panel.show{display:flex;flex-direction:column}
+.chat-panel .cp-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,var(--leaf-soft),#f5faf5)}
+.chat-panel .cp-header .cp-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:14px;color:#fff;flex-shrink:0}
+.chat-panel .cp-header .cp-info{flex:1}
+.chat-panel .cp-header .cp-info .cp-name{font-size:13px;font-weight:700;color:var(--ink)}
+.chat-panel .cp-header .cp-info .cp-status{font-size:10px;color:var(--leaf);font-weight:600}
+.chat-panel .cp-close{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;color:var(--ink-faint);cursor:pointer;transition:all .2s}
+.chat-panel .cp-close:hover{background:var(--bg);color:var(--ink)}
+.chat-panel .cp-body{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-height:180px;max-height:240px;background:#faf8f6}
+.chat-panel .cp-body .cp-msg{max-width:85%;padding:8px 12px;border-radius:10px;font-size:12px;line-height:1.5;animation:fadeIn .3s ease}
+.chat-panel .cp-body .cp-msg.other{background:#fff;color:var(--ink);align-self:flex-start;border:1px solid var(--line);border-bottom-left-radius:2px}
+.chat-panel .cp-body .cp-msg.me{background:var(--leaf);color:#fff;align-self:flex-end;border-bottom-right-radius:2px}
+.chat-panel .cp-body .cp-msg .cp-time{font-size:9px;opacity:.7;display:block;margin-top:4px;text-align:right}
+.chat-panel .cp-footer{display:flex;align-items:center;gap:6px;padding:8px 12px;border-top:1px solid var(--line)}
+.chat-panel .cp-footer input{flex:1;padding:7px 12px;border-radius:999px;border:1px solid var(--line);font-size:12px;outline:none;background:#fff;color:var(--ink)}
+.chat-panel .cp-footer input:focus{border-color:var(--leaf)}
+.chat-panel .cp-footer .cp-send{width:28px;height:28px;border-radius:50%;background:var(--leaf);color:#fff;display:grid;place-items:center;font-size:12px;cursor:pointer;border:none;transition:all .2s}
+.chat-panel .cp-footer .cp-send:hover{background:#3d8a5e}
+
+/* 个人影响看板 */
+.impact-overlay{position:fixed;inset:0;z-index:3500;background:rgba(43,38,34,.5);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;animation:fade-in .25s ease}
+.impact-overlay.show{display:flex}
+.impact-modal{background:var(--paper);border-radius:var(--radius-lg);padding:32px;max-width:500px;width:100%;box-shadow:0 24px 64px rgba(43,38,34,.15);animation:modal-in .3s cubic-bezier(.4,0,.2,1);max-height:85vh;overflow-y:auto}
+.impact-modal .im-header{text-align:center;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.impact-modal .im-header .im-badge{display:inline-block;padding:4px 14px;border-radius:999px;background:var(--brand-soft);color:var(--brand-deep);font-size:12px;font-weight:700;margin-bottom:8px}
+.impact-modal .im-header h3{font-size:22px;font-weight:800;color:var(--ink)}
+.impact-modal .im-header p{font-size:13px;color:var(--ink-soft);margin-top:4px}
+.impact-modal .im-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.impact-modal .im-stat{text-align:center;padding:16px;background:var(--bg);border-radius:10px;border:1px solid var(--line)}
+.impact-modal .im-stat .ims-num{font-size:28px;font-weight:800;color:var(--brand);line-height:1}
+.impact-modal .im-stat .ims-label{font-size:12px;color:var(--ink-soft);margin-top:4px}
+.impact-modal .im-stat .ims-sub{font-size:10px;color:var(--ink-faint);margin-top:2px}
+.impact-modal .im-stat.leaf .ims-num{color:var(--leaf)}
+.impact-modal .im-stat.sky .ims-num{color:var(--sky)}
+.impact-modal .im-stat.gold .ims-num{color:var(--gold)}
+.impact-modal .im-milestones{margin-bottom:20px}
+.impact-modal .im-milestones h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.impact-modal .im-milestones .im-milestone{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:var(--bg);margin-bottom:6px;font-size:13px;color:var(--ink-soft);border-left:3px solid var(--brand)}
+.impact-modal .im-milestones .im-milestone .ims-emoji{font-size:18px}
+.impact-modal .im-milestones .im-milestone.done{border-left-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf);font-weight:600}
+.impact-modal .im-actions{text-align:center}
+.impact-modal .im-actions .im-btn{padding:10px 28px;border-radius:999px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-deep));border:none;cursor:pointer;transition:all .2s;box-shadow:0 4px 12px rgba(200,83,58,.2)}
+.impact-modal .im-actions .im-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,83,58,.3)}
+
+/* 响应式 */
+@media(max-width:768px){
+  .notif-panel{width:300px;right:-10px}
+  .assistant-panel{width:290px;right:12px;bottom:160px}
+  .assistant-btn{width:44px;height:44px;font-size:20px;bottom:80px;right:16px}
+  .chat-panel{width:280px;right:12px;bottom:210px}
+  .chat-btn{width:38px;height:38px;font-size:16px;bottom:140px;right:16px}
+  .impact-modal{padding:24px;margin:12px}
+  .impact-modal .im-stats{grid-template-columns:1fr 1fr;gap:8px}
+  .deed-flow-modal{padding:24px;margin:12px}
+}
+@media(max-width:480px){
+  .notif-panel{width:280px;right:-8px}
+  .assistant-panel{width:270px;right:10px;bottom:140px}
+  .assistant-btn{width:40px;height:40px;font-size:18px;bottom:70px;right:12px}
+  .chat-panel{width:260px;right:10px;bottom:190px}
+  .chat-btn{width:34px;height:34px;font-size:14px;bottom:126px;right:12px}
+  .impact-modal .im-stats{grid-template-columns:1fr;gap:6px}
+}
+
+/* ===== 每日心情打卡 (Daily Mood Check-in) ===== */
+.mood-checkin{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 20px;box-shadow:var(--shadow);transition:var(--transition)}
+.mood-checkin .mood-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px}
+.mood-checkin .mood-header .mood-title{font-size:14px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px}
+.mood-checkin .mood-header .mood-status{font-size:11px;color:var(--ink-faint);font-weight:500}
+.mood-checkin .mood-options{display:flex;gap:8px;flex-wrap:wrap}
+.mood-checkin .mood-options .mood-btn{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--paper);display:grid;place-items:center;font-size:22px;cursor:pointer;transition:var(--transition);position:relative}
+.mood-checkin .mood-options .mood-btn:hover{border-color:var(--brand-soft);background:var(--brand-soft);transform:scale(1.1)}
+.mood-checkin .mood-options .mood-btn.selected{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 3px rgba(200,83,58,.15);transform:scale(1.1)}
+.mood-checkin .mood-options .mood-btn .mood-tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:3px 8px;border-radius:6px;font-size:10px;white-space:nowrap;opacity:0;pointer-events:none;transition:all .2s;font-weight:600}
+.mood-checkin .mood-options .mood-btn:hover .mood-tooltip{opacity:1}
+.mood-checkin .mood-result{display:none;margin-top:10px;padding:10px 14px;background:var(--brand-soft);border-radius:10px;border:1px solid #f5d6cc;animation:slide-up .3s ease}
+.mood-checkin .mood-result.show{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mood-checkin .mood-result .mr-icon{font-size:24px}
+.mood-checkin .mood-result .mr-text{flex:1;min-width:0}
+.mood-checkin .mood-result .mr-text .mr-title{font-size:13px;font-weight:700;color:var(--brand-deep)}
+.mood-checkin .mood-result .mr-text .mr-desc{font-size:12px;color:var(--ink-soft);margin-top:1px}
+.mood-checkin .mood-result .mr-points{padding:3px 10px;border-radius:999px;background:var(--gold-soft);color:var(--gold);font-size:12px;font-weight:700;white-space:nowrap}
+.mood-checkin .mood-history{display:flex;gap:4px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.mood-checkin .mood-history .mh-item{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;background:var(--bg);border:1px solid var(--line);transition:var(--transition)}
+.mood-checkin .mood-history .mh-item.today{border-color:var(--brand);background:var(--brand-soft);box-shadow:0 0 0 2px rgba(200,83,58,.1)}
+.mood-checkin .mood-history .mh-label{font-size:10px;color:var(--ink-faint);display:flex;align-items:center;margin-left:4px}
+
+/* ===== 社区广播 (Community Broadcast) ===== */
+.broadcast-section{background:var(--paper);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.broadcast-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.broadcast-header h3{font-size:16px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px}
+.broadcast-header .bc-live{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--brand);padding:3px 10px;background:var(--brand-soft);border-radius:999px}
+.broadcast-header .bc-live .bc-dot{width:6px;height:6px;border-radius:50%;background:var(--brand);animation:pulse-dot 1.5s ease-in-out infinite}
+.broadcast-feed{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:4px;margin-bottom:16px}
+.broadcast-feed::-webkit-scrollbar{width:4px}
+.broadcast-feed::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+.bc-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--brand);animation:rt-slide-in .4s ease;transition:var(--transition)}
+.bc-item:hover{background:var(--brand-soft);transform:translateX(4px)}
+.bc-item .bc-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.bc-item .bc-body{flex:1;min-width:0}
+.bc-item .bc-body .bc-text{font-size:13px;color:var(--ink);line-height:1.4}
+.bc-item .bc-body .bc-text .bc-name{font-weight:700;color:var(--brand)}
+.bc-item .bc-body .bc-text .bc-action{color:var(--ink-soft)}
+.bc-item .bc-body .bc-time{font-size:11px;color:var(--ink-faint);margin-top:2px}
+.bc-item .bc-likes{display:flex;align-items:center;gap:3px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;color:var(--ink-faint);border:1px solid var(--line);background:var(--paper);cursor:pointer;flex-shrink:0;transition:var(--transition);margin-top:0}
+.bc-item .bc-likes:hover{color:var(--brand);border-color:var(--brand-soft)}
+.bc-item .bc-likes.liked{color:var(--brand);background:var(--brand-soft);border-color:var(--brand-soft)}
+.broadcast-actions{display:flex;gap:10px;flex-wrap:wrap}
+.broadcast-actions .btn-broadcast{padding:10px 24px;border-radius:999px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-deep));transition:var(--transition);box-shadow:0 4px 12px rgba(200,83,58,.2);display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer}
+.broadcast-actions .btn-broadcast:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,83,58,.3)}
+.broadcast-actions .btn-broadcast-secondary{padding:10px 24px;border-radius:999px;font-size:13px;font-weight:600;color:var(--brand);border:1.5px solid var(--brand);background:var(--paper);transition:var(--transition);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.broadcast-actions .btn-broadcast-secondary:hover{background:var(--brand-soft)}
+.broadcast-input-wrap{display:none;margin-top:12px;padding:14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--line);animation:slide-up .3s ease}
+.broadcast-input-wrap.show{display:block}
+.broadcast-input-wrap textarea{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--line);font-size:13px;font-family:inherit;resize:vertical;min-height:60px;outline:none;background:var(--paper);color:var(--ink);transition:var(--transition)}
+.broadcast-input-wrap textarea:focus{border-color:var(--brand)}
+.broadcast-input-wrap .bc-input-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px;flex-wrap:wrap}
+.broadcast-input-wrap .bc-input-footer .bc-char-count{font-size:11px;color:var(--ink-faint)}
+.broadcast-input-wrap .bc-input-footer .bc-submit{padding:8px 20px;border-radius:999px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-deep));border:none;cursor:pointer;transition:var(--transition)}
+.broadcast-input-wrap .bc-input-footer .bc-submit:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(200,83,58,.2)}
+.broadcast-input-wrap .bc-input-footer .bc-submit:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ===== 好事挑战增强 (Good Deed Challenges) ===== */
+.challenge-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:16px}
+.challenge-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:var(--transition);position:relative;overflow:hidden}
+.challenge-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
+.challenge-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--gold))}
+.challenge-card .ch-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:10px}
+.challenge-card .ch-badge.time{background:var(--sky-soft);color:var(--sky)}
+.challenge-card .ch-badge.hot{background:var(--brand-soft);color:var(--brand-deep)}
+.challenge-card .ch-badge.new{background:var(--leaf-soft);color:var(--leaf)}
+.challenge-card h4{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.challenge-card p{font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px}
+.challenge-card .ch-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.challenge-card .ch-meta .ch-meta-item{display:inline-flex;align-items:center;gap:3px;font-size:12px;color:var(--ink-faint);padding:3px 8px;background:var(--bg);border-radius:6px}
+.challenge-card .ch-meta .ch-meta-item .ch-points{color:var(--gold);font-weight:700}
+.challenge-card .ch-progress{height:6px;background:var(--line);border-radius:999px;overflow:hidden;margin-bottom:10px}
+.challenge-card .ch-progress .ch-progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--gold));transition:width .6s ease;width:0%}
+.challenge-card .ch-btn{width:100%;padding:9px;border-radius:999px;font-size:13px;font-weight:700;text-align:center;transition:var(--transition);cursor:pointer;border:none}
+.challenge-card .ch-btn.primary{color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-deep));box-shadow:0 2px 8px rgba(200,83,58,.2)}
+.challenge-card .ch-btn.primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,83,58,.3)}
+.challenge-card .ch-btn.primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.challenge-card .ch-btn.accepted{background:var(--leaf-soft);color:var(--leaf);cursor:default}
+.challenge-card .ch-btn.completed{background:var(--gold-soft);color:var(--gold);cursor:default}
+.challenge-card.accepted{border-color:var(--leaf);background:var(--leaf-soft)}
+.challenge-card.completed{border-color:var(--gold);background:var(--gold-soft)}
+.challenge-card.completed::before{background:linear-gradient(90deg,var(--gold),var(--leaf))}
+
+/* ===== 分享按钮 (Share Buttons) ===== */
+.share-btn-wrap{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.share-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;transition:var(--transition);border:1px solid var(--line);background:var(--paper);color:var(--ink-soft)}
+.share-btn:hover{background:var(--brand-soft);color:var(--brand);border-color:var(--brand-soft)}
+.share-btn .sb-icon{font-size:14px}
+.share-btn.primary{background:var(--brand-soft);color:var(--brand-deep);border-color:var(--brand-soft)}
+.share-btn.primary:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+/* ===== 心愿值浮动动画 ===== */
+@keyframes points-float{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-40px) scale(1.3)}}
+.points-float{position:fixed;pointer-events:none;z-index:5000;font-size:20px;font-weight:800;color:var(--gold);animation:points-float 1.2s ease-out forwards}
+
+/* ===== 响应式 - 新功能 ===== */
+@media(max-width:768px){
+  .mood-checkin .mood-options .mood-btn{width:38px;height:38px;font-size:18px}
+  .mood-checkin .mood-history .mh-item{width:24px;height:24px;font-size:12px}
+  .broadcast-section{padding:20px;border-radius:var(--radius)}
+  .broadcast-feed{max-height:220px}
+  .challenge-grid{grid-template-columns:1fr}
+  .broadcast-actions{flex-direction:column}
+  .broadcast-actions .btn-broadcast,.broadcast-actions .btn-broadcast-secondary{width:100%;justify-content:center}
+}
 </style>
 </head>
 <body>
@@ -853,7 +1099,18 @@ ul,ol{list-style:none}
       <a href="#about">关于项目</a>
       <a href="v2-roadmap.html">v2.0路线图</a>
     </nav>
-    <div class="auth-btns">
+    <div class="auth-btns" style="position:relative;">
+      <div class="notif-bell" onclick="toggleNotifications()" id="notifBell" title="通知">
+        🔔
+        <span class="nb-dot" id="notifDot"></span>
+      </div>
+      <div class="notif-panel" id="notifPanel">
+        <div class="np-header">
+          <h4>🔔 通知中心</h4>
+          <span class="np-clear" onclick="clearNotifications()">全部已读</span>
+        </div>
+        <div class="np-list" id="notifList"></div>
+      </div>
       <button class="btn-login" onclick="showToast('info','登录提示','功能开发中，敬请期待')">登录</button>
       <button class="btn-register" onclick="showToast('info','注册提示','功能开发中，敬请期待')">注册</button>
     </div>
@@ -950,6 +1207,56 @@ ul,ol{list-style:none}
     </div>
   </div>
 
+  <!-- ===== 每日心情打卡 ===== -->
+  <div class="wrap" style="margin-bottom:20px;">
+    <div class="mood-checkin" id="moodCheckin">
+      <div class="mood-header">
+        <div class="mood-title">😊 每日心情打卡</div>
+        <div class="mood-status" id="moodStatus">今日未打卡</div>
+      </div>
+      <div class="mood-options" id="moodOptions">
+        <button class="mood-btn" onclick="selectMood('😄')" title="超开心">
+          😄
+          <span class="mood-tooltip">超开心</span>
+        </button>
+        <button class="mood-btn" onclick="selectMood('😊')" title="开心">
+          😊
+          <span class="mood-tooltip">开心</span>
+        </button>
+        <button class="mood-btn" onclick="selectMood('😐')" title="一般">
+          😐
+          <span class="mood-tooltip">一般</span>
+        </button>
+        <button class="mood-btn" onclick="selectMood('😢')" title="不太好">
+          😢
+          <span class="mood-tooltip">不太好</span>
+        </button>
+        <button class="mood-btn" onclick="selectMood('😌')" title="平静">
+          😌
+          <span class="mood-tooltip">平静</span>
+        </button>
+      </div>
+      <div class="mood-result" id="moodResult">
+        <span class="mr-icon">🎉</span>
+        <div class="mr-text">
+          <div class="mr-title" id="moodResultTitle">心情已记录！</div>
+          <div class="mr-desc" id="moodResultDesc">感谢你的分享，保持好心情！</div>
+        </div>
+        <span class="mr-points" id="moodResultPoints">💛 +5</span>
+      </div>
+      <div class="mood-history" id="moodHistory">
+        <span class="mh-item" style="background:#fbeae3;border-color:#f5c8b8;">😊</span>
+        <span class="mh-item" style="background:#fbeae3;border-color:#f5c8b8;">😄</span>
+        <span class="mh-item" style="background:#fbeae3;border-color:#f5c8b8;">😌</span>
+        <span class="mh-item" style="background:#fbeae3;border-color:#f5c8b8;">😊</span>
+        <span class="mh-item" style="background:#fbeae3;border-color:#f5c8b8;">😐</span>
+        <span class="mh-item" style="background:#fbeae3;border-color:#f5c8b8;">😄</span>
+        <span class="mh-item today" id="moodTodayItem">—</span>
+        <span class="mh-label">本周心情</span>
+      </div>
+    </div>
+  </div>
+
 <!-- ===== 好事提醒设置 ===== -->
 <div class="wrap" style="margin-bottom:20px;">
   <div style="background:linear-gradient(135deg,#f0f7f4,#e8f4ef);border:1px solid #d4e8da;border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow);">
@@ -1001,6 +1308,9 @@ ul,ol{list-style:none}
           <span class="tag time">⏱️ 5分钟</span>
           <span class="tag value">💛 +8</span>
         </div>
+        <div class="share-btn-wrap" style="margin-top:8px;justify-content:flex-end;">
+          <button class="share-btn" onclick="event.stopPropagation();shareAchievement('task','帮邻居取快递','📦')"><span class="sb-icon">📤</span> 分享</button>
+        </div>
       </div>
       <div class="task-card" data-value="20" data-name="垃圾分类引导" data-index="1">
         <span class="check-mark">✓</span>
@@ -1009,6 +1319,9 @@ ul,ol{list-style:none}
         <div class="task-meta">
           <span class="tag time">⏱️ 15分钟</span>
           <span class="tag value">💛 +20</span>
+        </div>
+        <div class="share-btn-wrap" style="margin-top:8px;justify-content:flex-end;">
+          <button class="share-btn" onclick="event.stopPropagation();shareAchievement('task','垃圾分类引导','♻️')"><span class="sb-icon">📤</span> 分享</button>
         </div>
       </div>
       <div class="task-card" data-value="25" data-name="教老人用手机" data-index="2">
@@ -1019,6 +1332,9 @@ ul,ol{list-style:none}
           <span class="tag time">⏱️ 20分钟</span>
           <span class="tag value">💛 +25</span>
         </div>
+        <div class="share-btn-wrap" style="margin-top:8px;justify-content:flex-end;">
+          <button class="share-btn" onclick="event.stopPropagation();shareAchievement('task','教老人用手机','📱')"><span class="sb-icon">📤</span> 分享</button>
+        </div>
       </div>
       <div class="task-card" data-value="18" data-name="陪老人散步" data-index="3">
         <span class="check-mark">✓</span>
@@ -1027,6 +1343,9 @@ ul,ol{list-style:none}
         <div class="task-meta">
           <span class="tag time">⏱️ 15分钟</span>
           <span class="tag value">💛 +18</span>
+        </div>
+        <div class="share-btn-wrap" style="margin-top:8px;justify-content:flex-end;">
+          <button class="share-btn" onclick="event.stopPropagation();shareAchievement('task','陪老人散步','👴')"><span class="sb-icon">📤</span> 分享</button>
         </div>
       </div>
       <div class="task-card" data-value="22" data-name="整理共享书架" data-index="4">
@@ -1037,6 +1356,9 @@ ul,ol{list-style:none}
           <span class="tag time">⏱️ 20分钟</span>
           <span class="tag value">💛 +22</span>
         </div>
+        <div class="share-btn-wrap" style="margin-top:8px;justify-content:flex-end;">
+          <button class="share-btn" onclick="event.stopPropagation();shareAchievement('task','整理共享书架','📚')"><span class="sb-icon">📤</span> 分享</button>
+        </div>
       </div>
       <div class="task-card" data-value="15" data-name="社区花园浇水" data-index="5">
         <span class="check-mark">✓</span>
@@ -1045,6 +1367,9 @@ ul,ol{list-style:none}
         <div class="task-meta">
           <span class="tag time">⏱️ 15分钟</span>
           <span class="tag value">💛 +15</span>
+        </div>
+        <div class="share-btn-wrap" style="margin-top:8px;justify-content:flex-end;">
+          <button class="share-btn" onclick="event.stopPropagation();shareAchievement('task','社区花园浇水','🌿')"><span class="sb-icon">📤</span> 分享</button>
         </div>
       </div>
       <div class="task-card" data-value="20" data-name="帮遛狗" data-index="6">
@@ -1055,6 +1380,9 @@ ul,ol{list-style:none}
           <span class="tag time">⏱️ 15分钟</span>
           <span class="tag value">💛 +20</span>
         </div>
+        <div class="share-btn-wrap" style="margin-top:8px;justify-content:flex-end;">
+          <button class="share-btn" onclick="event.stopPropagation();shareAchievement('task','帮遛狗','🐕')"><span class="sb-icon">📤</span> 分享</button>
+        </div>
       </div>
       <div class="task-card" data-value="25" data-name="社区巡逻" data-index="7">
         <span class="check-mark">✓</span>
@@ -1063,6 +1391,9 @@ ul,ol{list-style:none}
         <div class="task-meta">
           <span class="tag time">⏱️ 20分钟</span>
           <span class="tag value">💛 +25</span>
+        </div>
+        <div class="share-btn-wrap" style="margin-top:8px;justify-content:flex-end;">
+          <button class="share-btn" onclick="event.stopPropagation();shareAchievement('task','社区巡逻','🏪')"><span class="sb-icon">📤</span> 分享</button>
         </div>
       </div>
     </div>
@@ -1301,21 +1632,58 @@ ul,ol{list-style:none}
     </div>
   </div>
 
-  <!-- ===== 好事推荐轮播 ===== -->
+  <!-- ===== 好事推荐轮播（分时段增强） ===== -->
   <div class="section" style="padding:20px 0 40px;">
     <div class="wrap">
       <div class="section-title" style="margin-bottom:20px;">
         <h2>🎯 今日好事推荐</h2>
         <p>基于你的时间、位置和心情，为你推荐最适合的好事</p>
       </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="carouselPeriodLabel" style="padding:4px 14px;border-radius:999px;background:var(--brand-soft);color:var(--brand-deep);font-size:13px;font-weight:700;">🌅 晨间推荐</span>
+          <span id="carouselPeriodDesc" style="font-size:13px;color:var(--ink-soft);">清晨好时光，适合户外活动</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button onclick="scrollCarousel(-1)" style="width:32px;height:32px;border-radius:50%;background:var(--paper);border:1px solid var(--line);font-size:14px;cursor:pointer;transition:all .2s;display:grid;place-items:center;">◀</button>
+          <button onclick="scrollCarousel(1)" style="width:32px;height:32px;border-radius:50%;background:var(--paper);border:1px solid var(--line);font-size:14px;cursor:pointer;transition:all .2s;display:grid;place-items:center;">▶</button>
+          <button onclick="refreshRecommendations()" style="padding:4px 14px;border-radius:999px;font-size:12px;font-weight:600;color:var(--brand);border:1px solid var(--brand-soft);background:var(--brand-soft);cursor:pointer;transition:all .2s;">🔄 换一批</button>
+        </div>
+      </div>
       <div style="position:relative;overflow:hidden;">
         <div id="recommendCarousel" style="display:flex;gap:14px;overflow-x:auto;padding:8px 4px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
           <!-- 由 JS 动态生成 -->
         </div>
-        <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
-          <button onclick="scrollCarousel(-1)" style="width:32px;height:32px;border-radius:50%;background:var(--paper);border:1px solid var(--line);font-size:14px;cursor:pointer;transition:all .2s;display:grid;place-items:center;">◀</button>
-          <button onclick="scrollCarousel(1)" style="width:32px;height:32px;border-radius:50%;background:var(--paper);border:1px solid var(--line);font-size:14px;cursor:pointer;transition:all .2s;display:grid;place-items:center;">▶</button>
-          <button onclick="refreshRecommendations()" style="padding:4px 14px;border-radius:999px;font-size:12px;font-weight:600;color:var(--brand);border:1px solid var(--brand-soft);background:var(--brand-soft);cursor:pointer;transition:all .2s;">🔄 换一批</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 社区广播 (Community Broadcast) ===== -->
+  <div class="section" style="padding:20px 0 40px;">
+    <div class="wrap">
+      <div class="section-title" style="margin-bottom:20px;">
+        <h2>📡 社区广播站</h2>
+        <p>邻居们正在广播的好事动态，实时滚动播报</p>
+      </div>
+      <div class="broadcast-section">
+        <div class="broadcast-header">
+          <h3>
+            <span>📢 社区广播</span>
+            <span class="bc-live"><span class="bc-dot"></span> 实时播报</span>
+          </h3>
+          <span style="font-size:12px;color:var(--ink-faint);" id="bcCount">今日 <strong style="color:var(--brand)">0</strong> 条广播</span>
+        </div>
+        <div class="broadcast-feed" id="broadcastFeed"></div>
+        <div class="broadcast-actions">
+          <button class="btn-broadcast" onclick="toggleBroadcastInput()">📢 我也要广播</button>
+          <button class="btn-broadcast-secondary" onclick="refreshBroadcast()">🔄 刷新广播</button>
+        </div>
+        <div class="broadcast-input-wrap" id="broadcastInputWrap">
+          <textarea id="broadcastText" placeholder="说说你正在做什么好事…（例如：我正在帮邻居取快递 📦）" maxlength="100"></textarea>
+          <div class="bc-input-footer">
+            <span class="bc-char-count"><span id="bcCharCount">0</span>/100</span>
+            <button class="bc-submit" id="bcSubmitBtn" onclick="submitBroadcast()">📢 发布广播</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1345,6 +1713,14 @@ ul,ol{list-style:none}
         <div style="margin-top:16px;height:6px;background:rgba(200,83,58,.1);border-radius:999px;overflow:hidden;">
           <div id="challengeProgress" style="width:0%;height:100%;background:linear-gradient(90deg,var(--brand),var(--gold));border-radius:999px;transition:width .6s ease;"></div>
         </div>
+      </div>
+      <!-- ===== 好事挑战增强：3个轮换挑战 ===== -->
+      <div class="section-title" style="margin-top:24px;margin-bottom:16px;">
+        <h2>⚡ 好事挑战赛</h2>
+        <p>限时挑战，完成即可获得额外好心值奖励</p>
+      </div>
+      <div class="challenge-grid" id="challengeGrid">
+        <!-- 由 JS 动态生成 -->
       </div>
     </div>
   </div>
@@ -1572,13 +1948,14 @@ ul,ol{list-style:none}
     <h2>🧑 我的好心值</h2>
     <p>你的公益足迹在这里积累</p>
   </div>
-  <div class="profile-panel">
+  <div class="profile-panel" style="cursor:pointer;" onclick="openImpact()">
     <div class="profile-header">
       <div class="profile-avatar">好</div>
       <div class="profile-info">
         <div class="profile-name">热心邻居</div>
         <div class="profile-level">🏅 LV3 · 社区热心人</div>
       </div>
+      <span style="font-size:11px;padding:4px 10px;border-radius:999px;background:var(--brand-soft);color:var(--brand-deep);font-weight:600;flex-shrink:0;">查看报告 →</span>
     </div>
     <div class="profile-stats">
       <div class="profile-stat">
@@ -2439,6 +2816,148 @@ ul,ol{list-style:none}
     </div>
   </div>
 
+<div class="deed-flow-overlay" id="deedFlowOverlay">
+  <div class="deed-flow-modal">
+    <div class="dfm-header">
+      <span class="dfm-icon" id="dfmIcon">📦</span>
+      <h3 id="dfmTitle">完成好事流程</h3>
+      <p id="dfmDesc">跟着步骤完成这件好事，每一步都有温暖记录</p>
+    </div>
+    <div class="dfm-steps" id="dfmSteps">
+      <div class="dfm-step active" data-step="1">
+        <span class="dfs-num">1</span>
+        <div class="dfs-content">
+          <div class="dfs-title">确认任务</div>
+          <div class="dfs-desc" id="dfs1Desc">确认你要做的好事内容</div>
+        </div>
+        <span class="dfs-check" id="dfs1Check">✓</span>
+      </div>
+      <div class="dfm-step" data-step="2">
+        <span class="dfs-num">2</span>
+        <div class="dfs-content">
+          <div class="dfs-title">开始行动</div>
+          <div class="dfs-desc" id="dfs2Desc">模拟完成好事的行动过程</div>
+        </div>
+        <span class="dfs-check" id="dfs2Check">✓</span>
+      </div>
+      <div class="dfm-step" data-step="3">
+        <span class="dfs-num">3</span>
+        <div class="dfs-content">
+          <div class="dfs-title">记录成果</div>
+          <div class="dfs-desc" id="dfs3Desc">拍照或记录完成情况</div>
+        </div>
+        <span class="dfs-check" id="dfs3Check">✓</span>
+      </div>
+      <div class="dfm-step" data-step="4">
+        <span class="dfs-num">4</span>
+        <div class="dfs-content">
+          <div class="dfs-title">获得反馈</div>
+          <div class="dfs-desc" id="dfs4Desc">收到邻居的感谢和好评</div>
+        </div>
+        <span class="dfs-check" id="dfs4Check">✓</span>
+      </div>
+    </div>
+    <div class="dfm-actions">
+      <button class="dfm-btn dfm-btn-secondary" onclick="closeDeedFlow()">关闭</button>
+      <button class="dfm-btn dfm-btn-primary" id="dfmNextBtn" onclick="nextDeedStep()">下一步 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 智能助手 ===== -->
+<button class="assistant-btn" id="assistantBtn" onclick="toggleAssistant()" title="智能助手">🤖</button>
+<div class="assistant-panel" id="assistantPanel">
+  <div class="ap-header">
+    <div class="ap-avatar">🤖</div>
+    <div class="ap-info">
+      <div class="ap-name">好事助手 · 小近</div>
+      <div class="ap-status">🟢 在线中</div>
+    </div>
+    <div class="ap-close" onclick="toggleAssistant()">✕</div>
+  </div>
+  <div class="ap-body" id="assistantBody">
+    <div class="ap-msg bot">👋 你好！我是好事助手小近，有什么可以帮你的吗？</div>
+    <div class="ap-msg bot">💡 试试对我说：<br>• "推荐好事" — 分时段好建议<br>• "我的成就" — 查看个人成就<br>• "今日打卡" — 记录心情领奖励<br>• "查看挑战" — 限时挑战任务<br>• "社区动态" — 了解社区新鲜事<br>• "帮助指南" — 查看使用帮助</div>
+  </div>
+  <div class="ap-footer">
+    <input type="text" id="assistantInput" placeholder="输入消息..." onkeydown="if(event.key==='Enter')sendAssistant()">
+    <button class="ap-send" onclick="sendAssistant()">➤</button>
+  </div>
+</div>
+
+<!-- ===== 邻里聊天 ===== -->
+<button class="chat-btn" id="chatBtn" onclick="toggleChat()" title="邻里聊天">
+  💬
+  <span class="cb-dot"></span>
+</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="cp-header">
+    <div class="cp-avatar" style="background:var(--brand)">👩</div>
+    <div class="cp-info">
+      <div class="cp-name" id="chatPartnerName">张阿姨</div>
+      <div class="cp-status">🟢 在线 · 3栋</div>
+    </div>
+    <div class="cp-close" onclick="toggleChat()">✕</div>
+  </div>
+  <div class="cp-body" id="chatBody">
+    <div class="cp-msg other">你好呀！今天天气真好 ☀️</div>
+    <div class="cp-msg other">我刚在楼下花园浇完水，看到你最近做了好多好事呢！</div>
+  </div>
+  <div class="cp-footer">
+    <input type="text" id="chatInput" placeholder="回复邻居..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="cp-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- ===== 个人影响看板 ===== -->
+<div class="impact-overlay" id="impactOverlay">
+  <div class="impact-modal">
+    <div class="im-header">
+      <span class="im-badge">🌟 个人影响报告</span>
+      <h3>你的好事足迹</h3>
+      <p>每一件小事都在让社区变得更温暖</p>
+    </div>
+    <div class="im-stats">
+      <div class="im-stat">
+        <div class="ims-num" id="impactDeeds">42</div>
+        <div class="ims-label">已完成好事</div>
+        <div class="ims-sub">累计做好事次数</div>
+      </div>
+      <div class="im-stat leaf">
+        <div class="ims-num" id="impactPoints">2,580</div>
+        <div class="ims-label">累计好心值</div>
+        <div class="ims-sub">社区贡献总价值</div>
+      </div>
+      <div class="im-stat sky">
+        <div class="ims-num" id="impactPeople">18</div>
+        <div class="ims-label">帮助过的邻居</div>
+        <div class="ims-sub">正在不断扩大</div>
+      </div>
+      <div class="im-stat gold">
+        <div class="ims-num" id="impactDays">24</div>
+        <div class="ims-label">坚持天数</div>
+        <div class="ims-sub">最长连续记录</div>
+      </div>
+    </div>
+    <div class="im-milestones">
+      <h4>🏅 里程碑成就</h4>
+      <div class="im-milestone done"><span class="ims-emoji">🌟</span> 完成第1件好事</div>
+      <div class="im-milestone done"><span class="ims-emoji">💪</span> 累计10件好事</div>
+      <div class="im-milestone done"><span class="ims-emoji">🔥</span> 连续7天打卡</div>
+      <div class="im-milestone"><span class="ims-emoji">🏆</span> 累计50件好事 — 还差 <b>8</b> 件</div>
+      <div class="im-milestone"><span class="ims-emoji">👑</span> 帮助30位邻居 — 还差 <b>12</b> 位</div>
+    </div>
+    <div class="im-actions" style="margin-bottom:12px;">
+      <button class="im-btn" onclick="closeImpact()">我知道了 👍</button>
+    </div>
+    <div class="share-btn-wrap" style="justify-content:center;padding-top:12px;border-top:1px solid var(--line);">
+      <button class="share-btn primary" onclick="shareAchievement('impact')"><span class="sb-icon">📤</span> 分享成就到朋友圈</button>
+      <button class="share-btn" onclick="shareAchievement('wechat')"><span class="sb-icon">💬</span> 分享到微信</button>
+      <button class="share-btn" onclick="shareAchievement('weibo')"><span class="sb-icon">📱</span> 分享到微博</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== Footer ===== -->
 <footer class="footer">
   <div class="wrap">
@@ -3104,6 +3623,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!localStorage.getItem('haoshijin_onboarded')) {
     setTimeout(showOnboarding, 800);
   }
+
+  // 好事推荐轮播初始化
+  initRecommendations();
+  // 好事挑战初始化
+  initChallenges();
+  // 社区广播初始化
+  initBroadcastFeed();
 
   // Journey bar scroll tracking
   document.addEventListener('scroll', updateJourneyBar, { passive: true });
@@ -4210,6 +4736,95 @@ function updateChallengeUI() {
   document.getElementById('challengeProgress').style.width = pct + '%';
 }
 
+// ===== 好事挑战赛（3个轮换挑战） =====
+var challengePool = [
+  { icon: '🏆', title: '对5个陌生人微笑问好', desc: '微笑是最好的语言，今天向遇到的邻居、保安、店员微笑问好，传递温暖', points: 20, time: '今日', progress: 0, target: 5, tag: 'hot', tagText: '🔥 热门' },
+  { icon: '🌿', title: '捡起8件路上的垃圾', desc: '看到路上的垃圾随手捡起，让社区更干净整洁，保护环境人人有责', points: 25, time: '今日', progress: 0, target: 8, tag: 'new', tagText: '🆕 最新' },
+  { icon: '📦', title: '帮3位邻居做小事', desc: '帮邻居取快递、按电梯、提东西，举手之劳温暖邻里', points: 30, time: '今日', progress: 0, target: 3, tag: 'time', tagText: '⏳ 限时' },
+  { icon: '💬', title: '给5个人真诚赞美', desc: '真诚地赞美同事、家人或邻居，让他们感受到被看见和被重视', points: 20, time: '今日', progress: 0, target: 5, tag: 'hot', tagText: '🔥 热门' },
+  { icon: '🚲', title: '整理6辆共享单车', desc: '把路边倒下的共享单车扶正摆好，让城市更有序，出行更便利', points: 15, time: '今日', progress: 0, target: 6, tag: 'new', tagText: '🆕 最新' },
+  { icon: '📱', title: '教2位老人用手机', desc: '教社区老人使用手机功能，帮助跨越数字鸿沟，传递科技温度', points: 35, time: '今日', progress: 0, target: 2, tag: 'time', tagText: '⏳ 限时' },
+  { icon: '👴', title: '陪伴1位老人聊天', desc: '陪社区老人散步聊天半小时，倾听他们的故事，给予温暖陪伴', points: 40, time: '今日', progress: 0, target: 1, tag: 'time', tagText: '⏳ 限时' },
+  { icon: '♻️', title: '分类引导10人次', desc: '在垃圾投放点引导居民正确分类，让环保意识深入人心', points: 25, time: '今日', progress: 0, target: 10, tag: 'hot', tagText: '🔥 热门' }
+];
+
+var currentChallenges = [];
+var challengeTimer = null;
+
+function initChallenges() {
+  rotateChallenges();
+  // 每60秒轮换挑战
+  if (challengeTimer) clearInterval(challengeTimer);
+  challengeTimer = setInterval(rotateChallenges, 60000);
+}
+
+function rotateChallenges() {
+  var shuffled = challengePool.slice().sort(function() { return 0.5 - Math.random(); });
+  currentChallenges = shuffled.slice(0, 3);
+  renderChallenges();
+}
+
+function renderChallenges() {
+  var grid = document.getElementById('challengeGrid');
+  if (!grid) return;
+  var html = '';
+  for (var i = 0; i < currentChallenges.length; i++) {
+    var c = currentChallenges[i];
+    var pct = c.target > 0 ? Math.round((c.progress / c.target) * 100) : 0;
+    var isCompleted = c.progress >= c.target;
+    var btnClass = isCompleted ? 'completed' : (c.accepted ? 'accepted' : 'primary');
+    var btnText = isCompleted ? '✅ 已完成 +' + c.points : (c.accepted ? '⏳ 进行中' : '🚀 接受挑战');
+    html += '<div class="challenge-card' + (isCompleted ? ' completed' : '') + '" style="animation:slide-up .4s ease both;animation-delay:' + (i * 0.1) + 's;">';
+    html += '<span class="ch-badge ' + c.tag + '">' + c.tagText + '</span>';
+    html += '<h4>' + c.icon + ' ' + c.title + '</h4>';
+    html += '<p>' + c.desc + '</p>';
+    html += '<div class="ch-meta">';
+    html += '<span class="ch-meta-item">⏱️ ' + c.time + '</span>';
+    html += '<span class="ch-meta-item">🎯 目标 ' + c.target + ' 次</span>';
+    html += '<span class="ch-meta-item"><span class="ch-points">💛 +' + c.points + '</span></span>';
+    html += '</div>';
+    if (!isCompleted) {
+      html += '<div class="ch-progress"><div class="ch-progress-fill" style="width:' + pct + '%"></div></div>';
+    }
+    html += '<button class="ch-btn ' + btnClass + '" onclick="acceptChallenge(' + i + ')"' + (isCompleted ? ' disabled' : '') + '>' + btnText + '</button>';
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function acceptChallenge(index) {
+  var c = currentChallenges[index];
+  if (!c || c.progress >= c.target) return;
+  
+  if (!c.accepted) {
+    c.accepted = true;
+    showToast('success', '🚀 挑战已接受！', '你接受了「' + c.title + '」，完成可获得 💛+' + c.points + ' 好心值！');
+  }
+  
+  // 模拟进度增长
+  c.progress = Math.min(c.progress + 1, c.target);
+  renderChallenges();
+  
+  if (c.progress >= c.target) {
+    // 挑战完成
+    var heartEl = document.getElementById('heartValue');
+    if (heartEl) {
+      var currentVal = parseInt(heartEl.textContent.replace(/,/g, ''));
+      heartEl.textContent = (currentVal + c.points).toLocaleString();
+    }
+    var weeklyEl = document.getElementById('weeklyEarned');
+    if (weeklyEl) {
+      var weeklyVal = parseInt(weeklyEl.textContent.replace('+', '').replace(/,/g, ''));
+      weeklyEl.textContent = '+' + (weeklyVal + c.points).toLocaleString();
+    }
+    showToast('success', '🎉 挑战完成！', '你完成了「' + c.title + '」，获得 💛+' + c.points + ' 好心值奖励！');
+    updateWarmIndex();
+    createConfetti();
+  } else {
+    showToast('success', '👍 进度更新！', '「' + c.title + '」进度：' + c.progress + '/' + c.target + '，继续加油！');
+  }
+}
+
 // ===== 温暖指数 =====
 function initWarmIndex() {
   var base = 65 + Math.floor(Math.random() * 25);
@@ -4265,6 +4880,84 @@ function logMood(mood) {
   });
   event.currentTarget.style.borderColor = 'var(--brand)';
   event.currentTarget.style.background = 'var(--brand-soft)';
+}
+
+// ===== 每日心情打卡 selectMood =====
+function selectMood(mood) {
+  var moodNames = {
+    '😄': '超开心',
+    '😊': '开心',
+    '😐': '一般',
+    '😢': '不太好',
+    '😌': '平静'
+  };
+  var moodMsgs = {
+    '😄': '太棒了！你今天充满正能量，继续传递温暖吧！',
+    '😊': '保持好心情，你的笑容是社区最美的风景！',
+    '😐': '没关系，有时候平静也是一种力量，做件好事试试？',
+    '😢': '别难过，做一件温暖的小事，心情会变好的 🤗',
+    '😌': '内心平静，就是最好的状态，今天也是温暖的一天'
+  };
+  
+  // 更新状态
+  document.getElementById('moodStatus').textContent = '今日已打卡 ✓';
+  document.getElementById('moodStatus').style.color = 'var(--leaf)';
+  
+  // 显示结果
+  var result = document.getElementById('moodResult');
+  result.classList.add('show');
+  result.querySelector('.mr-icon').textContent = mood;
+  document.getElementById('moodResultTitle').textContent = '心情已记录：' + moodNames[mood] + ' ' + mood;
+  document.getElementById('moodResultDesc').textContent = moodMsgs[mood] || '感谢你的分享，保持好心情！';
+  document.getElementById('moodResultPoints').textContent = '💛 +5';
+  
+  // 更新今日心情图标
+  document.getElementById('moodTodayItem').textContent = mood;
+  document.getElementById('moodTodayItem').style.background = 'var(--brand-soft)';
+  document.getElementById('moodTodayItem').style.borderColor = 'var(--brand)';
+  
+  // 高亮选中的心情按钮
+  var btns = document.querySelectorAll('.mood-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.remove('selected');
+    if (btns[i].getAttribute('onclick').indexOf("'" + mood + "'") !== -1) {
+      btns[i].classList.add('selected');
+    }
+  }
+  
+  // 禁用所有按钮
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].disabled = true;
+    btns[i].style.cursor = 'default';
+    btns[i].style.opacity = '0.6';
+  }
+  
+  // 好心值奖励
+  var heartEl = document.getElementById('heartValue');
+  if (heartEl) {
+    var currentVal = parseInt(heartEl.textContent.replace(/,/g, ''));
+    heartEl.textContent = (currentVal + 5).toLocaleString();
+  }
+  var weeklyEl = document.getElementById('weeklyEarned');
+  if (weeklyEl) {
+    var weeklyVal = parseInt(weeklyEl.textContent.replace('+', '').replace(/,/g, ''));
+    weeklyEl.textContent = '+' + (weeklyVal + 5).toLocaleString();
+  }
+  
+  // 浮动+5动画
+  createPointsFloat();
+  
+  showToast('success', '😊 心情打卡 +5 💛', '今日心情：' + moodNames[mood] + '，感谢你的分享！');
+}
+
+function createPointsFloat() {
+  var el = document.createElement('div');
+  el.className = 'points-float';
+  el.textContent = '💛 +5';
+  el.style.left = (Math.random() * 60 + 20) + '%';
+  el.style.top = '40%';
+  document.body.appendChild(el);
+  setTimeout(function() { el.remove(); }, 1200);
 }
 
 // ===== 好事提醒 =====
@@ -4381,22 +5074,55 @@ function simulateNeighborAction() {
   }, 500);
 }
 
-// ===== 好事推荐轮播 =====
+// ===== 好事推荐轮播（分时段增强） =====
 var recommendData = [
-  { icon: '📦', title: '帮邻居取快递', desc: '顺路帮邻居把快递送到门口，只要5分钟', time: '5分钟', points: 8, tag: '邻里互助', color: '#fef3ef' },
-  { icon: '🚲', title: '整理共享单车', desc: '把路边倒下的共享单车扶正摆好', time: '3分钟', points: 6, tag: '随手环保', color: '#edf7f0' },
-  { icon: '😊', title: '对邻居微笑问好', desc: '对遇到的邻居微笑说声"你好"', time: '30秒', points: 3, tag: '传递温暖', color: '#fef6e8' },
-  { icon: '🌿', title: '给绿植浇水', desc: '给楼道或办公室的绿植浇浇水', time: '3分钟', points: 5, tag: '美化环境', color: '#edf7f0' },
-  { icon: '📱', title: '教老人用手机', desc: '教社区老人用手机挂号、发微信', time: '10分钟', points: 15, tag: '数字助老', color: '#eef4fa' },
-  { icon: '🧹', title: '整理公共区域', desc: '整理楼道、茶水间等公共区域', time: '5分钟', points: 10, tag: '公共维护', color: '#fef3ef' },
-  { icon: '☕', title: '给同事冲杯咖啡', desc: '午休后帮同事冲杯咖啡或倒杯水', time: '2分钟', points: 6, tag: '暖心瞬间', color: '#f5f0fa' },
-  { icon: '🗑️', title: '随手捡垃圾', desc: '看到地上的垃圾随手捡起', time: '1分钟', points: 5, tag: '随手环保', color: '#edf7f0' },
-  { icon: '👴', title: '陪老人散步', desc: '陪社区老人散步聊天', time: '15分钟', points: 18, tag: '暖心陪伴', color: '#fef6e8' },
-  { icon: '📚', title: '整理共享书架', desc: '把共享书架上的书整理整齐', time: '5分钟', points: 8, tag: '公共维护', color: '#eef4fa' }
+  // 晨间推荐 (6:00-12:00)
+  { icon: '🌿', title: '晨间花园浇水', desc: '清晨给社区花园的花草浇水，开启美好的一天', time: '10分钟', points: 12, tag: '晨间专属', color: '#e7f0e9', period: 'morning' },
+  { icon: '🥐', title: '帮邻居带早餐', desc: '买早餐时顺手帮邻居带一份，顺便聊聊天', time: '5分钟', points: 6, tag: '晨间专属', color: '#fef6e8', period: 'morning' },
+  { icon: '🏃', title: '晨跑顺手捡垃圾', desc: '晨跑时带上垃圾袋，边运动边保护环境', time: '15分钟', points: 14, tag: '晨间专属', color: '#edf7f0', period: 'morning' },
+  // 午后推荐 (12:00-18:00)
+  { icon: '📱', title: '教老人用手机', desc: '利用午休教社区老人用手机挂号、支付', time: '15分钟', points: 20, tag: '午后推荐', color: '#eef4fa', period: 'afternoon' },
+  { icon: '📚', title: '整理共享书架', desc: '午饭后到社区图书馆整理共享书架，让书籍有序', time: '15分钟', points: 18, tag: '午后推荐', color: '#f5f0fa', period: 'afternoon' },
+  { icon: '♻️', title: '垃圾分类引导', desc: '午后在垃圾投放点引导居民正确分类', time: '15分钟', points: 20, tag: '午后推荐', color: '#e7f0e9', period: 'afternoon' },
+  // 傍晚推荐 (18:00-22:00)
+  { icon: '👴', title: '陪老人散步', desc: '傍晚陪社区老人在小区散步聊天，享受夕阳', time: '15分钟', points: 18, tag: '傍晚推荐', color: '#fef6e8', period: 'evening' },
+  { icon: '🏪', title: '社区巡逻', desc: '傍晚社区巡逻，检查公共设施安全', time: '20分钟', points: 22, tag: '傍晚推荐', color: '#eef4fa', period: 'evening' },
+  { icon: '🐕', title: '帮遛狗', desc: '傍晚帮邻居遛狗，让狗狗在晚饭前活动活动', time: '15分钟', points: 18, tag: '傍晚推荐', color: '#f5f0fa', period: 'evening' },
+  // 全天通用
+  { icon: '📦', title: '帮邻居取快递', desc: '顺路帮邻居把快递送到门口，只要5分钟', time: '5分钟', points: 8, tag: '邻里互助', color: '#fef3ef', period: 'all' },
+  { icon: '🚲', title: '整理共享单车', desc: '把路边倒下的共享单车扶正摆好', time: '3分钟', points: 6, tag: '随手环保', color: '#edf7f0', period: 'all' },
+  { icon: '😊', title: '对邻居微笑问好', desc: '对遇到的邻居微笑说声"你好"', time: '30秒', points: 3, tag: '传递温暖', color: '#fef6e8', period: 'all' },
+  { icon: '🧹', title: '整理公共区域', desc: '整理楼道、茶水间等公共区域', time: '5分钟', points: 10, tag: '公共维护', color: '#fef3ef', period: 'all' },
+  { icon: '☕', title: '给同事冲杯咖啡', desc: '午休后帮同事冲杯咖啡或倒杯水', time: '2分钟', points: 6, tag: '暖心瞬间', color: '#f5f0fa', period: 'all' },
+  { icon: '🗑️', title: '随手捡垃圾', desc: '看到地上的垃圾随手捡起', time: '1分钟', points: 5, tag: '随手环保', color: '#edf7f0', period: 'all' }
 ];
 
+function getCurrentPeriod() {
+  var hour = new Date().getHours();
+  if (hour >= 6 && hour < 12) return 'morning';
+  if (hour >= 12 && hour < 18) return 'afternoon';
+  return 'evening';
+}
+
+function getPeriodLabel() {
+  var hour = new Date().getHours();
+  if (hour >= 6 && hour < 12) return { icon: '🌅', label: '晨间推荐', desc: '清晨好时光，适合户外活动' };
+  if (hour >= 12 && hour < 18) return { icon: '☀️', label: '午后推荐', desc: '午后闲暇，做点温暖小事' };
+  return { icon: '🌆', label: '傍晚推荐', desc: '夕阳西下，让温暖延续' };
+}
+
 function initRecommendations() {
+  updateCarouselPeriodLabel();
   renderRecommendations();
+}
+
+function updateCarouselPeriodLabel() {
+  var labelEl = document.getElementById('carouselPeriodLabel');
+  if (!labelEl) return;
+  var p = getPeriodLabel();
+  labelEl.innerHTML = p.icon + ' ' + p.label;
+  var descEl = document.getElementById('carouselPeriodDesc');
+  if (descEl) descEl.textContent = p.desc;
 }
 
 function renderRecommendations() {
@@ -4404,12 +5130,13 @@ function renderRecommendations() {
   if (!container) return;
   
   var html = '';
-  var picks = getRandomPicks();
+  var picks = getTimeBasedPicks();
   picks.forEach(function(item) {
+    var periodLabel = item.period !== 'all' ? ('<span style="font-size:10px;padding:1px 6px;border-radius:4px;background:' + item.color + ';color:var(--brand);font-weight:600;display:inline-block;margin-top:2px;">' + getPeriodLabel().icon + ' ' + getPeriodLabel().label + '</span>') : '';
     html += '<div style="flex:0 0 220px;scroll-snap-align:start;background:linear-gradient(135deg,#fff,' + item.color + ');border-radius:14px;padding:20px;border:1px solid #eee8e2;box-shadow:var(--shadow);transition:all .2s;cursor:pointer;" onclick="claimRecommendation(\'' + item.title + '\', ' + item.points + ')">';
     html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
     html += '<div style="width:40px;height:40px;border-radius:12px;background:' + item.color + ';display:grid;place-items:center;font-size:22px;">' + item.icon + '</div>';
-    html += '<div><div style="font-size:14px;font-weight:700;">' + item.title + '</div><div style="font-size:10px;padding:1px 6px;border-radius:4px;background:' + item.color + ';color:var(--brand);font-weight:600;display:inline-block;margin-top:2px;">' + item.tag + '</div></div>';
+    html += '<div><div style="font-size:14px;font-weight:700;">' + item.title + '</div>' + periodLabel + '</div>';
     html += '</div>';
     html += '<div style="font-size:12px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px;">' + item.desc + '</div>';
     html += '<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--ink-faint);padding-top:10px;border-top:1px solid #f5f0eb;">';
@@ -4419,14 +5146,27 @@ function renderRecommendations() {
   container.innerHTML = html;
 }
 
-function getRandomPicks() {
-  var shuffled = recommendData.slice().sort(function() { return 0.5 - Math.random(); });
-  return shuffled.slice(0, 6);
+function getTimeBasedPicks() {
+  var period = getCurrentPeriod();
+  // 优先选择当前时段的推荐
+  var periodItems = recommendData.filter(function(item) { return item.period === period; });
+  var allItems = recommendData.filter(function(item) { return item.period === 'all'; });
+  
+  // 打乱
+  periodItems.sort(function() { return 0.5 - Math.random(); });
+  allItems.sort(function() { return 0.5 - Math.random(); });
+  
+  // 取3个时段专属 + 3个通用推荐
+  var picks = periodItems.slice(0, 3);
+  picks = picks.concat(allItems.slice(0, 3));
+  return picks;
 }
 
 function refreshRecommendations() {
+  updateCarouselPeriodLabel();
   renderRecommendations();
-  showToast('success', '🔄 已刷新推荐！', '为你重新推荐了6件好事，看看有没有适合你的');
+  var p = getPeriodLabel();
+  showToast('success', '🔄 已刷新推荐！', '当前为' + p.icon + p.label + '，为你推荐了6件适合的好事');
 }
 
 function scrollCarousel(direction) {
@@ -4463,23 +5203,193 @@ function updateSharePreview() {
   document.getElementById('shareDate').textContent = '今天 ' + new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
 }
 
-function shareAchievement() {
-  var type = document.getElementById('shareType').value;
-  var data = shareData[type];
-  if (!data) return;
+function shareAchievement(target, taskName, taskIcon) {
+  // 如果是从分享预览区调用（无参数）
+  if (!target) {
+    var type = document.getElementById('shareType').value;
+    var data = shareData[type];
+    if (!data) return;
+    doShareAchievement(data.icon, data.title, data.desc, data.points, data.time);
+    return;
+  }
   
+  // 如果是从任务卡片或影响看板调用
+  if (target === 'task' && taskName) {
+    var icon = taskIcon || '📌';
+    // 生成分享描述
+    var desc = '今天' + taskName + '，做了一件温暖的小事，心里暖暖的！';
+    var points = 0;
+    // 尝试从任务卡片获取好心值
+    var card = event && event.currentTarget && event.currentTarget.closest('.task-card');
+    if (card && card.dataset.value) {
+      points = parseInt(card.dataset.value);
+    }
+    doShareAchievement(icon, taskName, desc, points, '15分钟');
+    return;
+  }
+  
+  // 社交分享模拟
+  var socialNames = {
+    'impact': '朋友圈',
+    'wechat': '微信好友',
+    'weibo': '微博'
+  };
+  var socialName = socialNames[target] || '社交平台';
+  var likes = 8 + Math.floor(Math.random() * 25);
+  showToast('success', '📤 分享到' + socialName + '成功！', '你的好事已分享，' + likes + ' 位好友点赞了！');
+  updateWarmIndex();
+}
+
+function doShareAchievement(icon, title, desc, points, time) {
   var likes = 5 + Math.floor(Math.random() * 20);
   document.getElementById('shareLikes').textContent = likes;
   document.getElementById('shareResult').style.display = 'block';
-  
-  showToast('success', '📤 分享成功！', '你的好事已分享到社区，' + likes + ' 位邻居点赞了！');
+  showToast('success', '📤 分享成功！', '你分享了「' + title + '」，' + likes + ' 位邻居点赞了！');
   updateWarmIndex();
-  
-  // 自动隐藏结果
   setTimeout(function() {
     document.getElementById('shareResult').style.display = 'none';
   }, 5000);
 }
+
+// ===== 社区广播功能 =====
+var broadcastData = [
+  { name: '小鹿', avatar: '小', color: '#c8533a', text: '刚帮楼下大爷把快递送到家门口，大爷非要给我削苹果 🍎', time: '2分钟前', likes: 8 },
+  { name: '张阿姨', avatar: '张', color: '#3f7d5b', text: '在小区花园浇水中，今天的花开得特别好 🌸', time: '5分钟前', likes: 12 },
+  { name: '李先生', avatar: '李', color: '#3b6b8c', text: '地铁口整理了6辆共享单车，整条街都整齐了！', time: '8分钟前', likes: 15 },
+  { name: '小陈', avatar: '陈', color: '#c98a2b', text: '教王奶奶用手机挂号成功，她开心得像个孩子 📱', time: '12分钟前', likes: 20 },
+  { name: '赵叔', avatar: '赵', color: '#6b4a7a', text: '巡逻发现楼道灯坏了，已报修，大家注意安全！', time: '15分钟前', likes: 6 },
+  { name: '林女士', avatar: '林', color: '#9e3b25', text: '整理共享书架时发现一本好书，推荐给大家 📚', time: '20分钟前', likes: 10 },
+  { name: '周同学', avatar: '周', color: '#2a5a7a', text: '帮邻居遛狗回来，狗狗好开心，我也锻炼了身体 🐕', time: '25分钟前', likes: 14 }
+];
+var broadcastTimer = null;
+
+function initBroadcastFeed() {
+  renderBroadcast();
+  // 启动轮播，每5秒新增一条
+  if (broadcastTimer) clearInterval(broadcastTimer);
+  broadcastTimer = setInterval(addBroadcast, 5000);
+}
+
+function renderBroadcast() {
+  var feed = document.getElementById('broadcastFeed');
+  if (!feed) return;
+  var html = '';
+  for (var i = 0; i < broadcastData.length; i++) {
+    var b = broadcastData[i];
+    html += '<div class="bc-item">';
+    html += '<div class="bc-avatar" style="background:' + b.color + '">' + b.avatar + '</div>';
+    html += '<div class="bc-body">';
+    html += '<div class="bc-text"><span class="bc-name">' + b.name + '</span> <span class="bc-action">' + b.text + '</span></div>';
+    html += '<div class="bc-time">' + b.time + '</div>';
+    html += '</div>';
+    html += '<button class="bc-likes" onclick="toggleBroadcastLike(this)">❤️ <span>' + b.likes + '</span></button>';
+    html += '</div>';
+  }
+  feed.innerHTML = html;
+  updateBroadcastCount();
+}
+
+function addBroadcast() {
+  var names = ['小鹿', '张阿姨', '李先生', '小陈', '赵叔', '林女士', '周同学', '王阿姨', '老张', '阿杰'];
+  var actions = [
+    '刚完成一件好事，心情超好！✨',
+    '在社区巡逻中，一切正常 🏪',
+    '帮邻居取了快递，顺手的事 📦',
+    '在教老人用手机，他们学得好认真 📱',
+    '给花园浇了水，花儿更美了 🌿',
+    '整理完共享书架，发现一本好书 📚',
+    '刚陪老人散步回来，聊得好开心 👴',
+    '垃圾分类引导中，大家越来越自觉了 ♻️'
+  ];
+  var colors = ['#c8533a','#3f7d5b','#c98a2b','#3b6b8c','#6b4a7a','#9e3b25','#2a5a7a','#5a3a6a'];
+  var name = names[Math.floor(Math.random() * names.length)];
+  var action = actions[Math.floor(Math.random() * actions.length)];
+  var color = colors[Math.floor(Math.random() * colors.length)];
+  var avatar = name.charAt(0);
+  var likes = Math.floor(Math.random() * 10) + 1;
+  
+  var b = { name: name, avatar: avatar, color: color, text: action, time: '刚刚', likes: likes };
+  broadcastData.unshift(b);
+  
+  // 限制最多20条
+  if (broadcastData.length > 20) {
+    broadcastData.pop();
+  }
+  
+  renderBroadcast();
+  showToast('info', '📢 新广播', name + '：' + action);
+}
+
+function toggleBroadcastLike(btn) {
+  btn.classList.toggle('liked');
+  var span = btn.querySelector('span');
+  var count = parseInt(span.textContent);
+  if (btn.classList.contains('liked')) {
+    span.textContent = count + 1;
+  } else {
+    span.textContent = count - 1;
+  }
+}
+
+function toggleBroadcastInput() {
+  var wrap = document.getElementById('broadcastInputWrap');
+  wrap.classList.toggle('show');
+  if (wrap.classList.contains('show')) {
+    document.getElementById('broadcastText').focus();
+  }
+}
+
+function submitBroadcast() {
+  var textarea = document.getElementById('broadcastText');
+  var text = textarea.value.trim();
+  if (!text) {
+    showToast('error', '请输入广播内容', '说说你正在做什么好事吧');
+    return;
+  }
+  
+  var colors = ['#c8533a','#3f7d5b','#c98a2b','#3b6b8c','#6b4a7a'];
+  var color = colors[Math.floor(Math.random() * colors.length)];
+  var b = { name: '我', avatar: '我', color: color, text: text, time: '刚刚', likes: 0 };
+  broadcastData.unshift(b);
+  
+  if (broadcastData.length > 20) {
+    broadcastData.pop();
+  }
+  
+  renderBroadcast();
+  textarea.value = '';
+  document.getElementById('broadcastInputWrap').classList.remove('show');
+  showToast('success', '📢 广播已发布！', '你的好事已广播给全社区，温暖在传递 ❤️');
+  updateWarmIndex();
+}
+
+function refreshBroadcast() {
+  renderBroadcast();
+  showToast('success', '🔄 已刷新广播', '播报了 ' + broadcastData.length + ' 条最新动态');
+}
+
+function updateBroadcastCount() {
+  var el = document.getElementById('bcCount');
+  if (el) {
+    el.innerHTML = '今日 <strong style="color:var(--brand)">' + broadcastData.length + '</strong> 条广播';
+  }
+}
+
+// 广播输入字数统计
+document.addEventListener('DOMContentLoaded', function() {
+  var bcText = document.getElementById('broadcastText');
+  if (bcText) {
+    bcText.addEventListener('input', function() {
+      var len = this.value.length;
+      var max = parseInt(this.getAttribute('maxlength')) || 100;
+      document.getElementById('bcCharCount').textContent = len;
+      var btn = document.getElementById('bcSubmitBtn');
+      if (btn) {
+        btn.disabled = len === 0;
+      }
+    });
+  }
+});
 
 // ===== 好事反馈墙 - 弹窗控制 =====
 var fmRatingVal = 5;
@@ -4621,22 +5531,366 @@ function restartQuiz() {
   showToast('info', '🔄 已重置', '所有题目已重置，重新开始答题吧！');
 }
 
-// ===== 初始化新模块 =====
-document.addEventListener('DOMContentLoaded', function() {
-  // 设置反馈墙默认评分
-  setFmRating(5);
-  // 更新计划本统计
-  updatePlannerStats();
+// ===== v2.0 新功能：通知中心 =====
+var notifications = [
+  { icon: '💛', iconBg: '#edf7f0', title: '好心值 +15', desc: '完成"帮邻居取快递"，获得15好心值', time: '刚刚', badge: 'NEW', badgeColor: '#c8533a' },
+  { icon: '🏅', iconBg: '#fef6e8', title: '成就解锁：助人新手', desc: '累计完成10件好事，解锁"助人新手"徽章', time: '5分钟前', badge: 'NEW', badgeColor: '#c8533a' },
+  { icon: '👋', iconBg: '#fef3ef', title: '新邻居打了招呼', desc: '5栋小陈向你打了招呼："你好！经常看到你做好事"', time: '15分钟前', badge: '', badgeColor: '' },
+  { icon: '🔥', iconBg: '#fef3ef', title: '连续打卡7天', desc: '你已经连续7天做好事，获得"热心坚持"成就', time: '1小时前', badge: '', badgeColor: '' },
+  { icon: '📢', iconBg: '#eef4fa', title: '社区公告：周末跳蚤市场', desc: '本周六上午9点在小区广场举办跳蚤市场', time: '2小时前', badge: '', badgeColor: '' },
+  { icon: '⭐', iconBg: '#f5f0fa', title: '收到好评', desc: '张阿姨给你的帮助打了5星好评："太热心了！"', time: '3小时前', badge: '', badgeColor: '' }
+];
+
+function toggleNotifications() {
+  var panel = document.getElementById('notifPanel');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    renderNotifications();
+    document.getElementById('notifDot').style.display = 'none';
+  }
+}
+
+function renderNotifications() {
+  var list = document.getElementById('notifList');
+  var html = '';
+  for (var i = 0; i < notifications.length; i++) {
+    var n = notifications[i];
+    html += '<div class="np-item">';
+    html += '<div class="np-icon" style="background:' + n.iconBg + '">' + n.icon + '</div>';
+    html += '<div class="np-body">';
+    html += '<div class="np-title">' + n.title + '</div>';
+    html += '<div class="np-desc">' + n.desc + '</div>';
+    html += '<div class="np-time">' + n.time + '</div>';
+    html += '</div>';
+    if (n.badge) {
+      html += '<span class="np-badge" style="background:' + n.badgeColor + ';color:#fff;">' + n.badge + '</span>';
+    }
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+
+function clearNotifications() {
+  document.getElementById('notifList').innerHTML = '<div style="text-align:center;padding:24px;font-size:13px;color:var(--ink-faint);">✅ 暂无新通知</div>';
+  document.getElementById('notifDot').style.display = 'none';
+  showToast('success', '🔔 已全部标记已读', '通知中心已清空');
+}
+
+// 点击页面其他地方关闭通知面板
+document.addEventListener('click', function(e) {
+  var bell = document.getElementById('notifBell');
+  var panel = document.getElementById('notifPanel');
+  if (bell && panel && !bell.contains(e.target) && !panel.contains(e.target)) {
+    panel.classList.remove('show');
+  }
 });
 
-// ===== 初始化 =====原代码保留勿删
+// ===== v2.0 新功能：好事完成流程 =====
+var deedFlowStep = 1;
+var deedFlowData = null;
+
+function openDeedFlow(taskName, taskIcon, taskValue) {
+  deedFlowStep = 1;
+  deedFlowData = { name: taskName, icon: taskIcon, value: taskValue };
+  document.getElementById('dfmIcon').textContent = taskIcon || '📦';
+  document.getElementById('dfmTitle').textContent = '完成：' + (taskName || '好事');
+  document.getElementById('dfmDesc').textContent = '跟着步骤完成这件好事，每一步都有温暖记录';
+  
+  // 重置所有步骤
+  var steps = document.querySelectorAll('#dfmSteps .dfm-step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].className = 'dfm-step';
+    steps[i].querySelector('.dfs-check').style.display = 'none';
+  }
+  steps[0].classList.add('active');
+  document.getElementById('dfs1Desc').textContent = '确认你要做的好事：' + (taskName || '好事');
+  document.getElementById('dfs2Desc').textContent = '模拟完成' + (taskName || '好事') + '的行动过程';
+  document.getElementById('dfs3Desc').textContent = '记录完成情况，留下美好瞬间';
+  document.getElementById('dfs4Desc').textContent = '邻居会收到你的帮助并表示感谢';
+  
+  document.getElementById('dfmNextBtn').textContent = '下一步 →';
+  document.getElementById('deedFlowOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeedFlow() {
+  document.getElementById('deedFlowOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function nextDeedStep() {
+  if (deedFlowStep < 4) {
+    var steps = document.querySelectorAll('#dfmSteps .dfm-step');
+    steps[deedFlowStep - 1].classList.remove('active');
+    steps[deedFlowStep - 1].classList.add('done');
+    steps[deedFlowStep - 1].querySelector('.dfs-check').style.display = 'inline';
+    deedFlowStep++;
+    steps[deedFlowStep - 1].classList.add('active');
+    
+    // 场景化描述
+    var actionTexts = [
+      '',
+      '✅ 已确认任务，准备出发！',
+      '🎯 行动中... 正在完成' + (deedFlowData ? deedFlowData.name : '好事') + '...',
+      '📸 记录完成！拍下了一张温暖的照片',
+      '💬 邻居说：' + getRandomThankYou() + ' ❤️'
+    ];
+    if (deedFlowStep <= 4) {
+      document.getElementById('dfmDesc').textContent = actionTexts[deedFlowStep];
+    }
+    
+    if (deedFlowStep === 4) {
+      document.getElementById('dfmNextBtn').textContent = '🎉 完成领取奖励';
+    }
+  } else {
+    // 完成所有步骤
+    completeDeedFlow();
+  }
+}
+
+function getRandomThankYou() {
+  var thanks = [
+    '太感谢你了！你真是个好邻居',
+    '谢谢你帮忙，真的太暖心了',
+    '效率好高，太感谢了！',
+    '有你这样的邻居真好',
+    '谢谢谢谢！下次我也帮你'
+  ];
+  return thanks[Math.floor(Math.random() * thanks.length)];
+}
+
+function completeDeedFlow() {
+  var value = deedFlowData ? deedFlowData.value : 10;
+  
+  // 更新好心值
+  var heartEl = document.getElementById('heartValue');
+  var currentVal = parseInt(heartEl.textContent.replace(/,/g, ''));
+  heartEl.textContent = (currentVal + value).toLocaleString();
+  
+  // 更新每周获得
+  var weeklyEl = document.getElementById('weeklyEarned');
+  var weeklyVal = parseInt(weeklyEl.textContent.replace(/[+,]/g, ''));
+  weeklyEl.textContent = '+' + (weeklyVal + value);
+  
+  // 更新温暖指数
+  updateWarmIndex();
+  
+  // 关闭流程弹窗
+  closeDeedFlow();
+  
+  showToast('success', '🎉 好事完成！', '获得 ' + value + ' 好心值，温暖 +1 ❤️');
+  
+  // 添加新通知
+  notifications.unshift({
+    icon: '💛', iconBg: '#edf7f0',
+    title: '好事完成：' + (deedFlowData ? deedFlowData.name : '好事'),
+    desc: '完成一件好事，获得 ' + value + ' 好心值',
+    time: '刚刚', badge: 'NEW', badgeColor: '#c8533a'
+  });
+  document.getElementById('notifDot').style.display = 'block';
+}
+
+// 增强一键领取任务，打开完成流程
+var origConfirmClaim = confirmClaim;
+function enhancedConfirmClaim() {
+  if (selectedTasks.size === 0) return;
+  var firstTask = selectedTasks.values().next().value;
+  closeClaimModal();
+  openDeedFlow(firstTask.name, getTaskIcon(Array.from(selectedTasks.keys())[0]), firstTask.value);
+}
+
+// 重写confirmClaim
+confirmClaim = function() {
+  enhancedConfirmClaim();
+};
+
+// ===== v2.0 新功能：智能助手 =====
+function toggleAssistant() {
+  var panel = document.getElementById('assistantPanel');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    document.getElementById('assistantInput').focus();
+  }
+}
+
+function sendAssistant() {
+  var input = document.getElementById('assistantInput');
+  var text = input.value.trim();
+  if (!text) return;
+  
+  var body = document.getElementById('assistantBody');
+  body.innerHTML += '<div class="ap-msg user">' + text + '</div>';
+  input.value = '';
+  body.scrollTop = body.scrollHeight;
+  
+  // 模拟助手回复
+  setTimeout(function() {
+    var reply = getAssistantReply(text);
+    body.innerHTML += '<div class="ap-msg bot">' + reply + '</div>';
+    body.scrollTop = body.scrollHeight;
+  }, 800);
+}
+
+function getAssistantReply(text) {
+  text = text.toLowerCase();
+  if (text.indexOf('推荐') !== -1 || text.indexOf('好事') !== -1) {
+    var hour = new Date().getHours();
+    var period = hour < 12 ? '☀️ 上午' : (hour < 18 ? '🌤️ 下午' : '🌙 晚上');
+    var timeRecs = '';
+    if (hour < 12) {
+      timeRecs = '1. 🌿 晨间花园浇水 (+12)<br>2. 🥐 帮邻居带早餐 (+6)<br>3. 🏃 晨跑顺手捡垃圾 (+14)';
+    } else if (hour < 18) {
+      timeRecs = '1. 📱 午休教老人用手机 (+20)<br>2. 📚 整理共享书架 (+18)<br>3. ♻️ 垃圾分类引导 (+20)';
+    } else {
+      timeRecs = '1. 👴 陪老人散步 (+18)<br>2. 🏪 社区巡逻 (+22)<br>3. 🐕 帮遛狗 (+18)';
+    }
+    return '🎯 ' + period + ' 推荐：<br>' + timeRecs + '<br>去首页「今日好事推荐」领取吧！💡 试试对我说"天气"获取场景推荐';
+  }
+  if (text.indexOf('成就') !== -1 || text.indexOf('我的') !== -1) {
+    var moodDone = document.getElementById('moodStatus') && document.getElementById('moodStatus').textContent.indexOf('已打卡') !== -1;
+    return '🏅 你的成就：<br>• 已完成 42 件好事<br>• 累计 2,580 好心值<br>• 连续 24 天打卡<br>• 帮助 18 位邻居<br>• 今日心情' + (moodDone ? '已打卡 ✅' : '未打卡 ⏳') + '<br>🌟 继续加油，下一个目标：50件好事！试试对我说"打卡"记录今日心情';
+  }
+  if (text.indexOf('社区') !== -1 || text.indexOf('动态') !== -1 || text.indexOf('广播') !== -1) {
+    return '📢 社区新鲜事：<br>• 张阿姨在花园浇水中 🌿<br>• 李先生整理了单车 🚲<br>• 今日已有 47 件好事完成<br>• 社区温暖指数 78 🔥<br>💡 去「社区广播站」看看邻居们的最新动态吧！';
+  }
+  if (text.indexOf('帮助') !== -1 || text.indexOf('指南') !== -1) {
+    return '📖 使用帮助：<br>1. 在「好事清单」选择想做的事<br>2. 点击「一键领取」开始完成流程<br>3. 完成后获得好心值<br>4. 好心值可兑换社区服务<br>📌 新功能：<br>• 每日心情打卡：记录心情 +5 💛<br>• 好事挑战：限时任务赢取大量好心值<br>• 社区广播：分享你的好事动态<br>💡 有问题随时问我！';
+  }
+  if (text.indexOf('你好') !== -1 || text.indexOf('嗨') !== -1 || text.indexOf('hi') !== -1 || text.indexOf('hello') !== -1) {
+    return '你好！我是好事助手小近 😊<br>有什么我可以帮你的吗？<br>试试对我说：<br>• "推荐好事" — 分时段好建议<br>• "我的成就" — 查看个人成就<br>• "今日打卡" — 记录心情领奖励<br>• "查看挑战" — 限时挑战任务';
+  }
+  if (text.indexOf('打卡') !== -1 || text.indexOf('心情') !== -1) {
+    return '😊 今日心情打卡：<br>去首页「每日心情打卡」区域选择你的今日心情吧！<br>打卡可获得 💛+5 好心值，还能看到本周的心情记录哦！<br>试试对自己说：今天感觉怎么样？😄';
+  }
+  if (text.indexOf('挑战') !== -1 || text.indexOf('任务') !== -1) {
+    return '🏆 好事挑战：<br>目前有 3 个限时挑战等着你！<br>去首页「好事挑战」板块看看吧！<br>完成挑战可获得 💛+15~40 好心值奖励！<br>💡 挑战每60秒轮换，抓住机会！';
+  }
+  if (text.indexOf('分享') !== -1) {
+    return '📤 分享好事的温暖：<br>你可以：<br>• 分享到朋友圈 — 让更多人看到你的善举<br>• 分享到微信好友 — 传递温暖给朋友<br>• 分享到微博 — 让好事传播更远<br>💡 去「影响看板」点击分享按钮即可！';
+  }
+  if (text.indexOf('天气') !== -1 || text.indexOf('时间') !== -1) {
+    var h = new Date().getHours();
+    var p = h < 6 ? '凌晨' : (h < 12 ? '上午' : (h < 14 ? '中午' : (h < 18 ? '下午' : '晚上')));
+    var w = ['☀️ 晴朗', '⛅ 多云', '🌧️ 小雨', '🌤️ 晴间多云', '🌥️ 阴天'][Math.floor(Math.random() * 5)];
+    return '🌤️ 当前时间：' + p + ' ' + h + '点<br>' + w + '，非常适合做好事！<br>💡 试试对我说"推荐好事"，获取' + p + '专属好建议！';
+  }
+  if (text.indexOf('积分') !== -1 || text.indexOf('好心值') !== -1 || text.indexOf('分值') !== -1) {
+    var heartEl = document.getElementById('heartValue');
+    var currentVal = heartEl ? parseInt(heartEl.textContent.replace(/,/g, '')) : 2580;
+    var nextMilestone = Math.ceil(currentVal / 500) * 500;
+    return '💛 好心值查询：<br>• 当前好心值：' + currentVal.toLocaleString() + '<br>• 下一里程碑：' + nextMilestone + ' 好心值<br>• 还差 ' + (nextMilestone - currentVal) + ' 点<br>💡 多做好事、完成挑战、每日打卡都能获得好心值！';
+  }
+  if (text.indexOf('你是谁') !== -1 || text.indexOf('名字') !== -1 || text.indexOf('叫什么') !== -1) {
+    return '我叫小近，是好事近社区的智能助手 😊<br>我的职责是帮你发现身边的好事、记录你的善举、推荐适合你的公益任务！<br>你可以随时问我关于好事近的任何问题 ✨';
+  }
+  if (text.indexOf('谢谢') !== -1 || text.indexOf('感谢') !== -1) {
+    return '不客气！能帮到你我也很开心 😊<br>做好事本身就是一种快乐，继续加油！<br>💡 还有什么我可以帮你的吗？';
+  }
+  if (text.indexOf('再见') !== -1 || text.indexOf('拜拜') !== -1 || text.indexOf('bye') !== -1) {
+    return '再见！祝你今天心情愉快，好事连连 🌟<br>记得常来看看，社区需要你的温暖！<br>下次见啦～👋';
+  }
+  var replies = [
+    '好的，已收到你的消息！💡 试试对我说"推荐好事"、"我的成就"或"今日打卡"',
+    '明白了！我可以帮你推荐好事、查看成就、了解社区动态、记录心情 😊',
+    '收到！我还在学习中，试试对我说"推荐好事"、"社区动态"、"帮助指南"或"今日打卡"',
+    '谢谢你的消息！你可以随时问我关于好事近的任何问题 ✨<br>💡 试试"查看挑战"看看有什么限时任务！',
+    '嗯嗯，我在听！💡 你可以试试：<br>• "推荐好事" — 分时段好建议<br>• "今日打卡" — 记录心情领奖励<br>• "查看挑战" — 限时挑战任务'
+  ];
+  return replies[Math.floor(Math.random() * replies.length)];
+}
+
+// 点击页面其他地方关闭助手
+document.addEventListener('click', function(e) {
+  var btn = document.getElementById('assistantBtn');
+  var panel = document.getElementById('assistantPanel');
+  if (btn && panel && !btn.contains(e.target) && !panel.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== v2.0 新功能：邻里聊天 =====
+var chatPartner = { name: '张阿姨', building: '3栋', avatar: '👩' };
+var chatReplies = [
+  '你真好！我看到了，谢谢你做的那些好事 🌟',
+  '是啊，社区有你这样的年轻人真好！',
+  '对了，这周六社区有跳蚤市场，你要不要一起来？',
+  '我刚才在楼下看到你帮忙整理单车了，太棒了！',
+  '好的好的，那先不打扰你了，回头聊！😊',
+  '哈哈，我也正在做好事呢，在帮邻居浇花 🌿',
+  '你这么说我都不好意思了，大家互相帮助嘛 ❤️',
+  '好的，有空来我家喝茶，我新学了一个点心做法 🍪'
+];
+
+function toggleChat() {
+  var panel = document.getElementById('chatPanel');
+  panel.classList.toggle('show');
+  if (panel.classList.contains('show')) {
+    document.getElementById('chatInput').focus();
+    // 随机切换聊天对象
+    var rand = Math.floor(Math.random() * 8);
+    var partners = [
+      { name: '张阿姨', building: '3栋', avatar: '👩', bg: 'var(--brand)' },
+      { name: '李先生', building: '7栋', avatar: '👨', bg: 'var(--sky)' },
+      { name: '小陈', building: '5栋', avatar: '👧', bg: 'var(--gold)' },
+      { name: '王爷爷', building: '1栋', avatar: '👴', bg: 'var(--plum)' },
+      { name: '刘姐', building: '6栋', avatar: '👩‍🦰', bg: 'var(--leaf)' },
+      { name: '赵叔', building: '2栋', avatar: '👨‍🦱', bg: 'var(--brand-deep)' },
+      { name: '小杨', building: '8栋', avatar: '🧑', bg: 'var(--sky)' },
+      { name: '周姐', building: '9栋', avatar: '👩', bg: 'var(--leaf)' }
+    ];
+    var p = partners[rand];
+    chatPartner = p;
+    document.getElementById('chatPartnerName').textContent = p.name;
+    document.querySelector('#chatPanel .cp-avatar').textContent = p.avatar;
+    document.querySelector('#chatPanel .cp-avatar').style.background = p.bg;
+    document.querySelector('#chatPanel .cp-status').textContent = '🟢 在线 · ' + p.building;
+  }
+}
+
+function sendChat() {
+  var input = document.getElementById('chatInput');
+  var text = input.value.trim();
+  if (!text) return;
+  
+  var body = document.getElementById('chatBody');
+  body.innerHTML += '<div class="cp-msg me">' + text + '<span class="cp-time">刚刚</span></div>';
+  input.value = '';
+  body.scrollTop = body.scrollHeight;
+  
+  // 模拟邻居回复
+  setTimeout(function() {
+    var reply = chatReplies[Math.floor(Math.random() * chatReplies.length)];
+    body.innerHTML += '<div class="cp-msg other">' + reply + '<span class="cp-time">刚刚</span></div>';
+    body.scrollTop = body.scrollHeight;
+  }, 1200 + Math.random() * 800);
+}
+
+// 点击页面其他地方关闭聊天
+document.addEventListener('click', function(e) {
+  var btn = document.getElementById('chatBtn');
+  var panel = document.getElementById('chatPanel');
+  if (btn && panel && !btn.contains(e.target) && !panel.contains(e.target)) {
+    panel.classList.remove('show');
+  }
+});
+
+// ===== v2.0 新功能：个人影响看板 =====
+function openImpact() {
+  document.getElementById('impactOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImpact() {
+  document.getElementById('impactOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// ===== v2.0 新功能：初始化 =====
 document.addEventListener('DOMContentLoaded', function() {
-  initGreeting();
-  initChallenge();
-  initWarmIndex();
-  initNeighborFeed();
-  initRecommendations();
-  updateSharePreview();
+  // 模拟首次通知小红点
+  setTimeout(function() {
+    document.getElementById('notifDot').style.display = 'block';
+  }, 3000);
 });
 </script>
 </body>

@@ -353,6 +353,99 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 .chat-input-bar input:focus { border-color: #c8533a; }
 .chat-input-bar button { padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; background: #c8533a; border: none; cursor: pointer; transition: all .2s; }
 .chat-input-bar button:hover { background: #b0442e; }
+
+/* ========== 好友互动系统 ========== */
+.friend-list { display: flex; flex-direction: column; gap: 8px; }
+.friend-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; border: 1px solid #eee8e2; transition: all .2s; }
+.friend-item:hover { border-color: #fde0d6; background: #fefaf5; }
+.friend-item .fi-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 18px; flex-shrink: 0; }
+.friend-item .fi-info { flex: 1; min-width: 0; }
+.friend-item .fi-info .fi-name { font-size: 13px; font-weight: 600; }
+.friend-item .fi-info .fi-meta { font-size: 11px; color: #7a6e66; margin-top: 1px; }
+.friend-item .fi-info .fi-time { font-size: 10px; color: #b5a99e; margin-top: 1px; }
+.friend-item .fi-actions { display: flex; gap: 4px; flex-shrink: 0; }
+.friend-btn { padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; border: 1px solid #ddd5cc; background: transparent; color: #7a6e66; cursor: pointer; transition: all .2s; white-space: nowrap; }
+.friend-btn:hover { border-color: #c8533a; color: #c8533a; background: #fef3ef; }
+.friend-btn.primary { border-color: #c8533a; color: #c8533a; }
+.friend-btn.primary:hover { background: #c8533a; color: #fff; }
+.friend-btn.gold { border-color: #f5a623; color: #c98a2b; }
+.friend-btn.gold:hover { background: #f5a623; color: #fff; }
+.friend-btn.green { border-color: #4a9e6e; color: #3f7d5b; }
+.friend-btn.green:hover { background: #4a9e6e; color: #fff; }
+.friend-btn.done { opacity: .5; cursor: default; pointer-events: none; }
+
+/* ========== 排行榜增强 ========== */
+.leaderboard-toggle { display: flex; gap: 4px; background: #f5f0eb; border-radius: 8px; padding: 2px; }
+.leaderboard-toggle .lb-tab { padding: 4px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; color: #7a6e66; cursor: pointer; transition: all .2s; border: none; background: transparent; }
+.leaderboard-toggle .lb-tab.active { background: #fff; color: #c8533a; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.leaderboard-toggle .lb-tab:hover:not(.active) { color: #2b2622; }
+.rank-highlight { margin-top: 8px; padding: 8px 12px; background: #fef3ef; border-radius: 8px; border: 1px solid #fde0d6; display: flex; align-items: center; gap: 10px; }
+.rank-highlight .rh-rank { font-size: 18px; font-weight: 900; color: #c8533a; }
+.rank-highlight .rh-label { font-size: 12px; color: #7a6e66; }
+.rank-highlight .rh-score { font-size: 13px; font-weight: 700; color: #c8533a; margin-left: auto; }
+
+/* ========== 邻里互动动态 ========== */
+.interaction-feed { max-height: 320px; overflow-y: auto; padding-right: 4px; }
+.interaction-feed::-webkit-scrollbar { width: 4px; }
+.interaction-feed::-webkit-scrollbar-thumb { background: #ddd5cc; border-radius: 2px; }
+.if-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f0eb; align-items: flex-start; animation: fadeIn .3s ease; }
+.if-item:last-child { border-bottom: none; }
+.if-item .if-avatar { width: 36px; height: 36px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+.if-item .if-body { flex: 1; }
+.if-item .if-body .if-text { font-size: 13px; line-height: 1.5; }
+.if-item .if-body .if-text b { color: #2b2622; }
+.if-item .if-body .if-time { font-size: 11px; color: #b5a99e; margin-top: 2px; display: flex; align-items: center; gap: 8px; }
+.if-item .if-body .if-time .if-count { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: #f5f0eb; color: #7a6e66; }
+.if-item .if-emoji { font-size: 18px; flex-shrink: 0; }
+
+/* ========== 好事心愿单 ========== */
+.wishlist-input-wrap { display: flex; gap: 8px; margin-bottom: 12px; }
+.wishlist-input-wrap input { flex: 1; padding: 8px 14px; border-radius: 999px; border: 1px solid #ddd5cc; font-size: 13px; outline: none; background: #faf8f6; }
+.wishlist-input-wrap input:focus { border-color: #c8533a; }
+.wishlist-input-wrap button { padding: 8px 18px; border-radius: 999px; font-size: 13px; font-weight: 700; color: #fff; background: linear-gradient(135deg, #c8533a, #da7a4a); border: none; cursor: pointer; transition: all .2s; white-space: nowrap; }
+.wishlist-input-wrap button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,83,58,.3); }
+.wishlist-progress { margin-bottom: 12px; }
+.wishlist-progress .wp-header { display: flex; justify-content: space-between; font-size: 12px; color: #7a6e66; margin-bottom: 4px; }
+.wishlist-progress .wp-header .wp-pct { font-weight: 700; color: #c8533a; }
+.wishlist-progress .wp-bar { height: 6px; background: #f5f0eb; border-radius: 3px; overflow: hidden; }
+.wishlist-progress .wp-bar-inner { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #c8533a, #4a9e6e); transition: width .6s ease; }
+.wishlist-items { display: flex; flex-direction: column; gap: 4px; }
+.wish-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; border: 1px solid #eee8e2; transition: all .2s; cursor: pointer; }
+.wish-item:hover { border-color: #fde0d6; background: #fefaf5; }
+.wish-item .w-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ddd5cc; display: grid; place-items: center; flex-shrink: 0; transition: all .2s; font-size: 10px; color: #fff; }
+.wish-item .w-check.done { background: #4a9e6e; border-color: #4a9e6e; }
+.wish-item .w-text { flex: 1; font-size: 13px; }
+.wish-item .w-text.done { text-decoration: line-through; color: #b5a99e; }
+.wish-item .w-del { font-size: 14px; color: #b5a99e; cursor: pointer; padding: 2px; transition: all .2s; }
+.wish-item .w-del:hover { color: #c8533a; }
+.wish-empty { text-align: center; padding: 20px; color: #b5a99e; font-size: 13px; }
+
+/* ========== 个人成长故事增强 ========== */
+.growth-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+.growth-header .gh-day { text-align: center; }
+.growth-header .gh-day .gh-day-num { font-size: 32px; font-weight: 900; color: #c8533a; line-height: 1; }
+.growth-header .gh-day .gh-day-label { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+.growth-header .gh-level { flex: 1; min-width: 120px; }
+.growth-header .gh-level .gh-level-title { font-size: 14px; font-weight: 700; }
+.growth-header .gh-level .gh-level-sub { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+.growth-level-bar { display: flex; gap: 3px; align-items: center; margin-top: 6px; }
+.growth-level-bar .glb-step { flex: 1; height: 6px; border-radius: 3px; background: #f5f0eb; transition: all .3s; }
+.growth-level-bar .glb-step.filled { background: #c8533a; }
+.growth-level-bar .glb-step.current { background: linear-gradient(90deg, #c8533a, #da7a4a); box-shadow: 0 0 6px rgba(200,83,58,.4); }
+.growth-milestones { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-bottom: 12px; }
+.growth-milestone { text-align: center; padding: 10px; background: #fff; border-radius: 8px; border: 1px solid #eee8e2; }
+.growth-milestone .gm-icon { font-size: 24px; margin-bottom: 4px; }
+.growth-milestone .gm-title { font-size: 12px; font-weight: 600; }
+.growth-milestone .gm-date { font-size: 10px; color: #b5a99e; margin-top: 1px; }
+.growth-milestone.unlocked { border-color: #fde0d6; background: #fefaf5; }
+.growth-milestone.locked { opacity: .5; }
+.growth-next { padding: 12px 14px; background: linear-gradient(135deg, #fef3ef, #fff8f0); border-radius: 10px; border: 1px solid #fde0d6; display: flex; align-items: center; gap: 10px; }
+.growth-next .gn-icon { font-size: 22px; }
+.growth-next .gn-body { flex: 1; }
+.growth-next .gn-body .gn-title { font-size: 13px; font-weight: 700; }
+.growth-next .gn-body .gn-desc { font-size: 12px; color: #7a6e66; margin-top: 1px; }
+.growth-next .gn-body .gn-progress { margin-top: 6px; height: 4px; background: #f5f0eb; border-radius: 2px; overflow: hidden; }
+.growth-next .gn-body .gn-progress-inner { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #c8533a, #da7a4a); transition: width .8s ease; }
 </style>
 </head>
 <body>
@@ -725,40 +818,29 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
   </div>
 
   <!-- 个人成长故事 -->
-<div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#fefaf5,#fff8f0);">
-  <div class="card-hd"><h3>🌱 我的成长故事</h3><span class="more" onclick="alert('查看完整成长故事 →')">分享</span></div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px;">
-    <div style="text-align:center;padding:16px;background:#fff;border-radius:10px;border:1px solid #eee8e2;">
-      <div style="font-size:32px;margin-bottom:6px;">👶</div>
-      <div style="font-size:13px;font-weight:700;">第 1 件好事</div>
-      <div style="font-size:11px;color:#7a6e66;margin-top:2px;">帮邻居按电梯<br>2026-07-01</div>
+  <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#fefaf5,#fff8f0);">
+    <div class="card-hd"><h3>🌱 个人成长故事</h3><span class="more" onclick="showToast('🌱','成长故事','分享你的公益成长之路')">分享 →</span></div>
+    <div class="growth-header" id="growthHeader">
+      <div class="gh-day">
+        <div class="gh-day-num" id="ghDayNum">65</div>
+        <div class="gh-day-label">加入社区第 N 天</div>
+      </div>
+      <div class="gh-level">
+        <div class="gh-level-title" id="ghLevelTitle">🏅 Lv.7 好事达人</div>
+        <div class="gh-level-sub">从新手到达人，一路温暖前行</div>
+        <div class="growth-level-bar" id="growthLevelBar"></div>
+      </div>
     </div>
-    <div style="text-align:center;padding:16px;background:#fff;border-radius:10px;border:1px solid #eee8e2;">
-      <div style="font-size:32px;margin-bottom:6px;">🌟</div>
-      <div style="font-size:13px;font-weight:700;">第 10 件好事</div>
-      <div style="font-size:11px;color:#7a6e66;margin-top:2px;">第一次收到感谢<br>2026-07-14</div>
-    </div>
-    <div style="text-align:center;padding:16px;background:#fff;border-radius:10px;border:1px solid #eee8e2;">
-      <div style="font-size:32px;margin-bottom:6px;">🏆</div>
-      <div style="font-size:13px;font-weight:700;">第 30 件好事</div>
-      <div style="font-size:11px;color:#7a6e66;margin-top:2px;">解锁"热心邻居"<br>2026-07-28</div>
-    </div>
-    <div style="text-align:center;padding:16px;background:#fff;border-radius:10px;border:1px solid #eee8e2;">
-      <div style="font-size:32px;margin-bottom:6px;">💪</div>
-      <div style="font-size:13px;font-weight:700;">连续 7 天打卡</div>
-      <div style="font-size:11px;color:#7a6e66;margin-top:2px;">坚持就是力量<br>2026-08-07</div>
-    </div>
-  </div>
-  <div style="padding:14px 16px;background:#fff;border-radius:10px;border:1px solid #fde0d6;">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div style="font-size:24px;">📝</div>
-      <div style="flex:1;">
-        <div style="font-size:13px;font-weight:700;">你的公益宣言</div>
-        <div style="font-size:12px;color:#7a6e66;margin-top:2px;font-style:italic;">"从第一次帮邻居按电梯开始，我发现做好事不需要理由，只需要一颗愿意的心。47件好事，47次温暖，我会继续走下去。"</div>
+    <div class="growth-milestones" id="growthMilestones"></div>
+    <div class="growth-next">
+      <div class="gn-icon">🎯</div>
+      <div class="gn-body">
+        <div class="gn-title" id="gnTitle">下一个目标：成为"社区之星"</div>
+        <div class="gn-desc" id="gnDesc">累计完成 60 件好事或达到 2,000 好心值</div>
+        <div class="gn-progress"><div class="gn-progress-inner" id="gnProgress" style="width:58%;"></div></div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- 邻里和排行榜双栏 -->
   <div class="content-grid" style="margin-top:16px;">
@@ -771,11 +853,28 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
         <div class="rec-grid" id="recGrid"></div>
       </div>
     </div>
-    <!-- 社区排行榜 -->
+    <!-- 社区排行榜增强 -->
     <div class="card">
-      <div class="card-hd"><h3>🏆 社区排行榜</h3><span class="more" onclick="showToast('🏆','排行榜','查看完整排名')">本周排名 →</span></div>
+      <div class="card-hd">
+        <h3>🏆 社区排行榜</h3>
+        <div class="leaderboard-toggle">
+          <button class="lb-tab active" onclick="switchLeaderboard('week')">本周</button>
+          <button class="lb-tab" onclick="switchLeaderboard('month')">本月</button>
+        </div>
+      </div>
       <div id="rankContainer"></div>
+      <div class="rank-highlight" id="rankHighlight">
+        <span class="rh-rank">#8</span>
+        <span class="rh-label">你的排名 · 保持努力，继续上升！</span>
+        <span class="rh-score">1,280 值</span>
+      </div>
     </div>
+  </div>
+
+  <!-- 好友互动系统 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-hd"><h3>🤝 好友列表</h3><span class="more" onclick="showToast('🤝','好友互动','与邻居好友互动，增进邻里情谊')">全部好友 →</span></div>
+    <div class="friend-list" id="friendList"></div>
   </div>
 
   <!-- 本周活跃度趋势 -->
@@ -915,6 +1014,26 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
       <div class="feedback-stat"><div class="fs-value" id="fbThanks">18</div><div class="fs-label">感谢条数</div></div>
     </div>
     <div id="feedbackList"></div>
+  </div>
+
+  <!-- 邻里互动动态 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-hd"><h3>💬 邻里互动动态</h3><span class="more" onclick="showToast('💬','互动动态','查看全部邻里互动记录')">查看全部 →</span></div>
+    <div class="interaction-feed" id="interactionFeedNew"></div>
+  </div>
+
+  <!-- 好事心愿单 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-hd"><h3>🎯 好事心愿单</h3><span class="more" onclick="showToast('🎯','心愿单','记录你想做的好事，一步步实现')">管理 →</span></div>
+    <div class="wishlist-input-wrap">
+      <input type="text" id="wishInput" placeholder="写下你想做的好事..." onkeydown="if(event.key==='Enter') addWish()">
+      <button onclick="addWish()">＋ 添加心愿</button>
+    </div>
+    <div class="wishlist-progress" id="wishlistProgress">
+      <div class="wp-header"><span>完成进度</span><span class="wp-pct" id="wishPct">0%</span></div>
+      <div class="wp-bar"><div class="wp-bar-inner" id="wishBar" style="width:0%;"></div></div>
+    </div>
+    <div class="wishlist-items" id="wishlistItems"></div>
   </div>
 
   <!-- 好事计划管理 -->
@@ -1158,26 +1277,74 @@ function renderNeighbors() {
 }
 renderNeighbors();
 
-// ==================== 排行榜 ====================
-var rankData = [
+// ==================== 排行榜增强 ====================
+var rankDataWeek = [
   { name:'赵姐', avatar:'👩', score:1280, badge:'热心楼长' },
   { name:'张哥', avatar:'👨', score:960, badge:'环保先锋' },
   { name:'小雅', avatar:'👧', score:850, badge:'共享达人' },
   { name:'刘叔', avatar:'👴', score:720, badge:'技能能手' },
   { name:'你（林小暖）', avatar:'🙋', score:640, badge:'Lv7 好事达人' },
   { name:'李姐', avatar:'👩', score:580, badge:'美食家' },
+  { name:'王阿姨', avatar:'👩', score:520, badge:'暖心大姐' },
+  { name:'陈伯', avatar:'👴', score:480, badge:'社区长辈' },
+  { name:'小周', avatar:'🧑', score:440, badge:'新生力量' },
+  { name:'老刘', avatar:'👨', score:400, badge:'热心肠' },
 ];
+var rankDataMonth = [
+  { name:'小雅', avatar:'👧', score:3200, badge:'共享达人' },
+  { name:'张哥', avatar:'👨', score:2850, badge:'环保先锋' },
+  { name:'赵姐', avatar:'👩', score:2560, badge:'热心楼长' },
+  { name:'你（林小暖）', avatar:'🙋', score:2100, badge:'Lv7 好事达人' },
+  { name:'刘叔', avatar:'👴', score:1880, badge:'技能能手' },
+  { name:'王阿姨', avatar:'👩', score:1650, badge:'暖心大姐' },
+  { name:'李姐', avatar:'👩', score:1420, badge:'美食家' },
+  { name:'陈伯', avatar:'👴', score:1200, badge:'社区长辈' },
+  { name:'小周', avatar:'🧑', score:980, badge:'新生力量' },
+  { name:'老刘', avatar:'👨', score:800, badge:'热心肠' },
+];
+var currentLeaderboardView = 'week';
 
 function renderRank() {
+  loadLeaderboard(currentLeaderboardView);
+}
+renderRank();
+
+function loadLeaderboard(view) {
+  currentLeaderboardView = view;
+  var data = view === 'week' ? rankDataWeek : rankDataMonth;
   var container = document.getElementById('rankContainer');
-  container.innerHTML = rankData.map(function(r, i) {
+  if (!container) return;
+  container.innerHTML = data.map(function(r, i) {
     var numCls = 'r-num' + (i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '');
-    var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+    var medal = '';
+    if (i === 0) medal = '🥇';
+    else if (i === 1) medal = '🥈';
+    else if (i === 2) medal = '🥉';
+    else medal = (i + 1);
     var isMe = r.name.indexOf('你') === 0;
     return '<div class="rank-item"><div class="' + numCls + '">' + medal + '</div><div class="r-avatar">' + r.avatar + '</div><div class="r-name"' + (isMe ? ' style="color:#c8533a;"' : '') + '>' + r.name + '</div><div class="r-score">' + r.score + ' 值</div><div class="r-badge">' + r.badge + '</div></div>';
   }).join('');
+  // Update highlight
+  var highlight = document.getElementById('rankHighlight');
+  if (highlight) {
+    var myScore = 0;
+    var myRank = 0;
+    data.forEach(function(r, i) {
+      if (r.name.indexOf('你') === 0) { myScore = r.score; myRank = i + 1; }
+    });
+    highlight.innerHTML = '<span class="rh-rank">#' + myRank + '</span><span class="rh-label">你的排名 · ' + (view === 'week' ? '本周' : '本月') + '表现</span><span class="rh-score">' + myScore + ' 值</span>';
+  }
 }
-renderRank();
+
+function switchLeaderboard(view) {
+  // Update tabs
+  document.querySelectorAll('.lb-tab').forEach(function(t) { t.classList.remove('active'); });
+  var tabs = document.querySelectorAll('.lb-tab');
+  if (view === 'week') { tabs[0].classList.add('active'); }
+  else { tabs[1].classList.add('active'); }
+  loadLeaderboard(view);
+  showToast('🏆', '排行榜已切换', '当前显示：' + (view === 'week' ? '本周' : '本月') + '排名');
+}
 
 // ==================== 模拟新消息推送 ====================
 setTimeout(function() {
@@ -1337,6 +1504,187 @@ function sayHi(idx, btn) {
   btn.classList.add('done');
   showToast('👋', '已打招呼', '已向 ' + recNeighbors[idx].name + ' 发送了打招呼消息');
 }
+
+// ==================== 好友互动系统 ====================
+var friendsData = [
+  { avatar:'👩', name:'张阿姨', building:'3-202', time:'10分钟前', lastAction:'sayhi' },
+  { avatar:'👨', name:'李先生', building:'5-103', time:'2小时前', lastAction:'bless' },
+  { avatar:'👧', name:'小陈', building:'7-302', time:'昨天', lastAction:'team' },
+  { avatar:'👴', name:'王爷爷', building:'1-501', time:'3天前', lastAction:'none' },
+  { avatar:'🧑', name:'小周', building:'5-201', time:'5天前', lastAction:'none' },
+];
+
+function loadFriends() {
+  var container = document.getElementById('friendList');
+  if (!container) return;
+  container.innerHTML = friendsData.map(function(f, i) {
+    return '<div class="friend-item"><div class="fi-avatar">' + f.avatar + '</div><div class="fi-info"><div class="fi-name">' + f.name + '</div><div class="fi-meta">🏠 ' + f.building + '</div><div class="fi-time">上次互动：' + f.time + '</div></div><div class="fi-actions"><button class="friend-btn primary" onclick="sayHiFriend(' + i + ', this)" data-idx="' + i + '">👋 打招呼</button><button class="friend-btn gold" onclick="sendBlessing(' + i + ', this)" data-idx="' + i + '">🎁 送祝福</button><button class="friend-btn green" onclick="teamUp(' + i + ', this)" data-idx="' + i + '">🤝 组队做好事</button></div></div>';
+  }).join('');
+}
+
+function sayHiFriend(idx, btn) {
+  if (btn.classList.contains('done')) return;
+  btn.classList.add('done');
+  btn.textContent = '✅ 已打招呼';
+  friendsData[idx].lastAction = 'sayhi';
+  showToast('👋', '打招呼成功', '你向 ' + friendsData[idx].name + ' 打了个招呼，邻居很开心！');
+  // 更新互动动态
+  addInteractionItem('你向 ' + friendsData[idx].name + ' 打了个招呼 👋', '刚刚');
+}
+
+function sendBlessing(idx, btn) {
+  if (btn.classList.contains('done')) return;
+  btn.classList.add('done');
+  btn.textContent = '✅ 已祝福';
+  friendsData[idx].lastAction = 'bless';
+  // 加好心值
+  var pts = document.getElementById('psPoints');
+  if (pts) {
+    var current = parseInt(pts.textContent.replace(/,/g, ''));
+    pts.textContent = (current + 2).toLocaleString();
+  }
+  showToast('🎁', '祝福已送达！', '你向 ' + friendsData[idx].name + ' 送出了祝福，好心值 +2 ❤️');
+  addInteractionItem('你给 ' + friendsData[idx].name + ' 送去了温暖祝福 🎁', '刚刚');
+}
+
+function teamUp(idx, btn) {
+  if (btn.classList.contains('done')) return;
+  btn.classList.add('done');
+  btn.textContent = '✅ 已组队';
+  friendsData[idx].lastAction = 'team';
+  showToast('🤝', '组队成功！', '你和 ' + friendsData[idx].name + ' 组队成功，一起做好事更快乐！');
+  addInteractionItem('你和 ' + friendsData[idx].name + ' 组队参加社区公益活动 🌟', '刚刚');
+}
+
+// ==================== 邻里互动动态 ====================
+var interactionData = [
+  { avatar:'👩', name:'张阿姨', text:'你给张阿姨的快递代收点了赞', emoji:'❤️', time:'10分钟前', count:3 },
+  { avatar:'👨', name:'李先生', text:'李先生回复了你的互助请求', emoji:'💬', time:'1小时前', count:5 },
+  { avatar:'👴', name:'王爷爷', text:'你和王爷爷组队整理了社区花园', emoji:'🌿', time:'3小时前', count:2 },
+  { avatar:'👧', name:'小陈', text:'小陈在楼道图书角借了你推荐的书', emoji:'📚', time:'昨天', count:1 },
+  { avatar:'👩', name:'赵姐', text:'赵姐分享了你的好事记录', emoji:'🌟', time:'昨天', count:4 },
+  { avatar:'🧑', name:'小周', text:'小周邀请你参加周末跳蚤市场', emoji:'🎪', time:'2天前', count:1 },
+];
+
+function loadInteractionFeed() {
+  var container = document.getElementById('interactionFeedNew');
+  if (!container) return;
+  container.innerHTML = interactionData.map(function(item) {
+    return '<div class="if-item"><div class="if-avatar">' + item.avatar + '</div><div class="if-body"><div class="if-text">' + item.text + ' ' + item.emoji + '</div><div class="if-time"><span>' + item.time + '</span><span class="if-count">' + item.count + ' 次互动</span></div></div></div>';
+  }).join('');
+}
+
+function addInteractionItem(text, time) {
+  interactionData.unshift({ avatar:'🙋', name:'你', text:text, emoji:'✨', time:time||'刚刚', count:1 });
+  loadInteractionFeed();
+}
+
+// ==================== 好事心愿单 ====================
+var wishData = [
+  { text:'帮邻居老人取快递', done:true },
+  { text:'在楼道增设共享雨伞架', done:true },
+  { text:'组织一次社区旧书交换活动', done:false },
+  { text:'陪独居老人聊天半小时', done:false },
+  { text:'在小区花园种一盆花', done:false },
+];
+
+function loadWishlist() {
+  var container = document.getElementById('wishlistItems');
+  if (!container) return;
+  if (wishData.length === 0) {
+    container.innerHTML = '<div class="wish-empty">🎯 还没有心愿，添加一个吧！</div>';
+    updateWishProgress();
+    return;
+  }
+  container.innerHTML = wishData.map(function(w, i) {
+    var checkCls = w.done ? 'done' : '';
+    var textCls = w.done ? 'done' : '';
+    return '<div class="wish-item" onclick="toggleWish(' + i + ', this)"><div class="w-check ' + checkCls + '">' + (w.done ? '✓' : '') + '</div><div class="w-text ' + textCls + '">' + w.text + '</div><span class="w-del" onclick="event.stopPropagation(); deleteWish(' + i + ')">✕</span></div>';
+  }).join('');
+  updateWishProgress();
+}
+
+function updateWishProgress() {
+  var total = wishData.length;
+  var done = wishData.filter(function(w) { return w.done; }).length;
+  var pct = total > 0 ? Math.round(done / total * 100) : 0;
+  var pctEl = document.getElementById('wishPct');
+  var barEl = document.getElementById('wishBar');
+  if (pctEl) pctEl.textContent = done + '/' + total + ' (' + pct + '%)';
+  if (barEl) barEl.style.width = pct + '%';
+}
+
+function addWish() {
+  var input = document.getElementById('wishInput');
+  var text = input.value.trim();
+  if (!text) { showToast('📝', '请输入心愿内容', '写下你想做的好事'); return; }
+  wishData.push({ text:text, done:false });
+  input.value = '';
+  loadWishlist();
+  showToast('🎯', '心愿已添加', '已添加：' + text);
+}
+
+function toggleWish(idx, el) {
+  wishData[idx].done = !wishData[idx].done;
+  loadWishlist();
+  var status = wishData[idx].done ? '已完成 ✅' : '标记为未完成';
+  showToast('📋', '心愿已更新', status + '：' + wishData[idx].text);
+}
+
+function deleteWish(idx) {
+  wishData.splice(idx, 1);
+  loadWishlist();
+  showToast('🗑️', '心愿已删除', '该心愿已从清单中移除');
+}
+
+// ==================== 个人成长故事 ====================
+function loadGrowthStory() {
+  // 成长级别进度条
+  var bar = document.getElementById('growthLevelBar');
+  if (bar) {
+    var currentLevel = 7;
+    var maxLevel = 10;
+    var html = '';
+    for (var i = 1; i <= maxLevel; i++) {
+      var cls = 'glb-step';
+      if (i < currentLevel) cls += ' filled';
+      else if (i === currentLevel) cls += ' current';
+      html += '<div class="' + cls + '" title="Lv' + i + '"></div>';
+    }
+    bar.innerHTML = html;
+  }
+  // 加入天数
+  var dayEl = document.getElementById('ghDayNum');
+  if (dayEl) {
+    var joinDate = new Date('2026-06-04');
+    var today = new Date();
+    var diff = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
+    dayEl.textContent = diff;
+    dayEl.nextElementSibling.textContent = '加入社区第 ' + diff + ' 天';
+  }
+  // 里程碑
+  var milestones = [
+    { icon:'👶', title:'第 1 件好事', date:'2026-07-01', unlocked:true },
+    { icon:'🌟', title:'第 10 件好事', date:'2026-07-14', unlocked:true },
+    { icon:'🏆', title:'第 30 件好事', date:'2026-07-28', unlocked:true },
+    { icon:'💪', title:'连续 7 天打卡', date:'2026-08-07', unlocked:true },
+    { icon:'🎯', title:'第 50 件好事', date:'进行中', unlocked:false },
+    { icon:'👑', title:'社区之星', date:'未解锁', unlocked:false },
+  ];
+  var mc = document.getElementById('growthMilestones');
+  if (mc) {
+    mc.innerHTML = milestones.map(function(m) {
+      var cls = 'growth-milestone' + (m.unlocked ? ' unlocked' : ' locked');
+      return '<div class="' + cls + '"><div class="gm-icon">' + m.icon + '</div><div class="gm-title">' + m.title + '</div><div class="gm-date">' + m.date + '</div></div>';
+    }).join('');
+  }
+}
+
+// ==================== 页面加载初始化 ====================
+loadFriends();
+loadInteractionFeed();
+loadWishlist();
+loadGrowthStory();
 
 // ==================== 数据联动模拟 ====================
 function startDataGrowth() {

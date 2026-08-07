@@ -356,6 +356,113 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
   border: none; cursor: pointer; transition: all .2s; color: #fff;
 }
 .activity-card .ac-btn:hover { transform: scale(1.05); }
+
+/* ====== 新功能：社区问答系统 ====== */
+.qa-item { border-bottom: 1px solid #f5f0eb; }
+.qa-item:last-child { border-bottom: none; }
+.qa-header { display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; cursor: pointer; transition: all .2s; }
+.qa-header:hover .qa-title { color: #c8533a; }
+.qa-icon { width: 24px; height: 24px; border-radius: 50%; background: #fef3ef; display: grid; place-items: center; font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+.qa-title { font-size: 13px; font-weight: 600; flex: 1; transition: color .2s; }
+.qa-arrow { font-size: 10px; color: #b5a99e; transition: transform .3s; }
+.qa-header.expanded .qa-arrow { transform: rotate(180deg); }
+.qa-meta { display: flex; gap: 8px; font-size: 11px; color: #7a6e66; margin-top: 2px; align-items: center; }
+.qa-tag { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #fef3ef; color: #c8533a; font-weight: 600; }
+.qa-body { display: none; padding: 10px 12px; background: #faf8f6; border-radius: 8px; margin: 0 0 10px 34px; font-size: 12px; line-height: 1.6; }
+.qa-body.show { display: block; animation: fadeIn .3s ease; }
+.qa-body .qa-answer-item { padding: 8px 0; border-bottom: 1px solid #eee8e2; }
+.qa-body .qa-answer-item:last-child { border-bottom: none; }
+.qa-body .qa-answer-author { font-size: 11px; font-weight: 600; color: #2b2622; }
+.qa-body .qa-answer-text { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+.qa-ask-btn { padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #fef3ef; color: #c8533a; border: none; cursor: pointer; transition: all .2s; }
+.qa-ask-btn:hover { background: #c8533a; color: #fff; }
+
+/* ====== 新功能：社区活动创建 ====== */
+.event-cat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.event-cat-item { padding: 10px 6px; border-radius: 8px; border: 1px solid #eee8e2; text-align: center; cursor: pointer; font-size: 12px; font-weight: 600; color: #7a6e66; transition: all .2s; }
+.event-cat-item:hover { border-color: #c8533a; background: #fefaf5; }
+.event-cat-item.selected { border-color: #c8533a; background: #fef3ef; color: #c8533a; }
+.user-event-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f0eb; align-items: center; }
+.user-event-item:last-child { border-bottom: none; }
+.user-event-item .ue-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+.user-event-item .ue-info { flex: 1; }
+.user-event-item .ue-title { font-size: 13px; font-weight: 600; }
+.user-event-item .ue-meta { font-size: 11px; color: #7a6e66; margin-top: 2px; }
+.user-event-item .ue-badge { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #edf7f0; color: #4a9e6e; font-weight: 600; }
+
+/* ====== 新功能：邻里匹配 ====== */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:640px) { .match-grid { grid-template-columns: 1fr; } }
+.match-card { padding: 16px; border-radius: 12px; border: 1px solid #eee8e2; text-align: center; transition: all .2s; background: #fff; }
+.match-card:hover { border-color: #c8533a; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(200,83,58,.08); }
+.match-card .mc-avatar { width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 8px; display: grid; place-items: center; font-size: 26px; background: #fef3ef; }
+.match-card .mc-name { font-size: 14px; font-weight: 700; }
+.match-card .mc-building { font-size: 10px; color: #b5a99e; margin-top: 2px; }
+.match-card .mc-interests { font-size: 11px; color: #7a6e66; margin-top: 6px; line-height: 1.4; }
+.match-card .mc-match-pct { font-size: 18px; font-weight: 800; color: #c8533a; margin-top: 6px; }
+.match-card .mc-match-label { font-size: 10px; color: #b5a99e; }
+.match-card .mc-btn { margin-top: 8px; padding: 6px 20px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #fef3ef; color: #c8533a; border: none; cursor: pointer; transition: all .2s; }
+.match-card .mc-btn:hover { background: #c8533a; color: #fff; }
+.match-card .mc-btn.sent { background: #edf7f0; color: #4a9e6e; cursor: default; }
+.match-card .mc-common { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
+.match-card .mc-common-item { font-size: 10px; padding: 2px 8px; border-radius: 999px; background: #fef3ef; color: #c8533a; font-weight: 600; }
+
+/* ====== 新功能：应急演练模拟 ====== */
+.drill-banner { padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 10px; }
+.drill-banner .db-icon { font-size: 40px; margin-bottom: 6px; }
+.drill-banner .db-title { font-size: 16px; font-weight: 700; }
+.drill-banner .db-desc { font-size: 12px; color: #7a6e66; margin-top: 4px; }
+.drill-step { padding: 14px 0; }
+.drill-step .ds-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.drill-step .ds-step-num { width: 28px; height: 28px; border-radius: 50%; background: #c8533a; color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 700; }
+.drill-step .ds-title { font-size: 14px; font-weight: 700; }
+.drill-step .ds-desc { font-size: 12px; color: #7a6e66; line-height: 1.5; margin-bottom: 10px; padding: 10px 12px; background: #fefaf5; border-radius: 8px; border-left: 3px solid #c8533a; }
+.drill-step .ds-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.drill-step .ds-choice { padding: 10px; border-radius: 8px; border: 1px solid #eee8e2; cursor: pointer; text-align: center; font-size: 12px; font-weight: 600; color: #7a6e66; transition: all .2s; background: #fff; }
+.drill-step .ds-choice:hover { border-color: #c8533a; background: #fefaf5; }
+.drill-step .ds-choice.selected { border-color: #c8533a; background: #fef3ef; color: #c8533a; }
+.drill-step .ds-choice.correct { border-color: #4a9e6e; background: #edf7f0; color: #4a9e6e; }
+.drill-step .ds-choice.wrong { border-color: #e05a5a; background: #fef0f0; color: #e05a5a; }
+.drill-step .ds-choice:disabled { cursor: default; opacity: .7; }
+.drill-result-card { text-align: center; padding: 20px; }
+.drill-result-card .dr-score { font-size: 42px; font-weight: 900; color: #c8533a; }
+.drill-result-card .dr-score-label { font-size: 12px; color: #7a6e66; }
+.drill-result-card .dr-grade { font-size: 16px; font-weight: 700; margin-top: 4px; }
+.drill-result-card .dr-tips { text-align: left; margin-top: 12px; }
+.drill-result-card .dr-tip-item { padding: 8px 0; border-bottom: 1px solid #f5f0eb; font-size: 12px; color: #7a6e66; line-height: 1.5; display: flex; gap: 6px; }
+.drill-result-card .dr-tip-item:last-child { border-bottom: none; }
+.drill-result-card .dr-tip-item .dti-num { color: #c8533a; font-weight: 700; flex-shrink: 0; }
+.drill-progress { display: flex; gap: 6px; margin-bottom: 12px; justify-content: center; }
+.drill-progress .dp-dot { width: 10px; height: 10px; border-radius: 50%; background: #eee8e2; transition: all .3s; }
+.drill-progress .dp-dot.active { background: #c8533a; transform: scale(1.2); }
+.drill-progress .dp-dot.done { background: #4a9e6e; }
+
+/* ====== 新功能：暖心故事征集 ====== */
+.warm-story-item { padding: 12px 0; border-bottom: 1px solid #f5f0eb; }
+.warm-story-item:last-child { border-bottom: none; }
+.warm-story-item .ws-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.warm-story-item .ws-avatar { width: 28px; height: 28px; border-radius: 50%; background: #fef3ef; display: grid; place-items: center; font-size: 12px; flex-shrink: 0; }
+.warm-story-item .ws-name { font-size: 12px; font-weight: 600; }
+.warm-story-item .ws-status { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #fef6e8; color: #c98a2b; font-weight: 600; margin-left: auto; }
+.warm-story-item .ws-status.approved { background: #edf7f0; color: #4a9e6e; }
+.warm-story-item .ws-title { font-size: 13px; font-weight: 600; margin-top: 4px; }
+.warm-story-item .ws-cat { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #fef3ef; color: #c8533a; font-weight: 600; display: inline-block; margin-top: 2px; }
+.warm-story-item .ws-content { font-size: 12px; color: #7a6e66; line-height: 1.5; margin-top: 4px; }
+.warm-story-item .ws-time { font-size: 10px; color: #b5a99e; margin-top: 4px; }
+.warm-story-cat-select { display: flex; gap: 6px; flex-wrap: wrap; }
+.warm-story-cat-select span { padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid #eee8e2; cursor: pointer; color: #7a6e66; transition: all .2s; }
+.warm-story-cat-select span:hover { border-color: #c8533a; color: #c8533a; }
+.warm-story-cat-select span.selected { background: #fef3ef; border-color: #c8533a; color: #c8533a; }
+
+/* ====== 新功能：已报名活动列表 ====== */
+.reg-event-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f0eb; align-items: center; }
+.reg-event-item:last-child { border-bottom: none; }
+.reg-event-item .re-icon { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+.reg-event-item .re-info { flex: 1; }
+.reg-event-item .re-title { font-size: 13px; font-weight: 600; }
+.reg-event-item .re-meta { font-size: 11px; color: #7a6e66; margin-top: 2px; }
+.reg-event-item .re-ticket { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: #fef3ef; color: #c8533a; font-weight: 600; cursor: pointer; }
+.reg-event-item .re-ticket:hover { background: #c8533a; color: #fff; }
 </style>
 </head>
 <body>
@@ -394,6 +501,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
   <div class="card">
     <div class="card-hd"><h3>📢 社区公告板</h3><span class="more" onclick="showToast('📢','公告板','查看全部公告')">全部公告 →</span></div>
     <div id="announcementContainer"></div>
+  </div>
+
+  <!-- ====== 新功能：社区问答系统 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>❓ 社区问答系统</h3><span class="more" onclick="openAskQuestionModal()">我要提问 →</span></div>
+    <div id="qaContainer"></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f5f0eb;text-align:center;">
+      <button class="qa-ask-btn" onclick="openAskQuestionModal()">✏️ 向邻居提问</button>
+    </div>
   </div>
 
   <!-- 邻里信用评分 -->
@@ -477,9 +593,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
 
   <!-- ====== 模块1：社区活动日历 ====== -->
   <div class="card">
-    <div class="card-hd"><h3>📅 社区活动日历</h3><span class="more" onclick="showToast('📅','活动日历','查看完整月份')">本月 →</span></div>
+    <div class="card-hd"><h3>📅 社区活动日历</h3><span class="more" onclick="showMyRegisteredEvents()" style="margin-right:8px;">🎫 我的报名</span><span class="more" onclick="showToast('📅','活动日历','查看完整月份')">本月 →</span></div>
     <div class="cal-grid" id="calGrid"></div>
     <div class="event-list" id="eventList"></div>
+  </div>
+
+  <!-- ====== 新功能：社区活动创建 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🎯 创建社区活动</h3><span class="more" onclick="createEvent()">创建活动 →</span></div>
+    <div style="margin-bottom:10px;font-size:12px;color:#7a6e66;">发起一个社区活动，邀请邻居们一起参与！</div>
+    <button onclick="createEvent()" style="padding:8px 20px;border-radius:999px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#c8533a,#b0442e);border:none;cursor:pointer;box-shadow:0 2px 8px rgba(200,83,58,.2);width:100%;">➕ 创建新活动</button>
+    <div id="userEventsContainer" style="margin-top:12px;display:none;">
+      <div style="font-size:12px;font-weight:600;color:#7a6e66;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid #f5f0eb;">📋 我创建的活动</div>
+      <div id="userEventsList"></div>
+    </div>
   </div>
 
   <!-- ====== 模块2：邻里互助墙 ====== -->
@@ -522,8 +649,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button onclick="showEmergencyGuide()" style="padding:8px 18px;border-radius:999px;font-size:12px;font-weight:600;background:#fff;color:#c8533a;border:1px solid #c8533a;cursor:pointer;flex:1;">📋 应急指南</button>
-      <button onclick="startEmergencyTraining()" style="padding:8px 18px;border-radius:999px;font-size:12px;font-weight:600;background:#c8533a;color:#fff;border:none;cursor:pointer;flex:1;">🎯 应急演练</button>
+      <button onclick="startDrill()" style="padding:8px 18px;border-radius:999px;font-size:12px;font-weight:600;background:#c8533a;color:#fff;border:none;cursor:pointer;flex:1;">🎯 应急演练</button>
     </div>
+  </div>
+
+  <!-- ====== 新功能：社区应急演练模拟 ====== -->
+  <div class="card" id="drillSection" style="display:none;">
+    <div class="card-hd"><h3>🎯 社区应急演练模拟</h3><span class="more" onclick="resetDrill()">重新开始 →</span></div>
+    <div id="drillContainer"></div>
   </div>
 
   <!-- 社区暖心广播站 -->
@@ -667,6 +800,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     </div>
   </div>
 
+  <!-- ====== 新功能：社区暖心故事征集 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>💝 社区暖心故事征集</h3><span class="more" onclick="openWarmStoryForm()">投稿 →</span></div>
+    <div style="font-size:12px;color:#7a6e66;margin-bottom:10px;">记录你身边的暖心瞬间，投稿经过审核后将在社区展示，并获得 +8 好心值奖励！</div>
+    <div id="warmStoryContainer"></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid #f5f0eb;text-align:center;">
+      <button onclick="openWarmStoryForm()" style="padding:8px 20px;border-radius:999px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(135deg,#c8533a,#b0442e);border:none;cursor:pointer;box-shadow:0 2px 8px rgba(200,83,58,.2);">💝 投稿暖心故事</button>
+    </div>
+  </div>
+
   <!-- ====== 模块11：社区趣味活动 ====== -->
   <div class="card">
     <div class="card-hd"><h3>🎮 社区趣味活动</h3><span class="more" onclick="showToast('🎮','趣味活动','更多趣味活动开发中')">更多 →</span></div>
@@ -686,6 +829,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     <span style="font-size:11px;padding:4px 12px;border-radius:999px;background:#fef3ef;color:#c8533a;font-weight:600;">🔥 今日 <b id="communityActiveCount">18</b> 位邻居在线</span>
     <span style="font-size:11px;padding:4px 12px;border-radius:999px;background:#edf7f0;color:#4a9e6e;font-weight:600;">💛 今日已做 <b id="communityTodayDeeds">47</b> 件好事</span>
   </div>
+</div>
+
+<!-- ====== 新功能：邻里匹配系统 ====== -->
+<div class="card">
+  <div class="card-hd"><h3>🤝 邻里匹配系统</h3><span class="more" onclick="loadMatches()">刷新推荐 →</span></div>
+  <div style="font-size:12px;color:#7a6e66;margin-bottom:10px;">发现与你兴趣相投的邻居，建立新的邻里关系！</div>
+  <div class="match-grid" id="matchGrid"></div>
 </div>
 
 <!-- ====== 社区公告推送 ====== -->
@@ -774,12 +924,12 @@ function showToast(icon, title, desc) {
 
 // ====== 模块1：日历 ======
 var events = [
-  { day: 5, title:'社区大扫除日', time:'周六 9:00–11:00', loc:'全小区', color:'#c8533a', signed:false },
-  { day: 12, title:'邻里跳蚤市场', time:'周六 14:00–17:00', loc:'小区广场', color:'#f5a623', signed:false },
-  { day: 15, title:'手机课堂：教老人用微信', time:'周二 15:00–16:30', loc:'活动室', color:'#4a9e6e', signed:true },
-  { day: 19, title:'社区健步走', time:'周六 7:00–8:00', loc:'绕小区3圈', color:'#3a7abf', signed:false },
-  { day: 22, title:'邻里百家宴', time:'周二 18:00–20:00', loc:'小区花园', color:'#b04a5e', signed:false },
-  { day: 28, title:'旧物交换日', time:'周一 10:00–16:00', loc:'活动室', color:'#7b4a8c', signed:false },
+  { id: 1, day: 5, title:'社区大扫除日', time:'周六 9:00–11:00', loc:'全小区', color:'#c8533a', signed:false, capacity: 30, registered: 12 },
+  { id: 2, day: 12, title:'邻里跳蚤市场', time:'周六 14:00–17:00', loc:'小区广场', color:'#f5a623', signed:false, capacity: 50, registered: 28 },
+  { id: 3, day: 15, title:'手机课堂：教老人用微信', time:'周二 15:00–16:30', loc:'活动室', color:'#4a9e6e', signed:true, capacity: 20, registered: 18 },
+  { id: 4, day: 19, title:'社区健步走', time:'周六 7:00–8:00', loc:'绕小区3圈', color:'#3a7abf', signed:false, capacity: 40, registered: 15 },
+  { id: 5, day: 22, title:'邻里百家宴', time:'周二 18:00–20:00', loc:'小区花园', color:'#b04a5e', signed:false, capacity: 60, registered: 35 },
+  { id: 6, day: 28, title:'旧物交换日', time:'周一 10:00–16:00', loc:'活动室', color:'#7b4a8c', signed:false, capacity: 25, registered: 8 },
 ];
 
 function renderCalendar() {
@@ -810,7 +960,11 @@ function renderEvents() {
   var container = document.getElementById('eventList');
   var upcoming = events.filter(function(e) { return e.day >= new Date().getDate(); }).slice(0, 4);
   container.innerHTML = upcoming.map(function(e) {
-    return '<div class="event-item"><div class="ei-dot" style="background:' + e.color + ';"></div><div class="ei-info"><div class="ei-title">' + e.title + '</div><div class="ei-meta">' + e.time + ' · ' + e.loc + '</div></div><button class="ei-btn' + (e.signed ? ' signed' : '') + '" onclick="' + (e.signed ? '' : 'signUp(this,\'' + e.title + '\')') + '">' + (e.signed ? '✓ 已报名' : '报名') + '</button></div>';
+    var full = e.registered >= e.capacity;
+    var btnText = e.signed ? '✓ 已报名' : (full ? '已满员' : '报名');
+    var btnClass = e.signed ? 'ei-btn signed' : (full ? 'ei-btn' : 'ei-btn');
+    var btnClick = e.signed || full ? '' : 'registerEvent(' + e.id + ')';
+    return '<div class="event-item"><div class="ei-dot" style="background:' + e.color + ';"></div><div class="ei-info"><div class="ei-title">' + e.title + '</div><div class="ei-meta">' + e.time + ' · ' + e.loc + ' · <span style="color:' + (full ? '#c8533a' : '#4a9e6e') + ';font-weight:600;">' + e.registered + '/' + e.capacity + '</span></div></div><button class="' + btnClass + '" onclick="' + btnClick + '">' + btnText + '</button></div>';
   }).join('');
 }
 renderCalendar();
@@ -1150,14 +1304,14 @@ function showTopicDetail(id) {
 
 // ====== 新增：你可能感兴趣的活动 ======
 var recommendedActivities = [
-  { icon: '🍪', bg: '#fef6e8', tag: '烘焙', title: '周末亲子烘焙课', time: '8月13日 周六 10:00', loc: '社区活动室', match: '你参加过烹饪类活动' },
-  { icon: '🧘', bg: '#eef4fa', tag: '运动', title: '晨间太极体验班', time: '8月14日 周日 7:30', loc: '小区花园', match: '你参加过健步走活动' },
-  { icon: '📱', bg: '#f5f0fa', tag: '学习', title: '手机摄影技巧分享', time: '8月20日 周六 15:00', loc: '活动室', match: '你对学习类活动感兴趣' },
+  { id: 4, icon: '🍪', bg: '#fef6e8', tag: '烘焙', title: '周末亲子烘焙课', time: '8月13日 周六 10:00', loc: '社区活动室', match: '你参加过烹饪类活动' },
+  { id: 3, icon: '🧘', bg: '#eef4fa', tag: '运动', title: '晨间太极体验班', time: '8月14日 周日 7:30', loc: '小区花园', match: '你参加过健步走活动' },
+  { id: 2, icon: '📱', bg: '#f5f0fa', tag: '学习', title: '手机摄影技巧分享', time: '8月20日 周六 15:00', loc: '活动室', match: '你对学习类活动感兴趣' },
 ];
 function renderRecommendedActivities() {
   var container = document.getElementById('recommendActContainer');
   container.innerHTML = recommendedActivities.map(function(r) {
-    return '<div class="rec-act-item"><div class="ra-icon" style="background:' + r.bg + ';">' + r.icon + '</div><div class="ra-body"><span class="ra-tag">' + r.tag + '</span><div class="ra-title">' + r.title + '</div><div class="ra-meta">' + r.time + ' · ' + r.loc + '</div><div class="ra-match">' + r.match + '</div></div><button class="ra-btn" onclick="signUp(this,\'' + r.title + '\')">感兴趣</button></div>';
+    return '<div class="rec-act-item"><div class="ra-icon" style="background:' + r.bg + ';">' + r.icon + '</div><div class="ra-body"><span class="ra-tag">' + r.tag + '</span><div class="ra-title">' + r.title + '</div><div class="ra-meta">' + r.time + ' · ' + r.loc + '</div><div class="ra-match">' + r.match + '</div></div><button class="ra-btn" onclick="showToast(\'🎯\',\'感兴趣\',\'「' + r.title + '」已添加到你的关注列表，活动开始前会提醒你\')">感兴趣</button></div>';
   }).join('');
 }
 
@@ -1487,6 +1641,420 @@ function startActivity(title) {
   showToast('🎮', '活动已启动', '「' + title + '」正在加载，准备开始挑战吧！');
 }
 renderActivities();
+
+// ====== 新功能：用户已报名活动列表 ======
+var userRegisteredEvents = [];
+
+function registerEvent(eventId) {
+  var evt = null;
+  for (var i = 0; i < events.length; i++) {
+    if (events[i].id === eventId) { evt = events[i]; break; }
+  }
+  if (!evt) return;
+  if (evt.signed) { showToast('📅', '已报名', '你已报名此活动'); return; }
+  if (evt.registered >= evt.capacity) { showToast('📅', '名额已满', '此活动已满员，下次早点报名哦'); return; }
+  
+  var phoneHint = '138' + String(Math.floor(Math.random() * 100000000) + 100000000).substr(0, 8);
+  var bodyHtml = '<div class="form-group"><label class="form-label">报名人数</label><select class="form-select" id="signupCount"><option value="1">1人</option><option value="2">2人</option><option value="3">3人</option><option value="4">4人</option><option value="5">5人</option></select></div><div class="form-group"><label class="form-label">联系方式（手机号）</label><input class="form-input" id="signupPhone" type="tel" placeholder="请输入手机号" value="' + phoneHint + '" /></div><div class="form-group"><label class="form-check"><input type="checkbox" id="signupItems" /> 携带物品（如相机、折叠椅、食物等）</label></div><div style="font-size:11px;color:#b5a99e;text-align:center;">📋 ' + evt.time + ' · ' + evt.loc + ' · 已报名 ' + evt.registered + '/' + evt.capacity + '</div>';
+  var footHtml = '<button class="modal-btn secondary" onclick="closeModal()">取消</button><button class="modal-btn primary" onclick="confirmRegisterEvent(' + eventId + ')">确认报名</button>';
+  openModal('📅 ' + evt.title, bodyHtml, footHtml);
+}
+
+function confirmRegisterEvent(eventId) {
+  var evt = null;
+  for (var i = 0; i < events.length; i++) {
+    if (events[i].id === eventId) { evt = events[i]; break; }
+  }
+  if (!evt) return;
+  var count = parseInt(document.getElementById('signupCount').value) || 1;
+  var phone = document.getElementById('signupPhone').value || '未填写';
+  var hasItems = document.getElementById('signupItems').checked;
+  evt.registered += count;
+  evt.signed = true;
+  var code = 'HSJ-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+  
+  userRegisteredEvents.push({ id: evt.id, title: evt.title, time: evt.time, loc: evt.loc, color: evt.color, code: code, count: count });
+  
+  closeModal();
+  var bodyHtml = '<div class="voucher"><div class="v-icon">🎫</div><div class="v-title">报名成功！</div><div class="v-info"><strong>' + evt.title + '</strong><br>👥 ' + count + '人 | 🎒 ' + (hasItems ? '携带物品' : '不携带物品') + '<br>📞 ' + phone + '</div><div class="v-code">' + code + '</div><div class="v-tip">📱 活动当天出示此凭证签到入场</div></div>';
+  var footHtml = '<button class="modal-btn primary" onclick="closeModal()">我知道了</button>';
+  openModal('✅ 报名成功', bodyHtml, footHtml);
+  renderEvents();
+  showToast('📅', '报名成功！', '已报名「' + evt.title + '」，电子凭证已生成');
+}
+
+function showMyRegisteredEvents() {
+  if (userRegisteredEvents.length === 0) {
+    showToast('📅', '暂无报名', '你还没有报名任何活动，快去看看吧');
+    return;
+  }
+  var listHtml = userRegisteredEvents.map(function(r) {
+    var bgColors = { '#c8533a':'#fef3ef', '#f5a623':'#fef6e8', '#4a9e6e':'#edf7f0', '#3a7abf':'#eef4fa', '#b04a5e':'#fef0f0', '#7b4a8c':'#f5f0fa' };
+    return '<div class="reg-event-item"><div class="re-icon" style="background:' + (bgColors[r.color] || '#fef3ef') + ';">🎫</div><div class="re-info"><div class="re-title">' + r.title + '</div><div class="re-meta">' + r.time + ' · ' + r.loc + ' · ' + r.count + '人</div></div><span class="re-ticket" onclick="showTicket(\'' + r.title.replace(/'/g, "\\'") + '\',\'' + r.code + '\',\'' + r.time + '\',\'' + r.loc + '\')">查看凭证</span></div>';
+  }).join('');
+  var bodyHtml = '<div style="font-size:12px;color:#7a6e66;margin-bottom:10px;">共 ' + userRegisteredEvents.length + ' 个已报名活动</div>' + listHtml;
+  var footHtml = '<button class="modal-btn primary" onclick="closeModal()">关闭</button>';
+  openModal('🎫 我的报名', bodyHtml, footHtml);
+}
+
+function showTicket(title, code, time, loc) {
+  var bodyHtml = '<div class="voucher"><div class="v-icon">🎫</div><div class="v-title">' + title + '</div><div class="v-info">' + time + ' · ' + loc + '</div><div class="v-code">' + code + '</div><div class="v-tip">📱 活动当天出示此凭证签到入场</div></div>';
+  var footHtml = '<button class="modal-btn primary" onclick="closeModal()">关闭</button>';
+  openModal('🎫 电子凭证', bodyHtml, footHtml);
+}
+
+// ====== 新功能：社区活动创建 ======
+var userCreatedEvents = [];
+var selectedEventCategory = '';
+
+function createEvent() {
+  selectedEventCategory = '';
+  var bodyHtml = '<div class="form-group"><label class="form-label">活动名称</label><input class="form-input" id="eventNameInput" placeholder="给你的活动起个名字" /></div>' +
+    '<div class="form-group" style="display:flex;gap:8px;"><div style="flex:1;"><label class="form-label">日期</label><input class="form-input" id="eventDateInput" type="date" /></div><div style="flex:1;"><label class="form-label">时间</label><input class="form-input" id="eventTimeInput" type="time" value="10:00" /></div></div>' +
+    '<div class="form-group"><label class="form-label">地点</label><input class="form-input" id="eventLocInput" placeholder="活动地点" /></div>' +
+    '<div class="form-group"><label class="form-label">活动描述</label><textarea class="form-input" id="eventDescInput" rows="3" placeholder="介绍一下你的活动……" style="resize:none;"></textarea></div>' +
+    '<div class="form-group"><label class="form-label">活动类别</label><div class="event-cat-grid" id="eventCatGrid">' +
+    '<div class="event-cat-item" data-cat="环保" onclick="selectEventCat(this,\'环保\')">🌿 环保</div>' +
+    '<div class="event-cat-item" data-cat="互助" onclick="selectEventCat(this,\'互助\')">🤝 互助</div>' +
+    '<div class="event-cat-item" data-cat="亲子" onclick="selectEventCat(this,\'亲子\')">👨‍👩‍👧 亲子</div>' +
+    '<div class="event-cat-item" data-cat="文娱" onclick="selectEventCat(this,\'文娱\')">🎭 文娱</div>' +
+    '<div class="event-cat-item" data-cat="其他" onclick="selectEventCat(this,\'其他\')">📌 其他</div>' +
+    '</div></div>' +
+    '<div class="form-group"><label class="form-label">最大参与人数</label><input class="form-input" id="eventMaxInput" type="number" value="20" min="1" max="200" /></div>';
+  var footHtml = '<button class="modal-btn secondary" onclick="closeModal()">取消</button><button class="modal-btn primary" onclick="submitEvent()">发布活动</button>';
+  openModal('🎯 创建社区活动', bodyHtml, footHtml);
+}
+
+function selectEventCat(el, cat) {
+  var items = document.querySelectorAll('#eventCatGrid .event-cat-item');
+  for (var i = 0; i < items.length; i++) { items[i].classList.remove('selected'); }
+  el.classList.add('selected');
+  selectedEventCategory = cat;
+}
+
+function submitEvent() {
+  var name = document.getElementById('eventNameInput').value.trim();
+  var date = document.getElementById('eventDateInput').value;
+  var time = document.getElementById('eventTimeInput').value;
+  var loc = document.getElementById('eventLocInput').value.trim();
+  var desc = document.getElementById('eventDescInput').value.trim();
+  var max = parseInt(document.getElementById('eventMaxInput').value) || 20;
+  if (!name) { showToast('🎯', '请输入活动名称', '给活动起个吸引人的名字吧'); return; }
+  if (!date) { showToast('🎯', '请选择日期', '选择活动举办的日期'); return; }
+  if (!loc) { showToast('🎯', '请输入地点', '填写活动地点让邻居知道去哪'); return; }
+  if (!selectedEventCategory) { showToast('🎯', '请选择类别', '选择一个活动类别方便邻居发现'); return; }
+  
+  var catIcons = { '环保':'🌿', '互助':'🤝', '亲子':'👨‍👩‍👧', '文娱':'🎭', '其他':'📌' };
+  var icon = catIcons[selectedEventCategory] || '📌';
+  var dateObj = new Date(date);
+  var day = dateObj.getDate();
+  var month = dateObj.getMonth() + 1;
+  var dateStr = month + '月' + day + '日';
+  
+  var newEvent = {
+    id: events.length + 1,
+    day: day,
+    title: name,
+    time: dateStr + ' ' + time,
+    loc: loc,
+    color: '#c8533a',
+    signed: false,
+    capacity: max,
+    registered: 0,
+    desc: desc,
+    category: selectedEventCategory,
+    icon: icon,
+    creator: true
+  };
+  events.push(newEvent);
+  userCreatedEvents.push(newEvent);
+  
+  closeModal();
+  renderCalendar();
+  loadUserEvents();
+  showToast('🎯', '活动创建成功！', '「' + name + '」已发布，好心值 +10 🎉');
+}
+
+function loadUserEvents() {
+  var container = document.getElementById('userEventsContainer');
+  var list = document.getElementById('userEventsList');
+  if (userCreatedEvents.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = 'block';
+  var catIcons = { '环保':'🌿', '互助':'🤝', '亲子':'👨‍👩‍👧', '文娱':'🎭', '其他':'📌' };
+  list.innerHTML = userCreatedEvents.map(function(e) {
+    return '<div class="user-event-item"><div class="ue-icon" style="background:#fef3ef;">' + (e.icon || catIcons[e.category] || '📌') + '</div><div class="ue-info"><div class="ue-title">' + e.title + '</div><div class="ue-meta">' + e.time + ' · ' + e.loc + ' · ' + e.registered + '/' + e.capacity + ' 人</div></div><span class="ue-badge">' + (e.category || '') + '</span></div>';
+  }).join('');
+}
+
+// ====== 新功能：社区问答系统 ======
+var qaData = [
+  { id: 1, title: '小区里有没有靠谱的空调维修师傅推荐？', desc: '家里的空调不制冷了，想找一位靠谱的师傅来看看，邻居们有推荐吗？', answers: ['3栋张叔：推荐小区门口的家电维修老李，电话138****5678，价格公道。', '5栋小王：上次找物业推荐的师傅，也挺靠谱的，可以问问物业。'], tags: ['生活服务', '维修'], count: 2 },
+  { id: 2, title: '周末想带孩子去周边玩，有什么好去处？', desc: '孩子5岁，想找个适合亲子游的地方，不要太远，当天能来回的。', answers: ['7栋刘姐：西郊公园不错，有儿童乐园和草坪，适合野餐。', '2栋赵叔：城南的科技馆也很适合孩子，可以玩一整天。'], tags: ['亲子', '周末'], count: 2 },
+  { id: 3, title: '小区停车位可以共享吗？', desc: '白天我上班车位空着，附近有没有邻居需要临时停车的？', answers: ['6栋周阿姨：这个主意好！我女儿周末来看我经常找不到车位。', '8栋小杨：可以试试在社区群里问问，应该有人需要。'], tags: ['停车', '共享'], count: 2 },
+  { id: 4, title: '有没有一起学英语的邻居？', desc: '想组个英语学习小组，每周一起练口语，有人感兴趣吗？', answers: ['9栋孙姐：我有兴趣！之前在单位也是英语爱好者，加我一个。', '4栋小李：建议建个群，我可以分享一些学习资料。'], tags: ['学习', '英语'], count: 2 },
+];
+
+function loadQAs() {
+  var container = document.getElementById('qaContainer');
+  if (!container) return;
+  container.innerHTML = qaData.map(function(q) {
+    var answersHtml = q.answers.map(function(a) {
+      var parts = a.split('：');
+      var author = parts[0] || '';
+      var text = parts.slice(1).join('：') || a;
+      return '<div class="qa-answer-item"><div class="qa-answer-author">' + author + '</div><div class="qa-answer-text">' + text + '</div></div>';
+    }).join('');
+    var tagsHtml = q.tags.map(function(t) { return '<span class="qa-tag">' + t + '</span>'; }).join('');
+    return '<div class="qa-item"><div class="qa-header" onclick="toggleAnswer(' + q.id + ')"><div class="qa-icon">❓</div><div class="qa-title">' + q.title + '</div><span class="qa-arrow">▼</span></div><div class="qa-meta" style="padding-left:34px;">' + tagsHtml + '<span>💬 ' + q.count + ' 个回答</span></div><div class="qa-body" id="qaBody_' + q.id + '">' + answersHtml + '</div></div>';
+  }).join('');
+}
+
+function toggleAnswer(id) {
+  var body = document.getElementById('qaBody_' + id);
+  if (!body) return;
+  body.classList.toggle('show');
+  var header = body.previousElementSibling.previousElementSibling;
+  if (header) header.classList.toggle('expanded');
+}
+
+function openAskQuestionModal() {
+  var bodyHtml = '<div class="form-group"><label class="form-label">问题标题</label><input class="form-input" id="askQTitle" placeholder="简明扼要地描述你的问题" /></div>' +
+    '<div class="form-group"><label class="form-label">问题描述</label><textarea class="form-input" id="askQDesc" rows="3" placeholder="详细说明你的问题，让邻居们更好地帮助你……" style="resize:none;"></textarea></div>' +
+    '<div class="form-group"><label class="form-label">标签</label><div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+    '<span class="qa-tag" style="cursor:pointer;padding:4px 10px;font-size:12px;" onclick="toggleQTag(this)">生活服务</span>' +
+    '<span class="qa-tag" style="cursor:pointer;padding:4px 10px;font-size:12px;" onclick="toggleQTag(this)">维修</span>' +
+    '<span class="qa-tag" style="cursor:pointer;padding:4px 10px;font-size:12px;" onclick="toggleQTag(this)">亲子</span>' +
+    '<span class="qa-tag" style="cursor:pointer;padding:4px 10px;font-size:12px;" onclick="toggleQTag(this)">学习</span>' +
+    '<span class="qa-tag" style="cursor:pointer;padding:4px 10px;font-size:12px;" onclick="toggleQTag(this)">宠物</span>' +
+    '<span class="qa-tag" style="cursor:pointer;padding:4px 10px;font-size:12px;" onclick="toggleQTag(this)">其他</span>' +
+    '</div></div>';
+  var footHtml = '<button class="modal-btn secondary" onclick="closeModal()">取消</button><button class="modal-btn primary" onclick="askQuestion()">发布问题</button>';
+  openModal('✏️ 向邻居提问', bodyHtml, footHtml);
+}
+
+var selectedQTags = [];
+function toggleQTag(el) {
+  el.classList.toggle('selected');
+  var tag = el.textContent.trim();
+  var idx = selectedQTags.indexOf(tag);
+  if (idx === -1) selectedQTags.push(tag);
+  else selectedQTags.splice(idx, 1);
+}
+
+function askQuestion() {
+  var title = document.getElementById('askQTitle').value.trim();
+  var desc = document.getElementById('askQDesc').value.trim();
+  if (!title) { showToast('❓', '请输入问题标题', '给问题起个标题吧'); return; }
+  if (!desc) { showToast('❓', '请输入问题描述', '详细描述你的问题'); return; }
+  var tags = selectedQTags.length > 0 ? selectedQTags.slice() : ['其他'];
+  var newQ = { id: qaData.length + 1, title: title, desc: desc, answers: ['🙋 等待邻居回答中……'], tags: tags, count: 0 };
+  qaData.unshift(newQ);
+  selectedQTags = [];
+  closeModal();
+  loadQAs();
+  showToast('❓', '问题已发布！', '等待邻居们来回答，好心值 +5');
+}
+
+// ====== 新功能：邻里匹配系统 ======
+var matchData = [
+  { id: 1, avatar: '👩', name: '张阿姨', building: '3栋', interests: ['环保', '园艺', '烘焙'], matchPct: 92, sent: false },
+  { id: 2, avatar: '👨', name: '李先生', building: '7栋', interests: ['读书', '运动', '摄影'], matchPct: 88, sent: false },
+  { id: 3, avatar: '👧', name: '小陈', building: '5栋', interests: ['宠物', '绘画', '音乐'], matchPct: 85, sent: false },
+  { id: 4, avatar: '👴', name: '王爷爷', building: '1栋', interests: ['象棋', '书法', '园艺'], matchPct: 78, sent: false },
+];
+
+function loadMatches() {
+  var grid = document.getElementById('matchGrid');
+  if (!grid) return;
+  grid.innerHTML = matchData.map(function(m) {
+    var commonHtml = m.interests.map(function(i) { return '<span class="mc-common-item">' + i + '</span>'; }).join('');
+    return '<div class="match-card"><div class="mc-avatar">' + m.avatar + '</div><div class="mc-name">' + m.name + '</div><div class="mc-building">' + m.building + '</div><div class="mc-interests">共同兴趣</div><div class="mc-common">' + commonHtml + '</div><div class="mc-match-pct">' + m.matchPct + '%</div><div class="mc-match-label">匹配度</div><button class="mc-btn' + (m.sent ? ' sent' : '') + '" onclick="' + (m.sent ? '' : 'sendMatchRequest(' + m.id + ')') + '">' + (m.sent ? '✓ 已发送请求' : '💌 发送匹配请求') + '</button></div>';
+  }).join('');
+}
+
+function sendMatchRequest(neighborId) {
+  var neighbor = null;
+  for (var i = 0; i < matchData.length; i++) { if (matchData[i].id === neighborId) { neighbor = matchData[i]; break; } }
+  if (!neighbor) return;
+  neighbor.sent = true;
+  loadMatches();
+  showToast('🤝', '匹配请求已发送！', '已向「' + neighbor.name + '」发送匹配请求，等待对方确认');
+}
+
+// ====== 新功能：应急演练模拟 ======
+var drillData = {
+  currentStep: 0,
+  score: 0,
+  totalSteps: 3,
+  scenarios: [
+    { title: '发现火情', desc: '你在楼道里闻到浓烈的烧焦味，并且看到邻居家的门缝中冒出黑烟。此时你应该怎么做？', choices: ['A. 立即敲门确认并拨打119', 'B. 先找物业再说', 'C. 用水泼向门缝', 'D. 打开窗户通风'], correct: 0, tip: '发现火情应第一时间确认并报警（119），同时通知物业和邻居疏散。切勿盲目用水或打开窗户，可能助长火势。' },
+    { title: '电梯故障被困', desc: '你乘坐电梯时突然停电，电梯停在楼层中间，门无法打开，手机还有信号。此时正确的做法是？', choices: ['A. 用力拍打电梯门', 'B. 按紧急呼叫按钮并拨打物业电话', 'C. 尝试自己扒开门', 'D. 在电梯里跳跃让电梯运行'], correct: 1, tip: '电梯被困时，第一时间按紧急呼叫按钮或拨打物业电话，保持冷静等待救援。切勿强行扒门或跳跃，非常危险。' },
+    { title: '邻居突发疾病', desc: '你在小区散步时，看到一位邻居突然倒地，意识不清。你应该怎么做？', choices: ['A. 立即拨打120急救电话', 'B. 赶紧走开避免麻烦', 'C. 先拍照发朋友圈', 'D. 给邻居喂水喂药'], correct: 0, tip: '遇到他人突发疾病，第一时间拨打120急救电话，在等待救护车时可以询问周围是否有医护人员，不要随意移动患者或喂食。' },
+  ],
+  tips: [
+    '✅ 遇到紧急情况，保持冷静是第一原则',
+    '✅ 熟记社区物业电话和紧急联系电话',
+    '✅ 平时多参加社区应急演练，提高自救互救能力',
+    '✅ 了解家中灭火器、急救包的位置和使用方法',
+    '✅ 发现隐患及时向物业报告，防患于未然'
+  ]
+};
+
+function startDrill() {
+  var section = document.getElementById('drillSection');
+  var container = document.getElementById('drillContainer');
+  if (!section || !container) return;
+  drillData.currentStep = 0;
+  drillData.score = 0;
+  section.style.display = 'block';
+  renderDrillStep();
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderDrillStep() {
+  var container = document.getElementById('drillContainer');
+  var step = drillData.currentStep;
+  var total = drillData.totalSteps;
+  
+  if (step >= total) {
+    renderDrillResult();
+    return;
+  }
+  
+  var s = drillData.scenarios[step];
+  var progressHtml = '';
+  for (var i = 0; i < total; i++) {
+    var cls = 'dp-dot';
+    if (i < step) cls += ' done';
+    else if (i === step) cls += ' active';
+    progressHtml += '<span class="' + cls + '"></span>';
+  }
+  
+  var choicesHtml = s.choices.map(function(c, idx) {
+    return '<div class="ds-choice" data-idx="' + idx + '" onclick="drillStep(' + idx + ')">' + c + '</div>';
+  }).join('');
+  
+  container.innerHTML = '<div class="drill-step"><div class="drill-progress">' + progressHtml + '</div><div class="ds-header"><div class="ds-step-num">' + (step + 1) + '</div><div class="ds-title">' + s.title + '</div></div><div class="ds-desc">' + s.desc + '</div><div class="ds-choices">' + choicesHtml + '</div></div>';
+}
+
+function drillStep(choice) {
+  var step = drillData.currentStep;
+  var s = drillData.scenarios[step];
+  var choices = document.querySelectorAll('.ds-choice');
+  
+  for (var i = 0; i < choices.length; i++) {
+    choices[i].onclick = null;
+    choices[i].style.cursor = 'default';
+    if (i === s.correct) choices[i].classList.add('correct');
+    else if (i === choice) choices[i].classList.add('wrong');
+  }
+  
+  if (choice === s.correct) {
+    drillData.score++;
+  }
+  
+  var tipHtml = '<div style="margin-top:10px;padding:10px 12px;background:#f0f7ff;border-radius:8px;font-size:12px;color:#3a7abf;line-height:1.5;animation:fadeIn .3s ease;">💡 ' + s.tip + '</div>';
+  var container = document.getElementById('drillContainer');
+  container.insertAdjacentHTML('beforeend', tipHtml);
+  
+  var nextBtn = document.createElement('div');
+  nextBtn.style.cssText = 'margin-top:10px;text-align:center;';
+  nextBtn.innerHTML = '<button onclick="nextDrillStep()" style="padding:8px 24px;border-radius:999px;font-size:13px;font-weight:700;color:#fff;background:#c8533a;border:none;cursor:pointer;">' + (step < drillData.totalSteps - 1 ? '下一步 →' : '查看结果') + '</button>';
+  container.appendChild(nextBtn);
+}
+
+function nextDrillStep() {
+  drillData.currentStep++;
+  renderDrillStep();
+}
+
+function renderDrillResult() {
+  var container = document.getElementById('drillContainer');
+  var total = drillData.totalSteps;
+  var score = drillData.score;
+  var pct = Math.round(score / total * 100);
+  var grade = pct >= 100 ? '🏆 完美！应急达人！' : (pct >= 66 ? '🌟 表现得不错！继续加油' : '💪 需要多学习应急知识哦');
+  
+  var tipsHtml = drillData.tips.map(function(t, i) {
+    return '<div class="dr-tip-item"><span class="dti-num">' + (i + 1) + '.</span>' + t + '</div>';
+  }).join('');
+  
+  container.innerHTML = '<div class="drill-result-card"><div class="dr-score">' + score + '/' + total + '</div><div class="dr-score-label">正确答题数</div><div class="dr-grade">' + grade + '</div><div class="dr-tips"><div style="font-size:13px;font-weight:600;margin-bottom:6px;color:#2b2622;">📋 应急安全小贴士</div>' + tipsHtml + '</div></div>';
+  showToast('🎯', '演练完成！', '你答对了 ' + score + '/' + total + ' 题，好心值 +15 🎉');
+}
+
+function resetDrill() {
+  drillData.currentStep = 0;
+  drillData.score = 0;
+  renderDrillStep();
+}
+
+// ====== 新功能：社区暖心故事征集 ======
+var warmStories = [
+  { id: 1, avatar: '👩', name: '赵姐', title: '帮邻居照顾生病的孩子', content: '隔壁邻居出差，孩子突发高烧，我帮忙送去医院并照顾了一整天，邻居回来感动得热泪盈眶。', category: '邻里互助', status: '已审核', time: '3天前' },
+  { id: 2, avatar: '👨', name: '张哥', title: '雨夜送老人回家', content: '深夜加班回来，看到一位老人在小区门口躲雨，我撑伞把老人送回了家，虽然自己淋湿了但心里很暖。', category: '暖心瞬间', status: '已审核', time: '5天前' },
+];
+
+function loadWarmStories() {
+  var container = document.getElementById('warmStoryContainer');
+  if (!container) return;
+  container.innerHTML = warmStories.map(function(s) {
+    return '<div class="warm-story-item"><div class="ws-header"><div class="ws-avatar">' + s.avatar + '</div><div class="ws-name">' + s.name + '</div><span class="ws-status ' + (s.status === '已审核' ? 'approved' : '') + '">' + (s.status === '已审核' ? '✅ ' : '⏳ ') + s.status + '</span></div><div class="ws-title">' + s.title + '</div><span class="ws-cat">' + s.category + '</span><div class="ws-content">' + s.content + '</div><div class="ws-time">' + s.time + '</div></div>';
+  }).join('');
+}
+
+function openWarmStoryForm() {
+  var bodyHtml = '<div class="form-group"><label class="form-label">故事标题</label><input class="form-input" id="warmStoryTitle" placeholder="给你的暖心故事起个名字" /></div>' +
+    '<div class="form-group"><label class="form-label">故事内容</label><textarea class="form-input" id="warmStoryContent" rows="4" placeholder="记录你身边的暖心瞬间……" style="resize:none;"></textarea></div>' +
+    '<div class="form-group"><label class="form-label">故事类别</label><div class="warm-story-cat-select" id="warmStoryCat">' +
+    '<span data-cat="邻里互助" onclick="selectWarmCat(this)">🤝 邻里互助</span>' +
+    '<span data-cat="暖心瞬间" onclick="selectWarmCat(this)">💝 暖心瞬间</span>' +
+    '<span data-cat="环保公益" onclick="selectWarmCat(this)">🌿 环保公益</span>' +
+    '<span data-cat="社区故事" onclick="selectWarmCat(this)">📖 社区故事</span>' +
+    '</div></div>';
+  var footHtml = '<button class="modal-btn secondary" onclick="closeModal()">取消</button><button class="modal-btn primary" onclick="submitWarmStory()">提交审核</button>';
+  openModal('💝 投稿暖心故事', bodyHtml, footHtml);
+}
+
+var selectedWarmCat = '';
+
+function selectWarmCat(el) {
+  var items = document.querySelectorAll('#warmStoryCat span');
+  for (var i = 0; i < items.length; i++) { items[i].classList.remove('selected'); }
+  el.classList.add('selected');
+  selectedWarmCat = el.dataset.cat;
+}
+
+function submitWarmStory() {
+  var title = document.getElementById('warmStoryTitle').value.trim();
+  var content = document.getElementById('warmStoryContent').value.trim();
+  if (!title) { showToast('💝', '请输入故事标题', '给故事起个名字吧'); return; }
+  if (!content) { showToast('💝', '请输入故事内容', '分享你身边的暖心故事'); return; }
+  if (!selectedWarmCat) { showToast('💝', '请选择类别', '选择一个故事类别'); return; }
+  
+  warmStories.unshift({
+    id: warmStories.length + 1,
+    avatar: '🙋',
+    name: '我',
+    title: title,
+    content: content,
+    category: selectedWarmCat,
+    status: '待审核',
+    time: '刚刚'
+  });
+  selectedWarmCat = '';
+  closeModal();
+  loadWarmStories();
+  showToast('💝', '投稿成功！', '你的暖心故事已提交审核，审核通过后将展示在社区，好心值 +8 🎉');
+}
+
+// ====== 初始化新功能 ======
+loadQAs();
+loadMatches();
+loadWarmStories();
 </script>
 </body>
 </html>
