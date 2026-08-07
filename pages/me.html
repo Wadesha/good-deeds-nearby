@@ -188,6 +188,100 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
   .profile-stats { grid-template-columns: repeat(3, 1fr); }
   .neighbor-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ========== 新增功能样式 ========== */
+
+/* 好事类型分布 - 环形图 */
+.chart-wrap { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.donut {
+  position: relative; width: 140px; height: 140px; border-radius: 50%; flex-shrink: 0;
+  background: conic-gradient(#c8533a 0deg 126deg, #da7a4a 126deg 216deg, #e8a87a 216deg 288deg, #b5a99e 288deg 331.2deg, #7a6e66 331.2deg 360deg);
+}
+.donut-hole {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 70px; height: 70px; border-radius: 50%; background: #fff;
+  display: grid; place-items: center; font-size: 14px; font-weight: 800; color: #c8533a;
+}
+.donut-legend { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 120px; }
+.donut-legend .dl-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.dl-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.dl-label { flex: 1; color: #2b2622; }
+.dl-pct { font-weight: 700; color: #c8533a; }
+
+/* 影响力指标 */
+.impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.impact-item { text-align: center; }
+.impact-item .ii-value { font-size: 22px; font-weight: 800; color: #c8533a; }
+.impact-item .ii-label { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+.impact-item .ii-bar { margin-top: 6px; height: 6px; background: #f5f0eb; border-radius: 3px; overflow: hidden; }
+.impact-item .ii-bar-inner { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #c8533a, #da7a4a); transition: width 1.5s ease; width: 0; }
+
+/* 活跃度柱状图 */
+.bar-chart { display: flex; align-items: flex-end; justify-content: space-between; gap: 6px; height: 140px; padding-top: 10px; }
+.bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; gap: 4px; }
+.bar {
+  width: 100%; max-width: 36px; border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, #c8533a, #da7a4a);
+  min-height: 4px; transition: height 1s ease;
+}
+.bar-item .bar { animation: barGrow .8s ease forwards; opacity: 0; }
+.bar-label { font-size: 11px; color: #7a6e66; font-weight: 600; }
+.bar-value { font-size: 10px; color: #c8533a; font-weight: 700; }
+@keyframes barGrow { from { opacity: 0; height: 0 !important; } to { opacity: 1; } }
+
+/* 成就进度 */
+.achievement-progress { margin-top: 12px; }
+.ach-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.ach-header .ach-title { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.ach-header .ach-toggle { font-size: 12px; color: #c8533a; cursor: pointer; font-weight: 600; user-select: none; }
+.ach-body { display: none; }
+.ach-body.show { display: block; animation: fadeIn .25s ease; }
+.ach-progress-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; }
+.ach-progress-item .ap-icon { font-size: 14px; width: 22px; text-align: center; }
+.ach-progress-item .ap-name { flex: 0 0 56px; color: #2b2622; font-weight: 600; font-size: 11px; }
+.ach-progress-item .ap-bar-wrap { flex: 1; height: 6px; background: #f5f0eb; border-radius: 3px; overflow: hidden; }
+.ach-progress-item .ap-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #c8533a, #da7a4a); transition: width .8s ease; width: 0; }
+.ach-progress-item .ap-pct { flex: 0 0 32px; text-align: right; font-weight: 700; color: #c8533a; font-size: 11px; }
+.ach-progress-item .ap-bar.done { background: #4a9e6e; }
+.ach-hint { margin-top: 8px; padding: 8px 12px; background: #fef3ef; border-radius: 8px; font-size: 12px; color: #7a6e66; display: flex; align-items: center; gap: 6px; }
+.ach-hint b { color: #c8533a; }
+
+/* 成长路径 */
+.level-path { display: flex; align-items: center; justify-content: space-between; gap: 2px; padding: 6px 0; }
+.level-node { display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; flex: 1; }
+.level-node .ln-circle {
+  width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 11px; font-weight: 800; transition: all .3s; position: relative; z-index: 2;
+}
+.level-node .ln-circle.unlocked { background: #c8533a; color: #fff; box-shadow: 0 0 0 3px #fde0d6; }
+.level-node .ln-circle.current {
+  background: #c8533a; color: #fff; width: 40px; height: 40px; font-size: 13px;
+  box-shadow: 0 0 0 4px #fde0d6, 0 4px 12px rgba(200,83,58,.3);
+  animation: levelPulse 2s infinite;
+}
+.level-node .ln-circle.locked { background: #f5f0eb; color: #b5a99e; }
+.level-node .ln-label { font-size: 9px; color: #7a6e66; font-weight: 600; white-space: nowrap; }
+.level-node .ln-connector {
+  position: absolute; top: 16px; left: -50%; width: 100%; height: 3px; z-index: 1; pointer-events: none;
+}
+.level-node:first-child .ln-connector { display: none; }
+.level-node .ln-connector.active { background: #c8533a; }
+.level-node .ln-connector.inactive { background: #f5f0eb; }
+@keyframes levelPulse { 0%,100% { box-shadow: 0 0 0 4px #fde0d6, 0 4px 12px rgba(200,83,58,.3); } 50% { box-shadow: 0 0 0 6px #fde0d6, 0 4px 16px rgba(200,83,58,.45); } }
+
+/* 推荐邻居 */
+.neighbor-rec-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f5f0eb; }
+.neighbor-rec-section .rec-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #2b2622; display: flex; align-items: center; gap: 6px; }
+.rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.rec-card { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px; border-radius: 10px; border: 1px solid #eee8e2; transition: all .2s; }
+.rec-card:hover { border-color: #c8533a; background: #fef3ef; }
+.rec-card .rc-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 18px; margin-bottom: 6px; }
+.rec-card .rc-name { font-size: 13px; font-weight: 600; }
+.rec-card .rc-meta { font-size: 11px; color: #7a6e66; margin-top: 2px; }
+.rec-card .rc-tag { font-size: 10px; padding: 2px 6px; border-radius: 999px; background: #fef3ef; color: #c8533a; font-weight: 600; margin-top: 4px; }
+.rec-card .rc-btn { margin-top: 6px; padding: 3px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; border: 1px solid #c8533a; color: #c8533a; background: transparent; cursor: pointer; transition: all .2s; }
+.rec-card .rc-btn:hover { background: #c8533a; color: #fff; }
+.rec-card .rc-btn.done { background: #4a9e6e; border-color: #4a9e6e; color: #fff; cursor: default; }
 </style>
 </head>
 <body>
@@ -251,6 +345,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
         <span class="badge-item locked" title="💛 暖心陪伴（未解锁）">💛</span>
         <span class="badge-item locked" title="🏆 挑战王者（未解锁）">🏆</span>
         <span class="badge-item locked" title="👑 全能好事家（未解锁）">👑</span>
+      </div>
+      <div class="achievement-progress">
+        <div class="ach-header">
+          <span class="ach-title">🏅 成就进度</span>
+          <span class="ach-toggle" onclick="toggleAchievement()">展开详情 ▸</span>
+        </div>
+        <div class="ach-body" id="achBody">
+          <div id="achProgressList"></div>
+          <div class="ach-hint">💡 下一个可解锁：<b id="nextAchHint">暖心陪伴</b>（还需完成 4 次暖心陪伴好事）</div>
+        </div>
       </div>
       <div class="profile-stats">
         <div class="ps-item"><div class="ps-num" id="psPoints">1,280</div><div class="ps-label">好心值</div></div>
@@ -341,12 +445,131 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     </div>
   </div>
 
+  <!-- 好事类型分布 + 好事影响力 -->
+  <div class="content-grid" style="margin-top:16px;">
+    <div class="card">
+      <div class="card-hd"><h3>🎯 我的场景偏好</h3><span class="more" onclick="alert('查看完整场景分析 →')">详情</span></div>
+      <div style="margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:600;">🌅 通勤场景</span>
+          <span style="font-size:12px;color:#c8533a;font-weight:700;">高频</span>
+        </div>
+        <div style="height:6px;background:#f5f0eb;border-radius:3px;overflow:hidden;">
+          <div style="width:78%;height:100%;background:linear-gradient(90deg,#3b6b8c,#5a8aaa);border-radius:3px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#7a6e66;margin-top:2px;">
+          <span>已做 23 次</span>
+          <span>78%</span>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:600;">☕ 午休场景</span>
+          <span style="font-size:12px;color:#4a9e6e;font-weight:700;">中频</span>
+        </div>
+        <div style="height:6px;background:#f5f0eb;border-radius:3px;overflow:hidden;">
+          <div style="width:45%;height:100%;background:linear-gradient(90deg,#3f7d5b,#5a9e7a);border-radius:3px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#7a6e66;margin-top:2px;">
+          <span>已做 12 次</span>
+          <span>45%</span>
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:600;">👨‍👩‍👧‍👦 家庭亲子</span>
+          <span style="font-size:12px;color:#7b4a8c;font-weight:700;">低频</span>
+        </div>
+        <div style="height:6px;background:#f5f0eb;border-radius:3px;overflow:hidden;">
+          <div style="width:22%;height:100%;background:linear-gradient(90deg,#6b4a7a,#8a5a9e);border-radius:3px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#7a6e66;margin-top:2px;">
+          <span>已做 6 次</span>
+          <span>22%</span>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:600;">🚨 应急响应</span>
+          <span style="font-size:12px;color:#c98a2b;font-weight:700;">待尝试</span>
+        </div>
+        <div style="height:6px;background:#f5f0eb;border-radius:3px;overflow:hidden;">
+          <div style="width:8%;height:100%;background:linear-gradient(90deg,#c8533a,#e07050);border-radius:3px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#7a6e66;margin-top:2px;">
+          <span>已做 2 次</span>
+          <span>8%</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid #f5f0eb;">
+        <div style="font-size:12px;color:#7a6e66;display:flex;align-items:center;gap:6px;">
+          <span>💡</span>
+          <span>推荐你尝试 <b style="color:#c8533a;">家庭亲子</b> 场景，周末可以带家人一起做公益</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>⏱️ 时间碎片利用</h3><span class="more" onclick="alert('查看完整时间分析 →')">详情</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div style="text-align:center;padding:12px;background:#faf8f6;border-radius:10px;">
+          <div style="font-size:24px;font-weight:800;color:#c8533a;">5</div>
+          <div style="font-size:11px;color:#7a6e66;">分钟以内</div>
+          <div style="font-size:10px;color:#b5a99e;">28次</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:#faf8f6;border-radius:10px;">
+          <div style="font-size:24px;font-weight:800;color:#3b6b8c;">10</div>
+          <div style="font-size:11px;color:#7a6e66;">分钟以内</div>
+          <div style="font-size:10px;color:#b5a99e;">15次</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:#faf8f6;border-radius:10px;">
+          <div style="font-size:24px;font-weight:800;color:#3f7d5b;">30</div>
+          <div style="font-size:11px;color:#7a6e66;">分钟以内</div>
+          <div style="font-size:10px;color:#b5a99e;">8次</div>
+        </div>
+        <div style="text-align:center;padding:12px;background:#faf8f6;border-radius:10px;">
+          <div style="font-size:24px;font-weight:800;color:#6b4a7a;">30+</div>
+          <div style="font-size:11px;color:#7a6e66;">分钟以上</div>
+          <div style="font-size:10px;color:#b5a99e;">3次</div>
+        </div>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px;">📊 最佳利用时段</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="padding:4px 12px;border-radius:999px;background:#fef3ef;color:#c8533a;font-size:12px;font-weight:600;">🌅 早通勤 7:30-9:00</span>
+          <span style="padding:4px 12px;border-radius:999px;background:#eef4fa;color:#3b6b8c;font-size:12px;font-weight:600;">☕ 午休 12:00-13:30</span>
+          <span style="padding:4px 12px;border-radius:999px;background:#edf7f0;color:#3f7d5b;font-size:12px;font-weight:600;">🌆 晚通勤 18:00-19:30</span>
+        </div>
+      </div>
+      <div style="padding:10px 12px;background:#fefaf5;border-radius:8px;font-size:12px;color:#7a6e66;display:flex;align-items:center;gap:6px;">
+        <span>💡</span>
+        <span>你的碎片时间利用率 <b style="color:#c8533a;">63%</b>，超过社区 <b style="color:#c8533a;">72%</b> 的邻居</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>📊 好事类型分布</h3><span class="more" onclick="showToast('📊','好事类型','你的好事类型分布分析')">查看详情 →</span></div>
+      <div class="chart-wrap" id="chartWrap">
+        <div class="donut" id="donutChart">
+          <div class="donut-hole">47件</div>
+        </div>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>🌱 我的好事影响力</h3><span class="more" onclick="showToast('🌱','影响力','你的好事对社区的影响')">查看全部 →</span></div>
+      <div class="impact-grid" id="impactGrid"></div>
+    </div>
+  </div>
+
   <!-- 邻里和排行榜双栏 -->
   <div class="content-grid" style="margin-top:16px;">
     <!-- 我的邻里 -->
     <div class="card">
       <div class="card-hd"><h3>👥 我的邻里</h3><span class="more" onclick="showToast('👥','邻里互动','查看全部邻居')">查看全部 →</span></div>
       <div class="neighbor-grid" id="neighborGrid"></div>
+      <div class="neighbor-rec-section" id="recSection">
+        <div class="rec-title">💡 可能感兴趣的邻居</div>
+        <div class="rec-grid" id="recGrid"></div>
+      </div>
     </div>
     <!-- 社区排行榜 -->
     <div class="card">
@@ -354,6 +577,63 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
       <div id="rankContainer"></div>
     </div>
   </div>
+
+  <!-- 本周活跃度趋势 -->
+  <div class="card" style="margin-top:16px;">
+    <div class="card-hd"><h3>📈 本周活跃度趋势</h3><span class="more" onclick="showToast('📈','活跃度','本周你的社区活跃度趋势')">查看月报 →</span></div>
+    <div class="bar-chart" id="barChart"></div>
+  </div>
+
+  <!-- 成长路径 -->
+  <div class="card" style="margin-top:16px;">
+    <div class="card-hd"><h3>🌱 成长路径</h3><span class="more" onclick="showToast('🌱','成长路径','从Lv1到Lv10的好事成长之路')">查看详情 →</span></div>
+    <div class="level-path" id="levelPath"></div>
+    <div style="margin-top:8px;font-size:12px;color:#7a6e66;text-align:center;">距离下一级还需 <b style="color:#c8533a;">320</b> 好心值</div>
+  </div>
+
+<!-- 社区关系网络 -->
+<div class="card" style="margin-bottom:20px;">
+  <div class="card-hd"><h3>🕸️ 社区关系网络</h3><span class="more" onclick="alert('查看完整关系网络 →')">详情</span></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px;">
+    <div style="text-align:center;padding:12px;background:#fef3ef;border-radius:10px;border:1px solid #fde0d6;">
+      <div style="font-size:28px;margin-bottom:4px;">🤝</div>
+      <div style="font-size:18px;font-weight:800;color:#c8533a;">18</div>
+      <div style="font-size:11px;color:#7a6e66;">互助过的邻居</div>
+    </div>
+    <div style="text-align:center;padding:12px;background:#edf7f0;border-radius:10px;border:1px solid #d4e8da;">
+      <div style="font-size:28px;margin-bottom:4px;">⭐</div>
+      <div style="font-size:18px;font-weight:800;color:#4a9e6e;">4.8</div>
+      <div style="font-size:11px;color:#7a6e66;">邻居评分</div>
+    </div>
+    <div style="text-align:center;padding:12px;background:#eef4fa;border-radius:10px;border:1px solid #d4e0ec;">
+      <div style="font-size:28px;margin-bottom:4px;">🔄</div>
+      <div style="font-size:18px;font-weight:800;color:#3a7abf;">12</div>
+      <div style="font-size:11px;color:#7a6e66;">收到感谢</div>
+    </div>
+    <div style="text-align:center;padding:12px;background:#fef6e8;border-radius:10px;border:1px solid #f0e0c8;">
+      <div style="font-size:28px;margin-bottom:4px;">🏆</div>
+      <div style="font-size:18px;font-weight:800;color:#c98a2b;">#7</div>
+      <div style="font-size:11px;color:#7a6e66;">社区排名</div>
+    </div>
+  </div>
+  <div style="margin-top:8px;">
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px;">最近互助的邻居</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#faf8f6;border:1px solid #eee8e2;font-size:12px;">
+        <span>👩 王姐</span><span style="color:#7a6e66;">3栋</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#faf8f6;border:1px solid #eee8e2;font-size:12px;">
+        <span>👨 老刘</span><span style="color:#7a6e66;">7栋</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#faf8f6;border:1px solid #eee8e2;font-size:12px;">
+        <span>👧 小周</span><span style="color:#7a6e66;">5栋</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:#faf8f6;border:1px solid #eee8e2;font-size:12px;">
+        <span>👴 陈伯</span><span style="color:#7a6e66;">1栋</span>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div><!-- /.wrap -->
 
@@ -576,6 +856,209 @@ setTimeout(function() {
   renderFeed();
   showToast('🌟', '动态已更新', '你的好事已出现在社区动态中');
 }, 15000);
+
+// ==================== 新增功能 ====================
+
+// 好事类型数据
+var deedTypes = [
+  { label:'邻里互助', pct:35, color:'#c8533a' },
+  { label:'随手环保', pct:25, color:'#da7a4a' },
+  { label:'技能顺手', pct:20, color:'#e8a87a' },
+  { label:'暖心陪伴', pct:12, color:'#b5a99e' },
+  { label:'闲置共享', pct:8, color:'#7a6e66' },
+];
+
+function renderDonutLegend() {
+  var container = document.getElementById('donutLegend');
+  if (!container) return;
+  container.innerHTML = deedTypes.map(function(d) {
+    return '<div class="dl-item"><span class="dl-dot" style="background:' + d.color + '"></span><span class="dl-label">' + d.label + '</span><span class="dl-pct">' + d.pct + '%</span></div>';
+  }).join('');
+}
+renderDonutLegend();
+
+// 影响力数据
+var impactData = [
+  { label:'累计影响人数', value:156, unit:'人', max:200 },
+  { label:'累计减少碳排放', value:23, unit:'kg', max:50 },
+  { label:'社区好感度提升', value:12, unit:'%', max:20 },
+  { label:'带动邻居参与数', value:8, unit:'人', max:10 },
+];
+
+function renderImpact() {
+  var container = document.getElementById('impactGrid');
+  if (!container) return;
+  container.innerHTML = impactData.map(function(d) {
+    var pct = Math.min(100, Math.round(d.value / d.max * 100));
+    return '<div class="impact-item"><div class="ii-value">' + d.value + '<span style="font-size:12px;font-weight:400;color:#7a6e66;"> ' + d.unit + '</span></div><div class="ii-label">' + d.label + '</div><div class="ii-bar"><div class="ii-bar-inner" data-target="' + pct + '"></div></div></div>';
+  }).join('');
+  setTimeout(function() {
+    document.querySelectorAll('.ii-bar-inner').forEach(function(el) {
+      el.style.width = el.dataset.target + '%';
+    });
+  }, 200);
+}
+renderImpact();
+
+// 本周活跃度
+var weeklyData = [
+  { label:'周一', value:65 },
+  { label:'周二', value:45 },
+  { label:'周三', value:80 },
+  { label:'周四', value:55 },
+  { label:'周五', value:90 },
+  { label:'周六', value:70 },
+  { label:'周日', value:40 },
+];
+
+function renderBarChart() {
+  var container = document.getElementById('barChart');
+  if (!container) return;
+  container.innerHTML = weeklyData.map(function(d, i) {
+    var delay = i * 0.1;
+    return '<div class="bar-item"><div class="bar-value">' + d.value + '</div><div class="bar" style="height:0;animation-delay:' + delay + 's" data-target="' + d.value + '"></div><div class="bar-label">' + d.label + '</div></div>';
+  }).join('');
+  setTimeout(function() {
+    document.querySelectorAll('.bar-chart .bar').forEach(function(el) {
+      el.style.height = el.dataset.target + '%';
+    });
+  }, 300);
+}
+renderBarChart();
+
+// 成就进度
+var achievementData = [
+  { icon:'🌟', name:'第一次好事', pct:100, status:'done' },
+  { icon:'🔥', name:'连续3天', pct:100, status:'done' },
+  { icon:'💫', name:'连续7天', pct:100, status:'done' },
+  { icon:'🤝', name:'助人达人', pct:100, status:'done' },
+  { icon:'🌿', name:'环保先锋', pct:100, status:'done' },
+  { icon:'💛', name:'暖心陪伴', pct:60, status:'progress' },
+  { icon:'🏆', name:'挑战王者', pct:35, status:'progress' },
+  { icon:'👑', name:'全能好事家', pct:20, status:'progress' },
+];
+
+function renderAchievementProgress() {
+  var container = document.getElementById('achProgressList');
+  if (!container) return;
+  container.innerHTML = achievementData.map(function(a) {
+    var barClass = 'ap-bar' + (a.status === 'done' ? ' done' : '');
+    return '<div class="ach-progress-item"><span class="ap-icon">' + a.icon + '</span><span class="ap-name">' + a.name + '</span><div class="ap-bar-wrap"><div class="' + barClass + '" data-target="' + a.pct + '"></div></div><span class="ap-pct">' + a.pct + '%</span></div>';
+  }).join('');
+  setTimeout(function() {
+    document.querySelectorAll('#achProgressList .ap-bar').forEach(function(el) {
+      el.style.width = el.dataset.target + '%';
+    });
+  }, 300);
+}
+renderAchievementProgress();
+
+function toggleAchievement() {
+  var body = document.getElementById('achBody');
+  var toggle = document.querySelector('.ach-toggle');
+  if (!body || !toggle) return;
+  body.classList.toggle('show');
+  toggle.textContent = body.classList.contains('show') ? '收起详情 ▾' : '展开详情 ▸';
+}
+
+// 成长路径
+function renderLevelPath() {
+  var container = document.getElementById('levelPath');
+  if (!container) return;
+  var currentLevel = 7;
+  var names = ['Lv1 新手', 'Lv2 见习', 'Lv3 入门', 'Lv4 热忱', 'Lv5 能手', 'Lv6 达人', 'Lv7 好事达人', 'Lv8 社区之星', 'Lv9 公益先锋', 'Lv10 善行大使'];
+  var html = '';
+  for (var i = 1; i <= 10; i++) {
+    var cls = 'ln-circle';
+    var connectorCls = 'ln-connector';
+    if (i < currentLevel) { cls += ' unlocked'; connectorCls += ' active'; }
+    else if (i === currentLevel) { cls += ' current'; connectorCls += ' active'; }
+    else { cls += ' locked'; connectorCls += ' inactive'; }
+    html += '<div class="level-node"><div class="' + connectorCls + '"></div><div class="' + cls + '" title="' + names[i-1] + '">' + i + '</div><div class="ln-label">Lv' + i + '</div></div>';
+  }
+  container.innerHTML = html;
+}
+renderLevelPath();
+
+// 推荐邻居
+var recNeighbors = [
+  { avatar:'🧑', name:'阿杰', building:'6-203', tag:'摄影爱好者', common:'📸 摄影' },
+  { avatar:'👩', name:'陈姐', building:'2-305', tag:'园艺达人', common:'🌿 环保' },
+  { avatar:'👨', name:'老周', building:'8-101', tag:'读书会', common:'📚 阅读' },
+];
+
+function renderRecNeighbors() {
+  var container = document.getElementById('recGrid');
+  if (!container) return;
+  container.innerHTML = recNeighbors.map(function(n, i) {
+    return '<div class="rec-card"><div class="rc-avatar">' + n.avatar + '</div><div class="rc-name">' + n.name + '</div><div class="rc-meta">' + n.building + ' · ' + n.common + '</div><div class="rc-tag">' + n.tag + '</div><button class="rc-btn" onclick="sayHi(' + i + ', this)">👋 打招呼</button></div>';
+  }).join('');
+}
+renderRecNeighbors();
+
+function sayHi(idx, btn) {
+  if (btn.classList.contains('done')) return;
+  btn.textContent = '✅ 已打招呼';
+  btn.classList.add('done');
+  showToast('👋', '已打招呼', '已向 ' + recNeighbors[idx].name + ' 发送了打招呼消息');
+}
+
+// ==================== 数据联动模拟 ====================
+function startDataGrowth() {
+  // 好心值缓慢增长
+  setInterval(function() {
+    var pts = document.getElementById('psPoints');
+    if (!pts) return;
+    var current = parseInt(pts.textContent.replace(/,/g, ''));
+    if (Math.random() < 0.35) {
+      var inc = Math.floor(Math.random() * 3) + 1;
+      pts.textContent = (current + inc).toLocaleString();
+    }
+  }, 4000);
+
+  // 完成好事数增长（联动环形图）
+  setInterval(function() {
+    var acts = document.getElementById('psActs');
+    if (!acts) return;
+    var current = parseInt(acts.textContent);
+    if (Math.random() < 0.2) {
+      acts.textContent = current + 1;
+      var hole = document.querySelector('.donut-hole');
+      if (hole) hole.textContent = (current + 1) + '件';
+    }
+  }, 8000);
+
+  // 帮助邻居数增长
+  setInterval(function() {
+    var helped = document.getElementById('psHelped');
+    if (!helped) return;
+    var current = parseInt(helped.textContent);
+    if (Math.random() < 0.15) {
+      helped.textContent = current + 1;
+    }
+  }, 10000);
+
+  // 影响力数据联动增长
+  setInterval(function() {
+    var changed = false;
+    if (Math.random() < 0.2 && impactData[0].value < impactData[0].max) {
+      impactData[0].value += Math.floor(Math.random() * 2) + 1;
+      changed = true;
+    }
+    if (Math.random() < 0.15 && impactData[1].value < impactData[1].max) {
+      impactData[1].value += Math.floor(Math.random() * 1) + 1;
+      changed = true;
+    }
+    if (Math.random() < 0.1 && impactData[3].value < impactData[3].max) {
+      impactData[3].value += 1;
+      changed = true;
+    }
+    if (changed) renderImpact();
+  }, 12000);
+}
+
+// 页面加载后启动数据联动模拟
+startDataGrowth();
 </script>
 
 </body>

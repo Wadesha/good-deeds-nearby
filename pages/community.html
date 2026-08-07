@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>社区活动中心 · 好事近</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f7f5f2; color: #2b2622; }
+.topbar { background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #eee8e2; position: sticky; top: 0; z-index: 1000; }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; max-width: 1200px; margin: 0 auto; height: 56px; }
+.topbar .logo { font-size: 18px; font-weight: 800; text-decoration: none; color: #2b2622; }
+.topbar .logo span { color: #c8533a; }
+.topbar nav { display: flex; gap: 4px; overflow-x: auto; }
+.topbar nav a { padding: 6px 12px; font-size: 13px; font-weight: 600; color: #7a6e66; text-decoration: none; border-radius: 6px; white-space: nowrap; transition: all .15s; }
+.topbar nav a:hover { color: #2b2622; background: #f5f0eb; }
+.topbar nav a.active { color: #c8533a; background: #fef3ef; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* 模块通用 */
+.card { background: #fff; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(43,38,34,.04), 0 4px 16px rgba(43,38,34,.05); border: 1px solid #eee8e2; margin-bottom: 16px; }
+.card-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.card-hd h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.card-hd .more { font-size: 12px; color: #c8533a; font-weight: 600; cursor: pointer; }
+
+/* ====== 模块1：活动日历 ====== */
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.cal-header { font-size: 11px; color: #7a6e66; text-align: center; font-weight: 600; padding: 4px 0; }
+.cal-day { aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .2s; position: relative; }
+.cal-day:hover { background: #f5f0eb; }
+.cal-day.other { color: #ddd5cc; }
+.cal-day.today { background: #fef3ef; color: #c8533a; font-weight: 800; }
+.cal-day.has-event { background: #fef6e8; }
+.cal-day.has-event::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; border-radius: 50%; background: #c8533a; }
+.cal-day .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: #c8533a; margin-top: 2px; }
+.event-list { margin-top: 12px; }
+.event-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f0eb; align-items: center; }
+.event-item:last-child { border-bottom: none; }
+.event-item .ei-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.event-item .ei-info { flex: 1; }
+.event-item .ei-title { font-size: 13px; font-weight: 600; }
+.event-item .ei-meta { font-size: 11px; color: #7a6e66; margin-top: 2px; }
+.event-item .ei-btn {
+  padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 600;
+  background: #fef3ef; color: #c8533a; border: none; cursor: pointer; transition: all .2s;
+}
+.event-item .ei-btn:hover { background: #c8533a; color: #fff; }
+.event-item .ei-btn.signed { background: #edf7f0; color: #4a9e6e; cursor: default; }
+
+/* ====== 模块2：互助墙 ====== */
+.wall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:640px) { .wall-grid { grid-template-columns: 1fr; } }
+.wall-card {
+  padding: 14px; border-radius: 10px; border: 1px solid #eee8e2; cursor: pointer; transition: all .2s; position: relative;
+}
+.wall-card:hover { border-color: #c8533a; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(200,83,58,.08); }
+.wall-card.help { background: #fefaf5; }
+.wall-card.offer { background: #f5faf5; }
+.wall-card .wc-type {
+  font-size: 10px; padding: 2px 8px; border-radius: 999px; font-weight: 700; display: inline-block; margin-bottom: 6px;
+}
+.wall-card.help .wc-type { background: #fef3ef; color: #c8533a; }
+.wall-card.offer .wc-type { background: #edf7f0; color: #4a9e6e; }
+.wall-card .wc-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.wall-card .wc-desc { font-size: 12px; color: #7a6e66; line-height: 1.4; }
+.wall-card .wc-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 11px; color: #b5a99e; }
+.wall-card .wc-btn {
+  padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; transition: all .2s;
+}
+.wall-card.help .wc-btn { background: #c8533a; color: #fff; }
+.wall-card.help .wc-btn:hover { background: #b0442e; }
+.wall-card.offer .wc-btn { background: #4a9e6e; color: #fff; }
+.wall-card.offer .wc-btn:hover { background: #3d8a5e; }
+.wall-card .wc-btn.done { background: #ddd5cc; color: #fff; cursor: default; }
+
+/* ====== 模块3：积分商城 ====== */
+.shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.shop-item {
+  padding: 14px 10px; border-radius: 10px; border: 1px solid #eee8e2; text-align: center; cursor: pointer; transition: all .2s;
+}
+.shop-item:hover { border-color: #c8533a; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(200,83,58,.08); }
+.shop-item .si-icon { font-size: 28px; margin-bottom: 6px; }
+.shop-item .si-name { font-size: 13px; font-weight: 600; }
+.shop-item .si-points { font-size: 12px; color: #c8533a; font-weight: 700; margin-top: 4px; }
+.shop-item .si-stock { font-size: 10px; color: #b5a99e; margin-top: 2px; }
+.shop-item .si-btn {
+  margin-top: 8px; padding: 4px 14px; border-radius: 999px; font-size: 11px; font-weight: 600;
+  background: #fef3ef; color: #c8533a; border: none; cursor: pointer; transition: all .2s;
+}
+.shop-item .si-btn:hover { background: #c8533a; color: #fff; }
+.shop-item .si-btn.sold { background: #ddd5cc; color: #fff; cursor: default; }
+
+/* ====== 模块4：话题圈子 ====== */
+.circle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.circle-card {
+  padding: 14px; border-radius: 10px; border: 1px solid #eee8e2; cursor: pointer; transition: all .2s; display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.circle-card:hover { border-color: #c8533a; background: #fefaf5; }
+.circle-card .cc-icon { font-size: 28px; margin-bottom: 6px; }
+.circle-card .cc-name { font-size: 13px; font-weight: 600; }
+.circle-card .cc-count { font-size: 11px; color: #7a6e66; margin-top: 2px; }
+.circle-card .cc-tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; background: #fef3ef; color: #c8533a; font-weight: 600; margin-top: 6px; }
+.circle-card .cc-tag.joined { background: #edf7f0; color: #4a9e6e; }
+
+/* ====== 模块5：好事瞬间 ====== */
+.moment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:640px) { .moment-grid { grid-template-columns: 1fr; } }
+.moment-card {
+  padding: 14px; border-radius: 10px; border: 1px solid #eee8e2; transition: all .2s;
+}
+.moment-card:hover { border-color: #c8533a; }
+.moment-card .mc-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.moment-card .mc-avatar { width: 28px; height: 28px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 12px; }
+.moment-card .mc-name { font-size: 12px; font-weight: 600; }
+.moment-card .mc-time { font-size: 10px; color: #b5a99e; margin-left: auto; }
+.moment-card .mc-text { font-size: 12px; line-height: 1.5; color: #2b2622; }
+.moment-card .mc-actions { display: flex; gap: 12px; margin-top: 8px; font-size: 11px; color: #7a6e66; }
+.moment-card .mc-actions span { cursor: pointer; display: flex; align-items: center; gap: 3px; }
+.moment-card .mc-actions span:hover { color: #c8533a; }
+.moment-card .mc-actions .liked { color: #c8533a; font-weight: 600; }
+
+/* ====== 模块6：评价系统 ====== */
+.review-stars { display: flex; gap: 6px; justify-content: center; margin: 10px 0; }
+.review-stars .star { font-size: 28px; cursor: pointer; transition: all .2s; color: #ddd5cc; }
+.review-stars .star.active { color: #f5a623; transform: scale(1.1); }
+.review-stars .star:hover { transform: scale(1.2); }
+.review-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 10px 0; }
+.review-tags .rt {
+  padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  border: 1px solid #eee8e2; cursor: pointer; transition: all .2s; color: #7a6e66;
+}
+.review-tags .rt:hover { border-color: #c8533a; color: #c8533a; }
+.review-tags .rt.active { background: #fef3ef; border-color: #c8533a; color: #c8533a; }
+.review-history { margin-top: 10px; }
+.review-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f0eb; }
+.review-item:last-child { border-bottom: none; }
+.review-item .ri-avatar { width: 28px; height: 28px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 12px; flex-shrink: 0; }
+.review-item .ri-body { flex: 1; }
+.review-item .ri-name { font-size: 12px; font-weight: 600; }
+.review-item .ri-stars { font-size: 11px; color: #f5a623; }
+.review-item .ri-text { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+
+/* ====== 模块7：社区大事记 ====== */
+.milestone-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f5f0eb; align-items: flex-start; }
+.milestone-item:last-child { border-bottom: none; }
+.milestone-item .mi-icon { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+.milestone-item .mi-body { flex: 1; }
+.milestone-item .mi-title { font-size: 13px; font-weight: 600; }
+.milestone-item .mi-desc { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+.milestone-item .mi-time { font-size: 11px; color: #b5a99e; margin-top: 2px; }
+
+/* ====== 模块8：好事推荐 ====== */
+.reco-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:640px) { .reco-grid { grid-template-columns: 1fr; } }
+.reco-card {
+  padding: 14px; border-radius: 10px; border: 1px solid #eee8e2; cursor: pointer; transition: all .2s;
+  display: flex; flex-direction: column; background: #faf8f6;
+}
+.reco-card:hover { border-color: #c8533a; background: #fefaf5; transform: translateY(-1px); }
+.reco-card .rc-reason { font-size: 10px; font-weight: 700; color: #c8533a; margin-bottom: 4px; }
+.reco-card .rc-icon { font-size: 22px; margin-bottom: 4px; }
+.reco-card .rc-title { font-size: 13px; font-weight: 600; }
+.reco-card .rc-desc { font-size: 11px; color: #7a6e66; margin-top: 2px; line-height: 1.4; }
+.reco-card .rc-btn {
+  margin-top: 8px; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 600;
+  background: #c8533a; color: #fff; border: none; cursor: pointer; align-self: flex-start; transition: all .2s;
+}
+.reco-card .rc-btn:hover { background: #b0442e; }
+
+/* Toast */
+.toast-box { position: fixed; top: 72px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
+.toast { background: #fff; border: 1px solid #eee8e2; border-left: 4px solid #4a9e6e; border-radius: 10px; padding: 14px 18px; box-shadow: 0 8px 32px rgba(43,38,34,.12); display: flex; align-items: center; gap: 10px; max-width: 380px; animation: slideIn .3s ease; }
+.toast .t-icon { font-size: 22px; }
+.toast .t-title { font-size: 14px; font-weight: 700; }
+.toast .t-desc { font-size: 12px; color: #7a6e66; margin-top: 1px; }
+@keyframes slideIn { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* ====== 新增功能样式 ====== */
+
+/* 弹窗通用 */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:2000; align-items:center; justify-content:center; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:#fff; border-radius:16px; padding:0; max-width:420px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.15); animation:slideUp .3s ease; }
+@keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+.modal-hd { display:flex; align-items:center; justify-content:space-between; padding:18px 20px 12px; border-bottom:1px solid #f5f0eb; }
+.modal-hd .mh-title { font-size:16px; font-weight:700; }
+.modal-close { width:28px;height:28px;border-radius:50%;border:none;background:#f5f0eb;cursor:pointer;font-size:16px;display:grid;place-items:center;color:#7a6e66;transition:all .2s; }
+.modal-close:hover { background:#eee8e2;color:#2b2622; }
+.modal-body { padding:20px; }
+.modal-foot { padding:12px 20px 18px; display:flex; gap:8px; justify-content:flex-end; border-top:1px solid #f5f0eb; }
+.modal-btn { padding:8px 20px;border-radius:999px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .2s; }
+.modal-btn.primary { background:#c8533a;color:#fff; }
+.modal-btn.primary:hover { background:#b0442e; }
+.modal-btn.secondary { background:#f5f0eb;color:#7a6e66; }
+.modal-btn.secondary:hover { background:#eee8e2;color:#2b2622; }
+
+/* 表单组件 */
+.form-group { margin-bottom:14px; }
+.form-label { display:block;font-size:12px;font-weight:600;color:#7a6e66;margin-bottom:4px; }
+.form-input, .form-select { width:100%;padding:8px 12px;border:1px solid #eee8e2;border-radius:8px;font-size:13px;background:#faf8f6;transition:border .2s;box-sizing:border-box; }
+.form-input:focus, .form-select:focus { outline:none;border-color:#c8533a;background:#fff; }
+.form-check { display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer; }
+.form-check input { width:16px;height:16px;accent-color:#c8533a; }
+
+/* 电子凭证 */
+.voucher { background:#fefaf5;border:2px dashed #c8533a;border-radius:12px;padding:16px;text-align:center; }
+.voucher .v-icon { font-size:40px;margin-bottom:6px; }
+.voucher .v-title { font-size:15px;font-weight:700;color:#2b2622; }
+.voucher .v-info { font-size:12px;color:#7a6e66;margin-top:4px;line-height:1.5; }
+.voucher .v-code { font-size:11px;color:#b5a99e;margin-top:8px;padding:6px 12px;background:#fff;border-radius:6px;border:1px solid #eee8e2;display:inline-block;font-family:monospace;letter-spacing:2px; }
+.voucher .v-tip { font-size:10px;color:#b5a99e;margin-top:6px; }
+
+/* 社区公告板 */
+.announcement-item { padding:12px 0;border-bottom:1px solid #f5f0eb;cursor:pointer;transition:all .2s; }
+.announcement-item:last-child { border-bottom:none; }
+.announcement-item:hover { padding-left:4px; }
+.announcement-item .ai-badge { display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;background:#fef3ef;color:#c8533a;font-weight:700;margin-right:6px;vertical-align:middle; }
+.announcement-item .ai-title { font-size:13px;font-weight:600;display:inline; }
+.announcement-item .ai-summary { font-size:12px;color:#7a6e66;margin-top:4px;line-height:1.4;display:none; }
+.announcement-item .ai-time { font-size:10px;color:#b5a99e;margin-top:4px; }
+.announcement-item .ai-detail { font-size:12px;color:#2b2622;line-height:1.6;margin-top:8px;padding:10px 12px;background:#faf8f6;border-radius:8px;display:none; }
+.announcement-item.expanded .ai-summary { display:block; }
+.announcement-item.expanded .ai-detail { display:block; }
+
+/* 响应流程 */
+.response-time-grid { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0; }
+.response-time-item { padding:10px;border-radius:8px;border:1px solid #eee8e2;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;font-weight:600;color:#7a6e66; }
+.response-time-item:hover { border-color:#c8533a;background:#fefaf5; }
+.response-time-item.selected { border-color:#c8533a;background:#fef3ef;color:#c8533a; }
+.contact-info { background:#f0f7ff;border-radius:8px;padding:12px;margin:10px 0;text-align:center;display:none; }
+.contact-info.show { display:block; }
+.contact-info .ci-label { font-size:11px;color:#7a6e66; }
+.contact-info .ci-phone { font-size:18px;font-weight:800;color:#3a7abf;letter-spacing:2px;margin:4px 0; }
+.contact-info .ci-tip { font-size:11px;color:#7a6e66; }
+
+/* 兑换流程 */
+.exchange-detail { text-align:center;padding:10px 0; }
+.exchange-detail .ed-icon { font-size:48px;margin-bottom:8px; }
+.exchange-detail .ed-name { font-size:16px;font-weight:700; }
+.exchange-detail .ed-points { font-size:14px;color:#c8533a;font-weight:700;margin-top:4px; }
+.exchange-detail .ed-stock { font-size:11px;color:#7a6e66;margin-top:2px; }
+.qr-area { margin:14px 0;text-align:center; }
+.qr-placeholder { width:120px;height:120px;margin:0 auto;background:#fff;border:2px solid #eee8e2;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;color:#b5a99e; }
+.qr-placeholder .qr-code-sim { font-size:40px;color:#2b2622;letter-spacing:4px;font-family:monospace; }
+.qr-placeholder .qr-label { margin-top:4px; }
+.exchange-instructions { background:#faf8f6;border-radius:8px;padding:12px;margin:10px 0; }
+.exchange-instructions .ei-title { font-size:12px;font-weight:600;color:#7a6e66;margin-bottom:4px; }
+.exchange-instructions .ei-item { font-size:12px;color:#7a6e66;line-height:1.6;padding-left:16px;position:relative; }
+.exchange-instructions .ei-item::before { content:'•';position:absolute;left:4px;color:#c8533a; }
+
+/* 热门话题讨论 */
+.topic-item { padding:14px 0;border-bottom:1px solid #f5f0eb; }
+.topic-item:last-child { border-bottom:none; }
+.topic-item .ti-header { display:flex;align-items:flex-start;gap:10px; }
+.topic-item .ti-rank { width:24px;height:24px;border-radius:50%;background:#f5f0eb;display:grid;place-items:center;font-size:11px;font-weight:800;color:#7a6e66;flex-shrink:0;margin-top:2px; }
+.topic-item .ti-rank.top1 { background:#fef3ef;color:#c8533a; }
+.topic-item .ti-rank.top2 { background:#fef6e8;color:#f5a623; }
+.topic-item .ti-rank.top3 { background:#f0f7ff;color:#3a7abf; }
+.topic-item .ti-body { flex:1; }
+.topic-item .ti-title { font-size:13px;font-weight:600;cursor:pointer; }
+.topic-item .ti-title:hover { color:#c8533a; }
+.topic-item .ti-meta { font-size:11px;color:#7a6e66;margin-top:4px;display:flex;gap:12px;flex-wrap:wrap; }
+.topic-item .ti-meta span { display:flex;align-items:center;gap:3px; }
+.topic-item .ti-actions { display:flex;gap:10px;margin-top:8px; }
+.topic-item .ti-action-btn { padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid #eee8e2;background:transparent;cursor:pointer;transition:all .2s;color:#7a6e66;display:flex;align-items:center;gap:4px; }
+.topic-item .ti-action-btn:hover { border-color:#c8533a;color:#c8533a;background:#fefaf5; }
+.topic-item .ti-action-btn.active { background:#fef3ef;border-color:#c8533a;color:#c8533a; }
+.topic-item .ti-comment-box { margin-top:8px;display:none; }
+.topic-item .ti-comment-box.show { display:flex;gap:6px; }
+.topic-item .ti-comment-box input { flex:1;padding:6px 10px;border:1px solid #eee8e2;border-radius:6px;font-size:12px;background:#faf8f6; }
+.topic-item .ti-comment-box button { padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;background:#c8533a;color:#fff;border:none;cursor:pointer; }
+.topic-item .ti-comment-box button:hover { background:#b0442e; }
+
+/* 活动推荐列表 */
+.rec-act-item { display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #f5f0eb;align-items:center; }
+.rec-act-item:last-child { border-bottom:none; }
+.rec-act-item .ra-icon { width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:22px;flex-shrink:0; }
+.rec-act-item .ra-body { flex:1; }
+.rec-act-item .ra-tag { font-size:10px;padding:1px 6px;border-radius:4px;background:#fef3ef;color:#c8533a;font-weight:700;display:inline-block;margin-bottom:2px; }
+.rec-act-item .ra-title { font-size:13px;font-weight:600; }
+.rec-act-item .ra-meta { font-size:11px;color:#7a6e66;margin-top:2px; }
+.rec-act-item .ra-match { font-size:10px;color:#4a9e6e;margin-top:2px; }
+.rec-act-item .ra-btn { padding:4px 12px;border-radius:999px;font-size:11px;font-weight:600;background:#fef3ef;color:#c8533a;border:none;cursor:pointer;transition:all .2s;flex-shrink:0; }
+.rec-act-item .ra-btn:hover { background:#c8533a;color:#fff; }
+
+/* 数据更新动画 */
+.data-pulse { animation:pulse .6s ease; }
+@keyframes pulse { 0%{background:transparent} 50%{background:rgba(200,83,58,.08)} 100%{background:transparent} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo">好事近 <span>·</span> 全案</a>
+    <nav>
+      <a href="../index.html">平台首页</a>
+      <a href="project.html">项目总览</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="simulator.html">模拟器</a>
+      <a href="choose.html">选择器</a>
+      <a href="cases.html">好事库</a>
+      <a href="interact2.html">互动广场</a>
+      <a href="me.html">个人中心</a>
+      <a href="community.html" class="active">社区中心</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ====== 新增模块：社区公告板 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📢 社区公告板</h3><span class="more" onclick="showToast('📢','公告板','查看全部公告')">全部公告 →</span></div>
+    <div id="announcementContainer"></div>
+  </div>
+
+  <!-- 邻里信用评分 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-hd"><h3>🏅 邻里信用评分</h3><span class="more" onclick="showTrustDetail()">详情</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+      <div style="text-align:center;padding:16px;background:linear-gradient(135deg,#fef3ef,#fff8f0);border-radius:12px;border:1px solid #fde0d6;">
+        <div style="font-size:36px;font-weight:900;color:#c8533a;">892</div>
+        <div style="font-size:12px;color:#7a6e66;margin-top:2px;">你的信用分</div>
+        <div style="font-size:11px;color:#b5a99e;margin-top:2px;">超过社区 85% 的邻居</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;justify-content:center;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:6px 10px;background:#faf8f6;border-radius:8px;">
+          <span style="color:#4a9e6e;">✅</span>
+          <span style="flex:1;">互助响应率</span>
+          <span style="font-weight:700;color:#4a9e6e;">94%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:6px 10px;background:#faf8f6;border-radius:8px;">
+          <span style="color:#3a7abf;">✅</span>
+          <span style="flex:1;">好事完成率</span>
+          <span style="font-weight:700;color:#3a7abf;">98%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:6px 10px;background:#faf8f6;border-radius:8px;">
+          <span style="color:#c98a2b;">✅</span>
+          <span style="flex:1;">邻居好评率</span>
+          <span style="font-weight:700;color:#c98a2b;">4.9</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:6px 10px;background:#faf8f6;border-radius:8px;">
+          <span style="color:#7b4a8c;">✅</span>
+          <span style="flex:1;">社区活跃度</span>
+          <span style="font-weight:700;color:#7b4a8c;">高</span>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+      <span style="padding:4px 12px;border-radius:999px;background:#fef3ef;color:#c8533a;font-size:11px;font-weight:600;">🏆 信用之星</span>
+      <span style="padding:4px 12px;border-radius:999px;background:#edf7f0;color:#4a9e6e;font-size:11px;font-weight:600;">🤝 互助达人</span>
+      <span style="padding:4px 12px;border-radius:999px;background:#eef4fa;color:#3a7abf;font-size:11px;font-weight:600;">💪 靠谱邻居</span>
+    </div>
+  </div>
+
+  <!-- ====== 模块1：社区活动日历 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📅 社区活动日历</h3><span class="more" onclick="showToast('📅','活动日历','查看完整月份')">本月 →</span></div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="event-list" id="eventList"></div>
+  </div>
+
+  <!-- ====== 模块2：邻里互助墙 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📌 邻里互助墙</h3><span class="more" onclick="showToast('📌','互助墙','查看全部互助信息')">发布求助 →</span></div>
+    <div class="wall-grid" id="wallGrid"></div>
+  </div>
+
+  <!-- 社区应急响应系统 -->
+  <div class="card" style="margin-bottom:20px;border:1px solid #fde0d6;background:linear-gradient(135deg,#fff8f6,#fffefc);">
+    <div class="card-hd">
+      <h3>🚨 社区应急响应 <span class="live-badge" style="display:inline-block;padding:1px 6px;border-radius:4px;background:#c8533a;color:#fff;font-size:9px;font-weight:700;margin-left:4px;animation:pulse 1.5s ease-in-out infinite;">LIVE</span></h3>
+      <span class="more" style="color:#c8533a;">历史记录 →</span>
+    </div>
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fff;border-radius:10px;border:1px solid #fde0d6;margin-bottom:8px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:#fef3ef;display:grid;place-items:center;font-size:20px;">🌧️</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;">暴雨预警 · 协助收衣物</div>
+          <div style="font-size:12px;color:#7a6e66;">3栋王阿姨 · 5分钟前发布 · 已响应 <b style="color:#c8533a;">3</b> 人</div>
+        </div>
+        <button onclick="respondEmergency(this)" style="padding:6px 16px;border-radius:999px;font-size:12px;font-weight:600;background:#c8533a;color:#fff;border:none;cursor:pointer;transition:all .2s;">我要响应</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fff;border-radius:10px;border:1px solid #eee8e2;margin-bottom:8px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:#eef4fa;display:grid;place-items:center;font-size:20px;">🏥</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;">老人突发不适 · 急需陪同就医</div>
+          <div style="font-size:12px;color:#7a6e66;">7栋李先生 · 15分钟前发布 · 已响应 <b style="color:#c8533a;">2</b> 人</div>
+        </div>
+        <button onclick="respondEmergency(this)" style="padding:6px 16px;border-radius:999px;font-size:12px;font-weight:600;background:#c8533a;color:#fff;border:none;cursor:pointer;transition:all .2s;">我要响应</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#fff;border-radius:10px;border:1px solid #eee8e2;margin-bottom:8px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:#edf7f0;display:grid;place-items:center;font-size:20px;">🔑</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;">被锁门外 · 急寻开锁电话</div>
+          <div style="font-size:12px;color:#7a6e66;">5栋小陈 · 30分钟前发布 · 已解决 ✅</div>
+        </div>
+        <button style="padding:6px 16px;border-radius:999px;font-size:12px;font-weight:600;background:#ddd5cc;color:#fff;border:none;cursor:default;">已解决</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button onclick="showEmergencyGuide()" style="padding:8px 18px;border-radius:999px;font-size:12px;font-weight:600;background:#fff;color:#c8533a;border:1px solid #c8533a;cursor:pointer;flex:1;">📋 应急指南</button>
+      <button onclick="startEmergencyTraining()" style="padding:8px 18px;border-radius:999px;font-size:12px;font-weight:600;background:#c8533a;color:#fff;border:none;cursor:pointer;flex:1;">🎯 应急演练</button>
+    </div>
+  </div>
+
+  <!-- ====== 模块3：好事积分商城 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🎁 好事积分商城</h3><span class="more" onclick="showToast('🎁','积分商城','查看全部商品')">我的好心值：<b style="color:#c8533a;">1,280</b></span></div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </div>
+
+  <!-- ====== 模块4：社区话题圈子 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>💬 社区话题圈子</h3><span class="more" onclick="showToast('💬','话题圈子','创建新圈子')">创建圈子 →</span></div>
+    <div class="circle-grid" id="circleGrid"></div>
+  </div>
+
+  <!-- ====== 新增模块：社区话题讨论 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🔥 热门话题讨论</h3><span class="more" onclick="showToast('🔥','话题讨论','发起新话题')">发起话题 →</span></div>
+    <div id="topicContainer"></div>
+  </div>
+
+  <!-- ====== 模块5：好事分享瞬间 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>📸 好事分享瞬间</h3><span class="more" onclick="showToast('📸','分享瞬间','发布你的好事瞬间')">发布 →</span></div>
+    <div class="moment-grid" id="momentGrid"></div>
+  </div>
+
+  <!-- ====== 模块6：互助评价系统 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>⭐ 互助评价</h3><span class="more">最近评价</span></div>
+    <div style="text-align:center;font-size:13px;color:#7a6e66;margin-bottom:4px;">你最近接受过邻居的帮助吗？给TA一个评价</div>
+    <div class="review-stars" id="reviewStars">
+      <span class="star" data-s="1" onclick="setStar(1)">★</span>
+      <span class="star" data-s="2" onclick="setStar(2)">★</span>
+      <span class="star" data-s="3" onclick="setStar(3)">★</span>
+      <span class="star" data-s="4" onclick="setStar(4)">★</span>
+      <span class="star" data-s="5" onclick="setStar(5)">★</span>
+    </div>
+    <div class="review-tags" id="reviewTags">
+      <span class="rt" data-tag="热心" onclick="toggleReviewTag(this)">🔥 热心</span>
+      <span class="rt" data-tag="及时" onclick="toggleReviewTag(this)">⏱️ 及时</span>
+      <span class="rt" data-tag="专业" onclick="toggleReviewTag(this)">💪 专业</span>
+      <span class="rt" data-tag="耐心" onclick="toggleReviewTag(this)">🤗 耐心</span>
+      <span class="rt" data-tag="细致" onclick="toggleReviewTag(this)">🔍 细致</span>
+      <span class="rt" data-tag="靠谱" onclick="toggleReviewTag(this)">✅ 靠谱</span>
+    </div>
+    <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap;">
+      <input id="reviewInput" placeholder="写一句评价……" style="flex:1;min-width:150px;padding:8px 12px;border:1px solid #eee8e2;border-radius:8px;font-size:13px;background:#faf8f6;" />
+      <button class="event-item .ei-btn" style="padding:8px 20px;border-radius:999px;font-size:13px;font-weight:700;background:#c8533a;color:#fff;border:none;cursor:pointer;" onclick="submitReview()">提交评价</button>
+    </div>
+    <div class="review-history" id="reviewHistory"></div>
+  </div>
+
+  <!-- ====== 模块7：社区大事记 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🏛️ 社区大事记</h3><span class="more" onclick="showToast('🏛️','大事记','查看完整社区历史')">查看全部 →</span></div>
+    <div id="milestoneContainer"></div>
+  </div>
+
+  <!-- ====== 模块8：好事推荐 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🎯 为你推荐</h3><span class="more" onclick="showToast('🎯','推荐','刷新推荐')">换一批 →</span></div>
+    <div class="reco-grid" id="recoGrid"></div>
+  </div>
+
+  <!-- ====== 新增模块：你可能感兴趣的活动 ====== -->
+  <div class="card">
+    <div class="card-hd"><h3>🎯 你可能感兴趣的活动</h3><span class="more" onclick="showToast('🎯','推荐','刷新推荐活动')">换一批 →</span></div>
+    <div id="recommendActContainer"></div>
+  </div>
+
+</div><!-- /.wrap -->
+
+<!-- ====== 新增：弹窗容器 ====== -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-hd">
+      <span class="mh-title" id="modalTitle">标题</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<footer style="margin-top:0;padding:24px;text-align:center;color:#7a6e66;font-size:13px;border-top:1px solid #eee8e2;background:#fff;">
+  <p>好事近 · 社区活动中心 &mdash; 让社区生活更丰富 <span style="color:#c8533a;">♥</span></p>
+</footer>
+
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+function showToast(icon, title, desc) {
+  var box = document.getElementById('toastBox');
+  var t = document.createElement('div'); t.className = 'toast';
+  t.innerHTML = '<span class="t-icon">' + icon + '</span><div><div class="t-title">' + title + '</div><div class="t-desc">' + desc + '</div></div>';
+  box.appendChild(t);
+  setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; t.style.transition = 'all .3s ease'; setTimeout(function() { t.remove(); }, 300); }, 3500);
+}
+
+// ====== 模块1：日历 ======
+var events = [
+  { day: 5, title:'社区大扫除日', time:'周六 9:00–11:00', loc:'全小区', color:'#c8533a', signed:false },
+  { day: 12, title:'邻里跳蚤市场', time:'周六 14:00–17:00', loc:'小区广场', color:'#f5a623', signed:false },
+  { day: 15, title:'手机课堂：教老人用微信', time:'周二 15:00–16:30', loc:'活动室', color:'#4a9e6e', signed:true },
+  { day: 19, title:'社区健步走', time:'周六 7:00–8:00', loc:'绕小区3圈', color:'#3a7abf', signed:false },
+  { day: 22, title:'邻里百家宴', time:'周二 18:00–20:00', loc:'小区花园', color:'#b04a5e', signed:false },
+  { day: 28, title:'旧物交换日', time:'周一 10:00–16:00', loc:'活动室', color:'#7b4a8c', signed:false },
+];
+
+function renderCalendar() {
+  var grid = document.getElementById('calGrid');
+  var headers = ['一','二','三','四','五','六','日'];
+  var html = headers.map(function(h) { return '<div class="cal-header">' + h + '</div>'; }).join('');
+  var today = new Date();
+  var year = today.getFullYear(), month = today.getMonth();
+  var firstDay = new Date(year, month, 1).getDay();
+  var daysInMonth = new Date(year, month + 1, 0).getDate();
+  var startPad = firstDay === 0 ? 6 : firstDay - 1;
+  for (var i = 0; i < startPad; i++) { html += '<div class="cal-day other"></div>'; }
+  var eventDays = events.map(function(e) { return e.day; });
+  for (var d = 1; d <= daysInMonth; d++) {
+    var cls = 'cal-day';
+    if (d === today.getDate()) cls += ' today';
+    if (eventDays.indexOf(d) !== -1) cls += ' has-event';
+    html += '<div class="' + cls + '" onclick="showEvent(' + d + ')" title="' + (eventDays.indexOf(d) !== -1 ? events[eventDays.indexOf(d)].title : '') + '">' + d + '</div>';
+  }
+  grid.innerHTML = html;
+  renderEvents();
+}
+function showEvent(day) {
+  var ev = events.filter(function(e) { return e.day === day; });
+  if (ev.length) showToast('📅', ev[0].title, ev[0].time + ' · ' + ev[0].loc);
+}
+function renderEvents() {
+  var container = document.getElementById('eventList');
+  var upcoming = events.filter(function(e) { return e.day >= new Date().getDate(); }).slice(0, 4);
+  container.innerHTML = upcoming.map(function(e) {
+    return '<div class="event-item"><div class="ei-dot" style="background:' + e.color + ';"></div><div class="ei-info"><div class="ei-title">' + e.title + '</div><div class="ei-meta">' + e.time + ' · ' + e.loc + '</div></div><button class="ei-btn' + (e.signed ? ' signed' : '') + '" onclick="' + (e.signed ? '' : 'signUp(this,\'' + e.title + '\')') + '">' + (e.signed ? '✓ 已报名' : '报名') + '</button></div>';
+  }).join('');
+}
+renderCalendar();
+
+// ====== 模块2：互助墙 ======
+var wallData = [
+  { type:'help', title:'需要帮忙搬一下家具', desc:'周五下午买了新书柜，一个人搬不动，求搭把手', author:'3号楼 李姐', time:'10分钟前', done:false },
+  { type:'offer', title:'我会修电脑，可以帮忙', desc:'周末有空，邻居电脑出问题可以找我', author:'5号楼 小王', time:'30分钟前', done:false },
+  { type:'help', title:'帮忙取一下快递', desc:'今天加班到很晚，快递在驿站怕超时', author:'7号楼 小张', time:'1小时前', done:false },
+  { type:'offer', title:'可以帮忙遛狗', desc:'每天晚上7-8点有空，可以帮邻居遛狗', author:'2号楼 刘姐', time:'2小时前', done:false },
+  { type:'help', title:'教我用手机挂号', desc:'下周要去医院复查，不会用手机预约挂号', author:'1号楼 陈爷爷', time:'3小时前', done:false },
+  { type:'offer', title:'家里有打印机，免费帮打印', desc:'小孩作业、资料等都可以，随时来', author:'6号楼 周阿姨', time:'5小时前', done:false },
+];
+function renderWall() {
+  var grid = document.getElementById('wallGrid');
+  grid.innerHTML = wallData.map(function(w) {
+    return '<div class="wall-card ' + w.type + '"><div class="wc-type">' + (w.type === 'help' ? '🙋 求助' : '🙌 提供帮助') + '</div><div class="wc-title">' + w.title + '</div><div class="wc-desc">' + w.desc + '</div><div class="wc-meta"><span>' + w.author + ' · ' + w.time + '</span><button class="wc-btn' + (w.done ? ' done' : '') + '" onclick="' + (w.done ? '' : 'respondWall(this,\'' + w.title + '\')') + '">' + (w.done ? '已完成' : (w.type === 'help' ? '我来帮' : '我需要')) + '</button></div></div>';
+  }).join('');
+}
+renderWall();
+
+// ====== 模块3：商城 ======
+var shopData = [
+  { icon:'☕', name:'暖心咖啡券', points:50, stock:12, sold:false },
+  { icon:'🪴', name:'迷你绿植', points:30, stock:8, sold:false },
+  { icon:'📖', name:'二手好书', points:20, stock:15, sold:false },
+  { icon:'🧹', name:'上门保洁1小时', points:100, stock:3, sold:false },
+  { icon:'🎫', name:'便民维修券', points:80, stock:5, sold:false },
+  { icon:'🍪', name:'手工饼干礼盒', points:40, stock:10, sold:false },
+  { icon:'🎨', name:'社区绘画课1次', points:60, stock:6, sold:false },
+  { icon:'🧴', name:'环保洗护套装', points:90, stock:4, sold:false },
+];
+function renderShop() {
+  var grid = document.getElementById('shopGrid');
+  grid.innerHTML = shopData.map(function(s) {
+    return '<div class="shop-item"><div class="si-icon">' + s.icon + '</div><div class="si-name">' + s.name + '</div><div class="si-points">' + s.points + ' 好心值</div><div class="si-stock">剩余 ' + s.stock + ' 份</div><button class="si-btn' + (s.sold ? ' sold' : '') + '" onclick="' + (s.sold ? '' : 'buyItem(this,\'' + s.name + '\',' + s.points + ')') + '">' + (s.sold ? '已兑换' : '兑换') + '</button></div>';
+  }).join('');
+}
+renderShop();
+
+// ====== 模块4：圈子 ======
+var circleData = [
+  { icon:'🌿', name:'环保小分队', count:38, tag:'热门', joined:false },
+  { icon:'📚', name:'读书分享会', count:25, tag:'活跃', joined:false },
+  { icon:'🐱', name:'宠物家长群', count:42, tag:'最热', joined:true },
+  { icon:'🏃', name:'晨跑打卡群', count:19, tag:'新开', joined:false },
+  { icon:'🍳', name:'美食交换群', count:31, tag:'活跃', joined:false },
+  { icon:'🌱', name:'阳台种菜交流', count:16, tag:'小众', joined:false },
+];
+function renderCircles() {
+  var grid = document.getElementById('circleGrid');
+  grid.innerHTML = circleData.map(function(c) {
+    return '<div class="circle-card" onclick="' + (c.joined ? '' : 'joinCircle(this,\'' + c.name + '\')') + '"><div class="cc-icon">' + c.icon + '</div><div class="cc-name">' + c.name + '</div><div class="cc-count">' + c.count + ' 位邻居</div><div class="cc-tag ' + (c.joined ? 'joined' : '') + '">' + (c.joined ? '✓ 已加入' : c.tag) + '</div></div>';
+  }).join('');
+}
+function joinCircle(el, name) {
+  var tag = el.querySelector('.cc-tag');
+  tag.textContent = '✓ 已加入'; tag.classList.add('joined');
+  el.onclick = null;
+  showToast('💬', '加入成功！', '你已加入「' + name + '」圈子');
+}
+renderCircles();
+
+// ====== 模块5：好事瞬间 ======
+var momentData = [
+  { avatar:'👩', name:'赵姐', text:'今天帮王奶奶取了快递，老人家一直说谢谢，心里暖暖的 🥰', time:'15分钟前', likes:8, liked:false, comments:3 },
+  { avatar:'👨', name:'张哥', text:'小区门口的单车又倒了一片，顺手全摆正了，强迫症舒适！', time:'42分钟前', likes:12, liked:false, comments:5 },
+  { avatar:'👧', name:'小雅', text:'在楼道放了共享雨伞，希望下雨天能帮到忘带伞的人 ☂️', time:'1小时前', likes:15, liked:true, comments:7 },
+  { avatar:'👴', name:'刘叔', text:'今天教陈爷爷用手机视频通话，他给远方的孙子打了电话，开心得像个孩子 📱', time:'2小时前', likes:20, liked:false, comments:9 },
+  { avatar:'👩', name:'李姐', text:'包了韭菜鸡蛋饺子，给楼上楼下各送了一盘，邻居回赠了红烧肉 🥟', time:'3小时前', likes:18, liked:false, comments:6 },
+  { avatar:'🧑', name:'小王', text:'楼道里的小广告太烦人了，今天花半小时全部清理干净了 ✨', time:'4小时前', likes:10, liked:false, comments:4 },
+];
+function renderMoments() {
+  var grid = document.getElementById('momentGrid');
+  grid.innerHTML = momentData.map(function(m) {
+    return '<div class="moment-card"><div class="mc-header"><div class="mc-avatar">' + m.avatar + '</div><div class="mc-name">' + m.name + '</div><div class="mc-time">' + m.time + '</div></div><div class="mc-text">' + m.text + '</div><div class="mc-actions"><span class="' + (m.liked ? 'liked' : '') + '" onclick="toggleLike(this)">' + (m.liked ? '❤️' : '🤍') + ' ' + m.likes + '</span><span onclick="showToast(\'💬\',\'评论\',\'评论功能开发中\')">💬 ' + m.comments + '</span><span onclick="showToast(\'📤\',\'分享\',\'分享功能开发中\')">📤 分享</span></div></div>';
+  }).join('');
+}
+function toggleLike(el) {
+  if (el.classList.contains('liked')) {
+    el.classList.remove('liked');
+    var n = parseInt(el.textContent.match(/\d+/)[0]) - 1;
+    el.innerHTML = '🤍 ' + n;
+  } else {
+    el.classList.add('liked');
+    var n = parseInt(el.textContent.match(/\d+/)[0]) + 1;
+    el.innerHTML = '❤️ ' + n;
+  }
+}
+renderMoments();
+
+// ====== 模块6：评价 ======
+var selectedStar = 0;
+var selectedReviewTags = [];
+var reviewHistoryData = [
+  { avatar:'👩', name:'赵姐', stars:5, text:'特别热心，帮我搬快递还送到门口，非常感谢！', tags:['热心','及时'] },
+  { avatar:'👨', name:'张哥', stars:5, text:'修电脑修得又快又好，还帮我清理了灰尘，太专业了', tags:['专业','靠谱'] },
+  { avatar:'👧', name:'小雅', stars:4, text:'帮忙遛狗遛得很认真，狗狗很喜欢她', tags:['耐心','细致'] },
+];
+function setStar(n) {
+  selectedStar = n;
+  document.querySelectorAll('.review-stars .star').forEach(function(s, i) {
+    s.classList.toggle('active', i < n);
+  });
+}
+function toggleReviewTag(el) {
+  el.classList.toggle('active');
+  var tag = el.dataset.tag;
+  var idx = selectedReviewTags.indexOf(tag);
+  if (idx === -1) selectedReviewTags.push(tag);
+  else selectedReviewTags.splice(idx, 1);
+}
+function submitReview() {
+  if (selectedStar === 0) { showToast('⭐', '请选择评分', '先点击星星选择评分'); return; }
+  var text = document.getElementById('reviewInput').value.trim() || '很好，很满意！';
+  reviewHistoryData.unshift({ avatar:'🙋', name:'你', stars:selectedStar, text:text, tags:selectedReviewTags.slice() });
+  renderReviews();
+  document.getElementById('reviewInput').value = '';
+  selectedStar = 0; selectedReviewTags = [];
+  document.querySelectorAll('.review-stars .star').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.review-tags .rt').forEach(function(t) { t.classList.remove('active'); });
+  showToast('⭐', '评价已提交！', '感谢你的评价，好心值 +10');
+}
+function renderReviews() {
+  var container = document.getElementById('reviewHistory');
+  container.innerHTML = reviewHistoryData.map(function(r) {
+    var stars = ''; for (var i = 0; i < 5; i++) { stars += i < r.stars ? '★' : '☆'; }
+    var tags = (r.tags || []).map(function(t) { return '<span style="display:inline-block;padding:1px 6px;border-radius:4px;background:#fef3ef;color:#c8533a;font-size:10px;font-weight:600;margin:2px;">' + t + '</span>'; }).join('');
+    return '<div class="review-item"><div class="ri-avatar">' + r.avatar + '</div><div class="ri-body"><div class="ri-name">' + r.name + ' <span class="ri-stars">' + stars + '</span></div>' + (tags ? '<div>' + tags + '</div>' : '') + '<div class="ri-text">' + r.text + '</div></div></div>';
+  }).join('');
+}
+renderReviews();
+
+// ====== 模块7：大事记 ======
+var milestones = [
+  { icon:'🎉', bg:'#fef3ef', title:'好事近平台在阳光花园上线', desc:'首批 47 位居民注册，当天完成 23 件好事', time:'2026年6月1日' },
+  { icon:'🌟', bg:'#fef6e8', title:'累计好事突破 100 件', desc:'社区好心值流通总量突破 5,000', time:'2026年6月15日' },
+  { icon:'🏪', bg:'#eef4fa', title:'首家合作商户签约', desc:'小区门口"暖心咖啡店"加入好心值兑换', time:'2026年6月28日' },
+  { icon:'👥', bg:'#edf7f0', title:'社区志愿者小队成立', desc:'12 位热心邻居组成"好邻居互助队"', time:'2026年7月10日' },
+  { icon:'📚', bg:'#f5f0fa', title:'楼道图书角落地', desc:'7 栋楼全部设立共享图书角，累计漂流 200+ 本书', time:'2026年7月20日' },
+  { icon:'🏆', bg:'#fef3ef', title:'社区排行榜上线', desc:'居民参与热情高涨，榜首赵姐累计 1,280 好心值', time:'2026年8月1日' },
+];
+function renderMilestones() {
+  var container = document.getElementById('milestoneContainer');
+  container.innerHTML = milestones.map(function(m) {
+    return '<div class="milestone-item"><div class="mi-icon" style="background:' + m.bg + ';">' + m.icon + '</div><div class="mi-body"><div class="mi-title">' + m.title + '</div><div class="mi-desc">' + m.desc + '</div><div class="mi-time">' + m.time + '</div></div></div>';
+  }).join('');
+}
+renderMilestones();
+
+// ====== 模块8：推荐 ======
+var recoData = [
+  { reason:'☀️ 天气适合外出', icon:'🚶', title:'今天适合散步做环保', desc:'天气晴朗，绕小区散步时顺手捡拾垃圾，一举两得', btn:'去做好事' },
+  { reason:'👴 社区有需求', icon:'📱', title:'教老人用手机', desc:'1号楼陈爷爷想学视频通话，你有空吗？', btn:'去帮忙' },
+  { reason:'🎯 你擅长这个', icon:'🔧', title:'帮邻居修小家电', desc:'你之前修过台灯，5号楼有个电扇需要看看', btn:'去看看' },
+  { reason:'🔥 大家都在做', icon:'🌿', title:'参与楼道清理', desc:'今天已有3位邻居清理了楼道，加入他们吧', btn:'加入' },
+];
+function renderReco() {
+  var grid = document.getElementById('recoGrid');
+  grid.innerHTML = recoData.map(function(r) {
+    return '<div class="reco-card"><div class="rc-reason">' + r.reason + '</div><div class="rc-icon">' + r.icon + '</div><div class="rc-title">' + r.title + '</div><div class="rc-desc">' + r.desc + '</div><button class="rc-btn" onclick="showToast(\'🎯\',\'已加入推荐\',\'「' + r.title + '」已添加到你的待办\')">' + r.btn + '</button></div>';
+  }).join('');
+}
+renderReco();
+
+// ====== 新增功能：弹窗工具函数 ======
+function openModal(title, bodyHtml, footHtml) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = bodyHtml;
+  document.getElementById('modalFoot').innerHTML = footHtml || '';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+// ====== 增强：活动报名弹窗流程 ======
+function signUp(el, title) {
+  var evt = null;
+  for (var i = 0; i < events.length; i++) {
+    if (events[i].title === title) { evt = events[i]; break; }
+  }
+  if (!evt) evt = { title: title, time: '', loc: '' };
+  var phoneHint = '138' + String(Math.floor(Math.random() * 100000000) + 100000000).substr(0, 8);
+  var bodyHtml = '<div class="form-group"><label class="form-label">报名人数</label><select class="form-select" id="signupCount"><option value="1">1人</option><option value="2">2人</option><option value="3">3人</option><option value="4">4人</option><option value="5">5人</option></select></div><div class="form-group"><label class="form-label">联系方式（手机号）</label><input class="form-input" id="signupPhone" type="tel" placeholder="请输入手机号" value="' + phoneHint + '" /></div><div class="form-group"><label class="form-check"><input type="checkbox" id="signupItems" /> 携带物品（如相机、折叠椅、食物等）</label></div><div style="font-size:11px;color:#b5a99e;text-align:center;">📋 ' + evt.time + ' · ' + evt.loc + '</div>';
+  var footHtml = '<button class="modal-btn secondary" onclick="closeModal()">取消</button><button class="modal-btn primary" onclick="confirmSignUp(\'' + title.replace(/'/g, "\\'") + '\')">确认报名</button>';
+  openModal('📅 ' + title, bodyHtml, footHtml);
+  window._signUpEl = el;
+}
+function confirmSignUp(title) {
+  var count = document.getElementById('signupCount').value;
+  var phone = document.getElementById('signupPhone').value || '未填写';
+  var hasItems = document.getElementById('signupItems').checked;
+  var code = 'HSJ-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+  var bodyHtml = '<div class="voucher"><div class="v-icon">🎫</div><div class="v-title">报名成功！</div><div class="v-info"><strong>' + title + '</strong><br>👥 ' + count + '人 | 🎒 ' + (hasItems ? '携带物品' : '不携带物品') + '<br>📞 ' + phone + '</div><div class="v-code">' + code + '</div><div class="v-tip">📱 活动当天出示此凭证签到入场</div></div>';
+  var footHtml = '<button class="modal-btn primary" onclick="closeModalAndMarkSignUp()">我知道了</button>';
+  openModal('✅ 报名成功', bodyHtml, footHtml);
+}
+function closeModalAndMarkSignUp() {
+  closeModal();
+  if (window._signUpEl) {
+    window._signUpEl.classList.add('signed');
+    window._signUpEl.textContent = '✓ 已报名';
+    window._signUpEl.onclick = null;
+    window._signUpEl = null;
+  }
+  showToast('📅', '报名成功！', '已生成电子凭证，可在活动当天使用');
+}
+
+// ====== 增强：邻里互助响应弹窗流程 ======
+function respondWall(el, title) {
+  var p1 = String(Math.floor(Math.random() * 9000) + 1000);
+  var p2 = String(Math.floor(Math.random() * 9000) + 1000);
+  var phone = '138-' + p1 + '-' + p2;
+  var bodyHtml = '<div style="text-align:center;margin-bottom:10px;"><div style="font-size:40px;margin-bottom:6px;">🤝</div><div style="font-size:14px;font-weight:600;">确认响应此求助</div><div style="font-size:12px;color:#7a6e66;margin-top:4px;">' + title + '</div></div><div class="form-group"><label class="form-label">⏰ 预计到达时间</label><div class="response-time-grid" id="responseTimeGrid"><div class="response-time-item" onclick="selectResponseTime(this,\'15分钟内\')">15分钟内</div><div class="response-time-item" onclick="selectResponseTime(this,\'30分钟内\')">30分钟内</div><div class="response-time-item" onclick="selectResponseTime(this,\'1小时内\')">1小时内</div><div class="response-time-item" onclick="selectResponseTime(this,\'2小时内\')">2小时内</div></div></div><div class="contact-info" id="contactInfo"><div class="ci-label">📞 对方联系方式</div><div class="ci-phone">' + phone + '</div><div class="ci-tip">请尽快联系对方确认具体事宜</div></div>';
+  var footHtml = '<button class="modal-btn secondary" onclick="closeModal()">取消</button><button class="modal-btn primary" id="confirmResponseBtn" onclick="confirmResponse(\'' + title.replace(/'/g, "\\'") + '\')" disabled>请选择到达时间</button>';
+  openModal('🙋 响应求助', bodyHtml, footHtml);
+  window._respondWallEl = el;
+}
+function selectResponseTime(el, time) {
+  var items = document.querySelectorAll('#responseTimeGrid .response-time-item');
+  for (var i = 0; i < items.length; i++) { items[i].classList.remove('selected'); }
+  el.classList.add('selected');
+  document.getElementById('confirmResponseBtn').disabled = false;
+  document.getElementById('confirmResponseBtn').textContent = '确认响应 · ' + time;
+  document.getElementById('contactInfo').classList.add('show');
+  window._responseTime = time;
+}
+function confirmResponse(title) {
+  var time = window._responseTime || '尽快';
+  closeModal();
+  if (window._respondWallEl) {
+    window._respondWallEl.classList.add('done');
+    window._respondWallEl.textContent = '已响应 ✓';
+    window._respondWallEl.onclick = null;
+    window._respondWallEl = null;
+  }
+  showToast('📌', '响应成功！', '你已响应「' + title + '」，预计' + time + '到达，对方联系方式已显示');
+}
+
+// ====== 增强：积分兑换弹窗流程 ======
+function buyItem(el, name, points) {
+  var item = null;
+  for (var i = 0; i < shopData.length; i++) {
+    if (shopData[i].name === name) { item = shopData[i]; break; }
+  }
+  if (!item) return;
+  var bodyHtml = '<div class="exchange-detail"><div class="ed-icon">' + item.icon + '</div><div class="ed-name">' + item.name + '</div><div class="ed-points">' + item.points + ' 好心值</div><div class="ed-stock">剩余 ' + item.stock + ' 份</div></div><div class="qr-area"><div class="qr-placeholder"><div class="qr-code-sim">▨▨▨▨</div><div class="qr-label">兑换二维码（模拟）</div></div></div><div class="exchange-instructions"><div class="ei-title">📋 兑换说明</div><div class="ei-item">兑换后请于7日内到社区服务中心领取</div><div class="ei-item">领取时出示此兑换凭证或二维码</div><div class="ei-item">如有疑问请联系社区工作人员</div></div>';
+  var footHtml = '<button class="modal-btn secondary" onclick="closeModal()">取消</button><button class="modal-btn primary" onclick="confirmExchange(\'' + name.replace(/'/g, "\\'") + '\',' + points + ')">确认兑换</button>';
+  openModal('🎁 兑换确认', bodyHtml, footHtml);
+  window._buyItemEl = el;
+  window._buyItemData = item;
+}
+function confirmExchange(name, points) {
+  var code = 'EX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2, 4).toUpperCase();
+  var bodyHtml = '<div class="voucher" style="border-color:#4a9e6e;"><div class="v-icon">🎁</div><div class="v-title" style="color:#4a9e6e;">兑换成功！</div><div class="v-info">消耗 <strong>' + points + ' 好心值</strong> 兑换了 <strong>' + name + '</strong><br>剩余好心值：<strong style="color:#c8533a;">' + (1280 - points) + '</strong></div><div class="v-code">' + code + '</div><div class="v-tip">📱 到社区服务中心出示此凭证领取</div></div>';
+  var footHtml = '<button class="modal-btn primary" onclick="closeModalAndMarkExchange()">我知道了</button>';
+  openModal('✅ 兑换成功', bodyHtml, footHtml);
+  window._exchangePoints = points;
+}
+function closeModalAndMarkExchange() {
+  closeModal();
+  if (window._buyItemEl) {
+    window._buyItemEl.classList.add('sold');
+    window._buyItemEl.textContent = '已兑换';
+    window._buyItemEl.onclick = null;
+    if (window._buyItemData) { window._buyItemData.sold = true; }
+    window._buyItemEl = null; window._buyItemData = null;
+  }
+  var pts = window._exchangePoints || 0;
+  showToast('🎁', '兑换成功！', '消耗 ' + pts + ' 好心值，请到社区服务中心领取');
+  window._exchangePoints = null;
+}
+
+// ====== 新增：社区公告板 ======
+var announcements = [
+  { id: 1, badge: 'NEW', title: '🎉 社区首届邻里节即将开幕', summary: '8月15日将举办首届社区邻里节，包括百家宴、才艺表演、趣味运动会等丰富活动，欢迎全体居民参加！', time: '2026年8月5日', detail: '为增进邻里感情，共建和谐社区，好事近平台联合阳光花园物业将于8月15日（周六）举办首届社区邻里节。<br><br>🏠 <b>百家宴</b> — 每家带一道菜，分享美食<br>🎤 <b>才艺表演</b> — 唱歌、舞蹈、乐器等<br>🏃 <b>趣味运动会</b> — 拔河、接力赛、跳绳<br>🎨 <b>儿童绘画角</b> — 孩子们的天地<br><br>📍 地点：小区中心广场<br>⏰ 时间：8月15日 16:00-20:00<br><br>点击下方活动日历中的相关活动报名参加！' },
+  { id: 2, badge: 'HOT', title: '📢 楼道图书角捐赠倡议', summary: '社区图书角需要更多书籍，欢迎大家捐赠闲置书籍，每捐赠一本书可获得5好心值奖励。', time: '2026年8月3日', detail: '目前各楼栋图书角已收到200余本书籍，但种类还不够丰富。现面向全体居民发起图书捐赠倡议：<br><br>📚 <b>捐赠要求</b>：书籍整洁、内容健康<br>📚 <b>捐赠类型</b>：文学、科普、儿童读物、生活百科<br>📚 <b>捐赠方式</b>：将书籍放到各楼栋一层图书角即可<br><br>🎁 每捐赠一本书可获得 <b>5好心值</b> 奖励！' },
+  { id: 3, badge: '', title: '🏆 7月"好邻居"评选结果出炉', summary: '经过居民投票，赵姐、张哥、小雅被评为7月"好邻居"，感谢他们的无私奉献！', time: '2026年8月1日', detail: '7月"好邻居"评选活动圆满结束。本次共有47位居民参与投票，评选结果：<br><br>🥇 <b>赵姐</b>（3号楼）— 1280 好心值<br>🥈 <b>张哥</b>（5号楼）— 965 好心值<br>🥉 <b>小雅</b>（7号楼）— 832 好心值<br><br>三位"好邻居"将获得社区荣誉证书及暖心咖啡券各一张。感谢所有为社区做出贡献的邻居们！' },
+];
+function renderAnnouncements() {
+  var container = document.getElementById('announcementContainer');
+  container.innerHTML = announcements.map(function(a) {
+    return '<div class="announcement-item" onclick="toggleAnnouncement(this)">' + (a.badge ? '<span class="ai-badge">' + a.badge + '</span>' : '') + '<span class="ai-title">' + a.title + '</span><div class="ai-summary">' + a.summary + '</div><div class="ai-time">' + a.time + '</div><div class="ai-detail">' + a.detail + '</div></div>';
+  }).join('');
+}
+function toggleAnnouncement(el) {
+  el.classList.toggle('expanded');
+}
+
+// ====== 新增：热门话题讨论 ======
+var hotTopics = [
+  { id: 1, title: '小区垃圾分类怎么分最有效？', author: '环保小分队', replies: 24, likes: 56, liked: false, comments: [], content: '我们小区最近开始推行垃圾分类，但很多邻居还不太清楚具体怎么分类。大家有什么好的分类方法或经验分享一下吗？比如厨余垃圾怎么处理，可回收物怎么投放更方便？' },
+  { id: 2, title: '推荐几本今年读过的好书', author: '读书分享会', replies: 18, likes: 42, liked: false, comments: [], content: '今年已经过半，大家读了哪些好书？我来推荐几本：《被讨厌的勇气》《克拉拉与太阳》《我在北京送快递》。欢迎在下面分享自己的书单！' },
+  { id: 3, title: '周末一起去爬山有一起的吗？', author: '晨跑打卡群', replies: 31, likes: 67, liked: false, comments: [], content: '这个周末天气不错，打算去爬西山，已有3位邻居报名。想一起的可以在下面留言，早上7点小区门口集合，自带水和零食！' },
+];
+function renderTopics() {
+  var container = document.getElementById('topicContainer');
+  container.innerHTML = hotTopics.map(function(t, idx) {
+    return '<div class="topic-item"><div class="ti-header"><div class="ti-rank ' + (idx === 0 ? 'top1' : idx === 1 ? 'top2' : 'top3') + '">' + (idx + 1) + '</div><div class="ti-body"><div class="ti-title" onclick="showTopicDetail(' + t.id + ')">' + t.title + '</div><div class="ti-meta"><span>👥 ' + t.author + '</span><span>💬 ' + t.replies + ' 回复</span><span>❤️ ' + t.likes + '</span></div><div class="ti-actions"><button class="ti-action-btn' + (t.liked ? ' active' : '') + '" onclick="toggleTopicLike(' + t.id + ', this)">' + (t.liked ? '❤️' : '🤍') + ' 点赞</button><button class="ti-action-btn" onclick="toggleTopicComment(' + t.id + ', this)">💬 回复</button><button class="ti-action-btn" onclick="showTopicDetail(' + t.id + ')">👁️ 查看详情</button></div><div class="ti-comment-box" id="topicComment_' + t.id + '"><input placeholder="写下你的回复…" id="topicCommentInput_' + t.id + '" /><button onclick="submitTopicComment(' + t.id + ')">发送</button></div></div></div></div>';
+  }).join('');
+}
+function toggleTopicLike(id, btn) {
+  var topic = null;
+  for (var i = 0; i < hotTopics.length; i++) { if (hotTopics[i].id === id) { topic = hotTopics[i]; break; } }
+  if (!topic) return;
+  if (topic.liked) { topic.liked = false; topic.likes--; btn.classList.remove('active'); btn.innerHTML = '🤍 点赞'; }
+  else { topic.liked = true; topic.likes++; btn.classList.add('active'); btn.innerHTML = '❤️ 点赞'; }
+  renderTopics();
+}
+function toggleTopicComment(id, btn) {
+  var box = document.getElementById('topicComment_' + id);
+  box.classList.toggle('show');
+  if (box.classList.contains('show')) { document.getElementById('topicCommentInput_' + id).focus(); }
+}
+function submitTopicComment(id) {
+  var input = document.getElementById('topicCommentInput_' + id);
+  var text = input.value.trim();
+  if (!text) { showToast('💬', '请输入回复内容', '写点内容再发送吧'); return; }
+  var topic = null;
+  for (var i = 0; i < hotTopics.length; i++) { if (hotTopics[i].id === id) { topic = hotTopics[i]; break; } }
+  if (topic) { topic.replies++; topic.comments = topic.comments || []; topic.comments.push(text); }
+  input.value = '';
+  document.getElementById('topicComment_' + id).classList.remove('show');
+  renderTopics();
+  showToast('💬', '回复成功', '你的回复已发布！');
+}
+function showTopicDetail(id) {
+  var topic = null;
+  for (var i = 0; i < hotTopics.length; i++) { if (hotTopics[i].id === id) { topic = hotTopics[i]; break; } }
+  if (!topic) return;
+  var commentsHtml = (topic.comments && topic.comments.length > 0) ? topic.comments.map(function(c) { return '<div style="padding:6px 0;border-bottom:1px solid #f5f0eb;font-size:12px;color:#7a6e66;">💬 ' + c + '</div>'; }).join('') : '<div style="font-size:12px;color:#b5a99e;text-align:center;padding:8px 0;">暂无回复，来抢沙发吧</div>';
+  var bodyHtml = '<div style="font-size:12px;color:#7a6e66;margin-bottom:8px;">👥 ' + topic.author + ' · ❤️ ' + topic.likes + ' · 💬 ' + topic.replies + '</div><div style="font-size:13px;line-height:1.6;margin-bottom:10px;padding:10px 12px;background:#faf8f6;border-radius:8px;">' + topic.content + '</div><div style="font-size:12px;font-weight:600;color:#7a6e66;margin-bottom:4px;">💬 全部回复</div>' + commentsHtml;
+  var footHtml = '<button class="modal-btn primary" onclick="closeModal()">关闭</button>';
+  openModal('💬 ' + topic.title, bodyHtml, footHtml);
+}
+
+// ====== 新增：你可能感兴趣的活动 ======
+var recommendedActivities = [
+  { icon: '🍪', bg: '#fef6e8', tag: '烘焙', title: '周末亲子烘焙课', time: '8月13日 周六 10:00', loc: '社区活动室', match: '你参加过烹饪类活动' },
+  { icon: '🧘', bg: '#eef4fa', tag: '运动', title: '晨间太极体验班', time: '8月14日 周日 7:30', loc: '小区花园', match: '你参加过健步走活动' },
+  { icon: '📱', bg: '#f5f0fa', tag: '学习', title: '手机摄影技巧分享', time: '8月20日 周六 15:00', loc: '活动室', match: '你对学习类活动感兴趣' },
+];
+function renderRecommendedActivities() {
+  var container = document.getElementById('recommendActContainer');
+  container.innerHTML = recommendedActivities.map(function(r) {
+    return '<div class="rec-act-item"><div class="ra-icon" style="background:' + r.bg + ';">' + r.icon + '</div><div class="ra-body"><span class="ra-tag">' + r.tag + '</span><div class="ra-title">' + r.title + '</div><div class="ra-meta">' + r.time + ' · ' + r.loc + '</div><div class="ra-match">' + r.match + '</div></div><button class="ra-btn" onclick="signUp(this,\'' + r.title + '\')">感兴趣</button></div>';
+  }).join('');
+}
+
+// ====== 新增：数据实时更新模拟 ======
+var dataUpdateTimer = setInterval(function() {
+  var choice = Math.floor(Math.random() * 5);
+  if (choice === 0 && events.length > 0) {
+    var idx = Math.floor(Math.random() * events.length);
+    if (!events[idx].signed) { showToast('📅', '活动热度更新', '「' + events[idx].title + '」又有邻居报名参加！'); }
+  } else if (choice === 1 && wallData.length > 0) {
+    var idx = Math.floor(Math.random() * wallData.length);
+    if (!wallData[idx].done) { showToast('📌', '互助新动态', '有邻居响应了「' + wallData[idx].title + '」'); }
+  } else if (choice === 2 && shopData.length > 0) {
+    var idx = Math.floor(Math.random() * shopData.length);
+    if (shopData[idx].stock > 0 && !shopData[idx].sold) { shopData[idx].stock = Math.max(0, shopData[idx].stock - (Math.floor(Math.random() * 2) + 1)); renderShop(); }
+  } else if (choice === 3 && momentData.length > 0) {
+    var idx = Math.floor(Math.random() * momentData.length);
+    momentData[idx].likes += Math.floor(Math.random() * 2) + 1; renderMoments();
+  } else if (choice === 4 && hotTopics.length > 0) {
+    var idx = Math.floor(Math.random() * hotTopics.length);
+    hotTopics[idx].replies += Math.floor(Math.random() * 2) + 1; renderTopics();
+  }
+}, 20000);
+
+// 渲染新增模块
+renderAnnouncements();
+renderTopics();
+renderRecommendedActivities();
+
+// ===== 邻里信用评分 =====
+function showTrustDetail() {
+  showToast('🏅', '信用评分详情', '互助响应率94% | 好事完成率98% | 好评率4.9 | 活跃度：高');
+}
+
+// ===== 应急响应 =====
+function respondEmergency(btn) {
+  btn.textContent = '✓ 已响应';
+  btn.style.background = '#4a9e6e';
+  btn.style.cursor = 'default';
+  btn.onclick = null;
+  showToast('🚨', '响应成功！', '已通知求助邻居，请保持手机畅通等待联系。+15信用分');
+  // 更新应急响应计数
+  var countEl = btn.closest('[style*="flex"]').querySelector('b');
+  if (countEl) {
+    countEl.textContent = parseInt(countEl.textContent) + 1;
+  }
+}
+
+function showEmergencyGuide() {
+  showToast('📋', '应急响应指南', '1.保持冷静 2.评估自身能力 3.及时响应 4.完成后标记解决');
+}
+
+function startEmergencyTraining() {
+  showToast('🎯', '应急演练已启动', '模拟场景：暴雨预警。请在5分钟内响应邻居的求助请求！');
+}
+
+// ===== Toast 通知（如果不存在） =====
+function showToast(icon, title, desc) {
+  var box = document.querySelector('.toast-box');
+  if (!box) {
+    box = document.createElement('div');
+    box.className = 'toast-box';
+    document.body.appendChild(box);
+  }
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '<div class="t-icon">' + icon + '</div><div><div class="t-title">' + title + '</div><div class="t-desc">' + desc + '</div></div>';
+  box.appendChild(t);
+  setTimeout(function() { t.remove(); }, 4000);
+}
+
+// ===== 应急响应脉搏动画 =====
+var pulseStyle = document.createElement('style');
+pulseStyle.textContent = '@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.5; } }';
+document.head.appendChild(pulseStyle);
+</script>
+</body>
+</html>

@@ -468,6 +468,219 @@ ul,ol{list-style:none}
 .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .particle{position:absolute;border-radius:50%;opacity:.08;animation:float-particle linear infinite}
 @keyframes float-particle{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:.08}90%{opacity:.08}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
+
+/* ============================================================
+   New Feature Styles (User Journey, Onboarding, Heatmap, etc.)
+   ============================================================ */
+
+/* ===== Onboarding Guide Overlay ===== */
+.onboarding-overlay{position:fixed;inset:0;z-index:5000;background:rgba(43,38,34,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;animation:fade-in .35s ease}
+.onboarding-overlay.show{display:flex}
+.onboarding-card{background:var(--paper);border-radius:var(--radius-lg);padding:40px 32px 32px;max-width:420px;width:100%;box-shadow:0 32px 80px rgba(43,38,34,.2);animation:modal-in .4s cubic-bezier(.4,0,.2,1);text-align:center;position:relative}
+.onboarding-card .onb-step-dots{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.onboarding-card .onb-step-dots .onb-dot{width:10px;height:10px;border-radius:50%;background:var(--line);transition:var(--transition);cursor:pointer}
+.onboarding-card .onb-step-dots .onb-dot.active{background:var(--brand);transform:scale(1.2)}
+.onboarding-card .onb-step-dots .onb-dot.done{background:var(--leaf)}
+.onboarding-card .onb-icon{font-size:56px;display:block;margin-bottom:16px;animation:float 3s ease-in-out infinite}
+.onboarding-card h3{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:10px}
+.onboarding-card p{font-size:15px;color:var(--ink-soft);line-height:1.7;margin-bottom:24px;max-width:320px;margin-left:auto;margin-right:auto}
+.onboarding-card .onb-actions{display:flex;gap:10px;justify-content:center}
+.onboarding-card .onb-actions .onb-btn{padding:12px 32px;border-radius:999px;font-size:15px;font-weight:700;transition:var(--transition);cursor:pointer}
+.onboarding-card .onb-actions .onb-btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;box-shadow:0 4px 16px rgba(200,83,58,.25)}
+.onboarding-card .onb-actions .onb-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,83,58,.35)}
+.onboarding-card .onb-actions .onb-btn-skip{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line)}
+.onboarding-card .onb-actions .onb-btn-skip:hover{background:var(--line)}
+.onboarding-card .onb-close-skip{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:16px;color:var(--ink-faint);background:var(--bg);cursor:pointer;transition:var(--transition)}
+.onboarding-card .onb-close-skip:hover{background:var(--line);color:var(--ink)}
+
+/* ===== User Journey Progress Bar ===== */
+.journey-bar{background:var(--paper);border-bottom:1px solid var(--line);padding:12px 0;position:sticky;top:64px;z-index:999;box-shadow:0 1px 4px rgba(43,38,34,.03);transition:var(--transition)}
+.journey-bar .wrap{display:flex;align-items:center;justify-content:space-between;max-width:900px}
+.journey-step{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;position:relative;flex:1;transition:var(--transition);padding:4px 0}
+.journey-step:hover{opacity:.8}
+.journey-step .js-circle{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:800;border:2.5px solid var(--line);background:var(--paper);color:var(--ink-faint);transition:var(--transition);position:relative;z-index:2}
+.journey-step.active .js-circle{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 2px 8px rgba(200,83,58,.25)}
+.journey-step.done .js-circle{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.journey-step .js-label{font-size:11px;font-weight:600;color:var(--ink-faint);transition:var(--transition);white-space:nowrap}
+.journey-step.active .js-label{color:var(--brand);font-weight:700}
+.journey-step.done .js-label{color:var(--leaf)}
+.journey-step .js-connector{position:absolute;top:18px;left:calc(50% + 18px);right:calc(-50% + 18px);height:2.5px;background:var(--line);z-index:1;transition:var(--transition)}
+.journey-step:last-child .js-connector{display:none}
+.journey-step.done .js-connector{background:var(--leaf)}
+.journey-step.active .js-connector{background:linear-gradient(90deg,var(--leaf),var(--line))}
+
+/* ===== Good Deed Heatmap ===== */
+.heatmap-section{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.heatmap-header{text-align:center;margin-bottom:24px}
+.heatmap-header h3{font-size:clamp(20px,2.5vw,24px);font-weight:800;color:var(--ink)}
+.heatmap-header p{font-size:14px;color:var(--ink-soft);margin-top:4px}
+.heatmap-legend{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;font-size:12px;color:var(--ink-faint);flex-wrap:wrap}
+.heatmap-legend .hl-item{display:flex;align-items:center;gap:4px}
+.heatmap-legend .hl-color{width:16px;height:16px;border-radius:4px;border:1px solid rgba(0,0,0,.06)}
+.heatmap-legend .hl-color.l1{background:#fbeae3}
+.heatmap-legend .hl-color.l2{background:#f5c8b8}
+.heatmap-legend .hl-color.l3{background:#e8957a}
+.heatmap-legend .hl-color.l4{background:#d86a4a}
+.heatmap-legend .hl-color.l5{background:#c8533a}
+.heatmap-grid-wrap{overflow-x:auto;padding:4px}
+.heatmap-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;min-width:560px}
+.heatmap-building{aspect-ratio:1;border-radius:var(--radius-sm);background:var(--bg);border:1.5px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition);position:relative;min-height:70px;padding:4px}
+.heatmap-building:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);z-index:3}
+.heatmap-building .hb-number{font-size:13px;font-weight:800;color:var(--ink);line-height:1.2}
+.heatmap-building .hb-label{font-size:9px;color:var(--ink-faint);margin-top:2px;text-align:center;line-height:1.2}
+.heatmap-building .hb-badge{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.heatmap-building.level-1{background:#fbeae3;border-color:#f5c8b8}
+.heatmap-building.level-2{background:#f5c8b8;border-color:#e8957a}
+.heatmap-building.level-3{background:#e8957a;border-color:#d86a4a;color:#fff}
+.heatmap-building.level-3 .hb-number,.heatmap-building.level-3 .hb-label{color:#fff}
+.heatmap-building.level-4{background:#d86a4a;border-color:#c8533a;color:#fff}
+.heatmap-building.level-4 .hb-number,.heatmap-building.level-4 .hb-label{color:#fff}
+.heatmap-building.level-5{background:#c8533a;border-color:#9e3b25;color:#fff}
+.heatmap-building.level-5 .hb-number,.heatmap-building.level-5 .hb-label{color:#fff}
+.heatmap-building .hb-tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;white-space:nowrap;opacity:0;pointer-events:none;transition:all .25s ease;z-index:10;font-weight:500}
+.heatmap-building .hb-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink)}
+.heatmap-building:hover .hb-tooltip{opacity:1;bottom:calc(100% + 10px)}
+.heatmap-building.level-3 .hb-badge,.heatmap-building.level-4 .hb-badge,.heatmap-building.level-5 .hb-badge{background:var(--gold)}
+.heatmap-building.level-1 .hb-badge,.heatmap-building.level-2 .hb-badge{background:var(--ink-faint)}
+.heatmap-building.selected{transform:translateY(-3px);box-shadow:0 0 0 3px var(--brand),var(--shadow-hover);z-index:3}
+.heatmap-detail{display:none;margin-top:20px;padding:20px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--line);animation:slide-up .4s ease}
+.heatmap-detail.show{display:block}
+.heatmap-detail .hmd-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.heatmap-detail .hmd-header h4{font-size:16px;font-weight:800;color:var(--ink)}
+.heatmap-detail .hmd-header .hmd-badge{padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;background:var(--brand-soft);color:var(--brand-deep)}
+.heatmap-detail .hmd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.heatmap-detail .hmd-stat{text-align:center;padding:10px;background:var(--paper);border-radius:var(--radius-sm);border:1px solid var(--line)}
+.heatmap-detail .hmd-stat .hmd-stat-num{font-size:18px;font-weight:800;color:var(--brand)}
+.heatmap-detail .hmd-stat .hmd-stat-label{font-size:11px;color:var(--ink-faint);margin-top:2px}
+.heatmap-detail .hmd-residents{font-size:13px;color:var(--ink-soft)}
+.heatmap-detail .hmd-residents span{display:inline-block;padding:3px 8px;background:var(--paper);border-radius:6px;margin:3px 4px 3px 0;border:1px solid var(--line);font-size:12px}
+
+/* ===== Real-time Data Stream ===== */
+.realtime-section{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.realtime-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+.realtime-header h3{font-size:clamp(18px,2.5vw,22px);font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px}
+.realtime-header .rt-status{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--leaf)}
+.realtime-header .rt-status .rt-dot{width:8px;height:8px;border-radius:50%;background:var(--leaf);animation:pulse-dot 1.5s ease-in-out infinite}
+.realtime-header .rt-count{font-size:13px;color:var(--ink-faint);font-weight:500}
+.realtime-stream{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto;padding-right:4px}
+.realtime-stream::-webkit-scrollbar{width:4px}
+.realtime-stream::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+.rt-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--brand);animation:rt-slide-in .4s ease;transition:var(--transition)}
+.rt-item:hover{background:var(--brand-soft);transform:translateX(4px)}
+.rt-item .rt-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.rt-item .rt-body{flex:1;min-width:0}
+.rt-item .rt-body .rt-text{font-size:13px;color:var(--ink);line-height:1.4}
+.rt-item .rt-body .rt-text .rt-name{font-weight:700;color:var(--brand)}
+.rt-item .rt-body .rt-text .rt-action{color:var(--ink-soft)}
+.rt-item .rt-body .rt-text .rt-task{font-weight:600;color:var(--leaf)}
+.rt-item .rt-body .rt-time{font-size:11px;color:var(--ink-faint);margin-top:2px}
+.rt-item .rt-value{font-size:12px;font-weight:700;color:var(--gold);flex-shrink:0;padding:2px 8px;background:var(--gold-soft);border-radius:999px}
+@keyframes rt-slide-in{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.rt-item.fade-out{opacity:0;transform:translateX(20px);transition:all .5s ease}
+
+/* ===== Good Deed Detail Modal ===== */
+.detail-overlay{position:fixed;inset:0;z-index:2500;background:rgba(43,38,34,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px;animation:fade-in .25s ease}
+.detail-overlay.show{display:flex}
+.detail-modal{background:var(--paper);border-radius:var(--radius-lg);padding:32px;max-width:520px;width:100%;box-shadow:0 24px 64px rgba(43,38,34,.15);animation:modal-in .3s cubic-bezier(.4,0,.2,1);max-height:85vh;overflow-y:auto}
+.detail-modal .dm-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px}
+.detail-modal .dm-header .dm-title-group{flex:1}
+.detail-modal .dm-header .dm-title-group .dm-icon{font-size:36px;display:block;margin-bottom:8px}
+.detail-modal .dm-header .dm-title-group h3{font-size:20px;font-weight:800;color:var(--ink)}
+.detail-modal .dm-header .dm-title-group .dm-tags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.detail-modal .dm-header .dm-title-group .dm-tags .dm-tag{padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.detail-modal .dm-header .dm-title-group .dm-tags .dm-tag.brand{background:var(--brand-soft);color:var(--brand-deep)}
+.detail-modal .dm-header .dm-title-group .dm-tags .dm-tag.gold{background:var(--gold-soft);color:var(--gold)}
+.detail-modal .dm-header .dm-title-group .dm-tags .dm-tag.leaf{background:var(--leaf-soft);color:var(--leaf)}
+.detail-modal .dm-close{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:18px;color:var(--ink-faint);transition:var(--transition);background:var(--bg);cursor:pointer;flex-shrink:0}
+.detail-modal .dm-close:hover{background:var(--line);color:var(--ink)}
+.detail-modal .dm-desc{font-size:14px;color:var(--ink-soft);line-height:1.7;margin-bottom:20px;padding:16px;background:var(--bg);border-radius:var(--radius-sm)}
+.detail-modal .dm-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.detail-modal .dm-detail-item{padding:12px;background:var(--bg);border-radius:var(--radius-sm);text-align:center;border:1px solid var(--line)}
+.detail-modal .dm-detail-item .dm-di-label{font-size:11px;color:var(--ink-faint);margin-bottom:4px}
+.detail-modal .dm-detail-item .dm-di-value{font-size:18px;font-weight:800;color:var(--ink)}
+.detail-modal .dm-detail-item .dm-di-value.brand{color:var(--brand)}
+.detail-modal .dm-detail-item .dm-di-value.gold{color:var(--gold)}
+.detail-modal .dm-detail-item .dm-di-value.leaf{color:var(--leaf)}
+.detail-modal .dm-similar{margin-bottom:20px}
+.detail-modal .dm-similar h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.detail-modal .dm-similar .dm-sim-list{display:flex;flex-direction:column;gap:6px}
+.detail-modal .dm-similar .dm-sim-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;font-size:13px;cursor:pointer;transition:var(--transition);border:1px solid transparent}
+.detail-modal .dm-similar .dm-sim-item:hover{background:var(--brand-soft);border-color:var(--brand-soft)}
+.detail-modal .dm-similar .dm-sim-item .dm-sim-name{font-weight:600;color:var(--ink)}
+.detail-modal .dm-similar .dm-sim-item .dm-sim-value{font-weight:700;color:var(--gold)}
+.detail-modal .dm-actions{display:flex;gap:10px}
+.detail-modal .dm-actions .dm-btn{flex:1;padding:12px;border-radius:999px;font-size:15px;font-weight:700;transition:var(--transition);text-align:center;cursor:pointer}
+.detail-modal .dm-actions .dm-btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;box-shadow:0 4px 12px rgba(200,83,58,.25)}
+.detail-modal .dm-actions .dm-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(200,83,58,.3)}
+.detail-modal .dm-actions .dm-btn-secondary{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line)}
+.detail-modal .dm-actions .dm-btn-secondary:hover{background:var(--line)}
+
+/* ===== Weather/Scene Recommendation ===== */
+.weather-rec{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.weather-rec .wr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.weather-rec .wr-header .wr-left{display:flex;align-items:center;gap:14px}
+.weather-rec .wr-header .wr-left .wr-weather-icon{font-size:42px;width:56px;height:56px;display:grid;place-items:center;background:var(--sky-soft);border-radius:14px}
+.weather-rec .wr-header .wr-left .wr-info .wr-weather-text{font-size:16px;font-weight:700;color:var(--ink)}
+.weather-rec .wr-header .wr-left .wr-info .wr-weather-desc{font-size:13px;color:var(--ink-soft);margin-top:2px}
+.weather-rec .wr-header .wr-left .wr-info .wr-weather-desc .wr-temp{font-weight:700;color:var(--brand)}
+.weather-rec .wr-header .wr-refresh-btn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);font-size:16px;cursor:pointer;transition:var(--transition)}
+.weather-rec .wr-header .wr-refresh-btn:hover{background:var(--line);transform:rotate(30deg)}
+.weather-rec .wr-rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.weather-rec .wr-rec-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:18px;transition:var(--transition);cursor:pointer;position:relative}
+.weather-rec .wr-rec-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.weather-rec .wr-rec-card .wr-rec-tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:8px}
+.weather-rec .wr-rec-card .wr-rec-tag.match{background:var(--brand-soft);color:var(--brand-deep)}
+.weather-rec .wr-rec-card .wr-rec-tag.rec{background:var(--gold-soft);color:var(--gold)}
+.weather-rec .wr-rec-card h5{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.weather-rec .wr-rec-card p{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px}
+.weather-rec .wr-rec-card .wr-rec-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.weather-rec .wr-rec-card .wr-rec-meta span{font-size:11px;color:var(--ink-faint);display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:var(--paper);border-radius:6px}
+.weather-rec .wr-rec-card .wr-rec-btn{width:100%;padding:8px;border-radius:999px;font-size:13px;font-weight:600;color:var(--brand);border:1.5px solid var(--brand);transition:var(--transition);text-align:center;background:var(--paper);cursor:pointer}
+.weather-rec .wr-rec-card .wr-rec-btn:hover{background:var(--brand-soft)}
+.weather-rec .wr-rec-card .wr-rec-btn.claimed{background:var(--leaf-soft);color:var(--leaf);border-color:var(--leaf);cursor:default}
+
+/* ===== Dashboard Real-time Badge ===== */
+.dashboard-update-badge{position:absolute;top:-4px;right:-4px;width:12px;height:12px;border-radius:50%;background:var(--brand);animation:pulse-dot 1.5s ease-in-out infinite;opacity:0;transition:opacity .3s}
+.dashboard-update-badge.show{opacity:1}
+.metric{z-index:1}
+.metric .metric-update-flash{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:var(--radius);background:radial-gradient(circle at center,rgba(200,83,58,.08),transparent 70%);opacity:0;pointer-events:none;transition:opacity .6s ease}
+.metric .metric-update-flash.flash{opacity:1}
+
+/* ===== Responsive for new features ===== */
+@media(max-width:768px){
+  .onboarding-card{padding:28px 20px 24px}
+  .onboarding-card .onb-icon{font-size:40px}
+  .onboarding-card h3{font-size:18px}
+  .journey-bar{top:64px;padding:8px 0}
+  .journey-step .js-circle{width:30px;height:30px;font-size:12px}
+  .journey-step .js-label{font-size:10px}
+  .journey-step .js-connector{top:15px}
+  .heatmap-section{padding:20px;border-radius:var(--radius)}
+  .heatmap-grid{grid-template-columns:repeat(6,1fr);gap:6px;min-width:auto}
+  .heatmap-building{min-height:56px}
+  .heatmap-building .hb-number{font-size:11px}
+  .heatmap-building .hb-label{font-size:8px;display:none}
+  .heatmap-detail .hmd-stats{grid-template-columns:1fr 1fr}
+  .realtime-section{padding:20px;border-radius:var(--radius)}
+  .realtime-stream{max-height:240px}
+  .weather-rec{padding:20px;border-radius:var(--radius)}
+  .weather-rec .wr-rec-grid{grid-template-columns:1fr}
+  .detail-modal{padding:24px;margin:16px}
+  .detail-modal .dm-detail-grid{grid-template-columns:1fr 1fr}
+  .heatmap-legend{font-size:10px;gap:4px}
+  .heatmap-legend .hl-color{width:12px;height:12px}
+}
+
+@media(max-width:480px){
+  .heatmap-grid{grid-template-columns:repeat(4,1fr);gap:5px}
+  .heatmap-building{min-height:48px;padding:2px}
+  .heatmap-building .hb-number{font-size:10px}
+  .heatmap-detail .hmd-stats{grid-template-columns:1fr}
+  .journey-step .js-label{font-size:9px}
+  .journey-step .js-circle{width:26px;height:26px;font-size:10px}
+  .journey-step .js-connector{top:13px}
+  .weather-rec .wr-header .wr-left .wr-weather-icon{font-size:32px;width:44px;height:44px}
+}
 </style>
 </head>
 <body>
@@ -512,6 +725,37 @@ ul,ol{list-style:none}
     <div class="mobile-auth">
       <a href="#" class="mob-login" onclick="showToast('info','登录提示','功能开发中，敬请期待');return false">登录</a>
       <a href="#" class="mob-register" onclick="showToast('info','注册提示','功能开发中，敬请期待');return false">注册</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== User Journey Progress Bar ===== -->
+<div class="journey-bar" id="journeyBar">
+  <div class="wrap">
+    <div class="journey-step active" data-journey="discover" onclick="scrollToSection('hero')">
+      <div class="js-circle">🔍</div>
+      <span class="js-label">发现</span>
+      <div class="js-connector"></div>
+    </div>
+    <div class="journey-step" data-journey="choose" onclick="scrollToSection('tasks')">
+      <div class="js-circle">✅</div>
+      <span class="js-label">选择</span>
+      <div class="js-connector"></div>
+    </div>
+    <div class="journey-step" data-journey="act" onclick="scrollToSection('sceneMatcher')">
+      <div class="js-circle">🎯</div>
+      <span class="js-label">行动</span>
+      <div class="js-connector"></div>
+    </div>
+    <div class="journey-step" data-journey="record" onclick="scrollToSection('feedContainer')">
+      <div class="js-circle">📝</div>
+      <span class="js-label">记录</span>
+      <div class="js-connector"></div>
+    </div>
+    <div class="journey-step" data-journey="grow" onclick="scrollToSection('profile')">
+      <div class="js-circle">🌱</div>
+      <span class="js-label">成长</span>
+      <div class="js-connector"></div>
     </div>
   </div>
 </div>
@@ -738,6 +982,206 @@ ul,ol{list-style:none}
     <p>看看邻居们最近做了什么好事</p>
   </div>
   <div class="feed" id="feedContainer"></div>
+</section>
+
+<!-- ===== Community Heatmap Section ===== -->
+<section class="wrap section" style="padding-top:0" id="heatmapSection">
+  <div class="section-title">
+    <h2>🗺️ 社区好事热力图</h2>
+    <p>看看小区里哪些楼栋的好事密度最高</p>
+  </div>
+  <div class="heatmap-section">
+    <div class="heatmap-header">
+      <h3>🏘️ 阳光花园小区分布</h3>
+      <p>点击楼栋查看该栋的好事统计</p>
+    </div>
+    <div class="heatmap-legend">
+      <span style="font-weight:600;color:var(--ink);margin-right:4px">密度</span>
+      <span class="hl-item"><span class="hl-color l1"></span> 低</span>
+      <span class="hl-item"><span class="hl-color l2"></span></span>
+      <span class="hl-item"><span class="hl-color l3"></span></span>
+      <span class="hl-item"><span class="hl-color l4"></span></span>
+      <span class="hl-item"><span class="hl-color l5"></span> 高</span>
+      <span style="margin-left:12px;font-size:12px;color:var(--ink-faint)">⚡ 实时更新 · 过去7天数据</span>
+    </div>
+    <div class="heatmap-grid-wrap">
+      <div class="heatmap-grid" id="heatmapGrid"></div>
+    </div>
+    <div class="heatmap-detail" id="heatmapDetail">
+      <div class="hmd-header">
+        <h4 id="hmdTitle">1号楼</h4>
+        <span class="hmd-badge" id="hmdLevel">🔥 活跃</span>
+      </div>
+      <div class="hmd-stats">
+        <div class="hmd-stat">
+          <div class="hmd-stat-num" id="hmdDeeds">0</div>
+          <div class="hmd-stat-label">已完成好事</div>
+        </div>
+        <div class="hmd-stat">
+          <div class="hmd-stat-num" id="hmdHeart">0</div>
+          <div class="hmd-stat-label">累计好心值</div>
+        </div>
+        <div class="hmd-stat">
+          <div class="hmd-stat-num" id="hmdResidents">0</div>
+          <div class="hmd-stat-label">热心居民数</div>
+        </div>
+      </div>
+      <div class="hmd-residents" id="hmdResidentsList">
+        <span style="font-weight:600;color:var(--ink);font-size:13px">🏅 热心居民：</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- ===== 今日场景入口 ===== -->
+  <div class="section">
+    <div class="section-title">
+      <h2>📍 今日场景入口</h2>
+      <p>根据你当前的时间和场景，推荐最适合的好事</p>
+    </div>
+    <div class="scene-entry-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;max-width:960px;margin:0 auto;">
+      <div class="scene-entry-card" onclick="showSceneDetail('commute')" style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:all .3s;box-shadow:var(--shadow);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#3b6b8c,#5a8aaa);"></div>
+        <div style="font-size:36px;margin-bottom:10px;">🌅</div>
+        <h4 style="font-size:16px;font-weight:800;margin-bottom:4px;">通勤路上</h4>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.5;">地铁让座、整理单车、电梯微笑<br><span style="color:var(--brand);font-weight:700;font-size:12px;">⏱ 1-5分钟</span></p>
+        <div style="margin-top:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:var(--sky-soft);color:var(--sky);font-weight:600;">🚇 让座</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:var(--sky-soft);color:var(--sky);font-weight:600;">🚲 整理</span>
+        </div>
+      </div>
+      <div class="scene-entry-card" onclick="showSceneDetail('lunch')" style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:all .3s;box-shadow:var(--shadow);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#3f7d5b,#5a9e7a);"></div>
+        <div style="font-size:36px;margin-bottom:10px;">☕</div>
+        <h4 style="font-size:16px;font-weight:800;margin-bottom:4px;">午休时光</h4>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.5;">帮同事带饭、整理茶水间、分享好书<br><span style="color:var(--brand);font-weight:700;font-size:12px;">⏱ 5-10分钟</span></p>
+        <div style="margin-top:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:var(--leaf-soft);color:var(--leaf);font-weight:600;">🍱 带饭</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:var(--leaf-soft);color:var(--leaf);font-weight:600;">🧹 整理</span>
+        </div>
+      </div>
+      <div class="scene-entry-card" onclick="showSceneDetail('family')" style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:all .3s;box-shadow:var(--shadow);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#6b4a7a,#8a5a9e);"></div>
+        <div style="font-size:36px;margin-bottom:10px;">👨‍👩‍👧‍👦</div>
+        <h4 style="font-size:16px;font-weight:800;margin-bottom:4px;">家庭亲子</h4>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.5;">亲子分类、陪伴老人、阳台种植分享<br><span style="color:var(--brand);font-weight:700;font-size:12px;">⏱ 10-30分钟</span></p>
+        <div style="margin-top:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:var(--plum-soft);color:var(--plum);font-weight:600;">♻️ 分类</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:var(--plum-soft);color:var(--plum);font-weight:600;">👴 陪伴</span>
+        </div>
+      </div>
+      <div class="scene-entry-card" onclick="showSceneDetail('emergency')" style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;cursor:pointer;transition:all .3s;box-shadow:var(--shadow);position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#c8533a,#e07050);"></div>
+        <div style="font-size:36px;margin-bottom:10px;">🚨</div>
+        <h4 style="font-size:16px;font-weight:800;margin-bottom:4px;">应急响应</h4>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.5;">天气预警互助、突发就医协助、物资共享<br><span style="color:var(--brand);font-weight:700;font-size:12px;">⏱ 即时响应</span></p>
+        <div style="margin-top:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand-deep);font-weight:600;">🆘 互助</span>
+          <span style="font-size:10px;padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand-deep);font-weight:600;">📦 共享</span>
+        </div>
+      </div>
+    </div>
+    <!-- 场景详情弹窗 -->
+    <div id="sceneDetailModal" style="display:none;position:fixed;inset:0;background:rgba(43,38,34,.4);z-index:2000;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease;">
+      <div style="background:#fff;border-radius:16px;max-width:500px;width:100%;padding:28px;box-shadow:0 16px 48px rgba(43,38,34,.16);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <div id="sceneDetailIcon" style="font-size:40px;"></div>
+          <div>
+            <h3 id="sceneDetailTitle" style="font-size:20px;font-weight:800;"></h3>
+            <p id="sceneDetailDesc" style="font-size:13px;color:var(--ink-soft);margin-top:2px;"></p>
+          </div>
+        </div>
+        <div id="sceneDetailList" style="margin-bottom:20px;"></div>
+        <div style="text-align:center;">
+          <button onclick="closeSceneModal()" style="padding:10px 28px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-soft);background:var(--bg);border:1px solid var(--line);cursor:pointer;">知道了</button>
+          <button onclick="goToInteract()" style="padding:10px 28px;border-radius:999px;font-size:14px;font-weight:600;color:#fff;background:var(--brand);border:none;cursor:pointer;margin-left:8px;">去互动广场 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 用户旅程地图 ===== -->
+  <div class="section" style="background:var(--paper);border-radius:20px;padding:40px 20px;margin:0 20px 40px;box-shadow:var(--shadow);">
+    <div class="section-title">
+      <h2>🛤️ 用户成长旅程</h2>
+      <p>从第一次尝试到成为社区温暖力量，每一步都值得记录</p>
+    </div>
+    <div style="max-width:800px;margin:0 auto;position:relative;padding:20px 0;">
+      <!-- 旅程路径线 -->
+      <div style="position:absolute;top:50%;left:40px;right:40px;height:3px;background:var(--line);transform:translateY(-50%);z-index:1;"></div>
+      <div style="position:absolute;top:50%;left:40px;width:0;height:3px;background:linear-gradient(90deg,var(--brand),var(--gold));transform:translateY(-50%);z-index:2;transition:width 1.5s ease;" id="journeyProgress"></div>
+      <!-- 旅程节点 -->
+      <div style="display:flex;justify-content:space-between;position:relative;z-index:3;flex-wrap:wrap;gap:10px;">
+        <div class="journey-node" data-step="1" style="text-align:center;flex:1;min-width:100px;padding:10px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:22px;margin:0 auto 8px;box-shadow:0 4px 12px rgba(200,83,58,.3);">👀</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink);">发现</div>
+          <div style="font-size:11px;color:var(--ink-soft);">第一次看到平台</div>
+        </div>
+        <div class="journey-node" data-step="2" style="text-align:center;flex:1;min-width:100px;padding:10px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--line);color:var(--ink-faint);display:grid;place-items:center;font-size:22px;margin:0 auto 8px;">✅</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink);">选择</div>
+          <div style="font-size:11px;color:var(--ink-soft);">挑一件好事试试</div>
+        </div>
+        <div class="journey-node" data-step="3" style="text-align:center;flex:1;min-width:100px;padding:10px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--line);color:var(--ink-faint);display:grid;place-items:center;font-size:22px;margin:0 auto 8px;">🎯</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink);">行动</div>
+          <div style="font-size:11px;color:var(--ink-soft);">完成第一件好事</div>
+        </div>
+        <div class="journey-node" data-step="4" style="text-align:center;flex:1;min-width:100px;padding:10px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--line);color:var(--ink-faint);display:grid;place-items:center;font-size:22px;margin:0 auto 8px;">📊</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink);">记录</div>
+          <div style="font-size:11px;color:var(--ink-soft);">看到自己的影响</div>
+        </div>
+        <div class="journey-node" data-step="5" style="text-align:center;flex:1;min-width:100px;padding:10px;">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--line);color:var(--ink-faint);display:grid;place-items:center;font-size:22px;margin:0 auto 8px;">🌟</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink);">成长</div>
+          <div style="font-size:11px;color:var(--ink-soft);">成为社区温暖力量</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <p style="font-size:13px;color:var(--ink-soft);">已有 <b style="color:var(--brand);">1,247</b> 位邻居完成了从"发现"到"成长"的旅程</p>
+      <button onclick="goToInteract()" style="margin-top:10px;padding:10px 28px;border-radius:999px;font-size:14px;font-weight:600;color:#fff;background:var(--brand);border:none;cursor:pointer;box-shadow:0 4px 12px rgba(200,83,58,.25);">开始你的旅程 →</button>
+    </div>
+  </div>
+
+<!-- ===== Real-time Data Stream Section ===== -->
+<section class="wrap section" style="padding-top:0" id="realtimeSection">
+  <div class="section-title">
+    <h2>⚡ 实时数据流</h2>
+    <p>邻居们正在做的事，实时更新中</p>
+  </div>
+  <div class="realtime-section">
+    <div class="realtime-header">
+      <h3>
+        <span>📡 实时好事动态</span>
+        <span class="rt-status"><span class="rt-dot"></span> 连接中</span>
+      </h3>
+      <span class="rt-count" id="rtCount">今日已记录 <strong style="color:var(--brand)">0</strong> 件好事</span>
+    </div>
+    <div class="realtime-stream" id="realtimeStream"></div>
+  </div>
+</section>
+
+<!-- ===== Weather/Scene Recommendation Section ===== -->
+<section class="wrap section" style="padding-top:0" id="weatherRecSection">
+  <div class="section-title">
+    <h2>🌤️ 天气场景推荐</h2>
+    <p>根据当前天气和时间，为你推荐最适合的好事</p>
+  </div>
+  <div class="weather-rec">
+    <div class="wr-header">
+      <div class="wr-left">
+        <div class="wr-weather-icon" id="wrWeatherIcon">☀️</div>
+        <div class="wr-info">
+          <div class="wr-weather-text" id="wrWeatherText">晴朗 · 适合户外活动</div>
+          <div class="wr-weather-desc" id="wrWeatherDesc">当前 <span class="wr-temp">28°C</span> · 体感温度 <span class="wr-temp">26°C</span></div>
+        </div>
+      </div>
+      <button class="wr-refresh-btn" onclick="refreshWeatherRec()" title="刷新推荐">🔄</button>
+    </div>
+    <div class="wr-rec-grid" id="wrRecGrid"></div>
+  </div>
 </section>
 
 <!-- ===== Recommended Tasks Section ===== -->
@@ -1073,6 +1517,61 @@ ul,ol{list-style:none}
   </div>
 </section>
 
+  <!-- ===== 社区真实故事 ===== -->
+  <div class="section">
+    <div class="section-title">
+      <h2>📖 社区真实故事</h2>
+      <p>来自邻居们的真实分享——好事就在身边</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:960px;margin:0 auto;">
+      <div style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--brand-soft);display:grid;place-items:center;font-size:18px;">👩</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;">张阿姨 · 3栋</div>
+            <div style="font-size:11px;color:var(--ink-faint);">2小时前</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.7;">"今天下楼倒垃圾，看到隔壁小王的快递在门口淋了两天雨，帮他收了放门口。拍了照发群里，他回了好几个谢谢。这种小事真的不费劲，但心里特别暖。"</p>
+        <div style="margin-top:10px;display:flex;gap:8px;font-size:12px;color:var(--ink-faint);">
+          <span>❤️ 24</span>
+          <span>💬 6</span>
+          <span style="color:var(--brand);font-weight:600;">#邻里互助</span>
+        </div>
+      </div>
+      <div style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--leaf-soft);display:grid;place-items:center;font-size:18px;">👨</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;">李先生 · 7栋</div>
+            <div style="font-size:11px;color:var(--ink-faint);">昨天</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.7;">"通勤路上看到地铁口共享单车倒了一片，花了3分钟一辆辆扶起来摆正。有个姑娘路过说了声'谢谢您'，一整天心情都特别好。其实举手之劳，但感觉整条街都变整齐了。"</p>
+        <div style="margin-top:10px;display:flex;gap:8px;font-size:12px;color:var(--ink-faint);">
+          <span>❤️ 42</span>
+          <span>💬 12</span>
+          <span style="color:var(--leaf);font-weight:600;">#随手环保</span>
+        </div>
+      </div>
+      <div style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--plum-soft);display:grid;place-items:center;font-size:18px;">👧</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;">小陈 · 5栋</div>
+            <div style="font-size:11px;color:var(--ink-faint);">3天前</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.7;">"周末带女儿参加了社区组织的'亲子环保日'，我们一起捡垃圾、分类，她还画了环保宣传画贴在楼道里。回来的路上她说'妈妈，保护地球好开心'。我觉得这就是最好的周末安排。"</p>
+        <div style="margin-top:10px;display:flex;gap:8px;font-size:12px;color:var(--ink-faint);">
+          <span>❤️ 56</span>
+          <span>💬 18</span>
+          <span style="color:var(--plum);font-weight:600;">#家庭亲子</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <!-- ===== Footer ===== -->
 <footer class="footer">
   <div class="wrap">
@@ -1095,6 +1594,71 @@ ul,ol{list-style:none}
     </div>
   </div>
 </footer>
+
+<!-- ===== Good Deed Detail Modal ===== -->
+<div class="detail-overlay" id="detailModal">
+  <div class="detail-modal">
+    <div class="dm-header">
+      <div class="dm-title-group">
+        <span class="dm-icon" id="dmIcon">📦</span>
+        <h3 id="dmTitle">帮邻居取快递</h3>
+        <div class="dm-tags" id="dmTags">
+          <span class="dm-tag brand">社区互助</span>
+          <span class="dm-tag gold">💛 +8</span>
+        </div>
+      </div>
+      <button class="dm-close" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="dm-desc" id="dmDesc">帮邻居从快递柜取快递送到家门口，顺便打个招呼，拉近邻里关系。一件小事，温暖一整天。</div>
+    <div class="dm-detail-grid">
+      <div class="dm-detail-item">
+        <div class="dm-di-label">⏱️ 所需时间</div>
+        <div class="dm-di-value" id="dmTime">5分钟</div>
+      </div>
+      <div class="dm-detail-item">
+        <div class="dm-di-label">💛 好心值奖励</div>
+        <div class="dm-di-value brand" id="dmValue">+8</div>
+      </div>
+      <div class="dm-detail-item">
+        <div class="dm-di-label">📍 距离</div>
+        <div class="dm-di-value" id="dmDistance">楼下</div>
+      </div>
+      <div class="dm-detail-item">
+        <div class="dm-di-label">👥 已参与</div>
+        <div class="dm-di-value leaf" id="dmParticipants">126人</div>
+      </div>
+    </div>
+    <div class="dm-similar">
+      <h4>💡 类似好事推荐</h4>
+      <div class="dm-sim-list" id="dmSimList"></div>
+    </div>
+    <div class="dm-actions">
+      <button class="dm-btn dm-btn-secondary" onclick="closeDetailModal()">关闭</button>
+      <button class="dm-btn dm-btn-primary" id="dmClaimBtn" onclick="claimFromDetail()">💛 领取这件好事</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Onboarding Guide Overlay ===== -->
+<div class="onboarding-overlay" id="onboardingOverlay">
+  <div class="onboarding-card">
+    <button class="onb-close-skip" onclick="skipOnboarding()">✕</button>
+    <div class="onb-step-dots" id="onbDots">
+      <span class="onb-dot active" data-step="0"></span>
+      <span class="onb-dot" data-step="1"></span>
+      <span class="onb-dot" data-step="2"></span>
+    </div>
+    <div id="onbContent">
+      <span class="onb-icon" id="onbIcon">🎯</span>
+      <h3 id="onbTitle">选择好事，从身边开始</h3>
+      <p id="onbDesc">浏览附近的好事清单，选择你想做的任务。取快递、垃圾分类、教老人用手机……总有一件适合你。</p>
+    </div>
+    <div class="onb-actions">
+      <button class="onb-btn onb-btn-skip" onclick="skipOnboarding()" id="onbSkipBtn">跳过引导</button>
+      <button class="onb-btn onb-btn-primary" onclick="nextOnboardingStep()" id="onbNextBtn">下一步 →</button>
+    </div>
+  </div>
+</div>
 
 <!-- ===== Claim Modal ===== -->
 <div class="modal-overlay" id="claimModal">
@@ -1662,6 +2226,22 @@ document.addEventListener('DOMContentLoaded', () => {
   startFeedRefresh();
   animateHeroStats();
 
+  // ===== New Feature Initializations =====
+  buildHeatmap();
+  startRealtimeStream();
+  buildWeatherRecs();
+  updateWeatherUI();
+  enhanceFeedItems();
+
+  // Show onboarding if not shown before
+  if (!localStorage.getItem('haoshijin_onboarded')) {
+    setTimeout(showOnboarding, 800);
+  }
+
+  // Journey bar scroll tracking
+  document.addEventListener('scroll', updateJourneyBar, { passive: true });
+  setTimeout(updateJourneyBar, 500);
+
   // Start daily tip rotation
   setInterval(rotateTip, 8000);
 
@@ -1963,6 +2543,652 @@ function submitVote() {
   showToast('success', '📊 投票成功！', '感谢你的参与，社区因为有你会更好');
 }
 
+/* ============================================================
+   New Feature: Journey Bar — 用户旅程滚动联动
+   ============================================================ */
+function scrollToSection(id) {
+  const el = document.getElementById(id) || document.querySelector('.' + id) || document.querySelector('#' + id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (id === 'feedContainer') {
+    document.getElementById('feedContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else if (id === 'hero') {
+    document.querySelector('.hero').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function updateJourneyBar() {
+  const steps = document.querySelectorAll('.journey-step');
+  const sections = [
+    { id: 'hero', journey: 'discover' },
+    { id: 'tasks', journey: 'choose' },
+    { id: 'sceneMatcher', journey: 'act' },
+    { id: 'feedContainer', journey: 'record' },
+    { id: 'profile', journey: 'grow' }
+  ];
+
+  let currentIdx = 0;
+  sections.forEach((s, i) => {
+    const el = document.getElementById(s.id) || document.querySelector('.' + s.id) || document.querySelector('#' + s.id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.4) {
+        currentIdx = i;
+      }
+    }
+  });
+
+  steps.forEach((step, i) => {
+    step.classList.remove('active', 'done');
+    if (i < currentIdx) step.classList.add('done');
+    else if (i === currentIdx) step.classList.add('active');
+  });
+}
+
+/* ============================================================
+   New Feature: Onboarding Guide — 新手引导
+   ============================================================ */
+const onboardingSteps = [
+  {
+    icon: '🎯',
+    title: '选择好事，从身边开始',
+    desc: '浏览附近的好事清单，选择你想做的任务。取快递、垃圾分类、教老人用手机……总有一件适合你。'
+  },
+  {
+    icon: '🗺️',
+    title: '场景匹配，随手公益',
+    desc: '选你现在的场景——通勤路上、午休空隙、遛娃散步……系统自动匹配最适合你的公益任务。'
+  },
+  {
+    icon: '📊',
+    title: '查看数据，见证成长',
+    desc: '在个人中心查看好心值、时间币和公益足迹。每一次微小的善意，都在让社区变得更好。'
+  }
+];
+
+let onboardingStep = 0;
+
+function showOnboarding() {
+  const overlay = document.getElementById('onboardingOverlay');
+  if (!overlay) return;
+  overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  onboardingStep = 0;
+  renderOnboardingStep();
+}
+
+function renderOnboardingStep() {
+  const step = onboardingSteps[onboardingStep];
+  document.getElementById('onbIcon').textContent = step.icon;
+  document.getElementById('onbTitle').textContent = step.title;
+  document.getElementById('onbDesc').textContent = step.desc;
+
+  const dots = document.querySelectorAll('#onbDots .onb-dot');
+  dots.forEach((dot, i) => {
+    dot.classList.remove('active', 'done');
+    if (i === onboardingStep) dot.classList.add('active');
+    else if (i < onboardingStep) dot.classList.add('done');
+  });
+
+  const nextBtn = document.getElementById('onbNextBtn');
+  if (onboardingStep === onboardingSteps.length - 1) {
+    nextBtn.textContent = '✨ 开始探索';
+  } else {
+    nextBtn.textContent = '下一步 →';
+  }
+}
+
+function nextOnboardingStep() {
+  if (onboardingStep < onboardingSteps.length - 1) {
+    onboardingStep++;
+    renderOnboardingStep();
+  } else {
+    completeOnboarding();
+  }
+}
+
+function skipOnboarding() {
+  completeOnboarding();
+}
+
+function completeOnboarding() {
+  localStorage.setItem('haoshijin_onboarded', 'true');
+  document.getElementById('onboardingOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+  showToast('success', '🎉 欢迎来到好事近！', '开始你的第一件好事吧，让公益触手可及');
+}
+
+/* ============================================================
+   New Feature: Heatmap — 社区好事热力图
+   ============================================================ */
+const heatmapBuildings = [
+  { num: '1号楼', label: '东区', level: 4, badge: '🔥' },
+  { num: '2号楼', label: '东区', level: 3, badge: '💛' },
+  { num: '3号楼', label: '东区', level: 5, badge: '🏆' },
+  { num: '4号楼', label: '东区', level: 2, badge: '📦' },
+  { num: '5号楼', label: '东区', level: 3, badge: '💛' },
+  { num: '6号楼', label: '东区', level: 1, badge: '🌱' },
+  { num: '7号楼', label: '东区', level: 4, badge: '🔥' },
+  { num: '8号楼', label: '东区', level: 2, badge: '📦' },
+  { num: '9号楼', label: '西区', level: 3, badge: '💛' },
+  { num: '10号楼', label: '西区', level: 5, badge: '🏆' },
+  { num: '11号楼', label: '西区', level: 4, badge: '🔥' },
+  { num: '12号楼', label: '西区', level: 2, badge: '📦' },
+  { num: '13号楼', label: '西区', level: 1, badge: '🌱' },
+  { num: '14号楼', label: '西区', level: 3, badge: '💛' },
+  { num: '15号楼', label: '西区', level: 4, badge: '🔥' },
+  { num: '16号楼', label: '西区', level: 2, badge: '📦' },
+  { num: '17号楼', label: '南区', level: 5, badge: '🏆' },
+  { num: '18号楼', label: '南区', level: 3, badge: '💛' },
+  { num: '19号楼', label: '南区', level: 4, badge: '🔥' },
+  { num: '20号楼', label: '南区', level: 2, badge: '📦' },
+  { num: '21号楼', label: '南区', level: 1, badge: '🌱' },
+  { num: '22号楼', label: '南区', level: 3, badge: '💛' },
+  { num: '23号楼', label: '南区', level: 4, badge: '🔥' },
+  { num: '24号楼', label: '南区', level: 2, badge: '📦' }
+];
+
+const buildingStats = {
+  '1号楼': { deeds: 38, heart: 520, residents: ['陈老师', '王阿姨', '小李'], level: '活跃' },
+  '2号楼': { deeds: 22, heart: 310, residents: ['赵叔', '林女士'], level: '良好' },
+  '3号楼': { deeds: 56, heart: 780, residents: ['张姐', '老周', '小刘', '孙阿姨'], level: '🔥 热门' },
+  '4号楼': { deeds: 14, heart: 190, residents: ['吴同学'], level: '发展中' },
+  '5号楼': { deeds: 25, heart: 340, residents: ['郑老师', '冯姐'], level: '良好' },
+  '6号楼': { deeds: 8, heart: 95, residents: ['黄叔'], level: '起步中' },
+  '7号楼': { deeds: 42, heart: 580, residents: ['杨阿姨', '朱姐', '何先生'], level: '活跃' },
+  '8号楼': { deeds: 16, heart: 210, residents: ['吕女士'], level: '发展中' },
+  '9号楼': { deeds: 28, heart: 380, residents: ['马老师', '钱叔'], level: '良好' },
+  '10号楼': { deeds: 62, heart: 890, residents: ['孙阿姨', '周姐', '李老师', '吴叔'], level: '🔥 热门' },
+  '11号楼': { deeds: 45, heart: 610, residents: ['陈姐', '刘叔', '小王'], level: '活跃' },
+  '12号楼': { deeds: 18, heart: 240, residents: ['罗女士'], level: '发展中' },
+  '13号楼': { deeds: 6, heart: 72, residents: ['谢叔'], level: '起步中' },
+  '14号楼': { deeds: 30, heart: 410, residents: ['韩老师', '曹姐'], level: '良好' },
+  '15号楼': { deeds: 48, heart: 650, residents: ['许姐', '沈叔', '小张'], level: '活跃' },
+  '16号楼': { deeds: 20, heart: 270, residents: ['彭女士'], level: '发展中' },
+  '17号楼': { deeds: 68, heart: 950, residents: ['刘阿姨', '陈叔', '王老师', '李姐', '赵同学'], level: '🔥 热门' },
+  '18号楼': { deeds: 32, heart: 430, residents: ['高老师', '宋姐'], level: '良好' },
+  '19号楼': { deeds: 50, heart: 680, residents: ['梁姐', '唐叔', '小周'], level: '活跃' },
+  '20号楼': { deeds: 15, heart: 180, residents: ['曾女士'], level: '发展中' },
+  '21号楼': { deeds: 5, heart: 60, residents: ['肖叔'], level: '起步中' },
+  '22号楼': { deeds: 26, heart: 360, residents: ['田老师', '段姐'], level: '良好' },
+  '23号楼': { deeds: 52, heart: 720, residents: ['叶姐', '蔡叔', '小杨'], level: '活跃' },
+  '24号楼': { deeds: 12, heart: 150, residents: ['范女士'], level: '发展中' }
+};
+
+function buildHeatmap() {
+  const grid = document.getElementById('heatmapGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  heatmapBuildings.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'heatmap-building level-' + b.level;
+    el.dataset.building = b.num;
+    const stats = buildingStats[b.num] || { deeds: 0, heart: 0, residents: [], level: '暂无数据' };
+    el.innerHTML =
+      '<span class="hb-number">' + b.num.replace('号楼', '') + '</span>' +
+      '<span class="hb-label">' + b.label + '</span>' +
+      '<span class="hb-badge">' + b.badge + '</span>' +
+      '<div class="hb-tooltip">' + b.num + ' · ' + stats.deeds + '件好事 · ' + stats.heart + '好心值</div>';
+    el.addEventListener('click', function() {
+      document.querySelectorAll('.heatmap-building').forEach(h => h.classList.remove('selected'));
+      this.classList.add('selected');
+      showHeatmapDetail(b.num);
+    });
+    grid.appendChild(el);
+  });
+}
+
+function showHeatmapDetail(building) {
+  const detail = document.getElementById('heatmapDetail');
+  const stats = buildingStats[building] || { deeds: 0, heart: 0, residents: [], level: '暂无数据' };
+  document.getElementById('hmdTitle').textContent = building;
+  document.getElementById('hmdLevel').textContent = stats.level;
+  document.getElementById('hmdDeeds').textContent = stats.deeds + '件';
+  document.getElementById('hmdHeart').textContent = stats.heart.toLocaleString();
+  document.getElementById('hmdResidents').textContent = stats.residents.length + '人';
+
+  const listEl = document.getElementById('hmdResidentsList');
+  listEl.innerHTML = '<span style="font-weight:600;color:var(--ink);font-size:13px">🏅 热心居民：</span>';
+  stats.residents.forEach(name => {
+    const span = document.createElement('span');
+    span.textContent = name;
+    listEl.appendChild(span);
+  });
+
+  detail.classList.add('show');
+}
+
+/* ============================================================
+   New Feature: Real-time Data Stream & Dashboard Updates
+   ============================================================ */
+const realtimeNames = ['李姐', '张叔', '王阿姨', '小陈', '赵老师', '林姐', '老周', '孙同学', '吴叔', '郑姐', '刘阿姨', '杨同学', '胡老师', '郭姐', '马叔'];
+const realtimeActions = [
+  { action: '刚刚完成了', task: '帮邻居取快递', value: 8, icon: '📦' },
+  { action: '正在参与', task: '垃圾分类引导', value: 20, icon: '♻️' },
+  { action: '领取了', task: '教老人用手机', value: 25, icon: '📱' },
+  { action: '完成了', task: '陪老人散步', value: 18, icon: '👴' },
+  { action: '正在做', task: '整理共享书架', value: 22, icon: '📚' },
+  { action: '刚刚完成了', task: '社区花园浇水', value: 15, icon: '🌿' },
+  { action: '领取了', task: '帮遛狗', value: 20, icon: '🐕' },
+  { action: '完成了', task: '社区巡逻', value: 25, icon: '🏪' },
+  { action: '正在参与', task: '社区共享市集服务', value: 22, icon: '🏪' },
+  { action: '刚刚完成了', task: '智能手机教学', value: 25, icon: '📱' }
+];
+const avatarColors = ['#c8533a','#3f7d5b','#c98a2b','#3b6b8c','#6b4a7a','#9e3b25','#2a5a7a','#5a3a6a'];
+
+let rtCount = 0;
+let rtItems = [];
+let rtTimer = null;
+
+function addRealtimeItem() {
+  const stream = document.getElementById('realtimeStream');
+  if (!stream) return;
+
+  const person = realtimeNames[Math.floor(Math.random() * realtimeNames.length)];
+  const action = realtimeActions[Math.floor(Math.random() * realtimeActions.length)];
+  const color = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+  const now = new Date();
+  const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+
+  const el = document.createElement('div');
+  el.className = 'rt-item';
+  el.innerHTML =
+    '<div class="rt-avatar" style="background:' + color + '">' + person.charAt(0) + '</div>' +
+    '<div class="rt-body">' +
+      '<div class="rt-text"><span class="rt-name">' + person + '</span> <span class="rt-action">' + action.action + '</span> <span class="rt-task">' + action.task + '</span></div>' +
+      '<div class="rt-time">' + timeStr + '</div>' +
+    '</div>' +
+    '<span class="rt-value">💛+' + action.value + '</span>';
+  stream.insertBefore(el, stream.firstChild);
+
+  rtCount++;
+  document.getElementById('rtCount').innerHTML = '今日已记录 <strong style="color:var(--brand)">' + rtCount + '</strong> 件好事';
+
+  // Limit to 50 items
+  if (stream.children.length > 50) {
+    stream.lastChild.classList.add('fade-out');
+    setTimeout(() => { if (stream.lastChild && stream.lastChild.parentElement) stream.lastChild.remove(); }, 500);
+  }
+
+  // Update dashboard metrics periodically
+  updateDashboardMetrics(action.value);
+}
+
+function updateDashboardMetrics(value) {
+  // Update metric2 (completed deeds)
+  const metric2 = document.getElementById('metric2');
+  if (metric2) {
+    let current = parseInt(metric2.textContent.replace(/,/g, '')) || 6523;
+    current += 1;
+    metric2.textContent = current.toLocaleString();
+    flashMetric(metric2);
+  }
+  // Update metric3 (heart value circulation)
+  const metric3 = document.getElementById('metric3');
+  if (metric3) {
+    let current = parseInt(metric3.textContent.replace(/,/g, '')) || 1284600;
+    current += value;
+    metric3.textContent = current.toLocaleString();
+    flashMetric(metric3);
+  }
+  // Update metric1 (users) occasionally
+  if (Math.random() < 0.05) {
+    const metric1 = document.getElementById('metric1');
+    if (metric1) {
+      let current = parseInt(metric1.textContent.replace(/,/g, '')) || 2847;
+      current += 1;
+      metric1.textContent = current.toLocaleString();
+      flashMetric(metric1);
+    }
+  }
+}
+
+function flashMetric(el) {
+  const parent = el.closest('.metric');
+  if (!parent) return;
+  let flash = parent.querySelector('.metric-update-flash');
+  if (!flash) {
+    flash = document.createElement('div');
+    flash.className = 'metric-update-flash';
+    parent.appendChild(flash);
+  }
+  flash.classList.remove('flash');
+  void flash.offsetHeight;
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 600);
+}
+
+function startRealtimeStream() {
+  // Add initial items
+  const initialItems = [
+    { person: '李姐', action: '刚刚完成了', task: '帮邻居取快递', value: 8, color: '#c8533a' },
+    { person: '张叔', action: '正在参与', task: '垃圾分类引导', value: 20, color: '#3f7d5b' },
+    { person: '王阿姨', action: '领取了', task: '教老人用手机', value: 25, color: '#c98a2b' },
+    { person: '小陈', action: '完成了', task: '社区花园浇水', value: 15, color: '#3b6b8c' },
+    { person: '赵老师', action: '刚刚完成了', task: '整理共享书架', value: 22, color: '#6b4a7a' }
+  ];
+  const stream = document.getElementById('realtimeStream');
+  if (stream) {
+    stream.innerHTML = '';
+    initialItems.forEach((item, i) => {
+      const el = document.createElement('div');
+      el.className = 'rt-item';
+      el.style.animationDelay = (i * 0.1) + 's';
+      el.innerHTML =
+        '<div class="rt-avatar" style="background:' + item.color + '">' + item.person.charAt(0) + '</div>' +
+        '<div class="rt-body">' +
+          '<div class="rt-text"><span class="rt-name">' + item.person + '</span> <span class="rt-action">' + item.action + '</span> <span class="rt-task">' + item.task + '</span></div>' +
+          '<div class="rt-time">刚刚</div>' +
+        '</div>' +
+        '<span class="rt-value">💛+' + item.value + '</span>';
+      stream.appendChild(el);
+      rtCount++;
+    });
+    document.getElementById('rtCount').innerHTML = '今日已记录 <strong style="color:var(--brand)">' + rtCount + '</strong> 件好事';
+  }
+
+  // Add new items every 5-10 seconds
+  if (rtTimer) clearInterval(rtTimer);
+  rtTimer = setInterval(addRealtimeItem, 5000 + Math.random() * 5000);
+}
+
+/* ============================================================
+   New Feature: Good Deed Detail Modal — 好事详情弹窗
+   ============================================================ */
+const detailDataMap = {
+  '帮邻居取快递': { icon: '📦', desc: '帮邻居从快递柜取快递送到家门口，顺便打个招呼，拉近邻里关系。一件小事，温暖一整天。', time: '5分钟', value: '+8', dist: '楼下', participants: '126人', tags: ['社区互助', '5分钟'], similar: ['帮遛狗 🐕 +20', '帮带早餐 🥐 +6', '帮忙搬东西 💪 +10'] },
+  '垃圾分类引导': { icon: '♻️', desc: '在社区垃圾分类投放点引导居民正确分类，普及环保知识，让我们的社区更绿色、更可持续。', time: '15分钟', value: '+20', dist: '小区门口', participants: '98人', tags: ['环保', '15分钟'], similar: ['社区花园浇水 🌿 +15', '公园垃圾捡拾 🏃 +12', '环保回收站 ♻️ +18'] },
+  '教老人用手机': { icon: '📱', desc: '教社区老年人使用智能手机，包括微信聊天、扫码支付、预约挂号等实用功能，缩小数字鸿沟。', time: '20分钟', value: '+25', dist: '社区活动室', participants: '87人', tags: ['助老', '20分钟'], similar: ['智能手机教学 📱 +25', '数字助老课堂 📚 +22', '陪老人散步 👴 +18'] },
+  '陪老人散步': { icon: '👴', desc: '陪社区里的老人散步聊天，15分钟的运动和陪伴，让老人感受到社区的温暖和关怀。', time: '15分钟', value: '+18', dist: '小区花园', participants: '112人', tags: ['助老', '15分钟'], similar: ['教老人用手机 📱 +25', '老年人陪伴服务 👴 +20', '帮老人取药 💊 +12'] },
+  '整理共享书架': { icon: '📚', desc: '整理社区共享书架的书籍，按类别归位，修补破损图书，让知识和善意一起流动。', time: '20分钟', value: '+22', dist: '社区图书馆', participants: '74人', tags: ['文化', '20分钟'], similar: ['社区花园维护 🌿 +18', '共享市集服务 🏪 +22', '图书捐赠整理 📚 +15'] },
+  '社区花园浇水': { icon: '🌿', desc: '为社区花园的植物浇水、除草、修剪，看着花草一天天长大，心情也会变得美丽。', time: '15分钟', value: '+15', dist: '社区花园', participants: '63人', tags: ['环保', '15分钟'], similar: ['垃圾分类引导 ♻️ +20', '公园垃圾捡拾 🏃 +12', '环保回收站 ♻️ +18'] },
+  '帮遛狗': { icon: '🐕', desc: '帮邻居遛狗15分钟，让狗狗在小区里活动活动，你也顺便锻炼了身体，一举两得。', time: '15分钟', value: '+20', dist: '小区内', participants: '55人', tags: ['互助', '15分钟'], similar: ['帮邻居取快递 📦 +8', '陪老人散步 👴 +18', '帮带早餐 🥐 +6'] },
+  '社区巡逻': { icon: '🏪', desc: '在社区内巡逻，检查公共设施安全、消防通道是否畅通，发现隐患及时上报，守护家园平安。', time: '20分钟', value: '+25', dist: '全小区', participants: '135人', tags: ['安全', '20分钟'], similar: ['小区环境巡查 🔍 +15', '运动器材维护 🔧 +8', '社区安全宣传 📢 +12'] }
+};
+
+let currentDetailTask = null;
+
+function openDetailModal(taskName, taskIcon) {
+  const data = detailDataMap[taskName] || {
+    icon: taskIcon || '📌',
+    desc: '一件温暖的小事，让社区变得更好。',
+    time: '15分钟',
+    value: '+15',
+    dist: '社区内',
+    participants: '50+人',
+    tags: ['社区', '互助'],
+    similar: ['帮邻居取快递 📦 +8', '垃圾分类引导 ♻️ +20', '教老人用手机 📱 +25']
+  };
+
+  currentDetailTask = taskName;
+  document.getElementById('dmIcon').textContent = data.icon;
+  document.getElementById('dmTitle').textContent = taskName;
+  document.getElementById('dmDesc').textContent = data.desc;
+  document.getElementById('dmTime').textContent = data.time;
+  document.getElementById('dmValue').textContent = data.value;
+  document.getElementById('dmDistance').textContent = data.dist;
+  document.getElementById('dmParticipants').textContent = data.participants;
+
+  // Tags
+  const tagsEl = document.getElementById('dmTags');
+  tagsEl.innerHTML = '';
+  data.tags.forEach(tag => {
+    const span = document.createElement('span');
+    span.className = 'dm-tag ' + (tag.includes('互助') || tag.includes('社区') ? 'brand' : tag.includes('环保') ? 'leaf' : 'gold');
+    span.textContent = tag;
+    tagsEl.appendChild(span);
+  });
+
+  // Similar items
+  const simList = document.getElementById('dmSimList');
+  simList.innerHTML = '';
+  data.similar.forEach(sim => {
+    const el = document.createElement('div');
+    el.className = 'dm-sim-item';
+    const parts = sim.split(' ');
+    const name = parts.slice(0, -1).join(' ');
+    const value = parts[parts.length - 1];
+    el.innerHTML = '<span class="dm-sim-name">' + name + '</span><span class="dm-sim-value">💛' + value + '</span>';
+    el.addEventListener('click', function() {
+      const simName = parts[0];
+      // Try to find the task name
+      const fullName = sim.replace(/ 🐕| 🌿| 💪| 🥐| 👴| 📱| 📚| 🏪| 🔍| 🔧| 📢| ♻️| 🏃/g, '').trim();
+      openDetailModal(fullName, parts[0].charAt(0));
+    });
+    simList.appendChild(el);
+  });
+
+  document.getElementById('detailModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetailModal() {
+  document.getElementById('detailModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function claimFromDetail() {
+  if (!currentDetailTask) return;
+  const btn = document.getElementById('dmClaimBtn');
+  if (btn.classList.contains('claimed')) return;
+  btn.classList.add('claimed');
+  btn.textContent = '✓ 已领取';
+
+  // Update heart value
+  const data = detailDataMap[currentDetailTask];
+  if (data) {
+    const val = parseInt(data.value.replace('+', ''));
+    const heartEl = document.getElementById('heartValue');
+    if (heartEl) {
+      let currentVal = parseInt(heartEl.textContent.replace(/,/g, ''));
+      heartEl.textContent = (currentVal + val).toLocaleString();
+    }
+    const weeklyEl = document.getElementById('weeklyEarned');
+    if (weeklyEl) {
+      let weeklyVal = parseInt(weeklyEl.textContent.replace('+', '').replace(/,/g, ''));
+      weeklyEl.textContent = '+' + (weeklyVal + val).toLocaleString();
+    }
+    showToast('success', '✅ 领取成功！', '你领取了「' + currentDetailTask + '」，获得 💛' + val + ' 好心值');
+  }
+
+  setTimeout(() => {
+    closeDetailModal();
+    btn.classList.remove('claimed');
+    btn.textContent = '💛 领取这件好事';
+  }, 1500);
+}
+
+// Close detail modal on overlay click
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('detailModal');
+  if (modal && modal.classList.contains('show') && e.target === modal) {
+    closeDetailModal();
+  }
+});
+
+// Escape key for detail modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const detailModal = document.getElementById('detailModal');
+    if (detailModal && detailModal.classList.contains('show')) closeDetailModal();
+  }
+});
+
+/* ============================================================
+   New Feature: Weather/Scene Recommendation — 天气场景联动
+   ============================================================ */
+const weatherPresets = [
+  { icon: '☀️', text: '晴朗 · 适合户外活动', desc: '阳光明媚', time: 'morning', temp: '28°C', feel: '26°C' },
+  { icon: '⛅', text: '多云 · 适宜出行', desc: '微风轻拂', time: 'afternoon', temp: '25°C', feel: '24°C' },
+  { icon: '🌧️', text: '小雨 · 适合室内活动', desc: '雨量不大', time: 'rainy', temp: '22°C', feel: '21°C' },
+  { icon: '🌤️', text: '晴间多云 · 适合散步', desc: '天气宜人', time: 'morning', temp: '24°C', feel: '23°C' },
+  { icon: '🌥️', text: '阴天 · 适合室内好事', desc: '无雨舒适', time: 'afternoon', temp: '23°C', feel: '22°C' }
+];
+
+const weatherRecs = {
+  morning: [
+    { tag: 'match', tagText: '🌅 晨间推荐', name: '晨间花园浇水', desc: '清晨给社区花园的花草浇水，开启美好的一天', time: '10分钟', value: '12', icon: '🌿' },
+    { tag: 'match', tagText: '🌅 晨间推荐', name: '帮邻居带早餐', desc: '买早餐时顺手帮邻居带一份，顺便聊聊天', time: '5分钟', value: '6', icon: '🥐' },
+    { tag: 'match', tagText: '🌅 晨间推荐', name: '晨跑顺手捡垃圾', desc: '晨跑时带上垃圾袋，边运动边保护环境', time: '15分钟', value: '14', icon: '🏃' }
+  ],
+  afternoon: [
+    { tag: 'match', tagText: '☀️ 午后推荐', name: '午休教老人用手机', desc: '利用午休时间教社区老人用手机挂号、支付', time: '15分钟', value: '20', icon: '📱' },
+    { tag: 'match', tagText: '☀️ 午后推荐', name: '整理共享书架', desc: '午饭后到社区图书馆整理共享书架，让书籍有序', time: '15分钟', value: '18', icon: '📚' },
+    { tag: 'rec', tagText: '💡 推荐', name: '垃圾分类引导', desc: '午后在垃圾投放点引导居民正确分类', time: '15分钟', value: '20', icon: '♻️' }
+  ],
+  rainy: [
+    { tag: 'match', tagText: '🌧️ 雨天推荐', name: '室内图书整理', desc: '在室内整理社区图书角，修补破损图书', time: '20分钟', value: '18', icon: '📚' },
+    { tag: 'match', tagText: '🌧️ 雨天推荐', name: '线上助老教学', desc: '通过视频教老人使用手机功能，雨天也能做好事', time: '15分钟', value: '22', icon: '💻' },
+    { tag: 'rec', tagText: '💡 推荐', name: '社区安全巡查', desc: '雨天检查楼道和公共区域的安全隐患', time: '15分钟', value: '16', icon: '🔍' }
+  ],
+  evening: [
+    { tag: 'match', tagText: '🌆 傍晚推荐', name: '陪老人散步', desc: '傍晚陪社区老人在小区散步聊天，享受夕阳', time: '15分钟', value: '18', icon: '👴' },
+    { tag: 'match', tagText: '🌆 傍晚推荐', name: '社区巡逻', desc: '傍晚社区巡逻，检查公共设施安全', time: '20分钟', value: '22', icon: '🏪' },
+    { tag: 'rec', tagText: '💡 推荐', name: '帮遛狗', desc: '傍晚帮邻居遛狗，让狗狗在晚饭前活动活动', time: '15分钟', value: '18', icon: '🐕' }
+  ]
+};
+
+let currentWeather = 0;
+
+function refreshWeatherRec() {
+  currentWeather = (currentWeather + 1) % weatherPresets.length;
+  updateWeatherUI();
+  buildWeatherRecs();
+  // Animate refresh button
+  const btn = document.querySelector('.wr-refresh-btn');
+  if (btn) {
+    btn.style.transform = 'rotate(360deg)';
+    btn.style.transition = 'transform .6s ease';
+    setTimeout(() => { btn.style.transform = ''; }, 600);
+  }
+}
+
+function updateWeatherUI() {
+  const w = weatherPresets[currentWeather];
+  const hour = new Date().getHours();
+  let timeKey = 'afternoon';
+  if (hour < 11) timeKey = 'morning';
+  else if (hour >= 18) timeKey = 'evening';
+  else if (w.time === 'rainy') timeKey = 'rainy';
+
+  // If it's rainy, use rainy regardless of time
+  if (w.time === 'rainy') timeKey = 'rainy';
+
+  document.getElementById('wrWeatherIcon').textContent = w.icon;
+  document.getElementById('wrWeatherText').textContent = w.text;
+  document.getElementById('wrWeatherDesc').innerHTML = '当前 <span class="wr-temp">' + w.temp + '</span> · 体感温度 <span class="wr-temp">' + w.feel + '</span>';
+}
+
+function buildWeatherRecs() {
+  const hour = new Date().getHours();
+  let timeKey = 'afternoon';
+  if (hour < 11) timeKey = 'morning';
+  else if (hour >= 18) timeKey = 'evening';
+
+  // If current weather is rainy type, use rainy
+  const w = weatherPresets[currentWeather];
+  if (w.time === 'rainy') timeKey = 'rainy';
+
+  const recs = weatherRecs[timeKey] || weatherRecs.afternoon;
+  const grid = document.getElementById('wrRecGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  recs.forEach((rec, i) => {
+    const card = document.createElement('div');
+    card.className = 'wr-rec-card';
+    card.style.animation = 'slide-up .4s ease both';
+    card.style.animationDelay = (i * 0.1) + 's';
+    card.innerHTML =
+      '<span class="wr-rec-tag ' + rec.tag + '">' + rec.tagText + '</span>' +
+      '<h5>' + rec.icon + ' ' + rec.name + '</h5>' +
+      '<p>' + rec.desc + '</p>' +
+      '<div class="wr-rec-meta">' +
+        '<span>⏱️ ' + rec.time + '</span>' +
+        '<span>💛 +' + rec.value + '</span>' +
+      '</div>' +
+      '<button class="wr-rec-btn" onclick="claimWeatherRec(this, \'' + rec.name + '\', ' + rec.value + ')">领取任务</button>';
+    grid.appendChild(card);
+  });
+}
+
+function claimWeatherRec(btn, name, value) {
+  if (btn.classList.contains('claimed')) return;
+  btn.classList.add('claimed');
+  btn.textContent = '✓ 已领取';
+
+  const heartEl = document.getElementById('heartValue');
+  if (heartEl) {
+    let currentVal = parseInt(heartEl.textContent.replace(/,/g, ''));
+    heartEl.textContent = (currentVal + value).toLocaleString();
+  }
+  const weeklyEl = document.getElementById('weeklyEarned');
+  if (weeklyEl) {
+    let weeklyVal = parseInt(weeklyEl.textContent.replace('+', '').replace(/,/g, ''));
+    weeklyEl.textContent = '+' + (weeklyVal + value).toLocaleString();
+  }
+  showToast('success', '✅ 领取成功！', '你领取了「' + name + '」，获得 💛' + value + ' 好心值');
+}
+
+/* ============================================================
+   Enhanced: Wire up existing feed items to open detail modal
+   ============================================================ */
+function enhanceFeedItems() {
+  const items = document.querySelectorAll('.feed-item');
+  items.forEach(item => {
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', function(e) {
+      // Don't open if clicking the like button
+      if (e.target.closest('.feed-like')) return;
+      const textEl = this.querySelector('.feed-text');
+      if (textEl) {
+        const text = textEl.textContent;
+        // Try to match a task name from the text
+        const taskNames = Object.keys(detailDataMap);
+        let matchedTask = null;
+        for (const name of taskNames) {
+          if (text.includes(name)) {
+            matchedTask = name;
+            break;
+          }
+        }
+        if (matchedTask) {
+          openDetailModal(matchedTask, detailDataMap[matchedTask].icon);
+        } else {
+          // Show generic detail
+          openDetailModal('社区好事', '💛');
+        }
+      }
+    });
+  });
+}
+
+// Also make task cards in the task picker open detail modal on double-click
+document.addEventListener('DOMContentLoaded', function() {
+  // Enhance existing task cards to open detail on double-click
+  setTimeout(() => {
+    document.querySelectorAll('.task-card').forEach(card => {
+      card.addEventListener('dblclick', function(e) {
+        const name = this.dataset.name;
+        if (name) {
+          openDetailModal(name, this.querySelector('.task-icon')?.textContent || '📌');
+        }
+      });
+    });
+
+    // Enhance rec cards
+    document.querySelectorAll('.rec-card').forEach(card => {
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.rec-btn')) return;
+        const title = this.querySelector('h4')?.textContent;
+        if (title) {
+          openDetailModal(title, this.querySelector('.rec-tag')?.textContent?.charAt(0) || '📌');
+        }
+      });
+    });
+  }, 500);
+});
+
 // ===== Scene Matcher + Vote Observer — 滚动动画 =====
 const sceneObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -1994,6 +3220,57 @@ const voteSectionObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.3 });
 const voteSection = document.getElementById('communityVote');
 if (voteSection) voteSectionObserver.observe(voteSection);
+// ===== 场景入口功能 =====
+function showSceneDetail(type) {
+  const scenes = {
+    commute: { icon: '🌅', title: '通勤路上', desc: '上下班路上顺手做的好事，不绕路不费时', items: ['🚇 地铁让座 — 给需要的人让座，3分钟', '🚲 整理共享单车 — 摆正倒下的单车，2分钟', '🏢 电梯微笑问候 — 问好帮按楼层，1分钟', '🗑️ 随手捡拾垃圾 — 等车时捡起站台垃圾', '🚶 让路先行 — 狭窄通道主动让路'] },
+    lunch: { icon: '☕', title: '午休时光', desc: '午休时间抽10分钟，做件温暖的小事', items: ['🍱 帮同事带饭 — 去食堂时问一句"需要吗"', '🪴 办公室绿植浇水 — 3分钟的小事', '🧹 整理公共区域 — 茶水间/会议室', '📚 分享一本好书 — 放共享书架', '☕ 给同事冲杯咖啡 — 午休后的温暖'] },
+    family: { icon: '👨‍👩‍👧‍👦', title: '家庭亲子', desc: '带家人一起做公益，培养孩子的爱心', items: ['♻️ 亲子垃圾分类 — 教孩子环保知识', '📦 家庭捐赠整理 — 整理闲置衣物书籍', '👴 陪伴社区老人 — 读报聊天', '🌱 阳台种植分享 — 种菜分享给邻居'] },
+    emergency: { icon: '🚨', title: '应急响应', desc: '邻居有急事，搭把手就能帮大忙', items: ['🆘 天气预警互助 — 帮邻居收阳台物品', '🏥 突发就医协助 — 帮忙叫车/陪同', '🔑 钥匙/门禁应急 — 联系开锁/提供避处', '📦 紧急物资共享 — 口罩/药品/工具'] }
+  };
+  const s = scenes[type];
+  document.getElementById('sceneDetailIcon').textContent = s.icon;
+  document.getElementById('sceneDetailTitle').textContent = s.title;
+  document.getElementById('sceneDetailDesc').textContent = s.desc;
+  document.getElementById('sceneDetailList').innerHTML = s.items.map(item => 
+    '<div style="padding:8px 12px;background:var(--bg);border-radius:8px;margin-bottom:6px;font-size:13px;">' + item + '</div>'
+  ).join('');
+  document.getElementById('sceneDetailModal').style.display = 'flex';
+}
+
+function closeSceneModal() {
+  document.getElementById('sceneDetailModal').style.display = 'none';
+}
+
+function goToInteract() {
+  window.location.href = 'pages/interact2.html';
+}
+
+// 场景入口点击外部关闭
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('sceneDetailModal');
+  if (modal && modal.style.display === 'flex' && e.target === modal) {
+    closeSceneModal();
+  }
+});
+
+// ===== 用户旅程动画 =====
+document.addEventListener('DOMContentLoaded', function() {
+  // 旅程进度条动画
+  setTimeout(function() {
+    var progress = document.getElementById('journeyProgress');
+    if (progress) {
+      progress.style.width = '40%';
+    }
+    // 标记已完成的旅程节点
+    var nodes = document.querySelectorAll('.journey-node');
+    if (nodes.length > 0) {
+      nodes[0].querySelector('div:first-child').style.background = 'var(--brand)';
+      nodes[0].querySelector('div:first-child').style.color = '#fff';
+      nodes[0].querySelector('div:first-child').style.boxShadow = '0 4px 12px rgba(200,83,58,.3)';
+    }
+  }, 500);
+});
 </script>
 </body>
 </html>
