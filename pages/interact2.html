@@ -530,6 +530,300 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-
     </div>
   </div>
 
+  <!-- ====== 模块7：社区话题投票 ====== -->
+  <div class="module" id="m7">
+    <div class="module-hd">
+      <div class="m-icon pink">🗳️</div>
+      <div class="m-info">
+        <h3>社区话题投票</h3>
+        <p>你希望社区下次组织什么活动？选一个最想要的，投票决定</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div class="opt-grid" id="topicGrid">
+        <div class="opt-card" data-topic="clean" onclick="toggleTopic(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🧹</div>
+          <div class="o-title">社区大扫除日</div>
+          <div class="o-desc">每月一次，大家一起打扫楼道和公共区域</div>
+        </div>
+        <div class="opt-card" data-topic="market" onclick="toggleTopic(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🏪</div>
+          <div class="o-title">邻里跳蚤市场</div>
+          <div class="o-desc">周末在小区广场摆摊，交换闲置物品</div>
+        </div>
+        <div class="opt-card" data-topic="movie" onclick="toggleTopic(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🎬</div>
+          <div class="o-title">露天电影夜</div>
+          <div class="o-desc">夏天晚上在小区空地放一场电影</div>
+        </div>
+        <div class="opt-card" data-topic="walk" onclick="toggleTopic(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🚶</div>
+          <div class="o-title">社区健步走</div>
+          <div class="o-desc">组织邻居一起晨跑或晚饭后散步</div>
+        </div>
+        <div class="opt-card" data-topic="dinner" onclick="toggleTopic(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🍲</div>
+          <div class="o-title">百家宴/邻里饭</div>
+          <div class="o-desc">每家带一道菜，在楼下一起吃顿饭</div>
+        </div>
+        <div class="opt-card" data-topic="class" onclick="toggleTopic(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🎨</div>
+          <div class="o-title">邻里兴趣班</div>
+          <div class="o-desc">邻居教邻居：绘画、书法、瑜伽、手工</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">当前得票最高：<b id="topicLeader">—</b> · 已投 <b id="topicCount">0</b></span>
+        <button class="btn-send" id="btnM7" disabled onclick="submitM7()">📤 投票</button>
+      </div>
+      <div class="result-box" id="rM7">
+        <div class="r-title">🗳️ 投票成功</div>
+        <div class="r-content" id="rM7Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块8：好事搭档匹配 ====== -->
+  <div class="module" id="m8">
+    <div class="module-hd">
+      <div class="m-icon green">👫</div>
+      <div class="m-info">
+        <h3>好事搭档匹配</h3>
+        <p>你想和什么样的人一起做好事？选你的偏好，系统帮你匹配</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div style="font-size:13px;font-weight:700;color:#7a6e66;margin-bottom:8px;">① 你想和谁一起做？</div>
+      <div class="opt-grid" id="partnerGrid">
+        <div class="opt-card" data-partner="neighbor" onclick="togglePartner(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🏠</div>
+          <div class="o-title">同楼栋邻居</div>
+          <div class="o-desc">住得近，可以随时约</div>
+        </div>
+        <div class="opt-card" data-partner="family" onclick="togglePartner(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">👨‍👩‍👧</div>
+          <div class="o-title">和家人一起</div>
+          <div class="o-desc">带孩子一起做，从小培养</div>
+        </div>
+        <div class="opt-card" data-partner="friend" onclick="togglePartner(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🤝</div>
+          <div class="o-title">约朋友一起</div>
+          <div class="o-desc">叫上朋友，好事更有趣</div>
+        </div>
+        <div class="opt-card" data-partner="alone" onclick="togglePartner(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🙋</div>
+          <div class="o-title">自己一个人</div>
+          <div class="o-desc">自由自在，想帮就帮</div>
+        </div>
+        <div class="opt-card" data-partner="group" onclick="togglePartner(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">👥</div>
+          <div class="o-title">社区小队</div>
+          <div class="o-desc">加入已有的社区志愿小组</div>
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:#7a6e66;margin:12px 0 8px;">② 你想做什么类型？</div>
+      <div class="opt-grid" id="partnerTypeGrid">
+        <div class="opt-card" data-ptype="elderly" onclick="togglePtype(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">👴</div>
+          <div class="o-title">关爱老人</div>
+          <div class="o-desc">陪聊、帮忙、探望</div>
+        </div>
+        <div class="opt-card" data-ptype="child" onclick="togglePtype(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">👶</div>
+          <div class="o-title">关爱孩子</div>
+          <div class="o-desc">陪玩、辅导、讲故事</div>
+        </div>
+        <div class="opt-card" data-ptype="env" onclick="togglePtype(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌿</div>
+          <div class="o-title">环保行动</div>
+          <div class="o-desc">清洁、种植、分类</div>
+        </div>
+        <div class="opt-card" data-ptype="skill" onclick="togglePtype(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🔧</div>
+          <div class="o-title">技能服务</div>
+          <div class="o-desc">维修、教学、理发</div>
+        </div>
+        <div class="opt-card" data-ptype="event" onclick="togglePtype(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🎉</div>
+          <div class="o-title">活动组织</div>
+          <div class="o-desc">策划、布置、摄影</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选：搭档 <b id="partnerCount">0</b> · 类型 <b id="ptypeCount">0</b></span>
+        <button class="btn-send" id="btnM8" disabled onclick="submitM8()">📤 匹配搭档</button>
+      </div>
+      <div class="result-box" id="rM8">
+        <div class="r-title">👫 匹配成功</div>
+        <div class="r-content" id="rM8Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块9：社区资源预约 ====== -->
+  <div class="module" id="m9">
+    <div class="module-hd">
+      <div class="m-icon blue">📅</div>
+      <div class="m-info">
+        <h3>社区资源预约</h3>
+        <p>社区共享资源有限，选你需要的时段，一键预约</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div style="font-size:13px;font-weight:700;color:#7a6e66;margin-bottom:8px;">① 选资源</div>
+      <div class="opt-grid" id="resourceGrid">
+        <div class="opt-card" data-res="toolbox" onclick="toggleRes(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🔧</div>
+          <div class="o-title">共享工具箱</div>
+          <div class="o-desc">电钻、扳手、梯子，借一次用2天</div>
+        </div>
+        <div class="opt-card" data-res="garden" onclick="toggleRes(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌻</div>
+          <div class="o-title">认养花坛</div>
+          <div class="o-desc">认领一个花坛，负责浇水维护一周</div>
+        </div>
+        <div class="opt-card" data-res="space" onclick="toggleRes(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🏠</div>
+          <div class="o-title">活动室时段</div>
+          <div class="o-desc">社区活动室，可用2小时做活动</div>
+        </div>
+        <div class="opt-card" data-res="bbq" onclick="toggleRes(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🍖</div>
+          <div class="o-title">烧烤区预约</div>
+          <div class="o-desc">小区烧烤区，限周末使用，每次3小时</div>
+        </div>
+        <div class="opt-card" data-res="parking" onclick="toggleRes(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🚗</div>
+          <div class="o-title">临时访客车位</div>
+          <div class="o-desc">亲友来访，预约一个临时车位</div>
+        </div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:#7a6e66;margin:12px 0 8px;">② 选时段</div>
+      <div class="opt-grid" id="slotGrid">
+        <div class="opt-card" data-slot="morning" onclick="toggleSlot(this)">
+          <div class="o-check">✓</div>
+          <div class="o-title">上午 8:00–12:00</div>
+          <div class="o-desc" style="font-size:11px;">剩余可用：3个</div>
+        </div>
+        <div class="opt-card" data-slot="afternoon" onclick="toggleSlot(this)">
+          <div class="o-check">✓</div>
+          <div class="o-title">下午 14:00–18:00</div>
+          <div class="o-desc" style="font-size:11px;">剩余可用：5个</div>
+        </div>
+        <div class="opt-card" data-slot="evening" onclick="toggleSlot(this)">
+          <div class="o-check">✓</div>
+          <div class="o-title">晚上 18:00–21:00</div>
+          <div class="o-desc" style="font-size:11px;">剩余可用：2个</div>
+        </div>
+        <div class="opt-card" data-slot="weekend" onclick="toggleSlot(this)">
+          <div class="o-check">✓</div>
+          <div class="o-title">周末全天</div>
+          <div class="o-desc" style="font-size:11px;">剩余可用：4个</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已选：<b id="resCount">0</b> 资源 · <b id="slotCount">0</b> 时段</span>
+        <button class="btn-send" id="btnM9" disabled onclick="submitM9()">📤 确认预约</button>
+      </div>
+      <div class="result-box" id="rM9">
+        <div class="r-title">📅 预约成功</div>
+        <div class="r-content" id="rM9Content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 模块10：好事成就解锁 ====== -->
+  <div class="module" id="m10">
+    <div class="module-hd">
+      <div class="m-icon purple">🏅</div>
+      <div class="m-info">
+        <h3>好事成就解锁</h3>
+        <p>你已经完成了哪些好事成就？选出来，解锁徽章，领取奖励</p>
+      </div>
+    </div>
+    <div class="module-bd">
+      <div class="opt-grid" id="badgeGrid">
+        <div class="opt-card" data-badge="first" onclick="toggleBadge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌟</div>
+          <div class="o-title">第一次好事</div>
+          <div class="o-desc">在平台完成第一件好事 · 奖励 +20 好心值</div>
+        </div>
+        <div class="opt-card" data-badge="streak3" onclick="toggleBadge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🔥</div>
+          <div class="o-title">连续3天</div>
+          <div class="o-desc">连续3天每天做好事 · 奖励 +50 好心值</div>
+        </div>
+        <div class="opt-card" data-badge="streak7" onclick="toggleBadge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">💫</div>
+          <div class="o-title">连续7天</div>
+          <div class="o-desc">连续7天每天做好事 · 奖励 +150 好心值</div>
+        </div>
+        <div class="opt-card" data-badge="helper" onclick="toggleBadge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🤝</div>
+          <div class="o-title">助人达人</div>
+          <div class="o-desc">累计帮助10位邻居 · 奖励 +100 好心值</div>
+        </div>
+        <div class="opt-card" data-badge="green" onclick="toggleBadge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🌿</div>
+          <div class="o-title">环保先锋</div>
+          <div class="o-desc">累计完成15件环保好事 · 奖励 +100 好心值</div>
+        </div>
+        <div class="opt-card" data-badge="elderly" onclick="toggleBadge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">💛</div>
+          <div class="o-title">暖心陪伴</div>
+          <div class="o-desc">累计陪伴老人5次 · 奖励 +80 好心值</div>
+        </div>
+        <div class="opt-card" data-badge="challenge" onclick="toggleBadge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">🏆</div>
+          <div class="o-title">挑战王者</div>
+          <div class="o-desc">完成所有挑战等级 · 奖励 +200 好心值</div>
+        </div>
+        <div class="opt-card" data-badge="allround" onclick="toggleBadge(this)">
+          <div class="o-check">✓</div>
+          <div class="o-icon">👑</div>
+          <div class="o-title">全能好事家</div>
+          <div class="o-desc">解锁全部8个成就 · 奖励 +500 好心值</div>
+        </div>
+      </div>
+      <div class="act-bar">
+        <span class="count">已解锁 <b id="badgeCount">0</b> 个成就 · 可领 <b id="badgeReward">0</b> 好心值</span>
+        <button class="btn-send" id="btnM10" disabled onclick="submitM10()">📤 领取奖励</button>
+      </div>
+      <div class="result-box" id="rM10">
+        <div class="r-title">🏅 成就已解锁</div>
+        <div class="r-content" id="rM10Content"></div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /.wrap -->
 
 <!-- 页脚 -->
@@ -763,6 +1057,154 @@ function updateStats() {
   var p = document.getElementById('sPoints');
   p.textContent = parseInt(p.textContent.replace(',','')) + 50;
   if (parseInt(p.textContent) > 9999) { p.textContent = parseInt(p.textContent).toLocaleString(); }
+}
+
+// ==================== 模块7：话题投票 ====================
+var topicVotes = { clean:12, market:8, movie:15, walk:6, dinner:10, class:18 };
+var topicNames = { clean:'🧹 社区大扫除日', market:'🏪 邻里跳蚤市场', movie:'🎬 露天电影夜', walk:'🚶 社区健步走', dinner:'🍲 百家宴/邻里饭', class:'🎨 邻里兴趣班' };
+
+function toggleTopic(el) {
+  document.querySelectorAll('#topicGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  var topic = el.dataset.topic;
+  var count = topicVotes[topic] + 1;
+  document.getElementById('topicCount').textContent = 1;
+  document.getElementById('topicLeader').textContent = topicNames[topic] + '（' + count + '票）';
+  document.getElementById('btnM7').disabled = false;
+}
+
+function submitM7() {
+  var el = document.querySelector('#topicGrid .opt-card.selected');
+  if (!el) return;
+  var topic = el.dataset.topic;
+  topicVotes[topic]++;
+  var leader = Object.keys(topicVotes).reduce(function(a,b) { return topicVotes[a] > topicVotes[b] ? a : b; });
+  var box = document.getElementById('rM7');
+  box.classList.add('show');
+  document.getElementById('rM7Content').innerHTML = '你投票给了：<span class="tag">' + topicNames[topic] + '</span><br><br>📊 当前票数统计：<br>' + Object.keys(topicVotes).map(function(k) { return '· ' + topicNames[k] + '：<b>' + topicVotes[k] + '</b> 票'; }).join('<br>') + '<br><br>🏆 当前领先：<span class="tag">' + topicNames[leader] + '</span>（' + topicVotes[leader] + '票）';
+  showToast('🗳️', '投票成功！', '你投给了' + topicNames[topic]);
+  updateStats();
+  document.querySelectorAll('#topicGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('topicCount').textContent = 0;
+  document.getElementById('topicLeader').textContent = '—';
+  document.getElementById('btnM7').disabled = true;
+}
+
+// ==================== 模块8：搭档匹配 ====================
+var partnerMap = { neighbor:'🏠 同楼栋邻居', family:'👨‍👩‍👧 和家人一起', friend:'🤝 约朋友一起', alone:'🙋 自己一个人', group:'👥 社区小队' };
+var ptypeMap = { elderly:'👴 关爱老人', child:'👶 关爱孩子', env:'🌿 环保行动', skill:'🔧 技能服务', event:'🎉 活动组织' };
+var selectedPartner = null;
+var selectedPtype = null;
+
+function togglePartner(el) {
+  document.querySelectorAll('#partnerGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedPartner = el.dataset.partner;
+  document.getElementById('partnerCount').textContent = 1;
+  checkM8();
+}
+
+function togglePtype(el) {
+  document.querySelectorAll('#partnerTypeGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedPtype = el.dataset.ptype;
+  document.getElementById('ptypeCount').textContent = 1;
+  checkM8();
+}
+
+function checkM8() {
+  document.getElementById('btnM8').disabled = !(selectedPartner && selectedPtype);
+}
+
+function submitM8() {
+  var partner = partnerMap[selectedPartner] || '未知';
+  var ptype = ptypeMap[selectedPtype] || '未知';
+  var matches = ['👩 2号楼的张姐（也喜欢' + ptype + '）', '👨 5号楼的王哥（最近在找' + ptype + '搭档）', '👋 7号楼的小李（和你选了同样的搭档类型）'];
+  var match = matches[Math.floor(Math.random()*matches.length)];
+  var box = document.getElementById('rM8');
+  box.classList.add('show');
+  document.getElementById('rM8Content').innerHTML = '你的偏好：搭档 <span class="tag">' + partner + '</span> · 类型 <span class="tag">' + ptype + '</span><br><br>🤝 为你匹配到：<br><br><b>' + match + '</b><br><br>📌 建议你们可以一起：<br>· 在群里互相打个招呼<br>· 约个时间一起行动<br>· 分享彼此的好事经验';
+  showToast('👫', '匹配成功！', '找到了适合的' + ptype + '搭档');
+  updateStats();
+  document.querySelectorAll('#partnerGrid .opt-card, #partnerTypeGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  selectedPartner = null; selectedPtype = null;
+  document.getElementById('partnerCount').textContent = 0;
+  document.getElementById('ptypeCount').textContent = 0;
+  document.getElementById('btnM8').disabled = true;
+}
+
+// ==================== 模块9：资源预约 ====================
+var resMap = { toolbox:'🔧 共享工具箱', garden:'🌻 认养花坛', space:'🏠 活动室时段', bbq:'🍖 烧烤区预约', parking:'🚗 临时访客车位' };
+var slotMap = { morning:'上午 8:00–12:00', afternoon:'下午 14:00–18:00', evening:'晚上 18:00–21:00', weekend:'周末全天' };
+var selectedRes = null;
+var selectedSlot = null;
+
+function toggleRes(el) {
+  document.querySelectorAll('#resourceGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedRes = el.dataset.res;
+  document.getElementById('resCount').textContent = 1;
+  checkM9();
+}
+
+function toggleSlot(el) {
+  document.querySelectorAll('#slotGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedSlot = el.dataset.slot;
+  document.getElementById('slotCount').textContent = 1;
+  checkM9();
+}
+
+function checkM9() {
+  document.getElementById('btnM9').disabled = !(selectedRes && selectedSlot);
+}
+
+function submitM9() {
+  var res = resMap[selectedRes] || '未知';
+  var slot = slotMap[selectedSlot] || '未知';
+  var code = 'PRE-' + Math.random().toString(36).substring(2,7).toUpperCase();
+  var box = document.getElementById('rM9');
+  box.classList.add('show');
+  document.getElementById('rM9Content').innerHTML = '预约内容：<span class="tag">' + res + '</span><br>预约时段：<span class="tag">' + slot + '</span><br><br>🎫 预约编号：<b style="color:#c8533a;font-size:18px;">' + code + '</b><br>📌 请到社区服务中心凭编号领取/使用<br>⚠️ 如需取消，请提前24小时在平台取消';
+  showToast('📅', '预约成功！', res + ' · ' + slot + ' · 编号' + code);
+  updateStats();
+  document.querySelectorAll('#resourceGrid .opt-card, #slotGrid .opt-card').forEach(function(c) { c.classList.remove('selected'); });
+  selectedRes = null; selectedSlot = null;
+  document.getElementById('resCount').textContent = 0;
+  document.getElementById('slotCount').textContent = 0;
+  document.getElementById('btnM9').disabled = true;
+}
+
+// ==================== 模块10：成就解锁 ====================
+var badgeMap = { first:'🌟 第一次好事', streak3:'🔥 连续3天', streak7:'💫 连续7天', helper:'🤝 助人达人', green:'🌿 环保先锋', elderly:'💛 暖心陪伴', challenge:'🏆 挑战王者', allround:'👑 全能好事家' };
+var badgeRewardMap = { first:20, streak3:50, streak7:150, helper:100, green:100, elderly:80, challenge:200, allround:500 };
+
+function toggleBadge(el) {
+  el.classList.toggle('selected');
+  var count = document.querySelectorAll('#badgeGrid .opt-card.selected').length;
+  document.getElementById('badgeCount').textContent = count;
+  var reward = 0;
+  document.querySelectorAll('#badgeGrid .opt-card.selected').forEach(function(c) { reward += badgeRewardMap[c.dataset.badge] || 0; });
+  document.getElementById('badgeReward').textContent = reward;
+  document.getElementById('btnM10').disabled = count === 0;
+}
+
+function submitM10() {
+  var selected = [];
+  var totalReward = 0;
+  document.querySelectorAll('#badgeGrid .opt-card.selected').forEach(function(c) {
+    selected.push(badgeMap[c.dataset.badge]);
+    totalReward += badgeRewardMap[c.dataset.badge] || 0;
+  });
+  var box = document.getElementById('rM10');
+  box.classList.add('show');
+  document.getElementById('rM10Content').innerHTML = '已解锁成就：<br><br>' + selected.map(function(s) { return '· <span class="tag">' + s + '</span>'; }).join('') + '<br><br>🎁 共领取 <b style="color:#c8533a;font-size:18px;">' + totalReward + '</b> 好心值奖励<br>🏅 继续加油，解锁更多成就！';
+  showToast('🏅', '成就已解锁！', '领取 ' + totalReward + ' 好心值奖励');
+  updateStats();
+  document.querySelectorAll('#badgeGrid .opt-card.selected').forEach(function(c) { c.classList.remove('selected'); });
+  document.getElementById('badgeCount').textContent = 0;
+  document.getElementById('badgeReward').textContent = 0;
+  document.getElementById('btnM10').disabled = true;
 }
 
 // 初始统计
