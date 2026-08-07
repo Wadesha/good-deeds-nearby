@@ -163,6 +163,93 @@ ul,ol{list-style:none}
 .rec-card .rec-btn:hover{background:var(--brand-soft)}
 .rec-card .rec-btn.claimed{background:var(--leaf-soft);color:var(--leaf);border-color:var(--leaf);cursor:default}
 
+/* ===== Scene Matcher ===== */
+.scene-matcher{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.scene-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.scene-card{position:relative;padding:20px 16px;border:2px solid var(--line);border-radius:var(--radius);cursor:pointer;transition:var(--transition);background:var(--paper);user-select:none;text-align:center}
+.scene-card:hover{border-color:var(--sky-soft);transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.scene-card.selected{border-color:var(--sky);background:var(--sky-soft);box-shadow:0 0 0 4px rgba(59,107,140,.1)}
+.scene-card .scene-icon{font-size:32px;display:block;margin-bottom:8px}
+.scene-card .scene-title{font-size:15px;font-weight:700;color:var(--ink);display:block;margin-bottom:4px}
+.scene-card .scene-desc{font-size:12px;color:var(--ink-soft);display:block}
+.scene-card .scene-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;color:transparent;transition:var(--transition)}
+.scene-card.selected .scene-check{border-color:var(--sky);background:var(--sky);color:#fff}
+.scene-actions{text-align:center}
+.scene-actions .btn-match{padding:14px 48px;border-radius:999px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--sky),#2a5a7a);transition:var(--transition);box-shadow:0 4px 16px rgba(59,107,140,.25);display:inline-flex;align-items:center;gap:8px}
+.scene-actions .btn-match:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(59,107,140,.35)}
+.scene-actions .btn-match:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.scene-actions .btn-match .count-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.25);font-size:13px;font-weight:700}
+.match-result{margin-top:28px;border-top:2px dashed var(--line);padding-top:24px;animation:slide-up .5s ease}
+.match-result .match-header{text-align:center;margin-bottom:16px}
+.match-result .match-header h4{font-size:18px;font-weight:800;color:var(--ink)}
+.match-result .match-header p{font-size:13px;color:var(--ink-soft);margin-top:4px}
+.match-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.match-task-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:18px;transition:var(--transition);position:relative}
+.match-task-card:hover{box-shadow:var(--shadow-hover)}
+.match-task-card .match-tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:8px}
+.match-task-card .match-tag.sky{background:var(--sky-soft);color:var(--sky)}
+.match-task-card .match-tag.leaf{background:var(--leaf-soft);color:var(--leaf)}
+.match-task-card .match-tag.gold{background:var(--gold-soft);color:var(--gold)}
+.match-task-card h5{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.match-task-card p{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:10px}
+.match-task-card .match-meta{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.match-task-card .match-meta span{font-size:11px;color:var(--ink-faint);display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:var(--paper);border-radius:6px}
+.match-task-card .match-claim-btn{width:100%;padding:8px;border-radius:999px;font-size:13px;font-weight:600;color:var(--sky);border:1.5px solid var(--sky);transition:var(--transition);text-align:center;background:var(--paper)}
+.match-task-card .match-claim-btn:hover{background:var(--sky-soft)}
+.match-task-card .match-claim-btn.claimed{background:var(--leaf-soft);color:var(--leaf);border-color:var(--leaf);cursor:default}
+
+/* ===== Community Vote ===== */
+.vote-section{background:var(--paper);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);border:1px solid var(--line);margin:0 auto;max-width:900px}
+.vote-options{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:24px}
+.vote-option{position:relative;padding:16px 18px;border:2px solid var(--line);border-radius:var(--radius);cursor:pointer;transition:var(--transition);background:var(--paper);user-select:none;display:flex;align-items:center;gap:12px}
+.vote-option:hover{border-color:var(--plum-soft);transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.vote-option.selected{border-color:var(--plum);background:var(--plum-soft);box-shadow:0 0 0 4px rgba(107,74,122,.1)}
+.vote-option .vote-opt-icon{font-size:24px;flex-shrink:0}
+.vote-option .vote-opt-text{font-size:14px;font-weight:600;color:var(--ink);flex:1}
+.vote-option .vote-opt-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;color:transparent;transition:var(--transition);flex-shrink:0}
+.vote-option.selected .vote-opt-check{border-color:var(--plum);background:var(--plum);color:#fff}
+.vote-footer{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid var(--line);flex-wrap:wrap;gap:12px}
+.vote-count{font-size:14px;color:var(--ink-soft);font-weight:500}
+.vote-count .vote-count-num{font-weight:800;color:var(--plum);font-size:18px}
+.vote-count .vote-count-max{color:var(--ink-faint)}
+.vote-footer .btn-vote{padding:12px 40px;border-radius:999px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--plum),#5a3a6a);transition:var(--transition);box-shadow:0 4px 16px rgba(107,74,122,.25);display:inline-flex;align-items:center;gap:8px}
+.vote-footer .btn-vote:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(107,74,122,.35)}
+.vote-footer .btn-vote:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.vote-result{margin-top:24px;border-top:2px dashed var(--line);padding-top:24px;animation:slide-up .5s ease}
+.vote-result .vote-result-title{text-align:center;margin-bottom:20px}
+.vote-result .vote-result-title h4{font-size:18px;font-weight:800;color:var(--ink)}
+.vote-result .vote-result-title p{font-size:13px;color:var(--ink-soft);margin-top:4px}
+.vote-result-list{display:flex;flex-direction:column;gap:14px}
+.vote-result-item{padding:14px 18px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--line)}
+.vote-result-item .vri-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.vote-result-item .vri-header .vri-name{font-size:14px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:6px}
+.vote-result-item .vri-header .vri-name .vri-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;background:var(--plum-soft);color:var(--plum);margin-left:4px}
+.vote-result-item .vri-header .vri-pct{font-size:16px;font-weight:800;color:var(--plum)}
+.vote-result-item .vri-bar-wrap{height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+.vote-result-item .vri-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--plum),#7a5a8a);transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0%}
+.vote-result-item .vri-votes{font-size:11px;color:var(--ink-faint);margin-top:4px;text-align:right}
+
+@media(max-width:768px){
+  .scene-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .scene-card{padding:14px 10px}
+  .scene-card .scene-icon{font-size:26px}
+  .scene-matcher{padding:20px;border-radius:var(--radius)}
+  .match-grid{grid-template-columns:1fr}
+  .vote-options{grid-template-columns:1fr}
+  .vote-section{padding:20px;border-radius:var(--radius)}
+  .vote-footer{flex-direction:column;align-items:stretch;text-align:center}
+  .vote-footer .btn-vote{width:100%;justify-content:center}
+}
+
+@media(max-width:480px){
+  .scene-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .scene-card{padding:12px 8px}
+  .scene-card .scene-icon{font-size:22px}
+  .scene-card .scene-title{font-size:13px}
+  .vote-options{grid-template-columns:1fr;gap:8px}
+  .vote-option{padding:12px 14px}
+}
+
 /* ===== Profile Panel ===== */
 .profile-panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);max-width:500px;margin:0 auto}
 .profile-panel .profile-header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
@@ -543,6 +630,61 @@ ul,ol{list-style:none}
   </div>
 </section>
 
+<!-- ===== Scene Matcher Section ===== -->
+<section class="wrap section" id="sceneMatcher">
+  <div class="section-title">
+    <h2>选你的场景，一键匹配好事</h2>
+    <p>告诉我你现在在哪儿、在做什么，帮你匹配最合适的公益任务</p>
+  </div>
+  <div class="scene-matcher">
+    <div class="scene-grid" id="sceneGrid">
+      <div class="scene-card" data-scene="commute">
+        <span class="scene-check">✓</span>
+        <span class="scene-icon">🚇</span>
+        <span class="scene-title">通勤路上</span>
+        <span class="scene-desc">地铁/公交里</span>
+      </div>
+      <div class="scene-card" data-scene="lunch">
+        <span class="scene-check">✓</span>
+        <span class="scene-icon">☕</span>
+        <span class="scene-title">午休空隙</span>
+        <span class="scene-desc">午饭后的空闲</span>
+      </div>
+      <div class="scene-card" data-scene="walk">
+        <span class="scene-check">✓</span>
+        <span class="scene-icon">👶</span>
+        <span class="scene-title">遛娃散步</span>
+        <span class="scene-desc">带娃在小区</span>
+      </div>
+      <div class="scene-card" data-scene="queue">
+        <span class="scene-check">✓</span>
+        <span class="scene-icon">⏳</span>
+        <span class="scene-title">排队等候</span>
+        <span class="scene-desc">等电梯/排队</span>
+      </div>
+      <div class="scene-card" data-scene="sport">
+        <span class="scene-check">✓</span>
+        <span class="scene-icon">🏃</span>
+        <span class="scene-title">运动健身</span>
+        <span class="scene-desc">跑步/健身途中</span>
+      </div>
+    </div>
+    <div class="scene-actions">
+      <button class="btn-match" id="btnMatch" disabled onclick="matchScenes()">
+        <span>🎯 一键匹配</span>
+        <span class="count-badge" id="sceneBadge">0</span>
+      </button>
+    </div>
+    <div class="match-result" id="matchResult" style="display:none">
+      <div class="match-header">
+        <h4>✨ 为你匹配到以下好事</h4>
+        <p>根据你选择的场景，推荐最适合的公益任务</p>
+      </div>
+      <div class="match-grid" id="matchGrid"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== Data Dashboard Section ===== -->
 <section class="wrap section">
   <div class="section-title">
@@ -648,6 +790,61 @@ ul,ol{list-style:none}
         <span class="rec-meta-item">💛 +25 好心值</span>
       </div>
       <button class="rec-btn" onclick="claimRecTask(this)">领取任务</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Community Vote Section ===== -->
+<section class="wrap section" id="communityVote">
+  <div class="section-title">
+    <h2>你希望社区增加什么？</h2>
+    <p>选出你希望社区新增的公益服务，让社区变得更好（最多选3项）</p>
+  </div>
+  <div class="vote-section">
+    <div class="vote-options" id="voteOptions">
+      <div class="vote-option" data-vote="elderly">
+        <span class="vote-opt-check">✓</span>
+        <span class="vote-opt-icon">👴</span>
+        <span class="vote-opt-text">老年人陪伴服务</span>
+      </div>
+      <div class="vote-option" data-vote="childcare">
+        <span class="vote-opt-check">✓</span>
+        <span class="vote-opt-icon">📚</span>
+        <span class="vote-opt-text">儿童课后托管</span>
+      </div>
+      <div class="vote-option" data-vote="garden">
+        <span class="vote-opt-check">✓</span>
+        <span class="vote-opt-icon">🌿</span>
+        <span class="vote-opt-text">社区花园维护</span>
+      </div>
+      <div class="vote-option" data-vote="pet">
+        <span class="vote-opt-check">✓</span>
+        <span class="vote-opt-icon">🐕</span>
+        <span class="vote-opt-text">宠物互助圈</span>
+      </div>
+      <div class="vote-option" data-vote="recycle">
+        <span class="vote-opt-check">✓</span>
+        <span class="vote-opt-icon">♻️</span>
+        <span class="vote-opt-text">环保回收站</span>
+      </div>
+      <div class="vote-option" data-vote="digital">
+        <span class="vote-opt-check">✓</span>
+        <span class="vote-opt-icon">📱</span>
+        <span class="vote-opt-text">数字助老课堂</span>
+      </div>
+    </div>
+    <div class="vote-footer">
+      <span class="vote-count">已选 <span class="vote-count-num" id="voteSelectedCount">0</span><span class="vote-count-max"> / 3</span></span>
+      <button class="btn-vote" id="btnVote" disabled onclick="submitVote()">
+        <span>📊 一键提交投票</span>
+      </button>
+    </div>
+    <div class="vote-result" id="voteResult" style="display:none">
+      <div class="vote-result-title">
+        <h4>📋 社区投票结果</h4>
+        <p>感谢你的参与！以下是当前投票统计</p>
+      </div>
+      <div class="vote-result-list" id="voteResultList"></div>
     </div>
   </div>
 </section>
@@ -1528,6 +1725,275 @@ document.addEventListener('DOMContentLoaded', () => {
   const leaderboard = document.querySelector('.leaderboard');
   if (leaderboard) lbObserver.observe(leaderboard);
 });
+
+// ===== Scene Matcher — 场景选择与匹配 =====
+const sceneCards = document.querySelectorAll('.scene-card');
+const btnMatch = document.getElementById('btnMatch');
+const sceneBadge = document.getElementById('sceneBadge');
+const matchResult = document.getElementById('matchResult');
+const matchGrid = document.getElementById('matchGrid');
+let selectedScenes = new Set();
+
+const sceneTaskMap = {
+  commute: [
+    { name: '帮老人让座引导', tag: '👴 助老', tagClass: 'gold', desc: '在通勤路上主动为需要帮助的人让座，传递温暖', time: '顺路', value: '5', icon: '🚇' },
+    { name: '共享单车整理', tag: '🌿 环保', tagClass: 'leaf', desc: '到站后顺手整理路边乱停放的共享单车，让出行更有序', time: '3分钟', value: '6', icon: '🚲' },
+    { name: '地铁口垃圾分类', tag: '♻️ 环保', tagClass: 'leaf', desc: '在地铁站出入口引导垃圾分类投放，顺手保护环境', time: '5分钟', value: '8', icon: '🗑️' }
+  ],
+  lunch: [
+    { name: '帮同事带饭', tag: '🤝 互助', tagClass: 'brand', desc: '午休帮加班的同事带份午饭，顺便聊聊天放松心情', time: '10分钟', value: '10', icon: '🍱' },
+    { name: '办公室绿植浇水', tag: '🌿 环保', tagClass: 'leaf', desc: '利用午休时间给办公室绿植浇浇水，营造绿色环境', time: '5分钟', value: '5', icon: '🌱' },
+    { name: '整理共享书架', tag: '📚 文化', tagClass: 'gold', desc: '午饭后整理公司或社区的共享书架，让好书触手可及', time: '10分钟', value: '12', icon: '📖' }
+  ],
+  walk: [
+    { name: '小区环境巡查', tag: '🏪 社区', tagClass: 'brand', desc: '遛娃时顺便查看小区公共设施安全，拍照上报隐患', time: '15分钟', value: '15', icon: '🔍' },
+    { name: '教孩子认识植物', tag: '🌿 教育', tagClass: 'leaf', desc: '带娃一起认识小区里的花草树木，培养环保意识', time: '10分钟', value: '10', icon: '🌻' },
+    { name: '帮邻居取快递', tag: '📦 互助', tagClass: 'gold', desc: '遛娃路过快递柜，顺手帮邻居取快递送到家门口', time: '5分钟', value: '8', icon: '📦' }
+  ],
+  queue: [
+    { name: '教老人用手机', tag: '📱 助老', tagClass: 'sky', desc: '排队时教身边的老人使用手机功能，打发时间又助人', time: '5分钟', value: '10', icon: '📱' },
+    { name: '排队秩序引导', tag: '🏪 社区', tagClass: 'brand', desc: '主动维护排队秩序，提醒大家保持间距，营造文明氛围', time: '5分钟', value: '6', icon: '👥' },
+    { name: '手机垃圾清理', tag: '📱 技能', tagClass: 'sky', desc: '帮身边不太会用手机的老年人清理手机垃圾、关闭后台应用', time: '5分钟', value: '8', icon: '🧹' }
+  ],
+  sport: [
+    { name: '公园垃圾捡拾', tag: '🌿 环保', tagClass: 'leaf', desc: '跑步健身时顺手捡拾沿途垃圾，让运动更有意义', time: '顺路', value: '12', icon: '🏃' },
+    { name: '陪老人散步', tag: '👴 助老', tagClass: 'gold', desc: '健身途中遇到散步的老人，陪他们边走边聊', time: '15分钟', value: '18', icon: '🚶' },
+    { name: '运动器材维护', tag: '🏪 社区', tagClass: 'brand', desc: '检查社区健身器材是否完好，发现问题及时上报', time: '5分钟', value: '8', icon: '🔧' }
+  ]
+};
+
+sceneCards.forEach(card => {
+  card.addEventListener('click', function() {
+    const scene = this.dataset.scene;
+    if (selectedScenes.has(scene)) {
+      selectedScenes.delete(scene);
+      this.classList.remove('selected');
+    } else {
+      selectedScenes.add(scene);
+      this.classList.add('selected');
+    }
+    updateSceneUI();
+  });
+});
+
+function updateSceneUI() {
+  const count = selectedScenes.size;
+  sceneBadge.textContent = count;
+  btnMatch.disabled = count === 0;
+  if (count === 0) {
+    matchResult.style.display = 'none';
+  }
+}
+
+function matchScenes() {
+  if (selectedScenes.size === 0) return;
+
+  const tasks = [];
+  selectedScenes.forEach(scene => {
+    const pool = sceneTaskMap[scene] || [];
+    tasks.push(...pool);
+  });
+
+  // Shuffle and pick up to 3
+  const shuffled = tasks.sort(() => Math.random() - 0.5);
+  const picked = shuffled.slice(0, 3);
+
+  // Check if we have less than 3, fill from other scenes
+  while (picked.length < 3) {
+    const allTasks = Object.values(sceneTaskMap).flat();
+    const remaining = allTasks.filter(t => !picked.includes(t));
+    if (remaining.length === 0) break;
+    shuffled.length = 0;
+    shuffled.push(...remaining.sort(() => Math.random() - 0.5));
+    picked.push(shuffled[0]);
+  }
+
+  matchGrid.innerHTML = '';
+  picked.forEach((task, i) => {
+    const card = document.createElement('div');
+    card.className = 'match-task-card';
+    card.style.animation = 'slide-up .4s ease both';
+    card.style.animationDelay = (i * 0.1) + 's';
+    card.innerHTML =
+      '<span class="match-tag ' + task.tagClass + '">' + task.tag + '</span>' +
+      '<h5>' + task.icon + ' ' + task.name + '</h5>' +
+      '<p>' + task.desc + '</p>' +
+      '<div class="match-meta">' +
+        '<span>⏱️ ' + task.time + '</span>' +
+        '<span>💛 +' + task.value + '</span>' +
+      '</div>' +
+      '<button class="match-claim-btn" onclick="claimMatchTask(this, \'' + task.name + '\', ' + task.value + ')">领取任务</button>';
+    matchGrid.appendChild(card);
+  });
+
+  matchResult.style.display = 'block';
+  matchResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  showToast('success', '🎯 匹配成功！', '为你找到了 ' + picked.length + ' 件适合的好事，快去领取吧');
+}
+
+function claimMatchTask(btn, name, value) {
+  if (btn.classList.contains('claimed')) return;
+  btn.classList.add('claimed');
+  btn.textContent = '✓ 已领取';
+
+  // Update heart value
+  const heartEl = document.getElementById('heartValue');
+  if (heartEl) {
+    let currentVal = parseInt(heartEl.textContent.replace(/,/g, ''));
+    heartEl.textContent = (currentVal + value).toLocaleString();
+  }
+  const weeklyEl = document.getElementById('weeklyEarned');
+  if (weeklyEl) {
+    let weeklyVal = parseInt(weeklyEl.textContent.replace('+', '').replace(/,/g, ''));
+    weeklyEl.textContent = '+' + (weeklyVal + value).toLocaleString();
+  }
+
+  showToast('success', '✅ 领取成功！', '你领取了「' + name + '」，获得 💛' + value + ' 好心值');
+}
+
+// ===== Community Vote — 社区投票 =====
+const voteOptions = document.querySelectorAll('.vote-option');
+const btnVote = document.getElementById('btnVote');
+const voteSelectedCount = document.getElementById('voteSelectedCount');
+const voteResult = document.getElementById('voteResult');
+const voteResultList = document.getElementById('voteResultList');
+let selectedVotes = new Set();
+
+const voteData = {
+  elderly: { icon: '👴', name: '老年人陪伴服务' },
+  childcare: { icon: '📚', name: '儿童课后托管' },
+  garden: { icon: '🌿', name: '社区花园维护' },
+  pet: { icon: '🐕', name: '宠物互助圈' },
+  recycle: { icon: '♻️', name: '环保回收站' },
+  digital: { icon: '📱', name: '数字助老课堂' }
+};
+
+voteOptions.forEach(option => {
+  option.addEventListener('click', function() {
+    const vote = this.dataset.vote;
+    if (selectedVotes.has(vote)) {
+      selectedVotes.delete(vote);
+      this.classList.remove('selected');
+    } else {
+      if (selectedVotes.size >= 3) {
+        showToast('info', '最多选3项', '你已经选了3项了，取消一项再选别的吧');
+        return;
+      }
+      selectedVotes.add(vote);
+      this.classList.add('selected');
+    }
+    updateVoteUI();
+  });
+});
+
+function updateVoteUI() {
+  const count = selectedVotes.size;
+  voteSelectedCount.textContent = count;
+  btnVote.disabled = count === 0;
+}
+
+function submitVote() {
+  if (selectedVotes.size === 0) return;
+
+  // Generate mock percentages
+  const totalVotes = 284; // simulated total votes
+  const mockVotes = {};
+  const allKeys = Object.keys(voteData);
+  let remaining = totalVotes;
+
+  // Distribute votes: selected items get higher share
+  allKeys.forEach((key, i) => {
+    if (i === allKeys.length - 1) {
+      mockVotes[key] = remaining;
+    } else {
+      let share;
+      if (selectedVotes.has(key)) {
+        share = Math.floor(totalVotes * (0.2 + Math.random() * 0.1));
+      } else {
+        share = Math.floor(totalVotes * (0.08 + Math.random() * 0.06));
+      }
+      mockVotes[key] = Math.min(share, remaining - (allKeys.length - 1 - i));
+      remaining -= mockVotes[key];
+    }
+  });
+  mockVotes[allKeys[allKeys.length - 1]] = remaining;
+
+  // Calculate percentages
+  const maxVotes = Math.max(...Object.values(mockVotes));
+  const total = Object.values(mockVotes).reduce((a, b) => a + b, 0);
+
+  voteResultList.innerHTML = '';
+  allKeys.forEach((key, i) => {
+    const item = voteData[key];
+    const votes = mockVotes[key];
+    const pct = ((votes / total) * 100).toFixed(1);
+    const barWidth = (votes / maxVotes) * 100;
+    const isSelected = selectedVotes.has(key);
+
+    const el = document.createElement('div');
+    el.className = 'vote-result-item';
+    el.style.animation = 'slide-up .4s ease both';
+    el.style.animationDelay = (i * 0.08) + 's';
+    el.innerHTML =
+      '<div class="vri-header">' +
+        '<span class="vri-name">' + item.icon + ' ' + item.name + (isSelected ? ' <span class="vri-badge">已投</span>' : '') + '</span>' +
+        '<span class="vri-pct">' + pct + '%</span>' +
+      '</div>' +
+      '<div class="vri-bar-wrap">' +
+        '<div class="vri-bar" style="width:0%"></div>' +
+      '</div>' +
+      '<div class="vri-votes">' + votes + ' 票</div>';
+    voteResultList.appendChild(el);
+
+    // Animate bar after a short delay
+    setTimeout(() => {
+      const bar = el.querySelector('.vri-bar');
+      if (bar) bar.style.width = barWidth + '%';
+    }, 200 + i * 100);
+  });
+
+  voteResult.style.display = 'block';
+  voteResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Disable further voting
+  voteOptions.forEach(opt => opt.style.cursor = 'default');
+  btnVote.disabled = true;
+  btnVote.textContent = '✓ 已投票';
+
+  showToast('success', '📊 投票成功！', '感谢你的参与，社区因为有你会更好');
+}
+
+// ===== Scene Matcher + Vote Observer — 滚动动画 =====
+const sceneObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const cards = entry.target.querySelectorAll('.scene-card');
+      cards.forEach((card, i) => {
+        card.style.animation = 'slide-up .4s ease both';
+        card.style.animationDelay = (i * 0.08) + 's';
+      });
+      sceneObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+const sceneSection = document.getElementById('sceneMatcher');
+if (sceneSection) sceneObserver.observe(sceneSection);
+
+// Vote section observer
+const voteSectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const options = entry.target.querySelectorAll('.vote-option');
+      options.forEach((opt, i) => {
+        opt.style.animation = 'slide-up .4s ease both';
+        opt.style.animationDelay = (i * 0.08) + 's';
+      });
+      voteSectionObserver.disconnect();
+    }
+  });
+}, { threshold: 0.3 });
+const voteSection = document.getElementById('communityVote');
+if (voteSection) voteSectionObserver.observe(voteSection);
 </script>
 </body>
 </html>

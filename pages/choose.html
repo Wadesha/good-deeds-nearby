@@ -1,0 +1,3002 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>好事选择器 · 好事近全案</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+/* ============================================================
+   好事选择器 · 互动广场 专用样式
+   ============================================================ */
+
+/* ---------- 设计系统扩展 ---------- */
+:root {
+  --ch-bg: var(--bg);
+  --ch-card: var(--paper);
+  --ch-shadow: 0 2px 8px rgba(43,38,34,.05), 0 10px 28px rgba(43,38,34,.07);
+  --ch-shadow-lg: 0 4px 14px rgba(43,38,34,.08), 0 16px 40px rgba(43,38,34,.1);
+  --ch-radius: 14px;
+  --ch-radius-sm: 9px;
+  --ch-transition: transform .2s ease, box-shadow .2s ease;
+}
+
+/* ---------- 动画 ---------- */
+@keyframes chFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes chSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes chSlideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes chPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes chPop { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.15); } 70% { transform: scale(0.95); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes chShimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes chFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes chBounceIn { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.1); } 80% { transform: scale(0.95); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes chSlideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes chShake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+@keyframes chSpin { to { transform: rotate(360deg); } }
+@keyframes chBarGrow { from { width: 0; } }
+@keyframes chConfetti { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-150px) rotate(720deg); opacity: 0; } }
+@keyframes chRipple { 0% { box-shadow: 0 0 0 0 rgba(200,83,58,.3); } 100% { box-shadow: 0 0 0 20px rgba(200,83,58,0); } }
+@keyframes chBadgePop { 0% { transform: scale(0) rotate(-15deg); opacity: 0; } 60% { transform: scale(1.2) rotate(3deg); opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes chCountUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes chSweep { 0% { left: -100%; } 100% { left: 100%; } }
+@keyframes chStarPop { 0% { transform: scale(0) rotate(-180deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+@keyframes chGradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+@keyframes chWiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-3deg); } 75% { transform: rotate(3deg); } }
+@keyframes chZoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+@keyframes chStamp { 0% { transform: scale(2) rotate(-10deg); opacity: 0; } 60% { transform: scale(0.9) rotate(2deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes chHeartbeat { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.15); } 28% { transform: scale(1); } 42% { transform: scale(1.08); } 56% { transform: scale(1); } }
+@keyframes chRainbow { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+@keyframes chTypewriter { 0% { width: 0; } 100% { width: 100%; } }
+@keyframes chBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes chFlipIn { 0% { transform: perspective(400px) rotateY(90deg); opacity: 0; } 100% { transform: perspective(400px) rotateY(0deg); opacity: 1; } }
+@keyframes chJump { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(-10px); } 50% { transform: translateY(-4px); } 70% { transform: translateY(-8px); } }
+@keyframes chGlow { 0%, 100% { box-shadow: 0 0 5px rgba(200,83,58,.2); } 50% { box-shadow: 0 0 20px rgba(200,83,58,.4); } }
+@keyframes chSlideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes chRotateIn { 0% { transform: rotate(-180deg) scale(0); opacity: 0; } 100% { transform: rotate(0) scale(1); opacity: 1; } }
+@keyframes chExpandWidth { 0% { width: 0; } 100% { width: 100%; } }
+@keyframes chNumberTicker { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes chCardSweep { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes chBorderDance { 0% { border-color: var(--brand); } 25% { border-color: var(--gold); } 50% { border-color: var(--leaf); } 75% { border-color: var(--sky); } 100% { border-color: var(--brand); } }
+@keyframes chScaleIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes chDropIn { 0% { transform: translateY(-60px); opacity: 0; } 60% { transform: translateY(6px); opacity: 1; } 80% { transform: translateY(-3px); } 100% { transform: translateY(0); } }
+@keyframes chProgressGlow { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+@keyframes chSwing { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(8deg); } 40% { transform: rotate(-6deg); } 60% { transform: rotate(4deg); } 80% { transform: rotate(-2deg); } }
+@keyframes chTada { 0% { transform: scale(1) rotate(0deg); } 10%, 30% { transform: scale(1.1) rotate(-3deg); } 20%, 40% { transform: scale(1.1) rotate(3deg); } 50%, 100% { transform: scale(1) rotate(0deg); } }
+@keyframes chRiseUp { 0% { transform: translateY(40px) scale(0.9); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+@keyframes chShrinkIn { 0% { transform: scale(1.2); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+/* ---------- 滚动条美化 ---------- */
+.ch-choose-page ::-webkit-scrollbar { width: 6px; height: 6px; }
+.ch-choose-page ::-webkit-scrollbar-track { background: var(--bg); }
+.ch-choose-page ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+.ch-choose-page ::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+
+/* ---------- 选择器主容器 ---------- */
+.ch-choose-page { padding-bottom: 60px; }
+
+/* ---------- 模块容器 ---------- */
+.ch-module {
+  background: var(--ch-card);
+  border: 1px solid var(--line);
+  border-radius: var(--ch-radius);
+  padding: 28px 26px 32px;
+  margin: 28px 0;
+  box-shadow: var(--ch-shadow);
+  position: relative;
+  overflow: hidden;
+  animation: chFadeIn .5s ease both;
+}
+.ch-module:nth-child(1) { animation-delay: .1s; }
+.ch-module:nth-child(2) { animation-delay: .2s; }
+.ch-module:nth-child(3) { animation-delay: .3s; }
+.ch-module:nth-child(4) { animation-delay: .4s; }
+.ch-module:nth-child(5) { animation-delay: .5s; }
+.ch-module:nth-child(6) { animation-delay: .6s; }
+
+.ch-module::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+.ch-module.brand::before { background: linear-gradient(90deg, var(--brand), #d96a4e); }
+.ch-module.leaf::before { background: linear-gradient(90deg, var(--leaf), #5a9e78); }
+.ch-module.gold::before { background: linear-gradient(90deg, var(--gold), #daa142); }
+.ch-module.sky::before { background: linear-gradient(90deg, var(--sky), #4e86ab); }
+.ch-module.plum::before { background: linear-gradient(90deg, var(--plum), #8b5f9e); }
+.ch-module.copper::before { background: linear-gradient(90deg, #b87333, #d4945a); }
+
+.ch-module-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.ch-module-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  flex: 0 0 auto;
+}
+.ch-module.brand .ch-module-icon { background: var(--brand-soft); }
+.ch-module.leaf .ch-module-icon { background: var(--leaf-soft); }
+.ch-module.gold .ch-module-icon { background: var(--gold-soft); }
+.ch-module.sky .ch-module-icon { background: var(--sky-soft); }
+.ch-module.plum .ch-module-icon { background: var(--plum-soft); }
+.ch-module.copper .ch-module-icon { background: #f5e6d6; }
+
+.ch-module-title {
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.3;
+}
+.ch-module-desc {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  margin: 2px 0 0;
+}
+
+/* ---------- 步骤标签 ---------- */
+.ch-step-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ink);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin: 14px 0 10px;
+}
+.ch-step-label .ch-step-num {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+}
+
+/* ---------- 选项网格 ---------- */
+.ch-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 8px 0 14px;
+}
+.ch-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: var(--ch-radius-sm);
+  background: var(--paper);
+  cursor: pointer;
+  transition: all .18s ease;
+  position: relative;
+  user-select: none;
+}
+.ch-option:hover {
+  border-color: #d0c8b8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(43,38,34,.04);
+}
+.ch-option.selected {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  box-shadow: 0 0 0 3px rgba(200,83,58,.08);
+}
+.ch-option.leaf-selected {
+  border-color: var(--leaf);
+  background: var(--leaf-soft);
+  box-shadow: 0 0 0 3px rgba(63,125,91,.08);
+}
+.ch-option.gold-selected {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+  box-shadow: 0 0 0 3px rgba(201,138,43,.08);
+}
+.ch-option.sky-selected {
+  border-color: var(--sky);
+  background: var(--sky-soft);
+  box-shadow: 0 0 0 3px rgba(59,107,140,.08);
+}
+.ch-option.plum-selected {
+  border-color: var(--plum);
+  background: var(--plum-soft);
+  box-shadow: 0 0 0 3px rgba(107,74,122,.08);
+}
+.ch-option .ch-opt-icon { font-size: 20px; flex: 0 0 auto; line-height: 1.2; }
+.ch-option .ch-opt-body { flex: 1; }
+.ch-option .ch-opt-title { font-size: 14px; font-weight: 700; line-height: 1.3; }
+.ch-option .ch-opt-desc { font-size: 12px; color: var(--ink-soft); margin-top: 2px; line-height: 1.4; }
+.ch-option .ch-opt-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: transparent;
+  transition: all .2s;
+  margin-top: 2px;
+}
+.ch-option.selected .ch-opt-check,
+.ch-option.leaf-selected .ch-opt-check,
+.ch-option.gold-selected .ch-opt-check,
+.ch-option.sky-selected .ch-opt-check,
+.ch-option.plum-selected .ch-opt-check {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.ch-option.leaf-selected .ch-opt-check { background: var(--leaf); border-color: var(--leaf); }
+.ch-option.gold-selected .ch-opt-check { background: var(--gold); border-color: var(--gold); }
+.ch-option.sky-selected .ch-opt-check { background: var(--sky); border-color: var(--sky); }
+.ch-option.plum-selected .ch-opt-check { background: var(--plum); border-color: var(--plum); }
+
+/* ---------- 按钮 ---------- */
+.ch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--ch-radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.ch-btn:active { transform: scale(0.97); }
+.ch-btn-primary {
+  background: var(--brand);
+  color: #fff;
+}
+.ch-btn-primary:hover { background: var(--brand-deep); box-shadow: 0 4px 12px rgba(200,83,58,.25); }
+.ch-btn-leaf {
+  background: var(--leaf);
+  color: #fff;
+}
+.ch-btn-leaf:hover { background: #2d5e42; box-shadow: 0 4px 12px rgba(63,125,91,.25); }
+.ch-btn-gold {
+  background: var(--gold);
+  color: #fff;
+}
+.ch-btn-gold:hover { background: #b07a1f; box-shadow: 0 4px 12px rgba(201,138,43,.25); }
+.ch-btn-sky {
+  background: var(--sky);
+  color: #fff;
+}
+.ch-btn-sky:hover { background: #2c536e; box-shadow: 0 4px 12px rgba(59,107,140,.25); }
+.ch-btn-plum {
+  background: var(--plum);
+  color: #fff;
+}
+.ch-btn-plum:hover { background: #4a3357; box-shadow: 0 4px 12px rgba(107,74,122,.25); }
+.ch-btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 2px solid var(--line);
+}
+.ch-btn-outline:hover { border-color: var(--brand); color: var(--brand); }
+.ch-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.ch-btn .ch-btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: chSpin .6s linear infinite;
+  display: none;
+}
+.ch-btn.loading .ch-btn-spinner { display: block; }
+.ch-btn.loading .ch-btn-label { opacity: .7; }
+.ch-btn.loading { pointer-events: none; }
+
+/* ---------- 结果区域 ---------- */
+.ch-result {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: var(--ch-radius-sm);
+  background: #f9f5ed;
+  border: 1px solid var(--line);
+  animation: chSlideUp .35s ease both;
+}
+.ch-result .ch-result-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- 任务卡片 ---------- */
+.ch-task-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: all .18s;
+  cursor: pointer;
+}
+.ch-task-card:hover { transform: translateY(-1px); box-shadow: var(--ch-shadow); }
+.ch-task-card:last-child { margin-bottom: 0; }
+.ch-task-card .ch-tc-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+.ch-task-card .ch-tc-body { flex: 1; }
+.ch-task-card .ch-tc-name { font-size: 13.5px; font-weight: 700; }
+.ch-task-card .ch-tc-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 3px; }
+.ch-task-card .ch-tc-meta span { font-size: 11.5px; color: var(--ink-faint); }
+.ch-task-card .ch-tc-meta b { color: var(--ink); }
+.ch-task-card .ch-tc-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+  flex: 0 0 auto;
+}
+.ch-task-card .ch-tc-btn.claim { background: var(--brand); color: #fff; }
+.ch-task-card .ch-tc-btn.claim:hover { background: var(--brand-deep); }
+.ch-task-card .ch-tc-btn.claimed { background: var(--leaf-soft); color: var(--leaf); cursor: default; }
+
+/* ---------- 投票结果条 ---------- */
+.ch-vote-bar-wrap { margin: 6px 0; }
+.ch-vote-bar-item { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+.ch-vote-bar-item .ch-vbi-label { font-size: 13px; font-weight: 600; min-width: 80px; }
+.ch-vote-bar-item .ch-vbi-track {
+  flex: 1;
+  height: 22px;
+  background: #f3ede4;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+.ch-vote-bar-item .ch-vbi-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  min-width: 30px;
+}
+.ch-vote-bar-item .ch-vbi-fill.brand-fill { background: linear-gradient(90deg, var(--brand), #d96a4e); }
+.ch-vote-bar-item .ch-vbi-fill.leaf-fill { background: linear-gradient(90deg, var(--leaf), #5a9e78); }
+.ch-vote-bar-item .ch-vbi-fill.gold-fill { background: linear-gradient(90deg, var(--gold), #daa142); }
+.ch-vote-bar-item .ch-vbi-fill.sky-fill { background: linear-gradient(90deg, var(--sky), #4e86ab); }
+.ch-vote-bar-item .ch-vbi-fill.plum-fill { background: linear-gradient(90deg, var(--plum), #8b5f9e); }
+.ch-vote-bar-item .ch-vbi-fill.copper-fill { background: linear-gradient(90deg, #b87333, #d4945a); }
+.ch-vote-bar-item .ch-vbi-pct { font-size: 12px; font-weight: 700; min-width: 32px; text-align: right; }
+
+/* ---------- 挑战卡片 ---------- */
+.ch-challenge-card {
+  padding: 16px 18px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
+}
+.ch-challenge-card:hover { transform: translateY(-2px); box-shadow: var(--ch-shadow); }
+.ch-challenge-card.selected {
+  border-color: var(--gold);
+  background: var(--gold-soft);
+  box-shadow: 0 0 0 3px rgba(201,138,43,.08);
+}
+.ch-challenge-card .ch-cc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.ch-challenge-card .ch-cc-title { font-size: 15px; font-weight: 700; }
+.ch-challenge-card .ch-cc-desc { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+.ch-challenge-card .ch-cc-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+.ch-challenge-card .ch-cc-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold);
+}
+.ch-challenge-card .ch-cc-stars {
+  display: inline-flex;
+  gap: 2px;
+  font-size: 14px;
+  color: var(--gold);
+}
+.ch-challenge-card .ch-cc-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: transparent;
+  transition: all .2s;
+}
+.ch-challenge-card.selected .ch-cc-check {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+/* ---------- 兑换卡片 ---------- */
+.ch-redeem-card {
+  padding: 14px 16px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all .2s;
+  position: relative;
+}
+.ch-redeem-card:hover { transform: translateY(-2px); box-shadow: var(--ch-shadow); }
+.ch-redeem-card.selected {
+  border-color: var(--plum);
+  background: var(--plum-soft);
+  box-shadow: 0 0 0 3px rgba(107,74,122,.08);
+}
+.ch-redeem-card .ch-rc-icon { font-size: 24px; margin-bottom: 6px; }
+.ch-redeem-card .ch-rc-name { font-size: 14px; font-weight: 700; }
+.ch-redeem-card .ch-rc-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--plum);
+  margin-top: 4px;
+}
+.ch-redeem-card .ch-rc-desc { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+.ch-redeem-card .ch-rc-check {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: transparent;
+  transition: all .2s;
+}
+.ch-redeem-card.selected .ch-rc-check {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: #fff;
+}
+
+/* ---------- 搭档卡片 ---------- */
+.ch-partner-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: all .18s;
+}
+.ch-partner-card:hover { transform: translateY(-1px); box-shadow: var(--ch-shadow); }
+.ch-partner-card .ch-pc-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  flex: 0 0 auto;
+}
+.ch-partner-card .ch-pc-body { flex: 1; }
+.ch-partner-card .ch-pc-name { font-size: 14px; font-weight: 700; }
+.ch-partner-card .ch-pc-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
+.ch-partner-card .ch-pc-tag {
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-weight: 600;
+}
+.ch-partner-card .ch-pc-match {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--leaf);
+  flex: 0 0 auto;
+}
+.ch-partner-card .ch-pc-btn {
+  padding: 5px 10px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--sky);
+  color: #fff;
+  transition: all .15s;
+  flex: 0 0 auto;
+}
+.ch-partner-card .ch-pc-btn:hover { background: #2c536e; }
+.ch-partner-card .ch-pc-btn.sent { background: var(--leaf-soft); color: var(--leaf); cursor: default; }
+
+/* ---------- 反馈复选框 ---------- */
+.ch-feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+  margin: 8px 0 14px;
+}
+.ch-feedback-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.ch-feedback-item:hover { border-color: #d0c8b8; background: #faf8f4; }
+.ch-feedback-item.selected {
+  border-color: var(--sky);
+  background: var(--sky-soft);
+  box-shadow: 0 0 0 3px rgba(59,107,140,.08);
+}
+.ch-feedback-item .ch-fi-icon { font-size: 16px; flex: 0 0 auto; }
+.ch-feedback-item .ch-fi-label { font-size: 13px; font-weight: 600; flex: 1; }
+.ch-feedback-item .ch-fi-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  color: transparent;
+  transition: all .2s;
+  flex: 0 0 auto;
+}
+.ch-feedback-item.selected .ch-fi-check {
+  background: var(--sky);
+  border-color: var(--sky);
+  color: #fff;
+}
+
+/* ---------- 输入框 ---------- */
+.ch-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--paper);
+  outline: none;
+  transition: border-color .2s;
+  margin-top: 8px;
+}
+.ch-input:focus { border-color: var(--brand); }
+
+/* ---------- 计数徽章 ---------- */
+.ch-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ink);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-left: 8px;
+}
+
+/* ---------- 弹窗（模态框） ---------- */
+.ch-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(43,38,34,.55);
+  z-index: 1000;
+  display: none;
+  place-items: center;
+  animation: chFadeIn .2s ease;
+  backdrop-filter: blur(2px);
+}
+.ch-modal-overlay.show { display: grid; }
+.ch-modal {
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 28px 26px;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(43,38,34,.2);
+  animation: chBounceIn .35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+.ch-modal.ch-modal-lg { max-width: 600px; }
+.ch-modal .ch-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #f3ede4;
+  cursor: pointer;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+  transition: all .15s;
+  color: var(--ink-soft);
+}
+.ch-modal .ch-modal-close:hover { background: var(--brand-soft); color: var(--brand); }
+.ch-modal .ch-modal-icon {
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.ch-modal h3 {
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
+  margin: 0 0 8px;
+}
+.ch-modal .ch-modal-body {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.ch-modal .ch-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ---------- Toast ---------- */
+.ch-toast-container {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.ch-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(43,38,34,.15);
+  animation: chSlideInRight .3s ease both;
+  max-width: 360px;
+}
+.ch-toast.ch-toast-success { background: var(--leaf); }
+.ch-toast.ch-toast-warning { background: var(--gold); }
+.ch-toast.ch-toast-error { background: var(--brand); }
+.ch-toast .ch-toast-icon { font-size: 18px; flex: 0 0 auto; }
+
+/* ---------- 分隔线 ---------- */
+.ch-divider {
+  border: none;
+  border-top: 2px dashed var(--line);
+  margin: 40px 0;
+}
+
+/* ---------- 进度指示器 ---------- */
+.ch-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 8px;
+}
+.ch-progress .ch-prog-step {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  transition: background .3s;
+}
+.ch-progress .ch-prog-step.done { background: var(--brand); }
+.ch-progress .ch-prog-step.active { background: var(--brand); animation: chPulse 1.5s ease infinite; }
+
+/* ---------- 余额显示 ---------- */
+.ch-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--plum-soft), #f0e6f3);
+  border: 1px solid #d9c4e0;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--plum);
+  margin-bottom: 14px;
+}
+.ch-balance .ch-balance-num { font-size: 20px; }
+
+/* ---------- 投票人数 ---------- */
+.ch-vote-count {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  text-align: center;
+  margin-top: 10px;
+  animation: chCountUp .5s ease both;
+}
+
+/* ---------- 挑战进度条 ---------- */
+.ch-progress-track {
+  height: 8px;
+  background: #f3ede4;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+.ch-progress-track .ch-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  background: linear-gradient(90deg, var(--gold), #daa142);
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 760px) {
+  .ch-module { padding: 20px 16px 24px; }
+  .ch-options { grid-template-columns: 1fr; }
+  .ch-feedback-grid { grid-template-columns: 1fr; }
+  .ch-modal { padding: 22px 18px; }
+  .ch-toast-container { right: 10px; left: 10px; }
+  .ch-toast { max-width: 100%; }
+  .ch-redeem-card .ch-rc-check { top: 6px; right: 6px; }
+  .ch-challenge-card .ch-cc-check { top: 8px; right: 8px; }
+  .ch-partner-card { flex-wrap: wrap; }
+  .ch-task-card { flex-wrap: wrap; }
+  .ch-vote-bar-item { flex-wrap: wrap; }
+  .ch-vote-bar-item .ch-vbi-label { min-width: 60px; }
+}
+
+/* ---------- 标签/徽章组件 ---------- */
+.ch-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.ch-tag-brand { background: var(--brand-soft); color: var(--brand-deep); }
+.ch-tag-leaf { background: var(--leaf-soft); color: #2c5a3f; }
+.ch-tag-gold { background: var(--gold-soft); color: #7a5a1a; }
+.ch-tag-sky { background: var(--sky-soft); color: #2c536e; }
+.ch-tag-plum { background: var(--plum-soft); color: #4a3357; }
+.ch-tag-copper { background: #f5e6d6; color: #8b5a2e; }
+
+/* ---------- 统计数字卡片 ---------- */
+.ch-stat-card {
+  text-align: center;
+  padding: 14px 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: all .2s;
+}
+.ch-stat-card:hover { transform: translateY(-2px); box-shadow: var(--ch-shadow); }
+.ch-stat-card .ch-stat-icon { font-size: 26px; margin-bottom: 4px; }
+.ch-stat-card .ch-stat-value {
+  font-size: clamp(20px, 2.8vw, 28px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+}
+.ch-stat-card .ch-stat-label { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
+.ch-stat-card .ch-stat-value.brand { color: var(--brand); }
+.ch-stat-card .ch-stat-value.leaf { color: var(--leaf); }
+.ch-stat-card .ch-stat-value.gold { color: var(--gold); }
+.ch-stat-card .ch-stat-value.sky { color: var(--sky); }
+.ch-stat-card .ch-stat-value.plum { color: var(--plum); }
+
+/* ---------- 加载骨架屏 ---------- */
+.ch-skeleton {
+  background: linear-gradient(90deg, #f3ede4 25%, #fbf7ef 50%, #f3ede4 75%);
+  background-size: 200% 100%;
+  animation: chShimmer 1.5s infinite;
+  border-radius: 6px;
+}
+.ch-skeleton-line { height: 12px; margin-bottom: 8px; width: 100%; }
+.ch-skeleton-line.w60 { width: 60%; }
+.ch-skeleton-line.w40 { width: 40%; }
+.ch-skeleton-block { height: 60px; border-radius: 8px; margin-bottom: 8px; }
+
+/* ---------- 空状态 ---------- */
+.ch-empty {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--ink-faint);
+}
+.ch-empty .ch-empty-icon { font-size: 40px; margin-bottom: 8px; }
+.ch-empty .ch-empty-text { font-size: 14px; }
+
+/* ---------- 顶部提示条 ---------- */
+.ch-notice-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 8px 0;
+}
+.ch-notice-bar.info { background: var(--sky-soft); color: var(--sky); }
+.ch-notice-bar.warning { background: var(--gold-soft); color: #7a5a1a; }
+.ch-notice-bar.success { background: var(--leaf-soft); color: var(--leaf); }
+.ch-notice-bar.error { background: var(--brand-soft); color: var(--brand-deep); }
+
+/* ---------- 分割标题 ---------- */
+.ch-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 16px 0 10px;
+}
+.ch-section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ---------- 工具提示 ---------- */
+.ch-tooltip {
+  position: relative;
+  display: inline-flex;
+  cursor: help;
+}
+.ch-tooltip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .2s;
+}
+.ch-tooltip:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* ---------- 评分星星 ---------- */
+.ch-stars {
+  display: inline-flex;
+  gap: 2px;
+  font-size: 14px;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+/* ---------- 数字跳动动画 ---------- */
+.ch-number-animate {
+  display: inline-block;
+  animation: chNumberTicker 0.4s ease both;
+}
+
+/* ---------- 选中高亮脉冲 ---------- */
+.ch-pulse-highlight {
+  animation: chGlow 1.5s ease-in-out 2;
+}
+
+/* ---------- 展开/折叠 ---------- */
+.ch-collapse {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.ch-collapse.collapsed {
+  max-height: 0 !important;
+}
+
+/* ---------- 装饰性角标 ---------- */
+.ch-corner-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--brand);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 0 14px 0 10px;
+  line-height: 1.4;
+}
+.ch-corner-badge.leaf { background: var(--leaf); }
+.ch-corner-badge.gold { background: var(--gold); }
+.ch-corner-badge.sky { background: var(--sky); }
+.ch-corner-badge.plum { background: var(--plum); }
+
+/* ---------- 步骤状态指示器 ---------- */
+.ch-step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 12px 0;
+}
+.ch-step-indicator .ch-si-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-faint);
+  position: relative;
+}
+.ch-step-indicator .ch-si-item::before {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  margin: 0 8px;
+}
+.ch-step-indicator .ch-si-item:first-child::before { display: none; }
+.ch-step-indicator .ch-si-item.active { color: var(--brand); font-weight: 700; }
+.ch-step-indicator .ch-si-item.active::before { background: var(--brand); }
+.ch-step-indicator .ch-si-item.done { color: var(--leaf); }
+.ch-step-indicator .ch-si-item.done::before { background: var(--leaf); }
+.ch-step-indicator .ch-si-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+.ch-step-indicator .ch-si-item.active .ch-si-num { border-color: var(--brand); background: var(--brand); color: #fff; }
+.ch-step-indicator .ch-si-item.done .ch-si-num { border-color: var(--leaf); background: var(--leaf); color: #fff; }
+
+/* ---------- 额外辅助 ---------- */
+.ch-mt-4 { margin-top: 4px; }
+.ch-mt-8 { margin-top: 8px; }
+.ch-mt-12 { margin-top: 12px; }
+.ch-mt-16 { margin-top: 16px; }
+.ch-mt-20 { margin-top: 20px; }
+.ch-mt-24 { margin-top: 24px; }
+.ch-mb-4 { margin-bottom: 4px; }
+.ch-mb-8 { margin-bottom: 8px; }
+.ch-mb-12 { margin-bottom: 12px; }
+.ch-mb-16 { margin-bottom: 16px; }
+.ch-ml-4 { margin-left: 4px; }
+.ch-ml-8 { margin-left: 8px; }
+.ch-mr-4 { margin-right: 4px; }
+.ch-mr-8 { margin-right: 8px; }
+.ch-p-8 { padding: 8px; }
+.ch-p-12 { padding: 12px; }
+.ch-p-16 { padding: 16px; }
+.ch-flex-center { display: flex; justify-content: center; align-items: center; }
+.ch-flex-between { display: flex; justify-content: space-between; align-items: center; }
+.ch-flex-wrap { display: flex; flex-wrap: wrap; }
+.ch-flex-col { display: flex; flex-direction: column; }
+.ch-text-center { text-align: center; }
+.ch-text-left { text-align: left; }
+.ch-text-right { text-align: right; }
+.ch-gap-4 { gap: 4px; }
+.ch-gap-8 { gap: 8px; }
+.ch-gap-12 { gap: 12px; }
+.ch-gap-16 { gap: 16px; }
+.ch-w-full { width: 100%; }
+.ch-font-bold { font-weight: 700; }
+.ch-font-mono { font-family: "SF Mono",ui-monospace,Menlo,monospace; }
+.ch-text-sm { font-size: 12px; }
+.ch-text-xs { font-size: 11px; }
+.ch-text-lg { font-size: 18px; }
+.ch-inline-flex { display: inline-flex; align-items: center; gap: 6px; }
+.ch-rounded { border-radius: 8px; }
+.ch-rounded-full { border-radius: 999px; }
+.ch-hidden { display: none; }
+.ch-relative { position: relative; }
+.ch-overflow-hidden { overflow: hidden; }
+.ch-animate-float { animation: chFloat 3s ease-in-out infinite; }
+.ch-animate-pulse { animation: chPulse 2s ease-in-out infinite; }
+.ch-animate-shimmer { background: linear-gradient(90deg, #f3ede4 25%, #fbf7ef 50%, #f3ede4 75%); background-size: 200% 100%; animation: chShimmer 2s infinite; }
+.ch-animate-bounce-in { animation: chBounceIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.ch-animate-slide-up { animation: chSlideUp 0.4s ease both; }
+.ch-animate-zoom-in { animation: chZoomIn 0.3s ease both; }
+.ch-animate-shake { animation: chShake 0.5s ease both; }
+.ch-animate-wiggle { animation: chWiggle 0.6s ease both; }
+.ch-animate-swing { animation: chSwing 0.8s ease both; }
+.ch-animate-tada { animation: chTada 0.8s ease both; }
+.ch-animate-flip-in { animation: chFlipIn 0.5s ease both; }
+.ch-animate-drop-in { animation: chDropIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.ch-animate-stamp { animation: chStamp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.ch-animate-jump { animation: chJump 0.6s ease both; }
+.ch-animate-sweep { position: relative; overflow: hidden; }
+.ch-animate-sweep::after { content: ""; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent); animation: chSweep 1.5s ease infinite; }
+</style>
+</head>
+<body class="ch-choose-page">
+
+<!-- 顶部装饰条 -->
+<div style="height:4px;background:linear-gradient(90deg,var(--brand),var(--gold),var(--leaf),var(--sky),var(--plum));"></div>
+
+<!-- ============================================================
+     顶部导航栏
+     ============================================================ -->
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo">好事近 <span>·</span> 全案</a>
+    <nav>
+      <a href="../index.html">平台首页</a>
+      <a href="project.html">项目总览</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="simulator.html">模拟器</a>
+      <a href="choose.html" class="active">选择器</a>
+      <a href="cases.html">案例库</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<!-- 页面顶部提示横幅 -->
+<div style="background:linear-gradient(90deg,var(--brand-soft),var(--gold-soft),var(--leaf-soft));padding:6px 0;text-align:center;font-size:12px;color:var(--ink-soft);border-bottom:1px solid var(--line);">
+  <span class="ch-inline-flex ch-gap-4" style="justify-content:center;">
+    <span>💡</span>
+    <span>欢迎来到好事选择器 · 互动广场 — 6大模块，30+交互选项，一键发送你的选择</span>
+  </span>
+</div>
+
+<!-- ============================================================
+     页面头部
+     ============================================================ -->
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb">
+      <a href="../index.html">首页</a>
+      <span class="sep">/</span>
+      <span>好事选择器</span>
+    </div>
+    <div class="eyebrow"><span class="dot"></span> 互动广场</div>
+    <h1>好事选择器 · 互动广场</h1>
+    <p class="sub">每个模块中，选择你的偏好，一键发送你的选择。所有选项基于"好事近"项目调研框架设计。</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
+      <span class="chip"><b>6</b> 个互动模块</span>
+      <span class="chip"><b>30+</b> 可交互选项</span>
+      <span class="chip"><b>6</b> 种弹窗类型</span>
+      <span class="chip"><b>∞</b> 种好事组合</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     主内容
+     ============================================================ -->
+<div class="wrap">
+
+  <!-- 模块快速导航 -->
+  <div class="ch-module" style="padding:16px 20px;margin-bottom:20px;background:#f9f5ed;border-style:dashed;">
+    <div style="font-size:13px;font-weight:600;color:var(--ink-soft);margin-bottom:10px;text-align:center;">📌 快速跳转至模块</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+      <a href="#scene-matcher" style="padding:6px 14px;border-radius:999px;background:var(--brand-soft);color:var(--brand-deep);text-decoration:none;font-size:13px;font-weight:600;transition:all .15s;white-space:nowrap;" onmouseover="this.style.background='var(--brand)'" onmouseout="this.style.background='var(--brand-soft)'" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--brand-deep)'">📍 场景匹配</a>
+      <a href="#community-vote" style="padding:6px 14px;border-radius:999px;background:var(--leaf-soft);color:var(--leaf);text-decoration:none;font-size:13px;font-weight:600;transition:all .15s;white-space:nowrap;" onmouseover="this.style.background='var(--leaf)'" onmouseout="this.style.background='var(--leaf-soft)'" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--leaf)'">🗳️ 社区投票</a>
+      <a href="#weekly-challenge" style="padding:6px 14px;border-radius:999px;background:var(--gold-soft);color:#b07a1f;text-decoration:none;font-size:13px;font-weight:600;transition:all .15s;white-space:nowrap;" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--gold-soft)'" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#b07a1f'">🏆 挑战赛</a>
+      <a href="#points-plan" style="padding:6px 14px;border-radius:999px;background:var(--plum-soft);color:var(--plum);text-decoration:none;font-size:13px;font-weight:600;transition:all .15s;white-space:nowrap;" onmouseover="this.style.background='var(--plum)'" onmouseout="this.style.background='var(--plum-soft)'" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--plum)'">💎 好心值</a>
+      <a href="#partner-match" style="padding:6px 14px;border-radius:999px;background:var(--sky-soft);color:var(--sky);text-decoration:none;font-size:13px;font-weight:600;transition:all .15s;white-space:nowrap;" onmouseover="this.style.background='var(--sky)'" onmouseout="this.style.background='var(--sky-soft)'" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--sky)'">🤝 搭档匹配</a>
+      <a href="#community-feedback" style="padding:6px 14px;border-radius:999px;background:#f5e6d6;color:#8b5a2e;text-decoration:none;font-size:13px;font-weight:600;transition:all .15s;white-space:nowrap;" onmouseover="this.style.background='#b87333'" onmouseout="this.style.background='#f5e6d6'" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#8b5a2e'">📝 问题反馈</a>
+    </div>
+    <div style="margin-top:10px;text-align:center;font-size:11.5px;color:var(--ink-faint);">
+      每个模块独立运作，选择偏好 → 一键发送 → 即时反馈
+    </div>
+  </div>
+
+  <!-- 平台统计概览 -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:20px 0 28px;">
+    <div class="ch-stat-card">
+      <div class="ch-stat-icon">💛</div>
+      <div class="ch-stat-value brand">2,580</div>
+      <div class="ch-stat-label">好心值余额</div>
+    </div>
+    <div class="ch-stat-card">
+      <div class="ch-stat-icon">📋</div>
+      <div class="ch-stat-value leaf">128</div>
+      <div class="ch-stat-label">今日好事</div>
+    </div>
+    <div class="ch-stat-card">
+      <div class="ch-stat-icon">👥</div>
+      <div class="ch-stat-value gold">3,642</div>
+      <div class="ch-stat-label">社区成员</div>
+    </div>
+    <div class="ch-stat-card">
+      <div class="ch-stat-icon">🏆</div>
+      <div class="ch-stat-value sky">47</div>
+      <div class="ch-stat-label">本周挑战者</div>
+    </div>
+    <div class="ch-stat-card">
+      <div class="ch-stat-icon">🤝</div>
+      <div class="ch-stat-value plum">89%</div>
+      <div class="ch-stat-label">匹配满意度</div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       模块1：好事场景匹配器
+       ========================================================== -->
+  <div class="ch-module brand" id="scene-matcher">
+    <div class="ch-module-header">
+      <div class="ch-module-icon">📍</div>
+      <div>
+        <h2 class="ch-module-title">好事场景匹配器</h2>
+        <p class="ch-module-desc">告诉我你在哪、有多少时间，AI 帮你匹配合适的好事</p>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="ch-tag ch-tag-brand">步骤1：选择场景</span>
+          <span class="ch-tag ch-tag-brand">步骤2：选择时长</span>
+          <span class="ch-tag ch-tag-brand">步骤3：一键匹配</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤1 -->
+    <div class="ch-step-label"><span class="ch-step-num">1</span> 选择场景</div>
+    <div class="ch-options" id="scene-options">
+      <div class="ch-option" data-value="commute">
+        <span class="ch-opt-icon">🚇</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">通勤路上</div>
+          <div class="ch-opt-desc">地铁/公交里，有15-30分钟</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="lunch">
+        <span class="ch-opt-icon">☕</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">午休空隙</div>
+          <div class="ch-opt-desc">午饭后的10-20分钟空闲</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="stroll">
+        <span class="ch-opt-icon">👶</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">遛娃散步</div>
+          <div class="ch-opt-desc">带娃在小区/公园</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="queue">
+        <span class="ch-opt-icon">⏳</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">排队等候</div>
+          <div class="ch-opt-desc">等电梯/排队/等外卖</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="fitness">
+        <span class="ch-opt-icon">🏃</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">运动健身</div>
+          <div class="ch-opt-desc">跑步/健身途中</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="home">
+        <span class="ch-opt-icon">🏠</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">居家空闲</div>
+          <div class="ch-opt-desc">在家休息的碎片时间</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+    </div>
+
+    <!-- 步骤2 -->
+    <div class="ch-step-label"><span class="ch-step-num">2</span> 选择可用时长</div>
+    <div class="ch-options" id="duration-options">
+      <div class="ch-option" data-value="5">
+        <span class="ch-opt-icon">⏱️</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">5分钟</div>
+          <div class="ch-opt-desc">顺手就做</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="10">
+        <span class="ch-opt-icon">⏱️</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">10分钟</div>
+          <div class="ch-opt-desc">快速搞定</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="15">
+        <span class="ch-opt-icon">⏱️</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">15分钟</div>
+          <div class="ch-opt-desc">一个碎片</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="20">
+        <span class="ch-opt-icon">⏱️</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">20分钟</div>
+          <div class="ch-opt-desc">稍微充裕</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="30">
+        <span class="ch-opt-icon">⏱️</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">30分钟</div>
+          <div class="ch-opt-desc">认真做件好事</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+    </div>
+
+    <!-- 进度指示器 -->
+    <div class="ch-progress" id="scene-progress">
+      <span class="ch-prog-step" data-step="1"></span>
+      <span class="ch-prog-step" data-step="2"></span>
+      <span class="ch-prog-step" data-step="3"></span>
+    </div>
+
+    <!-- 按钮 -->
+    <div class="ch-flex-center ch-mt-12">
+      <button class="ch-btn ch-btn-primary" id="btn-match" disabled onclick="matchScene()">
+        <span class="ch-btn-spinner"></span>
+        <span class="ch-btn-label">🎯 一键匹配好事</span>
+      </button>
+    </div>
+
+    <!-- 结果 -->
+    <div class="ch-result" id="scene-result" style="display:none;">
+      <div class="ch-result-title">📋 为你推荐以下好事</div>
+      <div id="scene-tasks"></div>
+      <div style="margin-top:12px;padding:10px 14px;background:var(--brand-soft);border-radius:8px;font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-size:16px;">💡</span>
+        <span>以上任务基于你的场景和时长智能推荐，点击"一键领取"即可加入我的好事清单</span>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="ch-tag ch-tag-brand">📋 推荐基于场景分析</span>
+        <span class="ch-tag ch-tag-leaf">⏱️ 已考虑时长限制</span>
+        <span class="ch-tag ch-tag-sky">📍 距离优先</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       分隔线
+       ========================================================== -->
+  <hr class="ch-divider" />
+
+  <!-- ==========================================================
+       模块2：社区好事共创投票
+       ========================================================== -->
+  <div class="ch-module leaf" id="community-vote">
+    <div class="ch-module-header">
+      <div class="ch-module-icon">🗳️</div>
+      <div>
+        <h2 class="ch-module-title">社区好事共创投票</h2>
+        <p class="ch-module-desc">你希望社区优先增加什么服务？最多选3项</p>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="ch-tag ch-tag-leaf">多选</span>
+          <span class="ch-tag ch-tag-leaf">最多3项</span>
+          <span class="ch-tag ch-tag-leaf">一键提交</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ch-options" id="vote-options">
+      <div class="ch-option" data-value="elderly">
+        <span class="ch-opt-icon">👴</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">老年人陪伴服务</div>
+          <div class="ch-opt-desc">定期陪独居老人聊天、散步</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="childcare">
+        <span class="ch-opt-icon">📚</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">儿童课后托管</div>
+          <div class="ch-opt-desc">社区互助式儿童看护</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="garden">
+        <span class="ch-opt-icon">🌿</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">社区花园维护</div>
+          <div class="ch-opt-desc">共同维护社区绿化</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="pets">
+        <span class="ch-opt-icon">🐕</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">宠物互助圈</div>
+          <div class="ch-opt-desc">遛狗/宠物临时照看</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="recycle">
+        <span class="ch-opt-icon">♻️</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">环保回收站</div>
+          <div class="ch-opt-desc">垃圾分类/旧物回收</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="digital">
+        <span class="ch-opt-icon">📱</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">数字助老课堂</div>
+          <div class="ch-opt-desc">教老人用智能手机</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+    </div>
+
+    <div class="ch-flex-center" style="justify-content:space-between;align-items:center;">
+      <span style="font-size:13px;color:var(--ink-faint);">已选：<strong id="vote-count" style="color:var(--leaf);">0</strong> / 3</span>
+      <button class="ch-btn ch-btn-leaf" id="btn-vote" disabled onclick="submitVote()">
+        <span class="ch-btn-spinner"></span>
+        <span class="ch-btn-label">📤 一键提交投票</span>
+      </button>
+    </div>
+
+    <div class="ch-result" id="vote-result" style="display:none;">
+      <div class="ch-result-title">📊 投票结果</div>
+      <div id="vote-bars"></div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+        <span class="ch-tag ch-tag-leaf">✅ 投票已记录</span>
+        <span class="ch-tag ch-tag-brand">📊 实时更新中</span>
+        <span class="ch-tag ch-tag-gold">🏆 感谢参与</span>
+      </div>
+      <div class="ch-vote-count" id="vote-count-display">已有 0 位邻居参与投票</div>
+      <div style="margin-top:8px;text-align:center;font-size:12px;color:var(--ink-faint);">
+        💡 投票结果实时更新，每次提交后数据会动态变化
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       分隔线
+       ========================================================== -->
+  <hr class="ch-divider" />
+
+  <!-- ==========================================================
+       模块3：本周好事挑战赛
+       ========================================================== -->
+  <div class="ch-module gold" id="weekly-challenge">
+    <div class="ch-module-header">
+      <div class="ch-module-icon">🏆</div>
+      <div>
+        <h2 class="ch-module-title">本周好事挑战赛</h2>
+        <p class="ch-module-desc">本周好事挑战，你敢接吗？选择一个挑战，一键参加</p>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="ch-tag ch-tag-gold">单选</span>
+          <span class="ch-tag ch-tag-gold">难度分级</span>
+          <span class="ch-tag ch-tag-gold">进度跟踪</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="challenge-list">
+      <div class="ch-challenge-card" data-value="challenge1" onclick="selectChallenge(this)">
+        <span class="ch-cc-check">✓</span>
+        <div class="ch-cc-header">
+          <div class="ch-cc-title">🌟 连续3天做好事</div>
+          <div class="ch-cc-stars">★★☆☆☆</div>
+        </div>
+        <div class="ch-cc-desc">每天完成1件好事，坚持3天</div>
+        <div class="ch-cc-footer">
+          <span class="ch-cc-reward">💛 奖励+50</span>
+        </div>
+      </div>
+      <div class="ch-challenge-card" data-value="challenge2" onclick="selectChallenge(this)">
+        <span class="ch-cc-check">✓</span>
+        <div class="ch-cc-header">
+          <div class="ch-cc-title">🌟 帮助5位邻居</div>
+          <div class="ch-cc-stars">★★★☆☆</div>
+        </div>
+        <div class="ch-cc-desc">本周帮助至少5位不同的邻居</div>
+        <div class="ch-cc-footer">
+          <span class="ch-cc-reward">💛 奖励+80</span>
+        </div>
+      </div>
+      <div class="ch-challenge-card" data-value="challenge3" onclick="selectChallenge(this)">
+        <span class="ch-cc-check">✓</span>
+        <div class="ch-cc-header">
+          <div class="ch-cc-title">🌟 参与社区活动</div>
+          <div class="ch-cc-stars">★★★☆☆</div>
+        </div>
+        <div class="ch-cc-desc">参加1次社区集体活动</div>
+        <div class="ch-cc-footer">
+          <span class="ch-cc-reward">💛 奖励+60</span>
+        </div>
+      </div>
+      <div class="ch-challenge-card" data-value="challenge4" onclick="selectChallenge(this)">
+        <span class="ch-cc-check">✓</span>
+        <div class="ch-cc-header">
+          <div class="ch-cc-title">🌟 邀请3位朋友</div>
+          <div class="ch-cc-stars">★★★★☆</div>
+        </div>
+        <div class="ch-cc-desc">邀请3位朋友注册好事近</div>
+        <div class="ch-cc-footer">
+          <span class="ch-cc-reward">💛 奖励+100</span>
+        </div>
+      </div>
+      <div class="ch-challenge-card" data-value="challenge5" onclick="selectChallenge(this)">
+        <span class="ch-cc-check">✓</span>
+        <div class="ch-cc-header">
+          <div class="ch-cc-title">🌟 完成10件好事</div>
+          <div class="ch-cc-stars">★★★★★</div>
+        </div>
+        <div class="ch-cc-desc">本周累计完成10件好事</div>
+        <div class="ch-cc-footer">
+          <span class="ch-cc-reward">💛 奖励+150</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ch-flex-center ch-mt-12">
+      <button class="ch-btn ch-btn-gold" id="btn-challenge" disabled onclick="joinChallenge()">
+        <span class="btn-challenge-spinner" style="display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:chSpin .6s linear infinite;"></span>
+        <span class="btn-challenge-label">🔥 一键参加挑战</span>
+      </button>
+    </div>
+    <div class="ch-vote-count ch-mt-8" id="challenge-count-display">已有 0 位邻居参加了本周挑战</div>
+    <div style="margin-top:14px;padding:12px 16px;background:var(--gold-soft);border-radius:10px;border:1px solid #e8d4a8;font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span style="font-size:20px;">💡</span>
+      <span>提示：挑战完成后好心值自动发放，可在"好心值使用计划"模块查看余额变化</span>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+      <span class="ch-tag ch-tag-gold">🔥 已参加挑战</span>
+      <span class="ch-tag ch-tag-brand">📊 实时进度跟踪</span>
+      <span class="ch-tag ch-tag-leaf">💛 完成即发放奖励</span>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       分隔线
+       ========================================================== -->
+  <hr class="ch-divider" />
+
+  <!-- ==========================================================
+       模块4：好心值使用计划
+       ========================================================== -->
+  <div class="ch-module plum" id="points-plan">
+    <div class="ch-module-header">
+      <div class="ch-module-icon">💎</div>
+      <div>
+        <h2 class="ch-module-title">好心值使用计划</h2>
+        <p class="ch-module-desc">你的好心值想怎么用？选择一个兑换方案</p>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="ch-tag ch-tag-plum">单选</span>
+          <span class="ch-tag ch-tag-plum">查看余额</span>
+          <span class="ch-tag ch-tag-plum">一键规划</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ch-balance">💛 好心值余额：<span class="ch-balance-num" id="points-balance">2,580</span></div>
+
+    <div class="ch-options" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));" id="redeem-options">
+      <div class="ch-redeem-card" data-value="badge" onclick="selectRedeem(this)">
+        <span class="ch-rc-check">✓</span>
+        <div class="ch-rc-icon">🏅</div>
+        <div class="ch-rc-name">社区荣誉徽章</div>
+        <div class="ch-rc-price">💛 200</div>
+        <div class="ch-rc-desc">线上荣誉展示</div>
+      </div>
+      <div class="ch-redeem-card" data-value="coffee" onclick="selectRedeem(this)">
+        <span class="ch-rc-check">✓</span>
+        <div class="ch-rc-icon">☕</div>
+        <div class="ch-rc-name">咖啡折扣券</div>
+        <div class="ch-rc-price">💛 150</div>
+        <div class="ch-rc-desc">合作咖啡店8折</div>
+      </div>
+      <div class="ch-redeem-card" data-value="skill" onclick="selectRedeem(this)">
+        <span class="ch-rc-check">✓</span>
+        <div class="ch-rc-icon">🔁</div>
+        <div class="ch-rc-name">技能交换课时</div>
+        <div class="ch-rc-price">💛 60</div>
+        <div class="ch-rc-desc">1小时技能教学</div>
+      </div>
+      <div class="ch-redeem-card" data-value="certificate" onclick="selectRedeem(this)">
+        <span class="ch-rc-check">✓</span>
+        <div class="ch-rc-icon">📜</div>
+        <div class="ch-rc-name">社区之星证书</div>
+        <div class="ch-rc-price">💛 500</div>
+        <div class="ch-rc-desc">电子证书可打印</div>
+      </div>
+      <div class="ch-redeem-card" data-value="store" onclick="selectRedeem(this)">
+        <span class="ch-rc-check">✓</span>
+        <div class="ch-rc-icon">🏪</div>
+        <div class="ch-rc-name">便利店折扣</div>
+        <div class="ch-rc-price">💛 100</div>
+        <div class="ch-rc-desc">全场9折</div>
+      </div>
+      <div class="ch-redeem-card" data-value="savings" onclick="selectRedeem(this)">
+        <span class="ch-rc-check">✓</span>
+        <div class="ch-rc-icon">🏦</div>
+        <div class="ch-rc-name">存入好心值生息</div>
+        <div class="ch-rc-price">💛 0</div>
+        <div class="ch-rc-desc">锁定30天，年化5%</div>
+      </div>
+    </div>
+
+    <div class="ch-flex-center ch-mt-12">
+      <button class="ch-btn ch-btn-plum" id="btn-redeem" disabled onclick="confirmRedeem()">
+        <span class="btn-redeem-spinner" style="display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:chSpin .6s linear infinite;"></span>
+        <span class="btn-redeem-label">📋 一键规划</span>
+      </button>
+    </div>
+    <div style="margin-top:14px;padding:12px 16px;background:var(--plum-soft);border-radius:10px;border:1px solid #d9c4e0;font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span style="font-size:20px;">🏦</span>
+      <span>好心值可通过完成好事、参与挑战、邀请好友等方式获取。当前余额 <strong style="color:var(--plum);">2,580</strong></span>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       分隔线
+       ========================================================== -->
+  <hr class="ch-divider" />
+
+  <!-- ==========================================================
+       模块5：好事搭档匹配
+       ========================================================== -->
+  <div class="ch-module sky" id="partner-match">
+    <div class="ch-module-header">
+      <div class="ch-module-icon">🤝</div>
+      <div>
+        <h2 class="ch-module-title">好事搭档匹配</h2>
+        <p class="ch-module-desc">你想和谁一起做好事？选择搭档类型和好事类型</p>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="ch-tag ch-tag-sky">步骤1：选择搭档类型</span>
+          <span class="ch-tag ch-tag-sky">步骤2：选择好事类型</span>
+          <span class="ch-tag ch-tag-sky">步骤3：一键匹配</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 步骤1 -->
+    <div class="ch-step-label"><span class="ch-step-num">1</span> 选择搭档类型</div>
+    <div class="ch-options" id="partner-type-options">
+      <div class="ch-option" data-value="alone">
+        <span class="ch-opt-icon">🧑</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">自己一个人</div>
+          <div class="ch-opt-desc">独立行动，自由灵活</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="family">
+        <span class="ch-opt-icon">👨‍👩‍👧</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">带上家人</div>
+          <div class="ch-opt-desc">和家人一起做</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="friends">
+        <span class="ch-opt-icon">👫</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">叫上朋友</div>
+          <div class="ch-opt-desc">和朋友约好一起</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="neighbors">
+        <span class="ch-opt-icon">🏘️</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">和邻居一起</div>
+          <div class="ch-opt-desc">顺便认识同小区的人</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="org">
+        <span class="ch-opt-icon">🎯</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">跟社区组织</div>
+          <div class="ch-opt-desc">有组织有安排</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+    </div>
+
+    <!-- 步骤2 -->
+    <div class="ch-step-label"><span class="ch-step-num">2</span> 选择好事类型</div>
+    <div class="ch-options" id="partner-good-type-options">
+      <div class="ch-option" data-value="errand">
+        <span class="ch-opt-icon">📦</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">顺手帮邻里</div>
+          <div class="ch-opt-desc">取快递、搬东西</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="community">
+        <span class="ch-opt-icon">♻️</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">社区公共事务</div>
+          <div class="ch-opt-desc">巡逻、垃圾分类</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="tech">
+        <span class="ch-opt-icon">📱</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">技能助老</div>
+          <div class="ch-opt-desc">教老人用手机</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="accompany">
+        <span class="ch-opt-icon">👴</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">陪伴倾听</div>
+          <div class="ch-opt-desc">陪老人聊天散步</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+      <div class="ch-option" data-value="green">
+        <span class="ch-opt-icon">🌿</span>
+        <div class="ch-opt-body">
+          <div class="ch-opt-title">环保行动</div>
+          <div class="ch-opt-desc">社区花园维护</div>
+        </div>
+        <span class="ch-opt-check">✓</span>
+      </div>
+    </div>
+
+    <!-- 进度指示器 -->
+    <div class="ch-progress" id="partner-progress">
+      <span class="ch-prog-step" data-step="1"></span>
+      <span class="ch-prog-step" data-step="2"></span>
+      <span class="ch-prog-step" data-step="3"></span>
+    </div>
+
+    <!-- 按钮 -->
+    <div class="ch-flex-center ch-mt-12">
+      <button class="ch-btn ch-btn-sky" id="btn-partner" disabled onclick="matchPartner()">
+        <span class="btn-partner-spinner" style="display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:chSpin .6s linear infinite;"></span>
+        <span class="btn-partner-label">🔍 一键匹配搭档</span>
+      </button>
+    </div>
+
+    <!-- 结果 -->
+    <div class="ch-result" id="partner-result" style="display:none;">
+      <div class="ch-result-title">🤝 匹配结果</div>
+      <div id="partner-summary" style="font-size:14px;font-weight:600;margin-bottom:10px;"></div>
+      <div id="partner-cards"></div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+        <span class="ch-tag ch-tag-sky">💬 可发送好友申请</span>
+        <span class="ch-tag ch-tag-leaf">📊 匹配度基于兴趣</span>
+        <span class="ch-tag ch-tag-copper">👥 附近邻居</span>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:var(--sky-soft);border-radius:8px;font-size:12.5px;color:var(--ink-soft);display:flex;align-items:center;gap:8px;">
+        <span style="font-size:16px;">🔒</span>
+        <span>隐私保护：匹配信息仅双方可见，可随时取消配对</span>
+      </div>
+    </div>
+    <div style="margin-top:14px;padding:12px 16px;background:var(--sky-soft);border-radius:10px;border:1px solid #c4d8e6;font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span style="font-size:20px;">💡</span>
+      <span>选择搭档类型和好事类型后，系统将智能匹配附近志同道合的邻居</span>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       分隔线
+       ========================================================== -->
+  <hr class="ch-divider" />
+
+  <!-- ==========================================================
+       模块6：社区问题反馈
+       ========================================================== -->
+  <div class="ch-module copper" id="community-feedback">
+    <div class="ch-module-header">
+      <div class="ch-module-icon" style="font-size:22px;">📝</div>
+      <div>
+        <h2 class="ch-module-title">社区问题反馈</h2>
+        <p class="ch-module-desc">你发现社区有什么可以改善的？选择问题或自行填写</p>
+        <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="ch-tag" style="background:#f5e6d6;color:#8b5a2e;">多选</span>
+          <span class="ch-tag" style="background:#f5e6d6;color:#8b5a2e;">可自定义</span>
+          <span class="ch-tag" style="background:#f5e6d6;color:#8b5a2e;">提交有奖励</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ch-feedback-grid" id="feedback-options">
+      <div class="ch-feedback-item" data-value="trash" onclick="toggleFeedback(this)">
+        <span class="ch-fi-icon">🗑️</span>
+        <span class="ch-fi-label">垃圾投放点不够干净</span>
+        <span class="ch-fi-check">✓</span>
+      </div>
+      <div class="ch-feedback-item" data-value="greenery" onclick="toggleFeedback(this)">
+        <span class="ch-fi-icon">🌳</span>
+        <span class="ch-fi-label">社区绿化需要维护</span>
+        <span class="ch-fi-check">✓</span>
+      </div>
+      <div class="ch-feedback-item" data-value="parking" onclick="toggleFeedback(this)">
+        <span class="ch-fi-icon">🅿️</span>
+        <span class="ch-fi-label">停车位不足</span>
+        <span class="ch-fi-check">✓</span>
+      </div>
+      <div class="ch-feedback-item" data-value="lighting" onclick="toggleFeedback(this)">
+        <span class="ch-fi-icon">🔦</span>
+        <span class="ch-fi-label">夜间照明不够</span>
+        <span class="ch-fi-check">✓</span>
+      </div>
+      <div class="ch-feedback-item" data-value="bench" onclick="toggleFeedback(this)">
+        <span class="ch-fi-icon">🪑</span>
+        <span class="ch-fi-label">公共座椅太少</span>
+        <span class="ch-fi-check">✓</span>
+      </div>
+      <div class="ch-feedback-item" data-value="sidewalk" onclick="toggleFeedback(this)">
+        <span class="ch-fi-icon">🚶</span>
+        <span class="ch-fi-label">人行道破损</span>
+        <span class="ch-fi-check">✓</span>
+      </div>
+      <div class="ch-feedback-item" data-value="wifi" onclick="toggleFeedback(this)">
+        <span class="ch-fi-icon">📶</span>
+        <span class="ch-fi-label">公共WiFi信号差</span>
+        <span class="ch-fi-check">✓</span>
+      </div>
+      <div class="ch-feedback-item" data-value="sports" onclick="toggleFeedback(this)">
+        <span class="ch-fi-icon">🏀</span>
+        <span class="ch-fi-label">运动设施老旧</span>
+        <span class="ch-fi-check">✓</span>
+      </div>
+    </div>
+
+    <div style="font-size:13px;color:var(--ink-faint);margin:6px 0;">已选：<strong id="feedback-count" style="color:var(--brand);">0</strong> 项</div>
+
+    <div class="ch-input-wrap">
+      <input class="ch-input" id="feedback-other" type="text" placeholder="其他问题，请在此填写……" maxlength="200" />
+    </div>
+
+    <div class="ch-flex-center ch-mt-12">
+      <button class="ch-btn ch-btn-primary" id="btn-feedback" onclick="submitFeedback()">
+        <span class="btn-feedback-spinner" style="display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:chSpin .6s linear infinite;"></span>
+        <span class="btn-feedback-label">📤 一键提交反馈</span>
+      </button>
+    </div>
+    <div style="margin-top:14px;padding:12px 16px;background:#f5e6d6;border-radius:10px;border:1px solid #e0cdb8;font-size:13px;color:var(--ink-soft);display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span style="font-size:20px;">🙏</span>
+      <span>每提交一条有效反馈，可获得 <strong style="color:var(--brand);">+10</strong> 好心值奖励</span>
+    </div>
+  </div>
+
+</div><!-- /.wrap -->
+
+<!-- ============================================================
+     页脚
+     ============================================================ -->
+<footer>
+  <div class="wrap">
+    <div class="refs">
+      <h5>📋 好事选择器 · 操作说明</h5>
+      <ol>
+        <li><strong>好事场景匹配器</strong> — 选择场景和时长，AI 智能推荐适合你的好事任务</li>
+        <li><strong>社区好事共创投票</strong> — 选择你希望社区优先增加的服务，提交后查看实时投票结果</li>
+        <li><strong>本周好事挑战赛</strong> — 选择一个挑战目标，参加后自动跟踪进度</li>
+        <li><strong>好心值使用计划</strong> — 查看余额并选择兑换方案，一键规划你的好心值使用</li>
+        <li><strong>好事搭档匹配</strong> — 选择搭档类型和好事类型，匹配附近志同道合的邻居</li>
+        <li><strong>社区问题反馈</strong> — 选择或填写社区问题，提交后获得好心值奖励</li>
+      </ol>
+    </div>
+    <p>好事近 · 泛公益调研全案 &mdash; 让好事触手可及 <span class="heart">♥</span></p>
+    <p style="font-size:11px;margin-top:6px;color:var(--ink-faint);">所有数据均为模拟演示数据，仅供互动体验使用</p>
+    <div style="margin-top:10px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:11px;color:var(--ink-faint);">
+      <span>📍 好事场景匹配器</span>
+      <span>🗳️ 社区好事共创投票</span>
+      <span>🏆 本周好事挑战赛</span>
+      <span>💎 好心值使用计划</span>
+      <span>🤝 好事搭档匹配</span>
+      <span>📝 社区问题反馈</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     弹窗容器
+     ============================================================ -->
+
+<!-- 弹窗1：场景匹配结果领取 -->
+<div class="ch-modal-overlay" id="modal-claim">
+  <div class="ch-modal">
+    <button class="ch-modal-close" onclick="closeModal('modal-claim')">✕</button>
+    <div class="ch-modal-icon">🎉</div>
+    <h3>任务已领取！</h3>
+    <div class="ch-modal-body" id="modal-claim-body">你已成功领取任务，快去完成吧！</div>
+    <div class="ch-modal-actions">
+      <button class="ch-btn ch-btn-primary" onclick="closeModal('modal-claim')">知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗2：投票结果详情 -->
+<div class="ch-modal-overlay" id="modal-vote">
+  <div class="ch-modal ch-modal-lg">
+    <button class="ch-modal-close" onclick="closeModal('modal-vote')">✕</button>
+    <div class="ch-modal-icon">📊</div>
+    <h3>投票已提交</h3>
+    <div class="ch-modal-body">感谢你的参与！你的选择将帮助我们更好地规划社区服务。</div>
+    <div class="ch-modal-actions">
+      <button class="ch-btn ch-btn-leaf" onclick="closeModal('modal-vote')">查看结果</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗3：挑战详情弹窗 -->
+<div class="ch-modal-overlay" id="modal-challenge">
+  <div class="ch-modal ch-modal-lg">
+    <button class="ch-modal-close" onclick="closeModal('modal-challenge')">✕</button>
+    <div class="ch-modal-icon" id="modal-challenge-icon">🏆</div>
+    <h3 id="modal-challenge-title">挑战已参加！</h3>
+    <div class="ch-modal-body" id="modal-challenge-body">
+      <p>挑战规则：</p>
+      <ul style="text-align:left;padding-left:20px;margin:8px 0;">
+        <li>每天完成好事后需在App内打卡</li>
+        <li>连续中断则挑战重新计算</li>
+        <li>完成挑战后好心值自动发放</li>
+      </ul>
+      <div class="ch-progress-track" style="margin:12px 0;">
+        <div class="ch-progress-fill" id="challenge-progress-fill" style="width:0%;"></div>
+      </div>
+      <div style="font-size:13px;color:var(--ink-soft);">挑战进度：<strong id="challenge-progress-text">0%</strong></div>
+    </div>
+    <div class="ch-modal-actions">
+      <button class="ch-btn ch-btn-gold" onclick="closeModal('modal-challenge')">开始挑战！</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗4：好心值使用计划确认 -->
+<div class="ch-modal-overlay" id="modal-redeem">
+  <div class="ch-modal">
+    <button class="ch-modal-close" onclick="closeModal('modal-redeem')">✕</button>
+    <div class="ch-modal-icon">💎</div>
+    <h3>确认使用计划</h3>
+    <div class="ch-modal-body" id="modal-redeem-body">你确定要兑换此项目吗？</div>
+    <div class="ch-modal-actions">
+      <button class="ch-btn ch-btn-outline" onclick="closeModal('modal-redeem')">取消</button>
+      <button class="ch-btn ch-btn-plum" id="btn-redeem-confirm" onclick="executeRedeem()">确认兑换</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗5：搭档好友申请 -->
+<div class="ch-modal-overlay" id="modal-partner">
+  <div class="ch-modal">
+    <button class="ch-modal-close" onclick="closeModal('modal-partner')">✕</button>
+    <div class="ch-modal-icon">🤝</div>
+    <h3>好友申请已发送</h3>
+    <div class="ch-modal-body">你的好友申请已发送，等待对方确认后即可一起做好事！</div>
+    <div class="ch-modal-actions">
+      <button class="ch-btn ch-btn-sky" onclick="closeModal('modal-partner')">知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 弹窗6：反馈提交成功 -->
+<div class="ch-modal-overlay" id="modal-feedback">
+  <div class="ch-modal">
+    <button class="ch-modal-close" onclick="closeModal('modal-feedback')">✕</button>
+    <div class="ch-modal-icon">🙏</div>
+    <h3>感谢你的反馈！</h3>
+    <div class="ch-modal-body">你的反馈已提交，社区管理员会尽快处理。好心值 <strong>+10</strong> 已发放！</div>
+    <div class="ch-modal-actions">
+      <button class="ch-btn ch-btn-primary" onclick="closeModal('modal-feedback')">太好了</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast 容器 -->
+<div class="ch-toast-container" id="toast-container"></div>
+
+<!-- ============================================================
+     JavaScript
+     ============================================================ -->
+<script>
+(function() {
+  'use strict';
+
+  // ==============================================================
+  // 工具函数库
+  // ==============================================================
+
+  /** 格式化数字，添加千分位逗号 */
+  function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  /** 随机整数 [min, max] */
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  /** 随机选取数组中的 N 个元素 */
+  function pickRandom(arr, n) {
+    var shuffled = arr.slice().sort(function() { return Math.random() - 0.5; });
+    return shuffled.slice(0, n);
+  }
+
+  /** 延迟执行（Promise 风格） */
+  function delay(ms) {
+    return new Promise(function(resolve) { setTimeout(resolve, ms); });
+  }
+
+  /** 安全获取元素 */
+  function getEl(id) {
+    var el = document.getElementById(id);
+    if (!el) console.warn('Element not found: #' + id);
+    return el;
+  }
+
+  /** 切换按钮加载状态 */
+  function setBtnLoading(btnId, loading, labelText) {
+    var btn = getEl(btnId);
+    if (!btn) return;
+    if (loading) {
+      btn.classList.add('loading');
+      btn.disabled = true;
+    } else {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      if (labelText) {
+        var label = btn.querySelector('.ch-btn-label');
+        if (label) label.textContent = labelText;
+      }
+    }
+  }
+
+  /** 显示 Toast 通知 */
+  function showToast(message, type) {
+    type = type || 'success';
+    var container = document.getElementById('toast-container');
+    if (!container) return;
+    var toast = document.createElement('div');
+    toast.className = 'ch-toast ch-toast-' + type;
+    var iconMap = { success: '✓', warning: '⚠', error: '✕', info: 'ℹ' };
+    toast.innerHTML = '<span class="ch-toast-icon">' + (iconMap[type] || '✓') + '</span> ' + message;
+    container.appendChild(toast);
+    setTimeout(function() {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(40px)';
+      toast.style.transition = 'all .3s ease';
+      setTimeout(function() { toast.remove(); }, 300);
+    }, 2500);
+  }
+
+  /** 关闭弹窗 */
+  function closeModal(id) {
+    var modal = document.getElementById(id);
+    if (modal) modal.classList.remove('show');
+  }
+
+  /** 打开弹窗 */
+  function showModal(id) {
+    var modal = document.getElementById(id);
+    if (modal) modal.classList.add('show');
+  }
+
+  /** 点击弹窗遮罩层关闭 */
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('ch-modal-overlay') && e.target.classList.contains('show')) {
+      e.target.classList.remove('show');
+    }
+  });
+
+  /** ESC 键关闭弹窗 */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var openModals = document.querySelectorAll('.ch-modal-overlay.show');
+      openModals.forEach(function(m) { m.classList.remove('show'); });
+    }
+  });
+
+  // ---------- 导出全局 ----------
+  window.showToast = showToast;
+  window.closeModal = closeModal;
+  window.showModal = showModal;
+  window.formatNumber = formatNumber;
+  window.randomInt = randomInt;
+
+  // ==============================================================
+  // 模块1：好事场景匹配器
+  // ==============================================================
+
+  /** 场景数据 */
+  var sceneData = {
+    commute: { label: '通勤路上', icon: '🚇', desc: '地铁/公交里，有15-30分钟' },
+    lunch: { label: '午休空隙', icon: '☕', desc: '午饭后的10-20分钟空闲' },
+    stroll: { label: '遛娃散步', icon: '👶', desc: '带娃在小区/公园' },
+    queue: { label: '排队等候', icon: '⏳', desc: '等电梯/排队/等外卖' },
+    fitness: { label: '运动健身', icon: '🏃', desc: '跑步/健身途中' },
+    home: { label: '居家空闲', icon: '🏠', desc: '在家休息的碎片时间' }
+  };
+
+  var durationData = {
+    '5': { label: '5分钟', desc: '顺手就做' },
+    '10': { label: '10分钟', desc: '快速搞定' },
+    '15': { label: '15分钟', desc: '一个碎片' },
+    '20': { label: '20分钟', desc: '稍微充裕' },
+    '30': { label: '30分钟', desc: '认真做件好事' }
+  };
+
+  var sceneRadios = (function() {
+    var c = document.getElementById('scene-options');
+    var opts = c.querySelectorAll('.ch-option');
+    opts.forEach(function(o) {
+      o.addEventListener('click', function() {
+        opts.forEach(function(x) { x.classList.remove('selected'); });
+        this.classList.add('selected');
+        updateMatchBtn();
+      });
+    });
+    return { getSelected: function() { var s = c.querySelector('.selected'); return s ? s.getAttribute('data-value') : null; } };
+  })();
+
+  var durationRadios = (function() {
+    var c = document.getElementById('duration-options');
+    var opts = c.querySelectorAll('.ch-option');
+    opts.forEach(function(o) {
+      o.addEventListener('click', function() {
+        opts.forEach(function(x) { x.classList.remove('selected'); });
+        this.classList.add('selected');
+        updateMatchBtn();
+      });
+    });
+    return { getSelected: function() { var s = c.querySelector('.selected'); return s ? s.getAttribute('data-value') : null; } };
+  })();
+
+  function updateMatchBtn() {
+    var btn = document.getElementById('btn-match');
+    var scene = sceneRadios.getSelected();
+    var dur = durationRadios.getSelected();
+    btn.disabled = !(scene && dur);
+    // 更新进度指示器
+    var steps = document.querySelectorAll('#scene-progress .ch-prog-step');
+    steps[0].classList.toggle('done', !!scene);
+    steps[1].classList.toggle('done', !!dur);
+    steps[2].classList.toggle('active', scene && dur);
+  }
+
+  /** 场景匹配任务库 */
+  var sceneTaskLibrary = [
+    { name: '帮邻居取快递', type: '顺手帮', duration: '5分钟', points: 15, dist: '50m内', icon: '📦', color: 'brand' },
+    { name: '楼道垃圾随手清', type: '环保', duration: '10分钟', points: 20, dist: '本楼', icon: '♻️', color: 'leaf' },
+    { name: '教老人用手机拍照', type: '技能助老', duration: '15分钟', points: 30, dist: '200m内', icon: '📱', color: 'sky' },
+    { name: '社区花园浇水', type: '环保', duration: '20分钟', points: 25, dist: '300m内', icon: '🌿', color: 'leaf' },
+    { name: '陪独居老人散步', type: '陪伴', duration: '30分钟', points: 40, dist: '500m内', icon: '👴', color: 'plum' },
+    { name: '共享单车摆放整齐', type: '顺手帮', duration: '5分钟', points: 10, dist: '100m内', icon: '🚲', color: 'gold' },
+    { name: '电梯/楼道消毒', type: '环保', duration: '10分钟', points: 18, dist: '本楼', icon: '🧹', color: 'sky' },
+    { name: '帮提重物上楼梯', type: '顺手帮', duration: '5分钟', points: 12, dist: '50m内', icon: '💪', color: 'brand' },
+    { name: '社区阅读角整理', type: '社区事务', duration: '15分钟', points: 22, dist: '200m内', icon: '📚', color: 'gold' },
+  ];
+
+  /** 场景-时长 → 任务筛选逻辑 */
+  function filterTasksBySceneAndDuration(scene, duration) {
+    var durNum = parseInt(duration, 10);
+    var sceneMap = {
+      commute: [0, 1, 5],
+      lunch: [1, 2, 3, 6],
+      stroll: [3, 4, 8],
+      queue: [0, 1, 5, 6],
+      fitness: [5, 7],
+      home: [2, 4, 8]
+    };
+    var taskIndices = sceneMap[scene] || [0, 1, 2];
+    // 根据时长过滤
+    var filtered = [];
+    taskIndices.forEach(function(idx) {
+      var task = sceneTaskLibrary[idx];
+      if (!task) return;
+      var taskDur = parseInt(task.duration, 10);
+      if (taskDur <= durNum) {
+        filtered.push(task);
+      }
+    });
+    // 如果不够3个，补一些通用任务
+    if (filtered.length < 3) {
+      sceneTaskLibrary.forEach(function(task) {
+        if (filtered.length >= 3) return;
+        var taskDur = parseInt(task.duration, 10);
+        if (taskDur <= durNum && filtered.indexOf(task) === -1) {
+          filtered.push(task);
+        }
+      });
+    }
+    return pickRandom(filtered, 3);
+  }
+
+  window.matchScene = function() {
+    var btn = document.getElementById('btn-match');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    var scene = sceneRadios.getSelected();
+    var dur = durationRadios.getSelected();
+
+    setTimeout(function() {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      updateMatchBtn();
+
+      // 使用智能筛选逻辑
+      var selected = filterTasksBySceneAndDuration(scene, dur);
+
+      var container = document.getElementById('scene-tasks');
+      container.innerHTML = '';
+      selected.forEach(function(task) {
+        var colorMap = {
+          brand: 'var(--brand)',
+          leaf: 'var(--leaf)',
+          gold: 'var(--gold)',
+          sky: 'var(--sky)',
+          plum: 'var(--plum)'
+        };
+        var c = colorMap[task.color] || 'var(--brand)';
+        var bgColor = c.replace('var(','').replace(')','').trim();
+        var card = document.createElement('div');
+        card.className = 'ch-task-card';
+        card.style.animationDelay = (selected.indexOf(task) * 0.1) + 's';
+        card.style.animation = 'chSlideUp 0.35s ease both';
+        card.innerHTML =
+          '<div class="ch-tc-icon" style="background:' + bgColor + '15;color:' + c + ';">' + task.icon + '</div>' +
+          '<div class="ch-tc-body">' +
+            '<div class="ch-tc-name">' + task.name + '</div>' +
+            '<div class="ch-tc-meta">' +
+              '<span>📋 ' + task.type + '</span>' +
+              '<span>⏱️ <b>' + task.duration + '</b></span>' +
+              '<span>💛 <b>+' + task.points + '</b></span>' +
+              '<span>📍 <b>' + task.dist + '</b></span>' +
+            '</div>' +
+          '</div>' +
+          '<button class="ch-tc-btn claim" onclick="claimTask(this, \'' + task.name + '\', ' + task.points + ')">一键领取</button>';
+        container.appendChild(card);
+      });
+
+      // 更新进度指示器
+      var steps = document.querySelectorAll('#scene-progress .ch-prog-step');
+      steps[0].classList.add('done');
+      steps[1].classList.add('done');
+      steps[2].classList.remove('active');
+      steps[2].classList.add('done');
+
+      document.getElementById('scene-result').style.display = 'block';
+      showToast('已为你匹配到 ' + selected.length + ' 个好事任务', 'success');
+    }, 1200);
+  };
+
+  window.claimTask = function(btn, taskName, points) {
+    if (btn.classList.contains('claimed')) return;
+    btn.classList.add('claimed');
+    btn.textContent = '✓ 已领取';
+    showModal('modal-claim');
+    document.getElementById('modal-claim-body').innerHTML = '你已成功领取「<strong>' + taskName + '</strong>」任务，<br>好心值 <strong>+' + points + '</strong> 已入账！';
+    showToast('🎉 领取成功！好心值 +' + points, 'success');
+  };
+
+  // ==============================================================
+  // 模块2：社区好事共创投票
+  // ==============================================================
+  var voteData = {
+    elderly: 0, childcare: 0, garden: 0, pets: 0, recycle: 0, digital: 0
+  };
+  var voteLabels = {
+    elderly: '老年人陪伴服务', childcare: '儿童课后托管', garden: '社区花园维护',
+    pets: '宠物互助圈', recycle: '环保回收站', digital: '数字助老课堂'
+  };
+  var voteColors = ['brand-fill','leaf-fill','gold-fill','sky-fill','plum-fill','copper-fill'];
+  var voteSelected = {};
+  var totalVoters = 0;
+
+  (function() {
+    var container = document.getElementById('vote-options');
+    var opts = container.querySelectorAll('.ch-option');
+    opts.forEach(function(o) {
+      o.addEventListener('click', function() {
+        var val = this.getAttribute('data-value');
+        if (this.classList.contains('selected')) {
+          this.classList.remove('selected');
+          delete voteSelected[val];
+        } else {
+          var count = Object.keys(voteSelected).length;
+          if (count >= 3) {
+            showToast('最多只能选择3项', 'warning');
+            return;
+          }
+          this.classList.add('selected');
+          voteSelected[val] = true;
+        }
+        var count = Object.keys(voteSelected).length;
+        document.getElementById('vote-count').textContent = count;
+        document.getElementById('btn-vote').disabled = count === 0;
+      });
+    });
+  })();
+
+  window.submitVote = function() {
+    var btn = document.getElementById('btn-vote');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    var selectedVals = Object.keys(voteSelected);
+    var selectedLabels = selectedVals.map(function(v) { return voteLabels[v]; }).join('、');
+
+    setTimeout(function() {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+
+      // 模拟投票数据
+      var newVoters = randomInt(15, 45);
+      totalVoters += newVoters;
+      selectedVals.forEach(function(v) {
+        voteData[v] = (voteData[v] || 0) + randomInt(8, 28);
+      });
+      // 未选中的也加一些随机票
+      Object.keys(voteData).forEach(function(v) {
+        if (!voteSelected[v]) {
+          voteData[v] = (voteData[v] || 0) + randomInt(0, 5);
+        }
+      });
+
+      var total = 0;
+      Object.values(voteData).forEach(function(v) { total += v; });
+
+      var barsContainer = document.getElementById('vote-bars');
+      barsContainer.innerHTML = '';
+      var keys = Object.keys(voteData);
+      keys.forEach(function(key, idx) {
+        var pct = total > 0 ? Math.round((voteData[key] / total) * 100) : 0;
+        var item = document.createElement('div');
+        item.className = 'ch-vote-bar-item';
+        item.style.animation = 'chSlideUp 0.3s ease both';
+        item.style.animationDelay = (idx * 0.08) + 's';
+        item.innerHTML =
+          '<span class="ch-vbi-label">' + voteLabels[key] + '</span>' +
+          '<div class="ch-vbi-track"><div class="ch-vbi-fill ' + voteColors[idx % voteColors.length] + '" style="width:' + pct + '%;">' + pct + '%</div></div>' +
+          '<span class="ch-vbi-pct">' + voteData[key] + '票</span>';
+        barsContainer.appendChild(item);
+      });
+
+      document.getElementById('vote-count-display').textContent = '已有 ' + totalVoters + ' 位邻居参与投票';
+      document.getElementById('vote-result').style.display = 'block';
+
+      // 弹窗详情
+      var voteModalBody = document.querySelector('#modal-vote .ch-modal-body');
+      if (voteModalBody) {
+        voteModalBody.innerHTML = '感谢你的投票！<br>你选择了：<strong>' + (selectedLabels || '未选择') + '</strong><br>本次共有 <strong>' + newVoters + '</strong> 位邻居参与投票，总投票人数已达 <strong>' + totalVoters + '</strong> 人。';
+      }
+      showModal('modal-vote');
+      showToast('投票已提交，感谢参与！', 'success');
+    }, 1000);
+  };
+
+  // ==============================================================
+  // 模块3：本周好事挑战赛
+  // ==============================================================
+  var selectedChallenge = null;
+  var challengeJoinCount = 0;
+
+  window.selectChallenge = function(el) {
+    var cards = document.querySelectorAll('#challenge-list .ch-challenge-card');
+    cards.forEach(function(c) { c.classList.remove('selected'); });
+    el.classList.add('selected');
+    selectedChallenge = el.getAttribute('data-value');
+    document.getElementById('btn-challenge').disabled = false;
+  };
+
+  /** 挑战数据 */
+  var challengeData = {
+    challenge1: { name: '连续3天做好事', desc: '每天完成1件好事，坚持3天', stars: '★★☆☆☆', reward: 50, difficulty: '简单' },
+    challenge2: { name: '帮助5位邻居', desc: '本周帮助至少5位不同的邻居', stars: '★★★☆☆', reward: 80, difficulty: '中等' },
+    challenge3: { name: '参与社区活动', desc: '参加1次社区集体活动', stars: '★★★☆☆', reward: 60, difficulty: '中等' },
+    challenge4: { name: '邀请3位朋友', desc: '邀请3位朋友注册好事近', stars: '★★★★☆', reward: 100, difficulty: '较难' },
+    challenge5: { name: '完成10件好事', desc: '本周累计完成10件好事', stars: '★★★★★', reward: 150, difficulty: '困难' }
+  };
+
+  /** 活跃挑战列表（模拟正在进行的挑战） */
+  var activeChallenges = [];
+
+  window.joinChallenge = function() {
+    var btn = document.getElementById('btn-challenge');
+    var spinner = btn.querySelector('.btn-challenge-spinner');
+    var label = btn.querySelector('.btn-challenge-label');
+    if (spinner) spinner.style.display = 'inline-block';
+    if (label) label.textContent = '参加中……';
+    btn.disabled = true;
+
+    setTimeout(function() {
+      if (spinner) spinner.style.display = 'none';
+      if (label) label.textContent = '🔥 一键参加挑战';
+      btn.disabled = false;
+
+      challengeJoinCount += randomInt(3, 11);
+      document.getElementById('challenge-count-display').textContent = '已有 ' + challengeJoinCount + ' 位邻居参加了本周挑战';
+
+      var data = challengeData[selectedChallenge] || { name: '好事挑战', reward: 0, difficulty: '未知', stars: '☆☆☆☆☆' };
+      var name = data.name;
+      var reward = data.reward;
+
+      // 记录活跃挑战
+      activeChallenges.push({
+        id: selectedChallenge,
+        name: name,
+        reward: reward,
+        joinedAt: new Date().toLocaleString('zh-CN'),
+        progress: 0
+      });
+
+      document.getElementById('modal-challenge-icon').textContent = '🏆';
+      document.getElementById('modal-challenge-title').textContent = '「' + name + '」挑战已参加！';
+      document.getElementById('challenge-progress-fill').style.width = '0%';
+      document.getElementById('challenge-progress-text').textContent = '0%';
+
+      // 显示挑战详情
+      var bodyEl = document.getElementById('modal-challenge-body');
+      bodyEl.innerHTML =
+        '<p style="text-align:left;font-weight:600;margin:0 0 8px;">📋 挑战规则：</p>' +
+        '<ul style="text-align:left;padding-left:20px;margin:8px 0;">' +
+          '<li>每天完成好事后需在App内打卡</li>' +
+          '<li>连续中断则挑战重新计算</li>' +
+          '<li>完成挑战后好心值自动发放</li>' +
+          '<li>难度等级：<strong style="color:var(--gold);">' + data.difficulty + '</strong></li>' +
+          '<li>奖励好心值：<strong style="color:var(--gold);">+ ' + data.reward + '</strong></li>' +
+        '</ul>' +
+        '<div class="ch-progress-track" style="margin:12px 0;">' +
+          '<div class="ch-progress-fill" id="challenge-progress-fill" style="width:0%;"></div>' +
+        '</div>' +
+        '<div style="font-size:13px;color:var(--ink-soft);text-align:center;">挑战进度：<strong id="challenge-progress-text">0%</strong></div>';
+
+      showModal('modal-challenge');
+      showToast('🔥 挑战「' + name + '」已加入，奖励 +' + reward, 'success');
+
+      // 模拟进度增长（更快更真实）
+      var progress = 0;
+      var interval = setInterval(function() {
+        var increment = randomInt(3, 12);
+        progress += increment;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          // 发放好心值
+          globalPoints.add(reward, '完成挑战：' + name);
+          showToast('🎉 挑战「' + name + '」完成！好心值 +' + reward + '，当前余额 ' + globalPoints.getBalance().toLocaleString(), 'success');
+
+          // 更新活跃挑战记录
+          var activeIdx = activeChallenges.length - 1;
+          if (activeIdx >= 0) {
+            activeChallenges[activeIdx].progress = 100;
+            activeChallenges[activeIdx].completedAt = new Date().toLocaleString('zh-CN');
+          }
+        }
+        var fillEl = document.getElementById('challenge-progress-fill');
+        var textEl = document.getElementById('challenge-progress-text');
+        if (fillEl) fillEl.style.width = progress + '%';
+        if (textEl) textEl.textContent = progress + '%';
+      }, 600);
+    }, 1000);
+  };
+
+  // ==============================================================
+  // 模块4：好心值使用计划
+  // ==============================================================
+  var userPoints = 2580;
+  var selectedRedeem = null;
+  var redeemData = {
+    badge: { name: '社区荣誉徽章', price: 200, icon: '🏅' },
+    coffee: { name: '咖啡折扣券', price: 150, icon: '☕' },
+    skill: { name: '技能交换课时', price: 60, icon: '🔁' },
+    certificate: { name: '社区之星证书', price: 500, icon: '📜' },
+    store: { name: '便利店折扣', price: 100, icon: '🏪' },
+    savings: { name: '存入好心值生息', price: 0, icon: '🏦' }
+  };
+
+  window.selectRedeem = function(el) {
+    var cards = document.querySelectorAll('#redeem-options .ch-redeem-card');
+    cards.forEach(function(c) { c.classList.remove('selected'); });
+    el.classList.add('selected');
+    selectedRedeem = el.getAttribute('data-value');
+    document.getElementById('btn-redeem').disabled = false;
+  };
+
+  /** 兑换记录 */
+  var redeemHistory = [];
+
+  window.confirmRedeem = function() {
+    if (!selectedRedeem) return;
+    var data = redeemData[selectedRedeem];
+    var currentBalance = globalPoints.getBalance();
+    var body = document.getElementById('modal-redeem-body');
+    var insufficient = data.price > currentBalance;
+    body.innerHTML = '你确定要兑换「<strong>' + data.name + '</strong>」吗？' +
+      '<br>价格：<strong style="color:var(--plum);">💛 ' + data.price + '</strong> 好心值' +
+      '<br>当前余额：<strong>💛 ' + currentBalance.toLocaleString() + '</strong>' +
+      (insufficient ? '<br><span style="color:var(--brand);font-weight:700;">⚠️ 好心值不足，还差 ' + (data.price - currentBalance).toLocaleString() + ' 点</span>' : '') +
+      '<br><br><span style="font-size:12px;color:var(--ink-faint);">兑换后不可撤销，请确认后操作</span>';
+    document.getElementById('btn-redeem-confirm').disabled = insufficient;
+    showModal('modal-redeem');
+  };
+
+  window.executeRedeem = function() {
+    if (!selectedRedeem) return;
+    var data = redeemData[selectedRedeem];
+    var currentBalance = globalPoints.getBalance();
+    if (data.price > currentBalance) {
+      showToast('好心值不足，需要 ' + data.price + ' 点，当前余额 ' + currentBalance.toLocaleString(), 'error');
+      closeModal('modal-redeem');
+      return;
+    }
+    globalPoints.deduct(data.price, '兑换：' + data.name);
+
+    // 记录兑换历史
+    redeemHistory.push({
+      item: data.name,
+      price: data.price,
+      date: new Date().toLocaleString('zh-CN'),
+      icon: data.icon
+    });
+
+    var btn = document.getElementById('btn-redeem');
+    btn.disabled = true;
+    var cards = document.querySelectorAll('#redeem-options .ch-redeem-card');
+    cards.forEach(function(c) { c.classList.remove('selected'); });
+    selectedRedeem = null;
+    closeModal('modal-redeem');
+
+    // 详细提示
+    var detailMsg = '🎉 兑换成功！已扣除 <strong>💛 ' + data.price + '</strong> 好心值';
+    if (data.name === '存入好心值生息') {
+      detailMsg += '<br>📈 锁定30天，年化5%，到期本息自动返还';
+    } else if (data.name === '社区荣誉徽章') {
+      detailMsg += '<br>🏅 徽章已发放到你的个人主页';
+    } else if (data.name === '咖啡折扣券') {
+      detailMsg += '<br>☕ 折扣券已发放到卡包，有效期30天';
+    } else if (data.name === '技能交换课时') {
+      detailMsg += '<br>🔁 课时券已发放，请在有效期内使用';
+    } else if (data.name === '社区之星证书') {
+      detailMsg += '<br>📜 电子证书已生成，可随时下载打印';
+    } else if (data.name === '便利店折扣') {
+      detailMsg += '<br>🏪 折扣券已发放，结账时出示即可';
+    }
+    detailMsg += '<br>当前余额：<strong style="color:var(--plum);">💛 ' + globalPoints.getBalance().toLocaleString() + '</strong>';
+
+    // 显示在弹窗中
+    document.getElementById('modal-redeem-body').innerHTML = detailMsg.replace(/<br>/g, '<br>');
+    showModal('modal-redeem');
+    document.getElementById('btn-redeem-confirm').textContent = '知道了';
+    document.getElementById('btn-redeem-confirm').onclick = function() { closeModal('modal-redeem'); };
+    showToast('🎉 兑换成功！已扣除 ' + data.price + ' 好心值', 'success');
+
+    // 3秒后重置按钮
+    setTimeout(function() {
+      document.getElementById('btn-redeem-confirm').textContent = '确认兑换';
+    }, 3000);
+  };
+
+  // ==============================================================
+  // 模块5：好事搭档匹配
+  // ==============================================================
+  var partnerTypeRadio = (function() {
+    var c = document.getElementById('partner-type-options');
+    var opts = c.querySelectorAll('.ch-option');
+    opts.forEach(function(o) {
+      o.addEventListener('click', function() {
+        opts.forEach(function(x) { x.classList.remove('selected'); });
+        this.classList.add('selected');
+        updatePartnerBtn();
+      });
+    });
+    return { getSelected: function() { var s = c.querySelector('.selected'); return s ? s.getAttribute('data-value') : null; } };
+  })();
+
+  var partnerGoodRadio = (function() {
+    var c = document.getElementById('partner-good-type-options');
+    var opts = c.querySelectorAll('.ch-option');
+    opts.forEach(function(o) {
+      o.addEventListener('click', function() {
+        opts.forEach(function(x) { x.classList.remove('selected'); });
+        this.classList.add('selected');
+        updatePartnerBtn();
+      });
+    });
+    return { getSelected: function() { var s = c.querySelector('.selected'); return s ? s.getAttribute('data-value') : null; } };
+  })();
+
+  function updatePartnerBtn() {
+    var btn = document.getElementById('btn-partner');
+    var t = partnerTypeRadio.getSelected();
+    var g = partnerGoodRadio.getSelected();
+    btn.disabled = !(t && g);
+    var steps = document.querySelectorAll('#partner-progress .ch-prog-step');
+    steps[0].classList.toggle('done', !!t);
+    steps[1].classList.toggle('done', !!g);
+    steps[2].classList.toggle('active', t && g);
+  }
+
+  /** 搭档匹配数据 */
+  var partnerTypeData = {
+    alone: { label: '自己一个人', icon: '🧑' },
+    family: { label: '带上家人', icon: '👨‍👩‍👧' },
+    friends: { label: '叫上朋友', icon: '👫' },
+    neighbors: { label: '和邻居一起', icon: '🏘️' },
+    org: { label: '跟社区组织', icon: '🎯' }
+  };
+
+  var partnerGoodData = {
+    errand: { label: '顺手帮邻里', icon: '📦' },
+    community: { label: '社区公共事务', icon: '♻️' },
+    tech: { label: '技能助老', icon: '📱' },
+    accompany: { label: '陪伴倾听', icon: '👴' },
+    green: { label: '环保行动', icon: '🌿' }
+  };
+
+  /** 模拟搭档库 */
+  var partnerDatabase = [
+    { name: '张明', avatar: '张', color: '#c8533a', tags: ['环保','运动','阅读'], match: '92%', interests: '跑步、园艺' },
+    { name: '李静', avatar: '李', color: '#3f7d5b', tags: ['助老','阅读','烹饪'], match: '88%', interests: '烘焙、读书' },
+    { name: '王磊', avatar: '王', color: '#3b6b8c', tags: ['宠物','摄影','音乐'], match: '85%', interests: '吉他、摄影' },
+    { name: '赵丽', avatar: '赵', color: '#c98a2b', tags: ['教育','手工艺','舞蹈'], match: '82%', interests: '手工、广场舞' },
+    { name: '刘伟', avatar: '刘', color: '#6b4a7a', tags: ['科技','棋类','写作'], match: '80%', interests: '编程、象棋' },
+    { name: '陈芳', avatar: '陈', color: '#b87333', tags: ['园艺','烹饪','绘画'], match: '78%', interests: '种花、水彩画' }
+  ];
+
+  window.matchPartner = function() {
+    var btn = document.getElementById('btn-partner');
+    var spinner = btn.querySelector('.btn-partner-spinner');
+    var label = btn.querySelector('.btn-partner-label');
+    if (spinner) spinner.style.display = 'inline-block';
+    if (label) label.textContent = '匹配中……';
+    btn.disabled = true;
+
+    var partnerType = partnerTypeRadio.getSelected();
+    var goodType = partnerGoodRadio.getSelected();
+
+    setTimeout(function() {
+      if (spinner) spinner.style.display = 'none';
+      if (label) label.textContent = '🔍 一键匹配搭档';
+      btn.disabled = false;
+      updatePartnerBtn();
+
+      var neighborCount = randomInt(8, 28);
+      var partnerTypeLabel = partnerTypeData[partnerType] ? partnerTypeData[partnerType].label : '未知';
+      var goodTypeLabel = partnerGoodData[goodType] ? partnerGoodData[goodType].label : '未知';
+      document.getElementById('partner-summary').innerHTML = '📍 附近有 <strong style="color:var(--sky);">' + neighborCount + '</strong> 位同频邻居<br><span style="font-size:12px;font-weight:400;color:var(--ink-faint);">搭档类型：' + partnerTypeLabel + ' ｜ 好事类型：' + goodTypeLabel + '</span>';
+
+      var partners = pickRandom(partnerDatabase, 3);
+
+      var container = document.getElementById('partner-cards');
+      container.innerHTML = '';
+      partners.forEach(function(p) {
+        var card = document.createElement('div');
+        card.className = 'ch-partner-card';
+        card.innerHTML =
+          '<div class="ch-pc-avatar" style="background:' + p.color + ';">' + p.avatar + '</div>' +
+          '<div class="ch-pc-body">' +
+            '<div class="ch-pc-name">' + p.name + '</div>' +
+            '<div class="ch-pc-tags">' + p.tags.map(function(t) { return '<span class="ch-pc-tag">' + t + '</span>'; }).join('') + '</div>' +
+            '<div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">兴趣：' + p.interests + '</div>' +
+          '</div>' +
+          '<span class="ch-pc-match">' + p.match + '</span>' +
+          '<button class="ch-pc-btn" onclick="sendFriendRequest(this)">发送好友申请</button>';
+        container.appendChild(card);
+      });
+
+      document.getElementById('partner-result').style.display = 'block';
+      showToast('匹配完成，找到 ' + neighborCount + ' 位同频邻居', 'success');
+    }, 1200);
+  };
+
+  window.sendFriendRequest = function(btn) {
+    if (btn.classList.contains('sent')) return;
+    btn.classList.add('sent');
+    btn.textContent = '✓ 已发送';
+    showModal('modal-partner');
+    showToast('好友申请已发送！', 'success');
+  };
+
+  // ==============================================================
+  // 模块6：社区问题反馈
+  // ==============================================================
+  var feedbackSelected = {};
+
+  window.toggleFeedback = function(el) {
+    var val = el.getAttribute('data-value');
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      delete feedbackSelected[val];
+    } else {
+      el.classList.add('selected');
+      feedbackSelected[val] = true;
+    }
+    var count = Object.keys(feedbackSelected).length;
+    document.getElementById('feedback-count').textContent = count;
+  };
+
+  /** 反馈问题标签映射 */
+  var feedbackLabels = {
+    trash: '垃圾投放点不够干净',
+    greenery: '社区绿化需要维护',
+    parking: '停车位不足',
+    lighting: '夜间照明不够',
+    bench: '公共座椅太少',
+    sidewalk: '人行道破损',
+    wifi: '公共WiFi信号差',
+    sports: '运动设施老旧'
+  };
+
+  /** 反馈提交历史统计 */
+  var feedbackStats = {
+    totalSubmitted: 0,
+    lastFeedbackDate: null,
+    topIssues: {}
+  };
+
+  window.submitFeedback = function() {
+    var btn = document.getElementById('btn-feedback');
+    var spinner = btn.querySelector('.btn-feedback-spinner');
+    var label = btn.querySelector('.btn-feedback-label');
+    if (spinner) spinner.style.display = 'inline-block';
+    if (label) label.textContent = '提交中……';
+    btn.disabled = true;
+
+    var otherVal = document.getElementById('feedback-other').value.trim();
+    var selectedKeys = Object.keys(feedbackSelected);
+    var hasSelection = selectedKeys.length > 0 || otherVal.length > 0;
+
+    if (!hasSelection) {
+      if (spinner) spinner.style.display = 'none';
+      if (label) label.textContent = '📤 一键提交反馈';
+      btn.disabled = false;
+      showToast('请至少选择一项或填写其他问题', 'warning');
+      return;
+    }
+
+    // 更详细的验证
+    if (otherVal.length > 0 && otherVal.length < 4) {
+      if (spinner) spinner.style.display = 'none';
+      if (label) label.textContent = '📤 一键提交反馈';
+      btn.disabled = false;
+      showToast('其他问题描述请至少4个字', 'warning');
+      return;
+    }
+
+    setTimeout(function() {
+      if (spinner) spinner.style.display = 'none';
+      if (label) label.textContent = '📤 一键提交反馈';
+      btn.disabled = false;
+
+      // 更新统计
+      feedbackStats.totalSubmitted++;
+      feedbackStats.lastFeedbackDate = new Date().toLocaleString('zh-CN');
+      selectedKeys.forEach(function(k) {
+        feedbackStats.topIssues[k] = (feedbackStats.topIssues[k] || 0) + 1;
+      });
+
+      // 好心值奖励
+      globalPoints.add(10, '提交社区反馈');
+
+      var selectedLabels = selectedKeys.map(function(k) { return feedbackLabels[k] || k; }).join('、');
+      var detailMsg = '你的反馈已提交！';
+      if (selectedLabels) detailMsg += '<br>反馈问题：<strong>' + selectedLabels + '</strong>';
+      if (otherVal) detailMsg += '<br>其他说明：<strong>' + otherVal + '</strong>';
+      detailMsg += '<br>好心值 <strong style="color:var(--brand);">+10</strong> 已发放';
+
+      var modalBody = document.querySelector('#modal-feedback .ch-modal-body');
+      if (modalBody) modalBody.innerHTML = detailMsg;
+
+      showModal('modal-feedback');
+      showToast('🙏 反馈已提交，好心值 +10，当前余额 ' + globalPoints.getBalance().toLocaleString(), 'success');
+
+      // 重置
+      var items = document.querySelectorAll('#feedback-options .ch-feedback-item');
+      items.forEach(function(i) { i.classList.remove('selected'); });
+      feedbackSelected = {};
+      document.getElementById('feedback-count').textContent = '0';
+      document.getElementById('feedback-other').value = '';
+    }, 1000);
+  };
+
+  // ==============================================================
+  // 模块间联动：好心值全局状态
+  // ==============================================================
+
+  /** 全局好心值状态管理 */
+  var globalPoints = {
+    balance: 2580,
+    earned: 0,
+    spent: 0,
+    listeners: [],
+
+    add: function(amount, reason) {
+      this.balance += amount;
+      this.earned += amount;
+      this.notifyListeners();
+      return this.balance;
+    },
+
+    deduct: function(amount, reason) {
+      if (amount > this.balance) return false;
+      this.balance -= amount;
+      this.spent += amount;
+      this.notifyListeners();
+      return true;
+    },
+
+    getBalance: function() {
+      return this.balance;
+    },
+
+    onUpdate: function(fn) {
+      this.listeners.push(fn);
+    },
+
+    notifyListeners: function() {
+      var bal = this.balance;
+      var el = document.getElementById('points-balance');
+      if (el) el.textContent = bal.toLocaleString();
+      this.listeners.forEach(function(fn) { fn(bal); });
+    }
+  };
+
+  /** 当好心值变化时，更新所有引用 */
+  globalPoints.onUpdate(function(bal) {
+    var el = document.getElementById('points-balance');
+    if (el) el.textContent = bal.toLocaleString();
+  });
+
+  // 导出全局好心值
+  window.globalPoints = globalPoints;
+
+  // 覆盖 claimTask 函数以联动好心值
+  var originalClaimTask = window.claimTask;
+  window.claimTask = function(btn, taskName, points) {
+    if (btn.classList.contains('claimed')) return;
+    btn.classList.add('claimed');
+    btn.textContent = '✓ 已领取';
+    globalPoints.add(points, '领取任务：' + taskName);
+    showModal('modal-claim');
+    document.getElementById('modal-claim-body').innerHTML = '你已成功领取「<strong>' + taskName + '</strong>」任务，<br>好心值 <strong>+' + points + '</strong> 已入账！<br>当前余额：<strong style="color:var(--plum);">' + globalPoints.getBalance().toLocaleString() + '</strong>';
+    showToast('🎉 领取成功！好心值 +' + points, 'success');
+  };
+
+  // 覆盖 executeRedeem 函数以联动好心值
+  var originalExecuteRedeem = window.executeRedeem;
+  window.executeRedeem = function() {
+    if (!selectedRedeem) return;
+    var data = redeemData[selectedRedeem];
+    if (data.price > globalPoints.getBalance()) {
+      showToast('好心值不足，需要 ' + data.price + ' 点，当前余额 ' + globalPoints.getBalance().toLocaleString(), 'error');
+      closeModal('modal-redeem');
+      return;
+    }
+    globalPoints.deduct(data.price, '兑换：' + data.name);
+    document.getElementById('btn-redeem').disabled = true;
+    var cards = document.querySelectorAll('#redeem-options .ch-redeem-card');
+    cards.forEach(function(c) { c.classList.remove('selected'); });
+    selectedRedeem = null;
+    closeModal('modal-redeem');
+    showToast('🎉 兑换成功！已扣除 ' + data.price + ' 好心值', 'success');
+  };
+
+  // ==============================================================
+  // 初始化：设置初始计数和模拟数据
+  // ==============================================================
+
+  /** 随机生成初始统计数据 */
+  challengeJoinCount = randomInt(25, 65);
+  var challengeCountEl = document.getElementById('challenge-count-display');
+  if (challengeCountEl) challengeCountEl.textContent = '已有 ' + challengeJoinCount + ' 位邻居参加了本周挑战';
+
+  totalVoters = randomInt(30, 80);
+  var voteCountEl = document.getElementById('vote-count-display');
+  if (voteCountEl) voteCountEl.textContent = '已有 ' + totalVoters + ' 位邻居参与投票';
+
+  /** 模拟初始投票数据 */
+  var keys = Object.keys(voteData);
+  keys.forEach(function(k) {
+    voteData[k] = randomInt(5, 35);
+  });
+
+  /** 统计卡片数据（模拟动态更新） */
+  var statsData = {
+    todayGoodDeeds: 128,
+    communityMembers: 3642,
+    weeklyChallengers: 47,
+    matchSatisfaction: 89
+  };
+
+  /** 刷新统计卡片 */
+  function refreshStatsCards() {
+    var statEls = document.querySelectorAll('.ch-stat-value');
+    if (statEls.length >= 5) {
+      statEls[1].textContent = statsData.todayGoodDeeds;
+      statEls[2].textContent = statsData.communityMembers;
+      statEls[3].textContent = statsData.weeklyChallengers;
+      statEls[4].textContent = statsData.matchSatisfaction + '%';
+    }
+  }
+
+  /** 自动刷新挑战参与人数（模拟实时效果） */
+  setInterval(function() {
+    challengeJoinCount += randomInt(0, 2);
+    var cEl = document.getElementById('challenge-count-display');
+    if (cEl) cEl.textContent = '已有 ' + challengeJoinCount + ' 位邻居参加了本周挑战';
+    // 同步更新统计卡片
+    statsData.weeklyChallengers = challengeJoinCount;
+    refreshStatsCards();
+  }, 8000);
+
+  /** 自动刷新投票人数（模拟实时效果） */
+  setInterval(function() {
+    totalVoters += randomInt(0, 3);
+    var vEl = document.getElementById('vote-count-display');
+    if (vEl) vEl.textContent = '已有 ' + totalVoters + ' 位邻居参与投票';
+  }, 10000);
+
+  /** 自动刷新今日好事统计（模拟实时效果） */
+  setInterval(function() {
+    statsData.todayGoodDeeds += randomInt(0, 3);
+    statsData.communityMembers += randomInt(0, 1);
+    statsData.matchSatisfaction = Math.min(99, statsData.matchSatisfaction + randomInt(0, 1));
+    refreshStatsCards();
+  }, 15000);
+
+  /** 页面加载完成后的欢迎提示 */
+  setTimeout(function() {
+    showToast('👋 欢迎来到好事选择器！开始选择你的好事吧', 'info');
+  }, 600);
+
+  /** 为所有模块添加"回到顶部"快捷按钮 */
+  document.querySelectorAll('.ch-module').forEach(function(mod) {
+    if (mod.id) {
+      var backBtn = document.createElement('div');
+      backBtn.style.cssText = 'text-align:right;margin-top:12px;';
+      var link = document.createElement('a');
+      link.href = '#top';
+      link.textContent = '↑ 回到顶部';
+      link.style.cssText = 'font-size:12px;color:var(--ink-faint);text-decoration:none;';
+      link.onmouseover = function() { link.style.color = 'var(--brand)'; };
+      link.onmouseout = function() { link.style.color = 'var(--ink-faint)'; };
+      backBtn.appendChild(link);
+      // 只对非导航模块添加
+      if (mod.id !== 'top' && !mod.querySelector('.ch-module-header')) {
+        // skip
+      } else if (mod.querySelector('.ch-module-header')) {
+        mod.appendChild(backBtn);
+      }
+    }
+  });
+
+  /** 页面滚动时模块入场动画 */
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = 'chRiseUp 0.5s ease both';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.ch-module').forEach(function(mod) {
+    observer.observe(mod);
+  });
+
+  console.log('✅ 好事选择器已初始化完成');
+  console.log('📊 当前好心值余额:', globalPoints.getBalance().toLocaleString());
+  console.log('📦 已加载模块: 场景匹配, 社区投票, 挑战赛, 好心值, 搭档匹配, 问题反馈');
+  console.log('💡 提示: 所有数据均为模拟数据，用于互动体验演示');
+  console.log('🕒 页面加载时间:', new Date().toLocaleString('zh-CN'));
+
+  // 注册全局调试对象（方便调试）
+  window.__DEBUG__ = {
+    globalPoints: globalPoints,
+    voteData: voteData,
+    challengeData: challengeData,
+    redeemHistory: redeemHistory,
+    activeChallenges: activeChallenges,
+    feedbackStats: feedbackStats,
+    sceneTaskLibrary: sceneTaskLibrary,
+    partnerDatabase: partnerDatabase,
+    statsData: statsData
+  };
+
+})();
+</script>
+
+</body>
+</html>

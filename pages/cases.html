@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>线下活动案例库 · 好事近全案</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+.case-page { padding-bottom: 60px; }
+
+/* 案例卡片 */
+.case-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:16px; margin:20px 0; }
+.case-card {
+  background:var(--paper); border:1px solid var(--line); border-radius:14px;
+  padding:20px; box-shadow:0 1px 2px rgba(43,38,34,.04),0 8px 24px rgba(43,38,34,.06);
+  transition:all .25s ease; position:relative; overflow:hidden; cursor:pointer;
+}
+.case-card:hover { transform:translateY(-3px); box-shadow:0 4px 8px rgba(43,38,34,.06),0 16px 40px rgba(43,38,34,.1); border-color:var(--brand-soft); }
+.case-card::before { content:""; position:absolute; top:0; left:0; right:0; height:3px; }
+.case-card.cat-points::before { background:linear-gradient(90deg,var(--gold),#daa142); }
+.case-card.cat-timebank::before { background:linear-gradient(90deg,var(--sky),#4e86ab); }
+.case-card.cat-meeting::before { background:linear-gradient(90deg,var(--plum),#8b5f9e); }
+.case-card.cat-elderly::before { background:linear-gradient(90deg,var(--brand),#d96a4e); }
+.case-card.cat-child::before { background:linear-gradient(90deg,var(--leaf),#5a9e78); }
+.case-card.cat-recycle::before { background:linear-gradient(90deg,#b87333,#d4945a); }
+.case-card.cat-skill::before { background:linear-gradient(90deg,var(--sky),var(--leaf)); }
+
+.case-card .case-tag { display:inline-block; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700; margin-bottom:10px; }
+.case-card .case-tag.points { background:var(--gold-soft); color:var(--gold); }
+.case-card .case-tag.timebank { background:var(--sky-soft); color:var(--sky); }
+.case-card .case-tag.meeting { background:var(--plum-soft); color:var(--plum); }
+.case-card .case-tag.elderly { background:var(--brand-soft); color:var(--brand-deep); }
+.case-card .case-tag.child { background:var(--leaf-soft); color:var(--leaf); }
+.case-card .case-tag.recycle { background:#f5e6d6; color:#8b5a2e; }
+.case-card .case-tag.skill { background:var(--sky-soft); color:var(--sky); }
+
+.case-card h3 { font-size:16px; font-weight:800; margin-bottom:6px; line-height:1.4; }
+.case-card .case-loc { font-size:12px; color:var(--ink-faint); margin-bottom:8px; display:flex; align-items:center; gap:4px; }
+.case-card .case-desc { font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:10px; }
+.case-card .case-highlights { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px; }
+.case-card .case-highlights span { font-size:11px; padding:2px 8px; border-radius:6px; background:var(--bg); color:var(--ink-soft); font-weight:600; }
+.case-card .case-mapping { padding:10px 12px; background:var(--bg); border-radius:8px; font-size:12px; color:var(--ink-soft); border-left:3px solid var(--brand); }
+.case-card .case-mapping b { color:var(--brand); }
+.case-card .case-source { font-size:11px; color:var(--ink-faint); margin-top:8px; }
+.case-card .case-follow {
+  position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:50%;
+  border:2px solid var(--line); display:grid; place-items:center; font-size:14px; color:transparent;
+  transition:all .2s; background:var(--paper);
+}
+.case-card.followed .case-follow { border-color:var(--brand); background:var(--brand); color:#fff; }
+
+/* 筛选标签 */
+.filter-tabs { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:20px 0; }
+.filter-tab {
+  padding:8px 18px; border-radius:999px; font-size:13px; font-weight:600;
+  color:var(--ink-soft); background:var(--paper); border:1px solid var(--line);
+  transition:all .2s; cursor:pointer; user-select:none;
+}
+.filter-tab:hover { color:var(--brand); border-color:var(--brand-soft); background:var(--brand-soft); }
+.filter-tab.active { color:#fff; background:var(--brand); border-color:var(--brand); }
+
+/* 版本路线图 */
+.roadmap-timeline { position:relative; padding-left:30px; }
+.roadmap-timeline::before { content:""; position:absolute; left:10px; top:0; bottom:0; width:2px; background:var(--line); }
+.roadmap-item { position:relative; margin-bottom:24px; }
+.roadmap-item::before { content:""; position:absolute; left:-25px; top:4px; width:12px; height:12px; border-radius:50%; background:var(--brand); border:2px solid var(--paper); box-shadow:0 0 0 2px var(--brand-soft); }
+.roadmap-item.done::before { background:var(--leaf); box-shadow:0 0 0 2px var(--leaf-soft); }
+.roadmap-item .rm-version { font-size:12px; font-weight:700; color:var(--brand); }
+.roadmap-item.done .rm-version { color:var(--leaf); }
+.roadmap-item .rm-title { font-size:15px; font-weight:700; margin:2px 0 4px; }
+.roadmap-item .rm-desc { font-size:13px; color:var(--ink-soft); line-height:1.6; }
+.roadmap-item .rm-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+.roadmap-item .rm-tags span { font-size:11px; padding:2px 8px; border-radius:6px; background:var(--bg); color:var(--ink-soft); }
+
+/* 模块映射表 */
+.mapping-table { width:100%; border-collapse:collapse; margin:16px 0; font-size:13px; }
+.mapping-table th { text-align:left; padding:10px 12px; background:var(--bg); border-bottom:2px solid var(--line); font-weight:700; color:var(--ink); font-size:12px; }
+.mapping-table td { padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+.mapping-table tr:hover { background:var(--bg); }
+.mapping-table .mod-name { font-weight:700; color:var(--brand); }
+.mapping-table .case-ref { font-size:12px; color:var(--ink-soft); }
+.mapping-table .mod-action { font-size:12px; font-weight:600; }
+
+/* 关注栏 */
+.follow-bar {
+  position:sticky; bottom:0; left:0; right:0; background:var(--paper);
+  border-top:1px solid var(--line); padding:12px 20px; z-index:100;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  box-shadow:0 -4px 16px rgba(43,38,34,.06);
+}
+.follow-bar .fb-count { font-size:14px; font-weight:600; color:var(--ink-soft); }
+.follow-bar .fb-count b { color:var(--brand); font-size:18px; }
+.follow-bar .fb-btn {
+  padding:10px 28px; border-radius:999px; font-size:14px; font-weight:700;
+  color:#fff; background:linear-gradient(135deg,var(--brand),var(--brand-deep));
+  transition:all .2s; box-shadow:0 4px 12px rgba(200,83,58,.25);
+}
+.follow-bar .fb-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(200,83,58,.35); }
+.follow-bar .fb-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
+
+@media(max-width:768px) {
+  .case-grid { grid-template-columns:1fr; }
+  .mapping-table { font-size:12px; }
+  .mapping-table th, .mapping-table td { padding:8px; }
+}
+</style>
+</head>
+<body class="case-page">
+
+<!-- 顶部装饰条 -->
+<div style="height:4px;background:linear-gradient(90deg,var(--brand),var(--gold),var(--leaf),var(--sky),var(--plum));"></div>
+
+<!-- 导航栏 -->
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo">好事近 <span>·</span> 全案</a>
+    <nav>
+      <a href="../index.html">平台首页</a>
+      <a href="project.html">项目总览</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="simulator.html">模拟器</a>
+      <a href="choose.html">选择器</a>
+      <a href="cases.html" class="active">案例库</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<!-- 页面头部 -->
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb">
+      <a href="../index.html">首页</a>
+      <span class="sep">/</span>
+      <span>线下活动案例库</span>
+    </div>
+    <div class="eyebrow"><span class="dot"></span> 真实案例 · 联网查询</div>
+    <h1>线下主题活动案例库</h1>
+    <p class="sub">从全国真实社区公益项目中提炼可复用模式，映射到好事近平台各模块，指导产品迭代方向</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;">
+      <span class="chip"><b>9</b> 个真实案例</span>
+      <span class="chip"><b>7</b> 个活动类型</span>
+      <span class="chip"><b>6</b> 个模块映射</span>
+      <span class="chip"><b>4</b> 个版本迭代</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 说明 -->
+  <div style="background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin:20px 0;box-shadow:0 1px 2px rgba(43,38,34,.04),0 8px 24px rgba(43,38,34,.06);">
+    <div style="display:flex;align-items:flex-start;gap:12px;">
+      <span style="font-size:24px;flex-shrink:0;">💡</span>
+      <div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">为什么需要线下活动案例？</div>
+        <div style="font-size:13px;color:var(--ink-soft);line-height:1.7;">
+          好事近的线上平台需要与线下场景深度结合才能形成闭环。以下案例均来自2025-2026年全国各地真实社区公益实践，
+          每个案例都标注了<strong style="color:var(--brand);">可对接的平台模块</strong>和<strong style="color:var(--brand);">产品迭代建议</strong>。
+          你可以关注感兴趣的案例方向，系统会据此规划版本优先级。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 筛选标签 -->
+  <div class="filter-tabs" id="filterTabs">
+    <div class="filter-tab active" data-cat="all">全部案例</div>
+    <div class="filter-tab" data-cat="points">💛 积分激励</div>
+    <div class="filter-tab" data-cat="timebank">⏰ 时间银行</div>
+    <div class="filter-tab" data-cat="meeting">🗳️ 社区议事</div>
+    <div class="filter-tab" data-cat="elderly">👴 适老服务</div>
+    <div class="filter-tab" data-cat="child">📚 儿童托管</div>
+    <div class="filter-tab" data-cat="recycle">♻️ 环保循环</div>
+    <div class="filter-tab" data-cat="skill">🔧 技能互助</div>
+  </div>
+
+  <!-- 案例卡片 -->
+  <div class="case-grid" id="caseGrid">
+
+    <!-- 案例1 -->
+    <div class="case-card cat-points" data-cat="points">
+      <div class="case-follow" onclick="toggleFollow(this, 'case1')">✓</div>
+      <span class="case-tag points">💛 积分激励</span>
+      <h3>北京珠江紫台社区"共治坊"</h3>
+      <div class="case-loc">📍 北京市丰台区 · 2026年8月</div>
+      <div class="case-desc">
+        社区举办志愿服务队伍动员会，设置军旅故事分享、志愿队伍动员、邻里议事会、帆布包拓印手工DIY四大环节。
+        提出"融业于治、顺手公益"思路，倡导驻区单位在日常经营中发现治理难题、提供便民服务。
+      </div>
+      <div class="case-highlights">
+        <span>志愿积分机制</span>
+        <span>议事会模式</span>
+        <span>手工DIY</span>
+        <span>驻区单位协同</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>社区好事投票</b>（议事会模式）、<b>好事场景匹配器</b>（手工DIY场景）、<b>好心值体系</b>（积分激励）
+      </div>
+      <div class="case-source">来源：北京日报 · 新京报</div>
+    </div>
+
+    <!-- 案例2 -->
+    <div class="case-card cat-recycle" data-cat="recycle">
+      <div class="case-follow" onclick="toggleFollow(this, 'case2')">✓</div>
+      <span class="case-tag recycle">♻️ 环保循环</span>
+      <h3>重庆善淘Buy42慈善商店</h3>
+      <div class="case-loc">📍 重庆市九龙坡区 · 2025年6月开业</div>
+      <div class="case-desc">
+        "政府提供场地+慈善组织运营+社会捐赠资源"模式，闲置物品流转超1.2万件。
+        "以袋换书"活动让环保袋物尽其用、书籍流转觅新读者。残健融合团队运营，为3名特殊人士提供就业。
+        "一日店长"活动吸引2597人参与，累计服务超17881小时。
+      </div>
+      <div class="case-highlights">
+        <span>闲置流转</span>
+        <span>以物换物</span>
+        <span>残健融合</span>
+        <span>一日店长</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>好心值使用计划</b>（慈善商店兑换）、<b>好事搭档匹配</b>（残健融合模式）、<b>好事场景匹配器</b>（以物换物场景）
+      </div>
+      <div class="case-source">来源：重庆市民政局 · 上游新闻</div>
+    </div>
+
+    <!-- 案例3 -->
+    <div class="case-card cat-elderly" data-cat="elderly">
+      <div class="case-follow" onclick="toggleFollow(this, 'case3')">✓</div>
+      <span class="case-tag elderly">👴 适老服务</span>
+      <h3>新疆文化社区"姥姥的药箱"</h3>
+      <div class="case-loc">📍 新疆和硕县 · 2025年至今</div>
+      <div class="case-desc">
+        "马兰红·朝夕伴"志愿服务品牌，专业社工联合志愿者上门清理过期药品、分类摆放、贴大字标签。
+        完成首批23户后升级为"居家安全改造"——安装感应夜灯、加装防滑扶手。
+        "六点半课堂"解决双职工家庭课后托管，累计开展特色活动40余场次。
+      </div>
+      <div class="case-highlights">
+        <span>药箱整理</span>
+        <span>居家改造</span>
+        <span>六点半课堂</span>
+        <span>专业社工+志愿者</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>好事场景匹配器</b>（上门服务场景）、<b>社区问题反馈</b>（居家安全隐患上报）、<b>好事搭档匹配</b>（社工+志愿者协作）
+      </div>
+      <div class="case-source">来源：中国志愿</div>
+    </div>
+
+    <!-- 案例4 -->
+    <div class="case-card cat-elderly" data-cat="elderly">
+      <div class="case-follow" onclick="toggleFollow(this, 'case4')">✓</div>
+      <span class="case-tag elderly">👴 适老服务</span>
+      <h3>四川绵阳"李杜暖心圈"</h3>
+      <div class="case-loc">📍 四川绵阳游仙区 · 2025-2026年</div>
+      <div class="case-desc">
+        聚焦12户"高龄老人+学龄孩子+待业家长"复合型困难家庭，从居家安居、助学成长、技能增长、慈善文化四维帮扶。
+        加装防滑扶手、配置护眼台灯；开设学业辅导、亲子沟通工作坊；布艺串珠技能培训。
+        撬动资源1.77万元，满意度100%。
+      </div>
+      <div class="case-highlights">
+        <span>适老改造</span>
+        <span>学业辅导</span>
+        <span>技能培训</span>
+        <span>精准画像</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>好事场景匹配器</b>（适老改造场景）、<b>好心值使用计划</b>（技能培训兑换）、<b>社区好事投票</b>（需求优先级投票）
+      </div>
+      <div class="case-source">来源：中国社区发展网</div>
+    </div>
+
+    <!-- 案例5 -->
+    <div class="case-card cat-skill" data-cat="skill">
+      <div class="case-follow" onclick="toggleFollow(this, 'case5')">✓</div>
+      <span class="case-tag skill">🔧 技能互助</span>
+      <h3>杭州星荷社区"义修哥"团队</h3>
+      <div class="case-loc">📍 杭州萧山区义桥镇 · 2022年至今</div>
+      <div class="case-desc">
+        85后硬件工程师从一张手写纸牌起步，3年成长为6人核心团队。
+        每周日下午固定服务点，免费维修小家电。维修日记记了二十多页。
+        "1+3+5"工作模式：1个核心理念（维修/回收/再生）、3级响应（现场快修/工坊精修/上门特护）、5化支撑。
+      </div>
+      <div class="case-highlights">
+        <span>家电维修</span>
+        <span>技能志愿者</span>
+        <span>3级响应</span>
+        <span>维修日记</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>好事搭档匹配</b>（技能志愿者匹配）、<b>好事场景匹配器</b>（维修服务场景）、<b>好心值使用计划</b>（技能交换课时）
+      </div>
+      <div class="case-source">来源：萧山日报</div>
+    </div>
+
+    <!-- 案例6 -->
+    <div class="case-card cat-points" data-cat="points">
+      <div class="case-follow" onclick="toggleFollow(this, 'case6')">✓</div>
+      <span class="case-tag points">💛 积分激励</span>
+      <h3>泰州康居社区博爱超市</h3>
+      <div class="case-loc">📍 江苏泰州野徐镇 · 2025年至今</div>
+      <div class="case-desc">
+        "博爱家园+社会组织"合作机制，"公益积分兑换+微利便民购物+志愿专属福利"三位一体。
+        志愿服务时长存储制，积分兑换米面粮油、老年护理品、便民服务。
+        注册志愿者1493人，占常住人口15.3%。15分钟便民生活圈，线上预订线下配送。
+      </div>
+      <div class="case-highlights">
+        <span>积分兑换</span>
+        <span>时长存储制</span>
+        <span>博爱超市</span>
+        <span>15分钟生活圈</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>好心值使用计划</b>（博爱超市兑换模式）、<b>时间币体系</b>（时长存储制）、<b>好事场景匹配器</b>（15分钟生活圈匹配）
+      </div>
+      <div class="case-source">来源：中国红十字会</div>
+    </div>
+
+    <!-- 案例7 -->
+    <div class="case-card cat-points" data-cat="points">
+      <div class="case-follow" onclick="toggleFollow(this, 'case7')">✓</div>
+      <span class="case-tag points">💛 积分激励</span>
+      <h3>宁夏安居苑社区"慈善银行"</h3>
+      <div class="case-loc">📍 宁夏银川金凤区 · 2025年至今</div>
+      <div class="case-desc">
+        "存储-增值-兑换"三环慈善银行：善意资产记录在册，联合开展应急救护/心理沟通/反诈培训推动专业化，
+        季度积分兑换物资。五色网格管理法（红橙黄蓝绿）差异化设置探访频次。
+        全国"四个100"优秀典型。志愿队伍从2支拓展至8支。
+      </div>
+      <div class="case-highlights">
+        <span>慈善银行</span>
+        <span>五色网格</span>
+        <span>专业培训</span>
+        <span>全国典型</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>好心值体系</b>（慈善银行概念）、<b>社区问题反馈</b>（五色网格需求分类）、<b>好事搭档匹配</b>（专业培训匹配）
+      </div>
+      <div class="case-source">来源：头条 · 凡人善举</div>
+    </div>
+
+    <!-- 案例8 -->
+    <div class="case-card cat-timebank" data-cat="timebank">
+      <div class="case-follow" onclick="toggleFollow(this, 'case8')">✓</div>
+      <span class="case-tag timebank">⏰ 时间银行</span>
+      <h3>南沙时间银行"我为你贴春联"</h3>
+      <div class="case-loc">📍 广州南沙区 · 连续6届</div>
+      <div class="case-desc">
+        "需求清单、资源清单、服务清单"三单联动机制。互联网+社区服务，"一图两库两清单"工作模式。
+        6届累计600余名志愿者、链接资源超11万元、服务1421户家庭。
+        "精准画像+资源整合"让志愿服务从"普惠式"走向"滴灌式"。
+      </div>
+      <div class="case-highlights">
+        <span>三单联动</span>
+        <span>精准画像</span>
+        <span>资源整合</span>
+        <span>品牌活动</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>时间币体系</b>（时间银行模式）、<b>好事场景匹配器</b>（节日服务场景）、<b>社区好事投票</b>（需求清单机制）
+      </div>
+      <div class="case-source">来源：信息时报 · 广东新闻网</div>
+    </div>
+
+    <!-- 案例9 -->
+    <div class="case-card cat-timebank" data-cat="timebank">
+      <div class="case-follow" onclick="toggleFollow(this, 'case9')">✓</div>
+      <span class="case-tag timebank">⏰ 时间银行</span>
+      <h3>北京安定门"甜葡萄时间银行"</h3>
+      <div class="case-loc">📍 北京东城区安定门街道 · 2025年至今</div>
+      <div class="case-desc">
+        累计存储志愿服务时长超10万小时。"萄气豆"积分兑换文化体验、生活物资、商户优惠。
+        20余家商户合作授"安定门友好商户"标识。
+        公益众筹模式："为超人妈妈送朵花"66份爱心汇聚；"邻里益起走"捐步超1000万步换端午粽子。
+      </div>
+      <div class="case-highlights">
+        <span>时间储蓄</span>
+        <span>公益众筹</span>
+        <span>捐步活动</span>
+        <span>友好商户</span>
+      </div>
+      <div class="case-mapping">
+        → 对接模块：<b>时间币体系</b>（时间储蓄模式）、<b>好心值使用计划</b>（商户优惠兑换）、<b>好事搭档匹配</b>（众筹协作模式）
+      </div>
+      <div class="case-source">来源：北京文明网</div>
+    </div>
+
+  </div>
+
+  <!-- 分隔线 -->
+  <hr style="border:none;border-top:2px dashed var(--line);margin:40px 0;" />
+
+  <!-- 模块映射表 -->
+  <div style="margin:24px 0;">
+    <div class="sec-head"><span class="sec-num">01</span><h2>案例 → 平台模块 映射表</h2></div>
+    <p class="muted" style="margin-bottom:16px;">每个案例的核心模式如何对接到好事近的现有模块</p>
+    <div style="overflow-x:auto;">
+      <table class="mapping-table">
+        <thead>
+          <tr>
+            <th>平台模块</th>
+            <th>可借鉴案例</th>
+            <th>核心模式</th>
+            <th>迭代建议</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mod-name">好事场景匹配器</td>
+            <td class="case-ref">姥姥的药箱、义修哥、康居社区</td>
+            <td>上门服务场景、维修服务场景、15分钟生活圈匹配</td>
+            <td class="mod-action">新增"上门服务""技能维修""节日活动"场景类别</td>
+          </tr>
+          <tr>
+            <td class="mod-name">社区好事投票</td>
+            <td class="case-ref">共治坊议事会、南沙三单联动、李杜暖心圈</td>
+            <td>邻里议事会模式、需求清单机制、优先级投票</td>
+            <td class="mod-action">增加"议事会"模式，投票结果生成需求清单</td>
+          </tr>
+          <tr>
+            <td class="mod-name">好心值使用计划</td>
+            <td class="case-ref">善淘商店、博爱超市、甜葡萄时间银行</td>
+            <td>慈善商店兑换、积分兑换物资、商户优惠</td>
+            <td class="mod-action">接入"友好商户"体系，增加实物兑换通道</td>
+          </tr>
+          <tr>
+            <td class="mod-name">好事搭档匹配</td>
+            <td class="case-ref">义修哥团队、善淘残健融合、安居苑专业培训</td>
+            <td>技能志愿者匹配、残健融合、专业培训</td>
+            <td class="mod-action">增加"技能认证"标签，支持社工+志愿者协作</td>
+          </tr>
+          <tr>
+            <td class="mod-name">社区问题反馈</td>
+            <td class="case-ref">姥姥的药箱、安居苑五色网格</td>
+            <td>居家安全隐患上报、五色网格需求分类</td>
+            <td class="mod-action">新增"安全隐患""适老改造"反馈类别</td>
+          </tr>
+          <tr>
+            <td class="mod-name">时间币体系</td>
+            <td class="case-ref">南沙时间银行、甜葡萄时间银行</td>
+            <td>时长存储制、公益众筹、捐步活动</td>
+            <td class="mod-action">增加"公益众筹"和"捐步换物"功能</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 版本路线图 -->
+  <div style="margin:24px 0;">
+    <div class="sec-head"><span class="sec-num">02</span><h2>版本迭代路线图</h2></div>
+    <p class="muted" style="margin-bottom:16px;">基于案例调研的版本规划，每个版本对应一批案例模式的落地</p>
+    <div class="roadmap-timeline">
+      <div class="roadmap-item done">
+        <div class="rm-version">v1.0 ✅ 已完成</div>
+        <div class="rm-title">基础互动平台搭建</div>
+        <div class="rm-desc">
+          首页好事选择器、场景匹配器、社区投票、好心值体系、数据看板、动态信息流。
+          建立核心交互框架与模拟数据体系。
+        </div>
+        <div class="rm-tags">
+          <span>好事选择器</span><span>场景匹配</span><span>社区投票</span><span>好心值</span><span>数据看板</span>
+        </div>
+      </div>
+      <div class="roadmap-item done">
+        <div class="rm-version">v1.1 ✅ 已完成</div>
+        <div class="rm-title">互动广场与选择器扩展</div>
+        <div class="rm-desc">
+          好事选择器6大模块（场景匹配、共创投票、挑战赛、好心值计划、搭档匹配、问题反馈）。
+          首页新增场景匹配和社区投票模块。
+        </div>
+        <div class="rm-tags">
+          <span>6大互动模块</span><span>一键发送</span><span>模块联动</span><span>好心值全局状态</span>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="rm-version">v1.2 🔜 进行中</div>
+        <div class="rm-title">线下活动案例库 + 模块映射</div>
+        <div class="rm-desc">
+          联网查询9个真实社区公益案例，建立案例→模块映射表。
+          新增案例筛选、关注、版本路线图展示。为v2.0功能迭代提供案例依据。
+          <br><strong style="color:var(--brand);">本次更新</strong>
+        </div>
+        <div class="rm-tags">
+          <span>9个真实案例</span><span>7类活动</span><span>模块映射表</span><span>版本路线图</span>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="rm-version">v2.0 📋 规划中</div>
+        <div class="rm-title">线下活动融合 + 深度功能迭代</div>
+        <div class="rm-desc">
+          基于案例库调研结果，落地以下功能：
+          <br>① <strong>议事会模式</strong>（借鉴共治坊）— 投票结果生成需求清单，支持邻里议事
+          <br>② <strong>友好商户体系</strong>（借鉴甜葡萄/博爱超市）— 好心值兑换商户优惠
+          <br>③ <strong>技能认证标签</strong>（借鉴义修哥）— 搭档匹配增加技能资质
+          <br>④ <strong>公益众筹</strong>（借鉴甜葡萄）— 好心值众筹+捐步换物
+          <br>⑤ <strong>适老改造场景</strong>（借鉴姥姥的药箱/李杜暖心圈）— 场景匹配器新增上门服务
+          <br>⑥ <strong>时间银行</strong>（借鉴南沙/甜葡萄）— 时间币存储制+三单联动
+        </div>
+        <div class="rm-tags">
+          <span>议事会</span><span>友好商户</span><span>技能认证</span><span>公益众筹</span><span>适老改造</span><span>时间银行</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 互动：关注案例方向 -->
+  <div style="margin:24px 0;">
+    <div class="sec-head"><span class="sec-num">03</span><h2>你感兴趣哪些方向？</h2></div>
+    <p class="muted" style="margin-bottom:16px;">选择你感兴趣的案例方向（可多选），帮助我们确定v2.0功能优先级</p>
+    <div class="case-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));">
+      <div class="case-card cat-points" data-interest="points" onclick="toggleInterest(this)" style="text-align:center;padding:16px;">
+        <div style="font-size:32px;margin-bottom:6px;">💛</div>
+        <div style="font-size:14px;font-weight:700;">积分激励体系</div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">慈善银行/博爱超市</div>
+      </div>
+      <div class="case-card cat-timebank" data-interest="timebank" onclick="toggleInterest(this)" style="text-align:center;padding:16px;">
+        <div style="font-size:32px;margin-bottom:6px;">⏰</div>
+        <div style="font-size:14px;font-weight:700;">时间银行模式</div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">时长存储/公益众筹</div>
+      </div>
+      <div class="case-card cat-meeting" data-interest="meeting" onclick="toggleInterest(this)" style="text-align:center;padding:16px;">
+        <div style="font-size:32px;margin-bottom:6px;">🗳️</div>
+        <div style="font-size:14px;font-weight:700;">社区议事会</div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">需求清单/议事</div>
+      </div>
+      <div class="case-card cat-elderly" data-interest="elderly" onclick="toggleInterest(this)" style="text-align:center;padding:16px;">
+        <div style="font-size:32px;margin-bottom:6px;">👴</div>
+        <div style="font-size:14px;font-weight:700;">适老服务</div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">药箱/改造/陪伴</div>
+      </div>
+      <div class="case-card cat-child" data-interest="child" onclick="toggleInterest(this)" style="text-align:center;padding:16px;">
+        <div style="font-size:32px;margin-bottom:6px;">📚</div>
+        <div style="font-size:14px;font-weight:700;">儿童托管</div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">六点半课堂</div>
+      </div>
+      <div class="case-card cat-recycle" data-interest="recycle" onclick="toggleInterest(this)" style="text-align:center;padding:16px;">
+        <div style="font-size:32px;margin-bottom:6px;">♻️</div>
+        <div style="font-size:14px;font-weight:700;">环保循环</div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">慈善商店/以物换物</div>
+      </div>
+      <div class="case-card cat-skill" data-interest="skill" onclick="toggleInterest(this)" style="text-align:center;padding:16px;">
+        <div style="font-size:32px;margin-bottom:6px;">🔧</div>
+        <div style="font-size:14px;font-weight:700;">技能互助</div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">义修哥/技能认证</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.wrap -->
+
+<!-- 关注栏 -->
+<div class="follow-bar">
+  <div class="fb-count">
+    已关注 <b id="followCount">0</b> 个案例 · 已选 <b id="interestCount">0</b> 个方向
+  </div>
+  <button class="fb-btn" id="submitInterest" disabled onclick="submitInterests()">
+    📤 一键提交关注方向
+  </button>
+</div>
+
+<!-- 页脚 -->
+<footer>
+  <div class="wrap">
+    <div class="refs">
+      <h5>📋 案例库说明</h5>
+      <ol>
+        <li>所有案例均来自2025-2026年公开报道的真实社区公益实践</li>
+        <li>每个案例标注了可对接的平台模块和产品迭代建议</li>
+        <li>关注案例方向后，系统会据此规划v2.0功能优先级</li>
+        <li>案例库将持续更新，联网查询更多优秀实践</li>
+      </ol>
+    </div>
+    <p>好事近 · 泛公益调研全案 &mdash; 让好事触手可及 <span class="heart">♥</span></p>
+    <p style="font-size:11px;margin-top:6px;color:var(--ink-faint);">案例来源已标注，数据均为公开报道整理</p>
+  </div>
+</footer>
+
+<!-- Toast 容器 -->
+<div id="toastContainer" style="position:fixed;top:70px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:8px;"></div>
+
+<script>
+// 筛选
+document.querySelectorAll('.filter-tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    var cat = this.dataset.cat;
+    document.querySelectorAll('#caseGrid .case-card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+        card.style.animation = 'slide-up .3s ease both';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+});
+
+// 关注案例
+var followedCases = new Set();
+function toggleFollow(el, caseId) {
+  event.stopPropagation();
+  var card = el.closest('.case-card');
+  if (card.classList.contains('followed')) {
+    card.classList.remove('followed');
+    followedCases.delete(caseId);
+  } else {
+    card.classList.add('followed');
+    followedCases.add(caseId);
+  }
+  document.getElementById('followCount').textContent = followedCases.size;
+}
+
+// 选择方向
+var selectedInterests = new Set();
+function toggleInterest(el) {
+  var interest = el.dataset.interest;
+  if (el.classList.contains('followed')) {
+    el.classList.remove('followed');
+    selectedInterests.delete(interest);
+  } else {
+    el.classList.add('followed');
+    selectedInterests.add(interest);
+  }
+  document.getElementById('interestCount').textContent = selectedInterests.size;
+  document.getElementById('submitInterest').disabled = selectedInterests.size === 0;
+}
+
+// 提交关注方向
+function submitInterests() {
+  var interestLabels = {
+    points: '积分激励体系', timebank: '时间银行模式', meeting: '社区议事会',
+    elderly: '适老服务', child: '儿童托管', recycle: '环保循环', skill: '技能互助'
+  };
+  var selected = Array.from(selectedInterests).map(function(k) { return interestLabels[k]; }).join('、');
+  
+  var btn = document.getElementById('submitInterest');
+  btn.disabled = true;
+  btn.textContent = '提交中……';
+  
+  setTimeout(function() {
+    btn.disabled = false;
+    btn.textContent = '📤 一键提交关注方向';
+    
+    showToast('✅', '关注方向已提交', '你选择了：' + selected + '，将在v2.0版本中优先开发相关功能');
+    
+    // 清除选择
+    document.querySelectorAll('[data-interest]').forEach(function(el) { el.classList.remove('followed'); });
+    selectedInterests.clear();
+    document.getElementById('interestCount').textContent = '0';
+    document.getElementById('submitInterest').disabled = true;
+  }, 800);
+}
+
+// Toast
+function showToast(icon, title, desc) {
+  var container = document.getElementById('toastContainer');
+  var toast = document.createElement('div');
+  toast.style.cssText = 'background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--leaf);border-radius:10px;padding:12px 18px;box-shadow:0 8px 32px rgba(43,38,34,.12);display:flex;align-items:center;gap:10px;max-width:360px;animation:slide-in .3s ease;';
+  toast.innerHTML = '<span style="font-size:20px;">' + icon + '</span><div><div style="font-size:14px;font-weight:700;">' + title + '</div><div style="font-size:12px;color:var(--ink-soft);margin-top:2px;">' + desc + '</div></div>';
+  container.appendChild(toast);
+  setTimeout(function() {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(40px)';
+    toast.style.transition = 'all .3s ease';
+    setTimeout(function() { toast.remove(); }, 300);
+  }, 3500);
+}
+
+// 添加动画样式
+var style = document.createElement('style');
+style.textContent = '@keyframes slide-in{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}@keyframes slide-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
