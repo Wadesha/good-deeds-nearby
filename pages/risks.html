@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>05 风险与直话 · 好事近全案</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 全案</a>
+    <nav>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html" class="active">风险</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>05 风险</div>
+    <span class="eyebrow"><span class="dot"></span> 直话直说</span>
+    <h1>风险与我的几点直话</h1>
+    <p class="sub">几个不得不说的真话——关于成本、历史教训、竞争策略，以及最可怕的"伪需求"。</p>
+  </div>
+</div>
+
+<main class="wrap">
+  <section>
+    <div class="grid cols-2">
+      <div class="card brand"><div class="ic">1</div><h4>"非金钱" ≠ "无成本"</h4><p>运营、撮合、信任背书都要人力和钱。可持续路径应是<b>社会企业 / 基金会</b>模式：用 CSR 合作、政府购买服务覆盖成本，而非向用户收费。</p></div>
+      <div class="card gold"><div class="ic">2</div><h4>时间银行的旧坑别再踩</h4><p>管理重、跨地域不通、年轻人不信。我们的解法是"<b>轻量任务 + 社区内自平衡 + 游戏化好心值</b>"，不是照搬传统时间银行。</p></div>
+      <div class="card leaf"><div class="ic">3</div><h4>别和志愿汇正面刚</h4><p>它是政策基础设施，我们做"<b>个人体验层</b>"，未来应是互补/接入而非替代。</p></div>
+      <div class="card plum"><div class="ic">4</div><h4>最大的真风险是"伪需求"</h4><p>所以 Phase 0 的验证必须狠——如果行为探针里人们只是"说想做、实际不动"，就说明"时间贫困者想做好事"是个温柔的错觉，<b>早点认栽比硬做产品体面</b>。</p></div>
+    </div>
+  </section>
+
+  <section style="border:none">
+    <div class="note warn"><span class="tag">核 心</span>Phase 0 的行为探针是成本最低、信号最真的验证。如果探针失败，说明"时间贫困者想做好事"是个温柔的错觉——<b>早点认栽比硬做产品体面</b>。</div>
+    <div style="text-align:center;margin-top:24px">
+      <p style="font-size:14px;color:var(--ink-faint)">下一步：<a href="next.html" style="color:var(--brand)">查看下一步行动建议 →</a></p>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><p>把好事做成日常 <span class="heart">♥</span> · 个人兴趣探索方案</p></div></footer>
+<button id="totop" aria-label="回到顶部">↑</button>
+<script>
+  const totop = document.getElementById('totop');
+  document.addEventListener('scroll', () => { totop.classList.toggle('show', document.documentElement.scrollTop > 600); }, {passive: true});
+  totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>00 一句话立论 · 好事近全案</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 全案</a>
+    <nav>
+      <a href="thesis.html" class="active">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>00 立论</div>
+    <span class="eyebrow"><span class="dot"></span> 核心判断</span>
+    <h1>一句话立论</h1>
+    <p class="sub">这四件事叠加，构成了一个被现有志愿服务体系系统性忽略的细分人群。如果这个判断成立，它就是机会；如果不成立，调研本身也能帮我们尽早止损。</p>
+  </div>
+</div>
+
+<main class="wrap">
+  <section>
+    <p class="lead" style="font-size:18px; line-height:1.8">
+      <strong>"时间贫困 × 意愿充足 × 非金钱驱动 × 强地域性"</strong> 这四件事叠加，构成了一个被现有志愿服务体系系统性忽略的细分人群。
+    </p>
+    <div class="grid cols-2" style="margin:24px 0">
+      <div class="card brand"><div class="ic">⏳</div><h4>时间贫困</h4><p>周均可支配"整块公益时间"极少，但有大量通勤、排队、午休等碎片时间。</p></div>
+      <div class="card leaf"><div class="ic">🌱</div><h4>意愿充足</h4><p>做过的人复购率高（蚂蚁森林、捐步证明"轻量即高频"），动机是自我价值感与社会连接。</p></div>
+      <div class="card gold"><div class="ic">💛</div><h4>非金钱驱动</h4><p>动机是"自我价值感、社交连接、缓解存在焦虑"，不是报酬。需要非货币但可感知的回报。</p></div>
+      <div class="card sky"><div class="ic">📍</div><h4>强地域性</h4><p>好事要"顺路、就近"才做——这正好和"15 分钟生活圈"政策同频。</p></div>
+    </div>
+    <p style="font-size:16px; line-height:1.8; margin-top:16px">
+      志愿汇解决的是"组织如何管理志愿者"，腾讯公益解决的是"如何筹钱"，而 <strong>"一个忙人如何在通勤和碎片时间里，顺手把好事做了"</strong> 这件事，目前没有专属产品。
+    </p>
+    <div class="note leaf"><span class="tag">判 断</span>如果这个判断成立，它就是机会；如果不成立，调研本身也能帮我们尽早止损。</div>
+  </section>
+  <section style="border:none; padding-bottom:20px; text-align:center">
+    <p style="font-size:14px;color:var(--ink-faint)">下一步：<a href="market.html" style="color:var(--brand)">查看市场与需求现状 →</a></p>
+  </section>
+</main>
+
+<footer><div class="wrap"><p>把好事做成日常 <span class="heart">♥</span> · 个人兴趣探索方案</p></div></footer>
+<button id="totop" aria-label="回到顶部">↑</button>
+<script>
+  const totop = document.getElementById('totop');
+  document.addEventListener('scroll', () => { totop.classList.toggle('show', document.documentElement.scrollTop > 600); }, {passive: true});
+  totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+</body>
+</html>

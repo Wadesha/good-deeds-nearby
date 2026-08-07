@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>下一步建议 · 好事近全案</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 全案</a>
+    <nav>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="next.html" class="active">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>下一步</div>
+    <span class="eyebrow"><span class="dot"></span> 行动指南</span>
+    <h1>下一步建议（如果你真要动）</h1>
+    <p class="sub">成本最低、信号最真的验证路径——从案头到田野，一周内启动。</p>
+  </div>
+</div>
+
+<main class="wrap">
+  <section>
+    <div class="grid cols-2">
+      <div class="card brand"><div class="ic">📋</div><h4>第 1 步：定稿工具</h4><p>先用 <b>1 周</b>把 <a href="research.html" style="color:var(--brand)">2.3 问卷</a>和 <a href="research.html" style="color:var(--brand)">2.4 访谈提纲</a>定稿，确保每个问题都指向对应的 H1–H5 假设。</p></div>
+      <div class="card leaf"><div class="ic">🤝</div><h4>第 2 步：社区引荐</h4><p>找 <b>2–3 个本地公益组织/社区</b>做引荐，启动 30 人深度访谈，重点验证 H3 动机真伪。</p></div>
+      <div class="card gold" style="grid-column:1/-1"><div class="ic">📱</div><h4>第 3 步：行为探针（最关键）</h4><p>同步建 <b>1 个 50 人微信群</b>做 2 周"人工撮合"行为探针——人工在群里发布"就近轻量好事"信息，观察真实参与率。这是<b>成本最低、信号最真</b>的验证。如果探针失败，说明"时间贫困者想做好事"是个温柔的错觉，<b>早点认栽比硬做产品体面</b>。</p></div>
+    </div>
+  </section>
+
+  <section style="border:none">
+    <div class="note sky" style="margin-top:22px">
+      <span class="tag">注</span>文中数据与竞品信息来自 2024–2026 年公开报道、平台官网及学术/政策文献；具体数字以最新官方统计为准。本文为<b>个人兴趣探索</b>用方案，落地前建议补充一手调研与法务合规校验。
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <p style="font-size:14px;color:var(--ink-faint)"><a href="../index.html" style="color:var(--brand)">← 返回首页</a></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="refs">
+      <h5>参考资料</h5>
+      <ol>
+        <li>中国志愿服务网 · 全国实名注册志愿者数据（2024.11）</li>
+        <li>全国志愿服务信息系统 · 老年志愿服务统计（2025.9）</li>
+        <li>艾瑞咨询 / 公开报道 · 互联网公益年参与人次</li>
+        <li>腾讯公益官网 · 累计筹款数据（2025.10）</li>
+        <li>志愿服务"三重失灵"相关学术文献</li>
+        <li>"15 分钟志愿服务圈"政策文件</li>
+        <li>新《慈善法》相关条款</li>
+        <li>时间银行用户性别分布调研</li>
+      </ol>
+    </div>
+    <p>把好事做成日常 <span class="heart">♥</span> · 个人兴趣探索方案</p>
+    <p style="margin-top:4px">泛公益参与需求调研 + 调研产品规划 + MVP 与递进路线（全案）</p>
+  </div>
+</footer>
+
+<button id="totop" aria-label="回到顶部">↑</button>
+<script>
+  const totop = document.getElementById('totop');
+  document.addEventListener('scroll', () => { totop.classList.toggle('show', document.documentElement.scrollTop > 600); }, {passive: true});
+  totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+</body>
+</html>

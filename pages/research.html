@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>02 需求假设与验证框架 · 好事近全案</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 全案</a>
+    <nav>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html" class="active">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>02 调研产品</div>
+    <span class="eyebrow"><span class="dot"></span> 调研产品规划</span>
+    <h1>需求假设与验证框架</h1>
+    <p class="sub">所谓"调研产品"，不是写篇报告，而是把"验证需求"本身做成一个可复用、可量化、可迭代的方法包。下面这套方法包就是产品。</p>
+  </div>
+</div>
+
+<main class="wrap">
+  <section>
+    <h3>2.1 待验证的核心假设（Hypothesis List）</h3>
+    <div class="grid cols-2">
+      <div class="hyp"><div class="row"><span class="badge">H1</span><div><h4>时间贫困者仍有稳定参与意愿</h4><div class="meta"><span>▸ 验证方式：<b>问卷 + 行为意向</b></span><span>▸ 证伪：意愿分 &lt; 中位、且无复购意向</span></div></div></div></div>
+      <div class="hyp H2"><div class="row"><span class="badge">H2</span><div><h4>"就近 + 碎片"是参与第一驱动力</h4><div class="meta"><span>▸ 验证方式：<b>联合分析 / 排序题</b></span><span>▸ 证伪：排序中"时长认证/证书"高于"就近"</span></div></div></div></div>
+      <div class="hyp H3"><div class="row"><span class="badge">H3</span><div><h4>非金钱激励（信用/好心值）足以驱动持续参与</h4><div class="meta"><span>▸ 验证方式：<b>访谈 + A/B 模拟</b></span><span>▸ 证伪：明确表示"没奖励就不做"且拒绝非货币权益</span></div></div></div></div>
+      <div class="hyp H4"><div class="row"><span class="badge">H4</span><div><h4>男性 / 年轻人 / 职场人是供给侧缺口</h4><div class="meta"><span>▸ 验证方式：<b>样本分布 + 动机差异</b></span><span>▸ 证伪：该群体参与意愿与女性无显著差异</span></div></div></div></div>
+      <div class="hyp H5" style="grid-column:1/-1"><div class="row"><span class="badge">H5</span><div><h4>地域性（社区 / LBS）是匹配关键</h4><div class="meta"><span>▸ 验证方式：<b>LBS 任务模拟点击</b></span><span>▸ 证伪：对"距离 &lt; 1km"任务无偏好</span></div></div></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h3>2.2 方法论：混合方法（Mixed Methods）</h3>
+    <div class="note sky"><span class="tag">原 则</span>不要只发问卷。问卷给"量"，访谈给"为什么"，行为数据给"真做了没"。</div>
+<pre class="flow"><code>定量（问卷，N≈600）  ──►  验证 H1/H2/H4/H5 的规模与分布
+   │
+深度访谈（N≈30）     ──►  验证 H3 动机，挖"为什么不做"的真障碍
+   │
+行为探针（小群 2 周） ──►  建微信群人工撮合"就近轻量好事"，看真实参与率
+   │
+竞品测绘（桌面）     ──►  已有，持续更新</code></pre>
+  </section>
+
+  <section>
+    <h3>2.3 调研工具一：问卷大纲（5 模块，约 25 题）</h3>
+    <div class="grid cols-2">
+      <div class="card brand"><div class="ic">A</div><h4>人口与"时间贫困度"</h4><p>年龄 / 城市层级 / 职业 / 周工作小时；周均可自由支配的"整块时间"（&gt;2h）？碎片时间场景（通勤/午休/排队/遛娃/运动）← <b>关键匹配锚点</b></p></div>
+      <div class="card leaf"><div class="ic">B</div><h4>公益参与现状</h4><p>过去一年是否参与过泛公益？单次愿意投入时长：&lt;15min / 15-30min / 0.5-1h / &gt;1h ← <b>验证颗粒度</b></p></div>
+      <div class="card gold"><div class="ic">C</div><h4>驱动力排序（联合分析核心）</h4><p>6 项参与理由排序 ← <b>直接验证 H2</b></p></div>
+      <div class="card sky"><div class="ic">D</div><h4>非金钱激励接受度（验证 H3）</h4><p>好心值兑换偏好、时间银行存兑意愿。</p></div>
+    </div>
+    <div class="card plum" style="margin-top:10px"><div class="ic" style="display:inline-grid;width:34px;height:34px;vertical-align:middle;margin-right:8px">E</div><h4 style="display:inline">障碍与流失</h4><p style="margin-top:8px">你不做公益的主因？如果有一款"顺路 15 分钟做好事"的小程序，参与意愿 1–10？</p></div>
+  </section>
+
+  <section>
+    <h3>2.4 深度访谈提纲（8 主题，每场 45min）</h3>
+    <ol>
+      <li>上一次你"顺手帮了别人"是什么时候？什么触发了你？</li>
+      <li>你觉得自己"忙"吗？忙和"想做好事"之间怎么取舍？</li>
+      <li>你做过最持续的公益是什么？为什么能持续？为什么停了？</li>
+      <li>你对"志愿汇/腾讯公益"的体验？哪里别扭？</li>
+      <li>如果好事"就在楼下、只要 15 分钟"，你会做吗？</li>
+      <li>你怎么看"好心值/信用"这类非金钱回报？</li>
+      <li>时间银行（存时间取服务）你信吗？怕什么？</li>
+      <li>你愿意和"附近同频的人"一起做吗？社交是加分还是减分？</li>
+    </ol>
+  </section>
+
+  <section>
+    <h3>2.5 样本设计（分层配额）</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>维度</th><th>分层</th><th>目标占比</th></tr></thead>
+        <tbody>
+          <tr><td>时间贫困度</td><td>高（周整块时间 &lt; 2h）/ 中 / 低</td><td><span class="pill brand">高占比 ≥ 50%</span></td></tr>
+          <tr><td>年龄</td><td>18-25 / 26-40 / 41-60 / 60+</td><td>重点 <b>26-40 职场人</b></td></tr>
+          <tr><td>地域</td><td>一线 / 新一线 / 三线及以下</td><td><span class="pill leaf">一线 + 新一线 ≥ 60%</span></td></tr>
+          <tr><td>性别</td><td>男 / 女</td><td>刻意 <b>oversample 男性</b>（验证 H4 缺口）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section style="border:none">
+    <h3>2.6 成功标准（什么算"验证通过"）</h3>
+    <ul class="check">
+      <li><b>H1 成立</b>：核心人群（高时间贫困）中，参与意愿 ≥ 6/10 且 ≥ 40% 表示"有合适入口会持续做"。</li>
+      <li><b>H2 成立</b>："就近 + 碎片"在驱动力排序中进入前 2。</li>
+      <li><b>行为探针</b>：2 周微信群撮合，人均真实参与 ≥ 1 次，且 ≥ 30% 主动问"下次什么时候"。</li>
+      <li><b>可推进 MVP 的门槛</b>：同时满足 H1 + H2，且非金钱激励在 H3 中不被明确拒绝。</li>
+    </ul>
+    <div style="text-align:center;margin-top:24px">
+      <p style="font-size:14px;color:var(--ink-faint)">下一步：<a href="mvp.html" style="color:var(--brand)">查看产品 MVP 规划 →</a></p>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><p>把好事做成日常 <span class="heart">♥</span> · 个人兴趣探索方案</p></div></footer>
+<button id="totop" aria-label="回到顶部">↑</button>
+<script>
+  const totop = document.getElementById('totop');
+  document.addEventListener('scroll', () => { totop.classList.toggle('show', document.documentElement.scrollTop > 600); }, {passive: true});
+  totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>04 叠加递进路径 · 好事近全案</title>
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 全案</a>
+    <nav>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html" class="active">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>04 递进路径</div>
+    <span class="eyebrow"><span class="dot"></span> 产品路线图</span>
+    <h1>叠加递进路径</h1>
+    <p class="sub">核心思路：每一层都以上一层的"用户 + 数据 + 信任"为地基，能力像搭乐高一样往上叠，而不是一次性做重。</p>
+  </div>
+</div>
+
+<main class="wrap">
+  <section>
+    <h3>路线总览</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>阶段</th><th>时间</th><th>核心目标</th><th>叠加的能力</th><th>关键指标</th></tr></thead>
+        <tbody>
+          <tr><td><b>Phase 0 验证</b></td><td>0–3 月</td><td>证伪 / 证实需求</td><td>问卷 + 30 访 + 2 周行为探针</td><td><span class="pill brand">H1–H5 通过门槛</span></td></tr>
+          <tr><td><b>Phase 1 MVP</b></td><td>3–6 月</td><td>跑通单点闭环</td><td>小程序 + LBS 任务 + 好心值</td><td><span class="pill leaf">单社区周活、人均参与次数</span></td></tr>
+          <tr><td><b>Phase 2 正循环</b></td><td>6–12 月</td><td>非货币激励闭环</td><td>时间币存兑 + 组织入驻 + 权益商城</td><td><span class="pill">时间币流通率、复购率</span></td></tr>
+          <tr><td><b>Phase 3 网络效应</b></td><td>12–24 月</td><td>多城复制 + 智能匹配</td><td>数据驱动推荐 + 跨社区 + 政府对接</td><td><span class="pill sky">城市数、匹配成功率</span></td></tr>
+          <tr><td><b>Phase 4 生态</b></td><td>24 月+</td><td>泛公益基础设施</td><td>开放 API + B 端 CSR 对接 + 影响力量化</td><td><span class="pill plum">接入组织数、社会价值报告</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section style="border:none">
+    <h3>递进的"杠杆点"</h3>
+    <div class="timeline">
+      <div class="phase p1"><div class="node"></div>
+        <div class="ptitle"><h4>Phase 1 → 2 的杠杆</h4><span class="when">关键转折</span></div>
+        <div class="pbody"><b>时间币真的能兑到东西</b>（否则激励失灵复发）。</div>
+      </div>
+      <div class="phase p3"><div class="node"></div>
+        <div class="ptitle"><h4>Phase 2 → 3 的杠杆</h4><span class="when">规模放大</span></div>
+        <div class="pbody"><b>数据让匹配更准</b>（否则信息失灵复发）。</div>
+      </div>
+      <div class="phase p5"><div class="node"></div>
+        <div class="ptitle"><h4>Phase 3 → 4 的杠杆</h4><span class="when">成为基础设施</span></div>
+        <div class="pbody"><b>成为政府/企业的善意基础设施</b>（否则持续失灵复发）。</div>
+      </div>
+    </div>
+    <div class="note sky"><span class="tag">逻 辑</span>每一层都以上一层的"用户 + 数据 + 信任"为地基，能力像搭乐高一样往上叠，而不是一次性做重。</div>
+    <div style="text-align:center;margin-top:24px">
+      <p style="font-size:14px;color:var(--ink-faint)">下一步：<a href="risks.html" style="color:var(--brand)">查看风险与直话 →</a></p>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><p>把好事做成日常 <span class="heart">♥</span> · 个人兴趣探索方案</p></div></footer>
+<button id="totop" aria-label="回到顶部">↑</button>
+<script>
+  const totop = document.getElementById('totop');
+  document.addEventListener('scroll', () => { totop.classList.toggle('show', document.documentElement.scrollTop > 600); }, {passive: true});
+  totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+</body>
+</html>

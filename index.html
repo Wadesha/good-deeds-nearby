@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>好事近 · 泛公益参与调研全案 | 项目展示</title>
+<meta name="description" content="把泛公益拆成15分钟、顺路、就近的轻量任务，用非金钱的'好心值+时间币'替代工资，让忙人也能把好事做成日常。" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  /* 看板统计 */
+  .dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin:30px 0}
+  .metric{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+    box-shadow:var(--shadow);text-align:center;position:relative;overflow:hidden}
+  .metric .num{font-size:clamp(32px,4vw,48px);font-weight:800;letter-spacing:-.02em;line-height:1}
+  .metric .num.brand{color:var(--brand)}
+  .metric .num.gold{color:var(--gold)}
+  .metric .num.leaf{color:var(--leaf)}
+  .metric .num.sky{color:var(--sky)}
+  .metric .num.plum{color:var(--plum)}
+  .metric .label{font-size:13px;color:var(--ink-soft);margin-top:6px}
+  .metric .sub{font-size:11.5px;color:var(--ink-faint);margin-top:2px}
+
+  /* 模拟柱状图 */
+  .bar-chart{display:flex;align-items:flex-end;gap:10px;height:220px;padding:20px 0 10px;position:relative}
+  .bar-chart::before{content:"";position:absolute;left:0;right:0;bottom:30px;border-bottom:1px solid var(--line)}
+  .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
+  .bar{width:100%;max-width:52px;border-radius:5px 5px 2px 2px;transition:height .6s ease;position:relative;min-height:4px}
+  .bar .val{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;white-space:nowrap}
+  .bar-label{font-size:11px;color:var(--ink-faint);margin-top:8px;text-align:center;line-height:1.3;max-width:80px}
+  .bar.brand{background:var(--brand)}
+  .bar.leaf{background:var(--leaf)}
+  .bar.gold{background:var(--gold)}
+  .bar.sky{background:var(--sky)}
+  .bar.plum{background:var(--plum)}
+  .bar.brand .val{color:var(--brand-deep)}
+  .bar.leaf .val{color:var(--leaf)}
+  .bar.gold .val{color:var(--gold)}
+  .bar.sky .val{color:var(--sky)}
+  .bar.plum .val{color:var(--plum)}
+
+  /* 环形进度 */
+  .ring{width:80px;height:80px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;position:relative}
+  .ring::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--brand) 0deg 312deg,var(--line) 312deg 360deg)}
+  .ring::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--paper)}
+  .ring .pct{position:relative;z-index:1;font-size:20px;font-weight:800;color:var(--brand)}
+  .ring.leaf::before{background:conic-gradient(var(--leaf) 0deg 259deg,var(--line) 259deg 360deg)}
+  .ring.leaf .pct{color:var(--leaf)}
+  .ring.gold::before{background:conic-gradient(var(--gold) 0deg 234deg,var(--line) 234deg 360deg)}
+  .ring.gold .pct{color:var(--gold)}
+  .ring.sky::before{background:conic-gradient(var(--sky) 0deg 288deg,var(--line) 288deg 360deg)}
+  .ring.sky .pct{color:var(--sky)}
+
+  /* 发现卡片 */
+  .findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:20px 0}
+  .finding{border:1px solid var(--line);border-radius:12px;padding:20px;background:var(--paper);box-shadow:var(--shadow)}
+  .finding .icon{font-size:28px;margin-bottom:8px}
+  .finding h4{margin:0 0 6px;font-size:15px}
+  .finding p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.65}
+  .finding .stat{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;padding:4px 10px;border-radius:999px}
+  .finding .stat.brand{background:var(--brand-soft);color:var(--brand-deep)}
+  .finding .stat.leaf{background:var(--leaf-soft);color:var(--leaf)}
+  .finding .stat.gold{background:var(--gold-soft);color:var(--gold)}
+
+  /* 模拟用户评价 */
+  .testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:20px 0}
+  .tweet{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+  .tweet .avatar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .tweet .avatar .pic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:700;color:#fff}
+  .tweet .avatar .name{font-size:14px;font-weight:600}
+  .tweet .avatar .role{font-size:11.5px;color:var(--ink-faint)}
+  .tweet .text{font-size:13.5px;color:var(--ink-soft);line-height:1.7;font-style:italic}
+  .tweet .text::before{content:"\201C";color:var(--brand);font-size:20px;font-weight:700;margin-right:2px}
+  .tweet .text::after{content:"\201D";color:var(--brand);font-size:20px;font-weight:700;margin-left:2px}
+
+  /* 假设状态 */
+  .hyp-status{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+  .hyp-tag{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600}
+  .hyp-tag.pass{background:var(--leaf-soft);color:var(--leaf)}
+  .hyp-tag.verify{background:var(--gold-soft);color:var(--gold)}
+  .hyp-tag.unknown{background:#f1ece4;color:var(--ink-faint)}
+
+  /* 阶段进度条 */
+  .phase-strip{display:flex;gap:2px;margin:20px 0;border-radius:8px;overflow:hidden}
+  .phase-strip .seg{flex:1;padding:14px 10px;text-align:center;font-size:12px;font-weight:600;color:rgba(255,255,255,.8);position:relative}
+  .phase-strip .seg.done{background:var(--brand)}
+  .phase-strip .seg.curr{background:var(--gold)}
+  .phase-strip .seg.next{background:var(--line);color:var(--ink-faint)}
+  .phase-strip .seg .phs{display:block;font-size:10px;font-weight:400;opacity:.7;margin-top:4px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="index.html" class="logo"><span>好事近</span> · 项目展示</a>
+    <nav>
+      <a href="index.html" class="active">首页</a>
+      <a href="pages/thesis.html">立论</a>
+      <a href="pages/market.html">市场</a>
+      <a href="pages/research.html">调研产品</a>
+      <a href="pages/mvp.html">MVP</a>
+      <a href="pages/roadmap.html">递进</a>
+      <a href="pages/risks.html">风险</a>
+      <a href="pages/next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span> 好事近 · 泛公益调研产品全案</span>
+    <h1>时间紧、仍想做点好事的人<br/><span class="hl">把好事做成日常</span></h1>
+    <p class="sub">一个被现有志愿服务体系系统性忽略的细分人群——"时间贫困 × 意愿充足 × 非金钱驱动 × 强地域性"。<br/>以下是 Phase 0 验证阶段基于 <strong>模拟数据</strong> 的项目展示。</p>
+    <div class="meta">
+      <span class="chip">📊 N=612 模拟样本</span>
+      <span class="chip">🏙️ 覆盖 35 个城市</span>
+      <span class="chip">📅 2025–2026 调研</span>
+      <span class="chip">✅ H1–H5 验证中</span>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- ============ 数据看板 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>项目总览 · 模拟数据看板</h2></div>
+    <p class="muted">以下数据基于 Phase 0 调研模拟，用于展示项目逻辑与验证框架。实际数据以真实调研结果为准。</p>
+
+    <div class="dashboard">
+      <div class="metric">
+        <div class="num brand">612</div>
+        <div class="label">有效问卷样本量</div>
+        <div class="sub">N=612，超目标 600</div>
+      </div>
+      <div class="metric">
+        <div class="num gold">58%</div>
+        <div class="label">男性受访者占比</div>
+        <div class="sub">刻意 oversample 验证 H4</div>
+      </div>
+      <div class="metric">
+        <div class="num leaf">87%</div>
+        <div class="label">碎片化参与意愿</div>
+        <div class="sub">任务 ≤15min 时愿意参与</div>
+      </div>
+      <div class="metric">
+        <div class="num sky">72%</div>
+        <div class="label">"就近"排入前 2 驱动力</div>
+        <div class="sub">验证 H2 通过</div>
+      </div>
+      <div class="metric">
+        <div class="num plum">35</div>
+        <div class="label">覆盖城市数</div>
+        <div class="sub">一线 + 新一线 ≥ 65%</div>
+      </div>
+      <div class="metric">
+        <div class="num brand">68%</div>
+        <div class="label">行为探针活跃率</div>
+        <div class="sub">2 周微信群主动参与率</div>
+      </div>
+    </div>
+
+    <!-- 假设验证进度 -->
+    <div class="hyp-status">
+      <span class="hyp-tag pass">✅ H1 时间贫困者有意愿 — 通过</span>
+      <span class="hyp-tag pass">✅ H2 就近+碎片是驱动力 — 通过</span>
+      <span class="hyp-tag verify">🔄 H3 非金钱激励可行 — 验证中</span>
+      <span class="hyp-tag pass">✅ H4 男性/职场人是缺口 — 通过</span>
+      <span class="hyp-tag verify">🔄 H5 LBS 是关键匹配 — 验证中</span>
+    </div>
+  </section>
+
+  <!-- ============ 调研发现 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>核心发现（模拟数据）</h2></div>
+
+    <h3>驱动力排序（联合分析）</h3>
+    <p class="muted">受访者对 6 项参与理由按重要性排序，得分越高越优先。</p>
+    <div class="bar-chart">
+      <div class="bar-wrap"><div class="bar brand" style="height:186px"><span class="val">92%</span></div><div class="bar-label">离家/公司近<br/>&lt;1km</div></div>
+      <div class="bar-wrap"><div class="bar gold" style="height:170px"><span class="val">84%</span></div><div class="bar-label">只要 15 分钟<br/>顺路就能做</div></div>
+      <div class="bar-wrap"><div class="bar leaf" style="height:120px"><span class="val">62%</span></div><div class="bar-label">有"好心值/信用"<br/>可积累</div></div>
+      <div class="bar-wrap"><div class="bar sky" style="height:94px"><span class="val">48%</span></div><div class="bar-label">能认识附近<br/>同频的人</div></div>
+      <div class="bar-wrap"><div class="bar plum" style="height:74px"><span class="val">38%</span></div><div class="bar-label">有官方时长<br/>认证/证书</div></div>
+      <div class="bar-wrap"><div class="bar" style="height:52px;background:var(--ink-faint)"><span class="val" style="color:var(--ink-faint)">28%</span></div><div class="bar-label">能存时间<br/>将来取服务</div></div>
+    </div>
+    <div class="note leaf"><span class="tag">解 读</span>"就近 + 碎片"以压倒性优势占据前两位，验证 H2 成立。传统时间银行的"存时间取服务"排在末位，说明年轻人对时间银行模式接纳度低，需要游戏化改造。</div>
+
+    <h3 style="margin-top:32px">非金钱激励接受度</h3>
+    <div class="grid cols-4">
+      <div style="text-align:center;padding:16px">
+        <div class="ring"><span class="pct">87%</span></div>
+        <p style="font-size:13px;font-weight:700;margin:0">社区荣誉</p>
+        <p style="font-size:11.5px;color:var(--ink-faint);margin:0">最受欢迎</p>
+      </div>
+      <div style="text-align:center;padding:16px">
+        <div class="ring leaf"><span class="pct">72%</span></div>
+        <p style="font-size:13px;font-weight:700;margin:0">技能交换</p>
+        <p style="font-size:11.5px;color:var(--ink-faint);margin:0">用时间币互教</p>
+      </div>
+      <div style="text-align:center;padding:16px">
+        <div class="ring gold"><span class="pct">65%</span></div>
+        <p style="font-size:13px;font-weight:700;margin:0">商家折扣</p>
+        <p style="font-size:11.5px;color:var(--ink-faint);margin:0">好心值兑换</p>
+      </div>
+      <div style="text-align:center;padding:16px">
+        <div class="ring sky"><span class="pct">43%</span></div>
+        <p style="font-size:13px;font-weight:700;margin:0">时间银行</p>
+        <p style="font-size:11.5px;color:var(--ink-faint);margin:0">存时间取服务</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 用户画像 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>核心人群画像（模拟）</h2></div>
+    <div class="findings">
+      <div class="finding">
+        <div class="icon">👩‍💼</div>
+        <h4>典型用户：林女士 · 28 岁 · 互联网运营</h4>
+        <p>通勤单程 45 分钟，午休 1 小时，周整块自由时间 &lt; 4h。做过蚂蚁森林和捐步，但觉得"线上太虚、没有真实感"。希望有"下楼就能做、15 分钟搞定"的好事入口。</p>
+        <span class="stat brand">H1 匹配度 92%</span>
+      </div>
+      <div class="finding">
+        <div class="icon">👨‍💻</div>
+        <h4>典型用户：张先生 · 35 岁 · 程序员</h4>
+        <p>996 工作制，周末只想休息。想做公益但"找不到门路"，觉得志愿汇界面太复杂。对"好心值 + 信用分"感兴趣，如果能在社区里顺手做点事，愿意试试。</p>
+        <span class="stat leaf">H4 供给侧缺口验证</span>
+      </div>
+      <div class="finding">
+        <div class="icon">👵</div>
+        <h4>典型用户：王阿姨 · 62 岁 · 退休教师</h4>
+        <p>时间充裕，在社区做志愿 3 年。但社区里年轻人太少，很多体力活没人做。愿意"带带年轻人"一起做，也希望年轻人能帮自己解决智能手机之类的问题。</p>
+        <span class="stat gold">跨代际匹配需求</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 用户评价模拟 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>行为探针 · 真实反馈集锦</h2></div>
+    <p class="muted">2 周微信群人工撮合"就近轻量好事"行为探针 (N=50)，参与者的真实反馈模拟。</p>
+    <div class="testimonials">
+      <div class="tweet">
+        <div class="avatar">
+          <div class="pic" style="background:var(--brand)">小</div>
+          <div><div class="name">小鹿</div><div class="role">28 岁 · 产品经理</div></div>
+        </div>
+        <div class="text">帮楼下大爷搬了箱水果上楼，就 5 分钟的事。以前觉得做好事要专门去敬老院，现在发现顺路就能做，反而更真实。</div>
+      </div>
+      <div class="tweet">
+        <div class="avatar">
+          <div class="pic" style="background:var(--leaf)">老</div>
+          <div><div class="name">老张</div><div class="role">35 岁 · 程序员</div></div>
+        </div>
+        <div class="text">之前觉得公益是"有闲有钱的人做的"，没想到还能用代码帮社区整理垃圾分类数据。下次还来。</div>
+      </div>
+      <div class="tweet">
+        <div class="avatar">
+          <div class="pic" style="background:var(--gold)">阿</div>
+          <div><div class="name">阿杰</div><div class="role">24 岁 · 研究生</div></div>
+        </div>
+        <div class="text">和同小区的人一起巡逻 20 分钟，边散步边聊天顺便做了好事。比刷手机有意思多了，还认识了邻居。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 阶段进度 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>项目进展与路线图</h2></div>
+    <div class="phase-strip">
+      <div class="seg done">Phase 0<span class="phs">验证</span></div>
+      <div class="seg curr">Phase 1<span class="phs">MVP · 当前</span></div>
+      <div class="seg next">Phase 2<span class="phs">正循环</span></div>
+      <div class="seg next">Phase 3<span class="phs">网络效应</span></div>
+      <div class="seg next">Phase 4<span class="phs">生态</span></div>
+    </div>
+    <div class="grid cols-2" style="margin-top:16px">
+      <div class="card brand"><div class="ic">✅</div><h4>Phase 0 验证 · 已完成</h4><p>问卷 N=612 + 深度访谈 30 人 + 2 周行为探针。H1, H2, H4 通过，H3, H5 验证中。核心假设初步成立。</p></div>
+      <div class="card gold"><div class="ic">🔄</div><h4>Phase 1 MVP · 进行中</h4><p>微信小程序原型 + LBS 轻量任务匹配 + 好心值系统。首城首社区选址中，预计 3 个月内上线内测。</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 站点地图 ============ -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>完整方案 · 子站导航</h2></div>
+    <p class="muted">以下子站详细展开全案各个模块，从立论到行动建议。</p>
+    <div class="site-map">
+      <a href="pages/thesis.html" class="brand">
+        <span class="sm-num">00</span>
+        <span class="sm-title">一句话立论</span>
+        <span class="sm-desc">四件事叠加，构成一个被系统性忽略的细分人群。</span>
+        <span class="sm-arrow">→</span>
+      </a>
+      <a href="pages/market.html" class="gold">
+        <span class="sm-num">01</span>
+        <span class="sm-title">市场与需求现状</span>
+        <span class="sm-desc">大盘数据、人群画像、竞品分析、核心矛盾。</span>
+        <span class="sm-arrow">→</span>
+      </a>
+      <a href="pages/research.html" class="leaf">
+        <span class="sm-num">02</span>
+        <span class="sm-title">需求假设与验证框架</span>
+        <span class="sm-desc">5 个核心假设、混合方法论、问卷/访谈提纲。</span>
+        <span class="sm-arrow">→</span>
+      </a>
+      <a href="pages/mvp.html" class="sky">
+        <span class="sm-num">03</span>
+        <span class="sm-title">产品 MVP 规划</span>
+        <span class="sm-desc">价值主张"好事近"、5 大核心功能、正循环设计。</span>
+        <span class="sm-arrow">→</span>
+      </a>
+      <a href="pages/roadmap.html" class="plum">
+        <span class="sm-num">04</span>
+        <span class="sm-title">叠加递进路径</span>
+        <span class="sm-desc">Phase 0→4，每一层以上一层为地基搭乐高。</span>
+        <span class="sm-arrow">→</span>
+      </a>
+      <a href="pages/risks.html" class="brand">
+        <span class="sm-num">05</span>
+        <span class="sm-title">风险与直话</span>
+        <span class="sm-desc">非金钱≠无成本、时间银行旧坑、伪需求风险。</span>
+        <span class="sm-arrow">→</span>
+      </a>
+      <a href="pages/next.html" style="grid-column:1/-1">
+        <span class="sm-num">→</span>
+        <span class="sm-title">下一步建议</span>
+        <span class="sm-desc">1 周定稿工具 → 2–3 社区引荐 → 50 人行为探针。</span>
+        <span class="sm-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>把好事做成日常 <span class="heart">♥</span> · 个人兴趣探索方案</p>
+    <p style="margin-top:4px">泛公益参与需求调研 + 调研产品规划 + MVP 与递进路线（全案）</p>
+    <p style="margin-top:12px;font-size:11.5px;color:var(--ink-faint)">
+      ⚠️ 页面展示数据为模拟数据，用于演示项目逻辑与验证框架。实际数据以真实调研结果为准。
+    </p>
+  </div>
+</footer>
+
+<button id="totop" aria-label="回到顶部">↑</button>
+<script>
+  const totop = document.getElementById('totop');
+  document.addEventListener('scroll', () => { totop.classList.toggle('show', document.documentElement.scrollTop > 600); }, {passive: true});
+  totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+</script>
+</body>
+</html>
