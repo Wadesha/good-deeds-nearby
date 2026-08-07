@@ -28,6 +28,10 @@ https://wadesha.github.io/good-deeds-nearby/
 │   ├── mvp.html            ← 03 产品 MVP 规划
 │   ├── roadmap.html        ← 04 叠加递进路径
 │   ├── risks.html          ← 05 风险与直话
+│   ├── ecosystem.html      ← 06 生态模拟平台（好心值市场/任务流/权益商城）
+│   ├── framework.html      ← 07 方法论框架扩展（假设树/统计模型/用户分层）
+│   ├── dashboard.html      ← 08 数据中台（多维分析/数据交易/场景模拟器/预测模型）
+│   ├── interact.html       ← 09 互动模块（好事人格测试/时间贫困度自评/社区匹配/问答）
 │   └── next.html           ← 下一步行动建议
 └── css/
     └── style.css           ← 共享样式

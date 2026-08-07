@@ -1,0 +1,1959 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>好事近 · 数据中台与交易模拟平台 | 项目数据看板</title>
+<meta name="description" content="好事近项目数据中台：人口统计学分析、驱动力分析、时间贫困度分析、非金钱激励分析、LBS地理分析、用户分层、模拟数据交易平台、场景模拟器、用户评价分析、数据导出、预测模型展示。" />
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+/* =============================================
+   好事近 · 数据中台与交易模拟平台 专用样式
+   ============================================= */
+
+/* ---------- 设计系统扩展 ---------- */
+:root {
+  --dash-bg: var(--bg);
+  --dash-card: var(--paper);
+  --dash-shadow: 0 2px 8px rgba(43,38,34,.05), 0 10px 28px rgba(43,38,34,.07);
+  --dash-shadow-lg: 0 4px 14px rgba(43,38,34,.08), 0 16px 40px rgba(43,38,34,.1);
+  --dash-radius: 14px;
+  --dash-radius-sm: 9px;
+  --dash-transition: transform .2s ease, box-shadow .2s ease;
+  --trend-up: #3f7d5b;
+  --trend-down: #c8533a;
+  --trend-flat: #9a9088;
+}
+
+/* ---------- 动画 ---------- */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes countUp { from { opacity: 0.5; } to { opacity: 1; } }
+@keyframes barGrow { from { height: 0; } to { height: var(--bar-h); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes modalBgIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes rotateIn { from { transform: rotate(-180deg) scale(0); opacity: 0; } to { transform: rotate(0) scale(1); opacity: 1; } }
+@keyframes bounceIn { 0% { transform: scale(0.3); opacity: 0; } 50% { transform: scale(1.05); } 70% { transform: scale(0.95); } 100% { transform: scale(1); opacity: 1; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* ---------- 指标卡片 ---------- */
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; margin: 18px 0; }
+.metric-card { background: var(--dash-card); border: 1px solid var(--line); border-radius: var(--dash-radius); padding: 20px 18px; box-shadow: var(--dash-shadow); transition: var(--dash-transition); position: relative; overflow: hidden; }
+.metric-card:hover { transform: translateY(-3px); box-shadow: var(--dash-shadow-lg); }
+.metric-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.metric-card.brand::before { background: var(--brand); }
+.metric-card.leaf::before { background: var(--leaf); }
+.metric-card.gold::before { background: var(--gold); }
+.metric-card.sky::before { background: var(--sky); }
+.metric-card.plum::before { background: var(--plum); }
+.metric-card .m-label { font-size: 12px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+.metric-card .m-value { font-size: clamp(28px, 3.4vw, 38px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+.metric-card .m-value.brand { color: var(--brand); }
+.metric-card .m-value.leaf { color: var(--leaf); }
+.metric-card .m-value.gold { color: var(--gold); }
+.metric-card .m-value.sky { color: var(--sky); }
+.metric-card .m-value.plum { color: var(--plum); }
+.metric-card .m-trend { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; margin-top: 4px; padding: 2px 8px; border-radius: 999px; }
+.metric-card .m-trend.up { color: var(--trend-up); background: var(--leaf-soft); }
+.metric-card .m-trend.down { color: var(--trend-down); background: var(--brand-soft); }
+.metric-card .m-trend.flat { color: var(--trend-flat); background: #f1ece4; }
+.metric-card .m-desc { font-size: 11.5px; color: var(--ink-faint); margin-top: 6px; line-height: 1.5; }
+
+/* ---------- 柱状图系统 ---------- */
+.chart-container { margin: 18px 0; }
+.chart-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+.chart-subtitle { font-size: 12px; color: var(--ink-faint); margin-bottom: 14px; }
+.bar-chart-h { display: flex; flex-direction: column; gap: 8px; padding: 16px 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-row .bar-label { width: 110px; flex-shrink: 0; font-size: 12.5px; color: var(--ink-soft); text-align: right; line-height: 1.3; }
+.bar-row .bar-track { flex: 1; height: 28px; background: #f3ede4; border-radius: 14px; overflow: hidden; position: relative; }
+.bar-row .bar-fill { height: 100%; border-radius: 14px; transition: width 1.2s cubic-bezier(0.22, 0.61, 0.36, 1); position: relative; min-width: 4px; }
+.bar-row .bar-fill .bar-val { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 11.5px; font-weight: 700; color: #fff; white-space: nowrap; }
+.bar-row .bar-fill.brand { background: linear-gradient(90deg, var(--brand), #d96a4e); }
+.bar-row .bar-fill.leaf { background: linear-gradient(90deg, var(--leaf), #5a9e78); }
+.bar-row .bar-fill.gold { background: linear-gradient(90deg, var(--gold), #daa142); }
+.bar-row .bar-fill.sky { background: linear-gradient(90deg, var(--sky), #4e86ab); }
+.bar-row .bar-fill.plum { background: linear-gradient(90deg, var(--plum), #856394); }
+.bar-row .bar-fill.ink { background: linear-gradient(90deg, var(--ink), #4a423c); }
+.bar-row .bar-pct { width: 44px; flex-shrink: 0; font-size: 13px; font-weight: 700; color: var(--ink); text-align: right; }
+
+/* ---------- 垂直柱状图 ---------- */
+.vbar-chart { display: flex; align-items: flex-end; gap: 10px; height: 240px; padding: 20px 0 10px; position: relative; }
+.vbar-chart::before { content: ""; position: absolute; left: 0; right: 0; bottom: 30px; border-bottom: 1px solid var(--line); }
+.vbar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+.vbar { width: 100%; max-width: 56px; border-radius: 5px 5px 2px 2px; transition: height 1s cubic-bezier(0.22, 0.61, 0.36, 1); position: relative; min-height: 4px; }
+.vbar .vval { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.vbar-label { font-size: 11px; color: var(--ink-faint); margin-top: 8px; text-align: center; line-height: 1.3; max-width: 80px; }
+.vbar.brand { background: linear-gradient(180deg, var(--brand), #d96a4e); }
+.vbar.leaf { background: linear-gradient(180deg, var(--leaf), #5a9e78); }
+.vbar.gold { background: linear-gradient(180deg, var(--gold), #daa142); }
+.vbar.sky { background: linear-gradient(180deg, var(--sky), #4e86ab); }
+.vbar.plum { background: linear-gradient(180deg, var(--plum), #856394); }
+.vbar.ink { background: linear-gradient(180deg, var(--ink), #4a423c); }
+.vbar.brand .vval { color: var(--brand-deep); }
+.vbar.leaf .vval { color: var(--leaf); }
+.vbar.gold .vval { color: var(--gold); }
+.vbar.sky .vval { color: var(--sky); }
+.vbar.plum .vval { color: var(--plum); }
+
+/* ---------- 环形图 ---------- */
+.donut-chart { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin: 18px 0; }
+.donut-item { text-align: center; width: 120px; }
+.donut { width: 90px; height: 90px; border-radius: 50%; position: relative; margin: 0 auto 8px; display: grid; place-items: center; }
+.donut .dval { position: relative; z-index: 1; font-size: 22px; font-weight: 800; }
+.donut .dval.brand { color: var(--brand); }
+.donut .dval.leaf { color: var(--leaf); }
+.donut .dval.gold { color: var(--gold); }
+.donut .dval.sky { color: var(--sky); }
+.donut .dval.plum { color: var(--plum); }
+.donut .dlbl { position: relative; z-index: 1; font-size: 10px; color: var(--ink-faint); margin-top: -2px; }
+.donut-item .dname { font-size: 13px; font-weight: 600; color: var(--ink); margin-top: 4px; }
+.donut-item .dsub { font-size: 11px; color: var(--ink-faint); }
+
+/* ---------- 表格卡片 ---------- */
+.table-card { background: var(--dash-card); border: 1px solid var(--line); border-radius: var(--dash-radius); overflow: hidden; box-shadow: var(--dash-shadow); margin: 16px 0; }
+.table-card .tc-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.table-card .tc-head h4 { margin: 0; font-size: 14.5px; }
+.table-card .tc-head .tc-badge { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: var(--brand-soft); color: var(--brand-deep); font-weight: 600; }
+.table-card table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.table-card th { background: #f3ead9; color: var(--ink); text-align: left; font-weight: 700; padding: 10px 14px; border-bottom: 2px solid #e2d4ba; white-space: nowrap; font-size: 12.5px; }
+.table-card td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.table-card tr:nth-child(even) { background: #fbf7ef; }
+.table-card tr:hover { background: #fdf4e3; }
+.table-card tr:last-child td { border-bottom: none; }
+
+/* ---------- 弹窗系统 ---------- */
+.modal-overlay { position: fixed; inset: 0; background: rgba(43,38,34,.5); backdrop-filter: blur(4px); z-index: 1000; display: none; place-items: center; animation: modalBgIn .25s ease; }
+.modal-overlay.show { display: grid; }
+.modal-box { background: var(--paper); border-radius: 18px; max-width: 500px; width: 92%; padding: 28px 30px; box-shadow: 0 24px 80px rgba(43,38,34,.25); animation: slideUp .35s cubic-bezier(0.22, 0.61, 0.36, 1); max-height: 85vh; overflow-y: auto; }
+.modal-box h3 { margin: 0 0 6px; font-size: 19px; font-weight: 800; }
+.modal-box .modal-sub { font-size: 13px; color: var(--ink-faint); margin-bottom: 14px; }
+.modal-box .modal-body { font-size: 14px; color: var(--ink-soft); line-height: 1.8; margin: 10px 0 18px; }
+.modal-box .modal-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.modal-box .modal-actions button { padding: 10px 22px; border-radius: 9px; border: none; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: .15s; }
+.modal-box .modal-actions .btn-primary { background: var(--brand); color: #fff; }
+.modal-box .modal-actions .btn-primary:hover { background: var(--brand-deep); }
+.modal-box .modal-actions .btn-secondary { background: var(--line); color: var(--ink-soft); }
+.modal-box .modal-actions .btn-secondary:hover { background: #ddd0bc; }
+.modal-box .modal-actions .btn-success { background: var(--leaf); color: #fff; }
+.modal-box .modal-actions .btn-success:hover { background: #2c6a4a; }
+.modal-box .modal-actions .btn-gold { background: var(--gold); color: #fff; }
+.modal-box .modal-actions .btn-gold:hover { background: #b0781f; }
+.modal-box .success-icon { text-align: center; padding: 16px 0 8px; }
+.modal-box .success-icon .big { font-size: 56px; display: block; margin-bottom: 8px; }
+.modal-box .success-icon h4 { font-size: 18px; color: var(--leaf); margin: 0; }
+.modal-box .success-icon p { font-size: 13px; color: var(--ink-soft); margin-top: 6px; }
+.modal-box .points-display { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 14px 0; padding: 16px; background: var(--gold-soft); border-radius: 12px; }
+.modal-box .points-display .pnum { font-size: 32px; font-weight: 800; color: var(--gold); }
+.modal-box .points-display .plbl { font-size: 12px; color: var(--ink-faint); }
+.modal-box .modal-body .data-preview { background: #f3ede4; border-radius: 8px; padding: 12px; margin: 12px 0; font-size: 12px; font-family: "SF Mono", ui-monospace, Menlo, monospace; overflow-x: auto; line-height: 1.6; max-height: 200px; overflow-y: auto; }
+.modal-box .modal-body .data-preview .row { display: flex; gap: 12px; border-bottom: 1px solid #e2d4ba; padding: 3px 0; }
+.modal-box .modal-body .data-preview .row:last-child { border-bottom: none; }
+.modal-box .modal-body .data-preview .cell { flex: 1; min-width: 60px; }
+
+/* ---------- 滑块组件 ---------- */
+.slider-group { margin: 16px 0; }
+.slider-group .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.slider-group .slider-header label { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.slider-group .slider-header .slider-val { font-size: 14px; font-weight: 700; color: var(--brand); font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+.slider-group input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; appearance: none; background: var(--line); border-radius: 3px; outline: none; }
+.slider-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--brand); cursor: pointer; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(43,38,34,.2); }
+.slider-group input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--brand); cursor: pointer; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(43,38,34,.2); }
+.slider-group .slider-hints { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-faint); margin-top: 2px; }
+
+/* ---------- 模拟器结果面板 ---------- */
+.sim-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+.sim-result-card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-align: center; box-shadow: var(--dash-shadow); transition: var(--dash-transition); }
+.sim-result-card:hover { transform: translateY(-2px); box-shadow: var(--dash-shadow-lg); }
+.sim-result-card .sr-value { font-size: clamp(28px, 3.2vw, 40px); font-weight: 800; line-height: 1; }
+.sim-result-card .sr-value.brand { color: var(--brand); }
+.sim-result-card .sr-value.leaf { color: var(--leaf); }
+.sim-result-card .sr-value.gold { color: var(--gold); }
+.sim-result-card .sr-value.sky { color: var(--sky); }
+.sim-result-card .sr-label { font-size: 12px; color: var(--ink-soft); margin-top: 6px; font-weight: 600; }
+.sim-result-card .sr-bar { margin-top: 10px; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.sim-result-card .sr-bar .sr-fill { height: 100%; border-radius: 2px; transition: width .5s ease; }
+
+/* ---------- 关键词云 ---------- */
+.word-cloud { display: flex; flex-wrap: wrap; gap: 8px 12px; justify-content: center; padding: 20px; margin: 14px 0; background: var(--paper); border: 1px solid var(--line); border-radius: var(--dash-radius); box-shadow: var(--dash-shadow); }
+.word-cloud .word { display: inline-block; padding: 4px 12px; border-radius: 999px; transition: .2s; cursor: default; }
+.word-cloud .word:hover { transform: scale(1.1); box-shadow: var(--dash-shadow); }
+.word-cloud .word.w1 { font-size: 22px; font-weight: 800; color: var(--brand); background: var(--brand-soft); }
+.word-cloud .word.w2 { font-size: 18px; font-weight: 700; color: var(--leaf); background: var(--leaf-soft); }
+.word-cloud .word.w3 { font-size: 16px; font-weight: 600; color: var(--gold); background: var(--gold-soft); }
+.word-cloud .word.w4 { font-size: 14px; font-weight: 600; color: var(--sky); background: var(--sky-soft); }
+.word-cloud .word.w5 { font-size: 12px; font-weight: 500; color: var(--plum); background: var(--plum-soft); }
+.word-cloud .word.w6 { font-size: 11px; font-weight: 500; color: var(--ink-soft); background: #f1ece4; }
+
+/* ---------- 漏斗图 ---------- */
+.funnel { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 20px 0; }
+.funnel .f-level { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; transition: .2s; width: 100%; max-width: 500px; }
+.funnel .f-level:hover { transform: scale(1.02); }
+.funnel .f-level .f-name { min-width: 80px; text-align: right; }
+.funnel .f-level .f-count { font-family: "SF Mono", ui-monospace, Menlo, monospace; min-width: 60px; }
+.funnel .f-level .f-bar { flex: 1; height: 10px; border-radius: 5px; }
+.funnel .f-level .f-pct { min-width: 44px; text-align: right; font-size: 12px; color: var(--ink-faint); }
+.funnel .f-level.l1 { background: var(--brand-soft); color: var(--brand-deep); }
+.funnel .f-level.l2 { background: var(--gold-soft); color: #7a5a1a; }
+.funnel .f-level.l3 { background: var(--leaf-soft); color: var(--leaf); }
+.funnel .f-level.l4 { background: var(--sky-soft); color: var(--sky); }
+.funnel .f-level.l5 { background: var(--plum-soft); color: var(--plum); }
+
+/* ---------- 评价卡片 ---------- */
+.review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 16px 0; }
+.review-card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 18px; box-shadow: var(--dash-shadow); transition: var(--dash-transition); }
+.review-card:hover { transform: translateY(-2px); box-shadow: var(--dash-shadow-lg); }
+.review-card .r-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.review-card .r-avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 15px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.review-card .r-name { font-size: 14px; font-weight: 600; }
+.review-card .r-date { font-size: 11px; color: var(--ink-faint); }
+.review-card .r-stars { display: flex; gap: 2px; margin: 4px 0; }
+.review-card .r-stars .star { font-size: 14px; }
+.review-card .r-stars .star.on { color: var(--gold); }
+.review-card .r-stars .star.off { color: var(--line); }
+.review-card .r-text { font-size: 13.5px; color: var(--ink-soft); line-height: 1.7; }
+.review-card .r-tag { display: inline-block; font-size: 10.5px; padding: 2px 8px; border-radius: 999px; margin-top: 8px; font-weight: 600; }
+.review-card .r-tag.pos { background: var(--leaf-soft); color: var(--leaf); }
+.review-card .r-tag.neu { background: var(--gold-soft); color: var(--gold); }
+.review-card .r-tag.neg { background: var(--brand-soft); color: var(--brand-deep); }
+
+/* ---------- 数据包卡片 ---------- */
+.datapack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin: 16px 0; }
+.datapack-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--dash-radius); padding: 20px; box-shadow: var(--dash-shadow); transition: var(--dash-transition); position: relative; overflow: hidden; }
+.datapack-card:hover { transform: translateY(-3px); box-shadow: var(--dash-shadow-lg); }
+.datapack-card .dp-icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; margin-bottom: 10px; }
+.datapack-card .dp-icon.brand { background: var(--brand-soft); color: var(--brand-deep); }
+.datapack-card .dp-icon.leaf { background: var(--leaf-soft); color: var(--leaf); }
+.datapack-card .dp-icon.gold { background: var(--gold-soft); color: var(--gold); }
+.datapack-card .dp-icon.sky { background: var(--sky-soft); color: var(--sky); }
+.datapack-card .dp-icon.plum { background: var(--plum-soft); color: var(--plum); }
+.datapack-card h4 { margin: 0 0 4px; font-size: 15px; }
+.datapack-card .dp-desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 10px; }
+.datapack-card .dp-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.datapack-card .dp-meta .dp-tag { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: #f3ede4; color: var(--ink-soft); font-weight: 500; }
+.datapack-card .dp-price { font-size: 22px; font-weight: 800; color: var(--gold); display: flex; align-items: center; gap: 6px; }
+.datapack-card .dp-price span { font-size: 12px; font-weight: 400; color: var(--ink-faint); }
+.datapack-card .dp-actions { display: flex; gap: 8px; margin-top: 12px; }
+.datapack-card .dp-actions button { padding: 7px 16px; border-radius: 7px; border: none; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: .15s; }
+.datapack-card .dp-actions .btn-buy { background: var(--brand); color: #fff; }
+.datapack-card .dp-actions .btn-buy:hover { background: var(--brand-deep); }
+.datapack-card .dp-actions .btn-preview { background: var(--line); color: var(--ink-soft); }
+.datapack-card .dp-actions .btn-preview:hover { background: #ddd0bc; }
+.datapack-card .dp-actions .btn-preview.owned { background: var(--leaf-soft); color: var(--leaf); }
+.datapack-card .dp-downloads { font-size: 11px; color: var(--ink-faint); display: flex; align-items: center; gap: 4px; margin-top: 8px; }
+
+/* ---------- 交易历史 ---------- */
+.tx-list { margin: 16px 0; }
+.tx-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); transition: .1s; }
+.tx-item:last-child { border-bottom: none; }
+.tx-item:hover { background: var(--bg); }
+.tx-item .tx-icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 16px; }
+.tx-item .tx-icon.buy { background: var(--brand-soft); color: var(--brand-deep); }
+.tx-item .tx-icon.sell { background: var(--leaf-soft); color: var(--leaf); }
+.tx-item .tx-icon.earn { background: var(--gold-soft); color: var(--gold); }
+.tx-item .tx-info { flex: 1; }
+.tx-item .tx-info .tx-name { font-size: 14px; font-weight: 600; }
+.tx-item .tx-info .tx-time { font-size: 11.5px; color: var(--ink-faint); }
+.tx-item .tx-amount { font-size: 15px; font-weight: 700; }
+.tx-item .tx-amount.plus { color: var(--leaf); }
+.tx-item .tx-amount.minus { color: var(--brand); }
+
+/* ---------- 需求发布表单 ---------- */
+.request-form { background: var(--paper); border: 1px solid var(--line); border-radius: var(--dash-radius); padding: 22px; box-shadow: var(--dash-shadow); margin: 16px 0; }
+.request-form .form-group { margin-bottom: 14px; }
+.request-form .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.request-form .form-group input, .request-form .form-group textarea, .request-form .form-group select { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; font-family: inherit; background: var(--paper); color: var(--ink); transition: .15s; }
+.request-form .form-group input:focus, .request-form .form-group textarea:focus, .request-form .form-group select:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(200, 83, 58, .1); }
+.request-form .form-group textarea { resize: vertical; min-height: 80px; }
+.request-form .btn-submit { padding: 10px 24px; border-radius: 8px; border: none; background: var(--brand); color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; transition: .15s; }
+.request-form .btn-submit:hover { background: var(--brand-deep); }
+
+/* ---------- 导出/分享按钮组 ---------- */
+.export-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; }
+.export-btn { display: flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 9px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: .15s; }
+.export-btn.pdf { background: var(--brand); color: #fff; }
+.export-btn.pdf:hover { background: var(--brand-deep); }
+.export-btn.csv { background: var(--leaf); color: #fff; }
+.export-btn.csv:hover { background: #2c6a4a; }
+.export-btn.share { background: var(--sky); color: #fff; }
+.export-btn.share:hover { background: #2c536e; }
+.export-btn.copy { background: var(--plum); color: #fff; }
+.export-btn.copy:hover { background: #4a3357; }
+.export-btn.link { background: var(--gold); color: #fff; }
+.export-btn.link:hover { background: #b0781f; }
+.export-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ---------- 模型展示卡片 ---------- */
+.model-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--dash-radius); padding: 20px; box-shadow: var(--dash-shadow); margin: 14px 0; }
+.model-card .mc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.model-card .mc-head .mc-icon { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; font-size: 18px; }
+.model-card .mc-head h4 { margin: 0; font-size: 15px; }
+.model-card .mc-formula { font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 13px; background: #f3ede4; padding: 12px 14px; border-radius: 8px; margin: 10px 0; overflow-x: auto; color: var(--ink); }
+.model-card .mc-stats { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+.model-card .mc-stats .ms { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; background: var(--bg); font-size: 12px; }
+.model-card .mc-stats .ms .ms-val { font-weight: 700; }
+.model-card .mc-stats .ms .ms-val.high { color: var(--leaf); }
+.model-card .mc-stats .ms .ms-val.medium { color: var(--gold); }
+.model-card .mc-stats .ms .ms-val.low { color: var(--brand); }
+.model-card .mc-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+.model-card .mc-coeff { margin-top: 10px; }
+.model-card .mc-coeff .coeff-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12.5px; border-bottom: 1px solid #f3ede4; }
+.model-card .mc-coeff .coeff-row .cname { color: var(--ink-soft); }
+.model-card .mc-coeff .coeff-row .cval { font-weight: 600; font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+
+/* ---------- 情感分析条 ---------- */
+.sentiment-bar { display: flex; height: 36px; border-radius: 18px; overflow: hidden; margin: 14px 0; }
+.sentiment-bar .seg { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; transition: width .8s ease; }
+.sentiment-bar .seg.pos { background: linear-gradient(90deg, var(--leaf), #5a9e78); }
+.sentiment-bar .seg.neu { background: linear-gradient(90deg, var(--gold), #daa142); }
+.sentiment-bar .seg.neg { background: linear-gradient(90deg, var(--brand), #d96a4e); }
+
+/* ---------- 趋势图 (CSS模拟) ---------- */
+.trend-chart { display: flex; align-items: flex-end; gap: 4px; height: 120px; padding: 10px 0; margin: 14px 0; }
+.trend-chart .tp { flex: 1; border-radius: 3px 3px 0 0; transition: height .5s ease; min-height: 4px; position: relative; }
+.trend-chart .tp .tp-val { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 9.5px; color: var(--ink-faint); white-space: nowrap; }
+.trend-chart .tp.week1 { background: var(--brand); height: 60px; }
+.trend-chart .tp.week2 { background: var(--brand); height: 72px; }
+.trend-chart .tp.week3 { background: var(--brand); height: 55px; }
+.trend-chart .tp.week4 { background: var(--brand); height: 80px; }
+.trend-chart .tp.week5 { background: var(--brand); height: 68px; }
+.trend-chart .tp.week6 { background: var(--brand); height: 85px; }
+.trend-chart .tp.week7 { background: var(--brand); height: 78px; }
+.trend-chart .tp.week8 { background: var(--brand); height: 92px; }
+.trend-chart .tp.week9 { background: var(--brand); height: 74px; }
+.trend-chart .tp.week10 { background: var(--brand); height: 88px; }
+.trend-chart .tp.week11 { background: var(--brand); height: 82px; }
+.trend-chart .tp.week12 { background: var(--brand); height: 95px; }
+.trend-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 760px) {
+  .bar-row .bar-label { width: 70px; font-size: 11px; }
+  .bar-row .bar-pct { width: 34px; font-size: 11px; }
+  .donut-item { width: 100px; }
+  .donut { width: 72px; height: 72px; }
+  .donut .dval { font-size: 18px; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .datapack-grid { grid-template-columns: 1fr; }
+  .review-grid { grid-template-columns: 1fr; }
+  .funnel .f-level { font-size: 11px; padding: 10px 12px; }
+  .funnel .f-level .f-name { min-width: 50px; }
+  .funnel .f-level .f-count { min-width: 40px; }
+  .modal-box { padding: 20px; }
+  .export-bar { flex-direction: column; }
+  .export-btn { width: 100%; justify-content: center; }
+}
+
+/* ---------- 评分星星交互 ---------- */
+.star-rating { display: flex; gap: 4px; direction: rtl; }
+.star-rating input { display: none; }
+.star-rating label { font-size: 24px; color: var(--line); cursor: pointer; transition: .15s; }
+.star-rating label:hover, .star-rating label:hover ~ label, .star-rating input:checked ~ label { color: var(--gold); }
+
+/* ---------- 通知条 ---------- */
+.toast { position: fixed; top: 70px; right: 22px; z-index: 2000; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 20px; box-shadow: 0 8px 30px rgba(43,38,34,.15); display: none; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; animation: slideInRight .3s ease; max-width: 360px; }
+.toast.show { display: flex; }
+.toast .toast-icon { font-size: 20px; }
+.toast.success { border-left: 4px solid var(--leaf); }
+.toast.warning { border-left: 4px solid var(--gold); }
+.toast.error { border-left: 4px solid var(--brand); }
+.toast.info { border-left: 4px solid var(--sky); }
+
+/* ---------- 余额显示 ---------- */
+.balance-display { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: linear-gradient(135deg, var(--gold-soft), #faf3e0); border: 1px solid rgba(201, 138, 43, .3); border-radius: 12px; margin: 14px 0; }
+.balance-display .b-icon { font-size: 28px; }
+.balance-display .b-info { flex: 1; }
+.balance-display .b-info .b-label { font-size: 12px; color: var(--ink-faint); }
+.balance-display .b-info .b-value { font-size: 28px; font-weight: 800; color: var(--gold); }
+.balance-display .b-info .b-sub { font-size: 11px; color: var(--ink-faint); margin-top: 2px; }
+
+/* ---------- 评分统计 ---------- */
+.rating-stats { display: flex; align-items: center; gap: 20px; padding: 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; margin: 14px 0; }
+.rating-stats .rs-big { text-align: center; }
+.rating-stats .rs-big .rs-num { font-size: 40px; font-weight: 800; color: var(--gold); line-height: 1; }
+.rating-stats .rs-big .rs-lbl { font-size: 12px; color: var(--ink-faint); }
+.rating-stats .rs-bars { flex: 1; }
+.rating-stats .rs-bar-row { display: flex; align-items: center; gap: 6px; margin: 3px 0; }
+.rating-stats .rs-bar-row .rs-label { font-size: 12px; color: var(--ink-soft); width: 14px; }
+.rating-stats .rs-bar-row .rs-track { flex: 1; height: 8px; background: #f3ede4; border-radius: 4px; overflow: hidden; }
+.rating-stats .rs-bar-row .rs-fill { height: 100%; background: var(--gold); border-radius: 4px; }
+.rating-stats .rs-bar-row .rs-pct { font-size: 11px; color: var(--ink-faint); width: 32px; text-align: right; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 数据中台</a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html" class="active">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>数据中台与交易模拟平台</div>
+    <span class="eyebrow"><span class="dot"></span> 好事近 · 数据处理与模拟交易</span>
+    <h1>数据中台 &amp; 交易模拟平台</h1>
+    <p class="sub">基于 Phase 0 调研模拟数据构建的完整数据中台，涵盖人口统计学分析、驱动力建模、用户分层、场景模拟器以及数据交易市场。所有数据均为模拟数据，用于展示平台逻辑与数据分析框架。</p>
+  </div>
+</div>
+
+<main class="wrap">
+
+<!-- ==============================================================
+     第一部分：数据总览看板
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>数据总览看板</h2></div>
+  <p class="muted">核心指标一览，反映 Phase 0 调研的整体数据质量与样本结构。</p>
+
+  <div class="metric-grid">
+    <div class="metric-card brand">
+      <div class="m-label">总样本量</div>
+      <div class="m-value brand">612</div>
+      <div class="m-trend up">↑ 2.0%</div>
+      <div class="m-desc">有效问卷总数，超出目标 600 份，样本回收率 97.3%。覆盖 35 个城市，其中一线城市占比 42%、新一线 28%、二线 18%、三线及以下 12%。样本分布均匀，满足统计分析要求。</div>
+    </div>
+    <div class="metric-card leaf">
+      <div class="m-label">覆盖城市</div>
+      <div class="m-value leaf">35</div>
+      <div class="m-trend up">↑ 5 城</div>
+      <div class="m-desc">覆盖全国 35 个城市，较 Phase 0 初期增加 5 个城市。一线城市（北京/上海/广州/深圳）4 个、新一线城市（成都/杭州/武汉/南京/重庆/苏州/西安/长沙/东莞/天津/郑州）11 个、二线城市 12 个、三线及以下 8 个。</div>
+    </div>
+    <div class="metric-card gold">
+      <div class="m-label">有效问卷率</div>
+      <div class="m-value gold">93.7%</div>
+      <div class="m-trend up">↑ 1.2%</div>
+      <div class="m-desc">有效问卷率 93.7%，排除答题时间过短（<120s）、逻辑矛盾、重复 IP 等无效样本。筛选标准严格：陷阱题错误率 >50% 剔除、所有选项相同者剔除、开放题无意义填写者剔除。</div>
+    </div>
+    <div class="metric-card sky">
+      <div class="m-label">完成率</div>
+      <div class="m-value sky">96.2%</div>
+      <div class="m-trend up">↑ 0.8%</div>
+      <div class="m-desc">问卷完成率 96.2%，即 96.2% 的受访者完成了全部题目。平均完成时间 12.4 分钟，中位完成时间 10.8 分钟。跳题率最高的题目为"时间贫困度自评量表"（跳题率 3.2%）。</div>
+    </div>
+    <div class="metric-card plum">
+      <div class="m-label">男性占比</div>
+      <div class="m-value plum">58.0%</div>
+      <div class="m-trend up">↑ 目标达成</div>
+      <div class="m-desc">男性受访者占比 58.0%，为刻意 oversample 以验证 H4（男性/职场人是供给缺口）。自然人口中男性传统公益参与率仅 30-35%，本样本 oversample 至 58% 以充分检验该假设。</div>
+    </div>
+    <div class="metric-card brand">
+      <div class="m-label">活跃率</div>
+      <div class="m-value brand">68.3%</div>
+      <div class="m-trend up">↑ 5.1%</div>
+      <div class="m-desc">行为探针活跃率 68.3%，指在 2 周微信群行为探针中主动参与至少 1 次任务的用户比例。较 Phase 0 初期提升 5.1%。日均活跃用户 34 人，峰值活跃出现在晚间 19:00-21:00。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第二部分：人口统计学分析
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>人口统计学分析</h2></div>
+  <p class="muted">基于模拟样本的详细人口统计学数据，为人群画像和细分策略提供基线。</p>
+
+  <!-- 年龄分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 年龄分布（6 个年龄段）</div>
+    <div class="chart-subtitle">样本主力集中在 25-40 岁，与"时间贫困 × 意愿充足"目标人群吻合。</div>
+    <div class="vbar-chart">
+      <div class="vbar-wrap"><div class="vbar brand" style="height:62px"><span class="vval">12.5%</span></div><div class="vbar-label">18-24 岁<br/><span style="font-size:10px;color:var(--ink-faint)">77 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar leaf" style="height:186px"><span class="vval">37.6%</span></div><div class="vbar-label">25-30 岁<br/><span style="font-size:10px;color:var(--ink-faint)">230 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar gold" style="height:152px"><span class="vval">30.7%</span></div><div class="vbar-label">31-40 岁<br/><span style="font-size:10px;color:var(--ink-faint)">188 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar sky" style="height:66px"><span class="vval">13.4%</span></div><div class="vbar-label">41-50 岁<br/><span style="font-size:10px;color:var(--ink-faint)">82 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar plum" style="height:24px"><span class="vval">4.9%</span></div><div class="vbar-label">51-60 岁<br/><span style="font-size:10px;color:var(--ink-faint)">30 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar ink" style="height:8px"><span class="vval" style="color:var(--ink-faint)">0.9%</span></div><div class="vbar-label">60 岁以上<br/><span style="font-size:10px;color:var(--ink-faint)">5 人</span></div></div>
+    </div>
+  </div>
+
+  <!-- 性别分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 性别分布</div>
+    <div class="chart-subtitle">男性 oversample 至 58%，以充分验证 H4 供给侧缺口假设。</div>
+    <div class="donut-chart">
+      <div class="donut-item">
+        <div class="donut" style="background:conic-gradient(var(--brand) 0deg 208.8deg, var(--line) 208.8deg 360deg);"><span class="dval brand">58.0%</span><span class="dlbl">男性</span></div>
+        <div class="dname">男性</div>
+        <div class="dsub">355 人</div>
+      </div>
+      <div class="donut-item">
+        <div class="donut" style="background:conic-gradient(var(--leaf) 0deg 151.2deg, var(--line) 151.2deg 360deg);"><span class="dval leaf">42.0%</span><span class="dlbl">女性</span></div>
+        <div class="dname">女性</div>
+        <div class="dsub">257 人</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 城市等级分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 城市等级分布</div>
+    <div class="chart-subtitle">一线 + 新一线占比 70%，符合"15 分钟生活圈"政策重点覆盖区域。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">一线城市</div><div class="bar-track"><div class="bar-fill brand" style="width:42%"><span class="bar-val">42.0%</span></div></div><div class="bar-pct">42.0%</div></div>
+      <div class="bar-row"><div class="bar-label">新一线城市</div><div class="bar-track"><div class="bar-fill leaf" style="width:28%"><span class="bar-val">28.0%</span></div></div><div class="bar-pct">28.0%</div></div>
+      <div class="bar-row"><div class="bar-label">二线城市</div><div class="bar-track"><div class="bar-fill gold" style="width:18%"><span class="bar-val">18.0%</span></div></div><div class="bar-pct">18.0%</div></div>
+      <div class="bar-row"><div class="bar-label">三线及以下</div><div class="bar-track"><div class="bar-fill sky" style="width:12%"><span class="bar-val">12.0%</span></div></div><div class="bar-pct">12.0%</div></div>
+    </div>
+  </div>
+
+  <!-- 职业分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 职业分布（8 个职业类别）</div>
+    <div class="chart-subtitle">互联网/IT、金融/咨询、教育/科研位列前三，反映白领职场人群为主力。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">互联网/IT</div><div class="bar-track"><div class="bar-fill brand" style="width:28.5%"><span class="bar-val">28.5%</span></div></div><div class="bar-pct">28.5%</div></div>
+      <div class="bar-row"><div class="bar-label">金融/咨询</div><div class="bar-track"><div class="bar-fill leaf" style="width:18.2%"><span class="bar-val">18.2%</span></div></div><div class="bar-pct">18.2%</div></div>
+      <div class="bar-row"><div class="bar-label">教育/科研</div><div class="bar-track"><div class="bar-fill gold" style="width:14.8%"><span class="bar-val">14.8%</span></div></div><div class="bar-pct">14.8%</div></div>
+      <div class="bar-row"><div class="bar-label">政府/事业单位</div><div class="bar-track"><div class="bar-fill sky" style="width:11.3%"><span class="bar-val">11.3%</span></div></div><div class="bar-pct">11.3%</div></div>
+      <div class="bar-row"><div class="bar-label">医疗/健康</div><div class="bar-track"><div class="bar-fill plum" style="width:8.6%"><span class="bar-val">8.6%</span></div></div><div class="bar-pct">8.6%</div></div>
+      <div class="bar-row"><div class="bar-label">自由职业/创业者</div><div class="bar-track"><div class="bar-fill ink" style="width:7.4%"><span class="bar-val">7.4%</span></div></div><div class="bar-pct">7.4%</div></div>
+      <div class="bar-row"><div class="bar-label">学生</div><div class="bar-track"><div class="bar-fill brand" style="width:6.2%"><span class="bar-val">6.2%</span></div></div><div class="bar-pct">6.2%</div></div>
+      <div class="bar-row"><div class="bar-label">其他</div><div class="bar-track"><div class="bar-fill" style="width:5.0%;background:var(--ink-faint)"><span class="bar-val">5.0%</span></div></div><div class="bar-pct">5.0%</div></div>
+    </div>
+  </div>
+
+  <!-- 教育程度分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 教育程度分布</div>
+    <div class="chart-subtitle">本科及以上占比 78.6%，样本整体学历偏高，反映目标人群的认知能力与参与潜力。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">高中及以下</div><div class="bar-track"><div class="bar-fill brand" style="width:5.2%"><span class="bar-val">5.2%</span></div></div><div class="bar-pct">5.2%</div></div>
+      <div class="bar-row"><div class="bar-label">大专</div><div class="bar-track"><div class="bar-fill leaf" style="width:16.2%"><span class="bar-val">16.2%</span></div></div><div class="bar-pct">16.2%</div></div>
+      <div class="bar-row"><div class="bar-label">本科</div><div class="bar-track"><div class="bar-fill gold" style="width:54.8%"><span class="bar-val">54.8%</span></div></div><div class="bar-pct">54.8%</div></div>
+      <div class="bar-row"><div class="bar-label">硕士</div><div class="bar-track"><div class="bar-fill sky" style="width:18.6%"><span class="bar-val">18.6%</span></div></div><div class="bar-pct">18.6%</div></div>
+      <div class="bar-row"><div class="bar-label">博士及以上</div><div class="bar-track"><div class="bar-fill plum" style="width:5.2%"><span class="bar-val">5.2%</span></div></div><div class="bar-pct">5.2%</div></div>
+    </div>
+  </div>
+
+  <!-- 收入分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 月收入分布（6 个区间）</div>
+    <div class="chart-subtitle">月收入 8K-15K 区间占比最高，与城市等级分布吻合。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">&lt; 5K</div><div class="bar-track"><div class="bar-fill brand" style="width:8.5%"><span class="bar-val">8.5%</span></div></div><div class="bar-pct">8.5%</div></div>
+      <div class="bar-row"><div class="bar-label">5K-8K</div><div class="bar-track"><div class="bar-fill leaf" style="width:18.3%"><span class="bar-val">18.3%</span></div></div><div class="bar-pct">18.3%</div></div>
+      <div class="bar-row"><div class="bar-label">8K-12K</div><div class="bar-track"><div class="bar-fill gold" style="width:27.6%"><span class="bar-val">27.6%</span></div></div><div class="bar-pct">27.6%</div></div>
+      <div class="bar-row"><div class="bar-label">12K-15K</div><div class="bar-track"><div class="bar-fill sky" style="width:22.4%"><span class="bar-val">22.4%</span></div></div><div class="bar-pct">22.4%</div></div>
+      <div class="bar-row"><div class="bar-label">15K-20K</div><div class="bar-track"><div class="bar-fill plum" style="width:14.7%"><span class="bar-val">14.7%</span></div></div><div class="bar-pct">14.7%</div></div>
+      <div class="bar-row"><div class="bar-label">> 20K</div><div class="bar-track"><div class="bar-fill ink" style="width:8.5%"><span class="bar-val">8.5%</span></div></div><div class="bar-pct">8.5%</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第三部分：驱动力分析
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>驱动力分析（联合分析结果）</h2></div>
+  <p class="muted">基于联合分析（Conjoint Analysis）的 6 项驱动力重要性排序，以及按年龄、性别的细分差异。</p>
+
+  <!-- 驱动力排序 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 6 项驱动力重要性排序</div>
+    <div class="chart-subtitle">"就近"和"碎片时间"以压倒性优势占据前两位，验证 H2 核心假设。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">离家/公司近（&lt;1km）</div><div class="bar-track"><div class="bar-fill brand" style="width:92%"><span class="bar-val">92.3%</span></div></div><div class="bar-pct">92.3%</div></div>
+      <div class="bar-row"><div class="bar-label">只要 15 分钟就能做</div><div class="bar-track"><div class="bar-fill leaf" style="width:84%"><span class="bar-val">84.1%</span></div></div><div class="bar-pct">84.1%</div></div>
+      <div class="bar-row"><div class="bar-label">好心值/信用可积累</div><div class="bar-track"><div class="bar-fill gold" style="width:62%"><span class="bar-val">62.4%</span></div></div><div class="bar-pct">62.4%</div></div>
+      <div class="bar-row"><div class="bar-label">能认识附近同频的人</div><div class="bar-track"><div class="bar-fill sky" style="width:48%"><span class="bar-val">48.2%</span></div></div><div class="bar-pct">48.2%</div></div>
+      <div class="bar-row"><div class="bar-label">官方时长认证/证书</div><div class="bar-track"><div class="bar-fill plum" style="width:38%"><span class="bar-val">38.5%</span></div></div><div class="bar-pct">38.5%</div></div>
+      <div class="bar-row"><div class="bar-label">存时间将来取服务</div><div class="bar-track"><div class="bar-fill ink" style="width:28%"><span class="bar-val">28.2%</span></div></div><div class="bar-pct">28.2%</div></div>
+    </div>
+  </div>
+
+  <!-- 按年龄段细分 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 按年龄段细分的驱动力差异</div>
+    <div class="chart-subtitle">不同年龄段对驱动力偏好存在显著差异，年轻群体更看重社交，中年群体更看重就近。</div>
+    <div class="table-card">
+      <div class="tc-head"><h4>驱动力 × 年龄段交叉分析</h4><span class="tc-badge">重要性得分</span></div>
+      <table>
+        <thead><tr><th>驱动力</th><th>18-24 岁</th><th>25-30 岁</th><th>31-40 岁</th><th>41-50 岁</th><th>51+ 岁</th></tr></thead>
+        <tbody>
+          <tr><td>离家/公司近</td><td>88.2%</td><td>91.5%</td><td>94.3%</td><td>95.1%</td><td>89.7%</td></tr>
+          <tr><td>只要 15 分钟</td><td>82.6%</td><td>83.8%</td><td>86.2%</td><td>84.5%</td><td>79.3%</td></tr>
+          <tr><td>好心值可积累</td><td>58.4%</td><td>61.2%</td><td>64.8%</td><td>62.3%</td><td>55.6%</td></tr>
+          <tr><td>认识附近的人</td><td>56.7%</td><td>50.3%</td><td>45.2%</td><td>41.8%</td><td>38.4%</td></tr>
+          <tr><td>官方时长认证</td><td>32.1%</td><td>35.6%</td><td>40.2%</td><td>44.5%</td><td>48.9%</td></tr>
+          <tr><td>存时间取服务</td><td>24.5%</td><td>26.8%</td><td>29.4%</td><td>32.1%</td><td>35.6%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 按性别细分 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 按性别细分的驱动力差异</div>
+    <div class="chart-subtitle">男性和女性在"就近"和"社交"维度上存在显著差异。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">离家近（男）</div><div class="bar-track"><div class="bar-fill brand" style="width:90%"><span class="bar-val">90.5%</span></div></div><div class="bar-pct">90.5%</div></div>
+      <div class="bar-row"><div class="bar-label">离家近（女）</div><div class="bar-track"><div class="bar-fill leaf" style="width:95%"><span class="bar-val">94.8%</span></div></div><div class="bar-pct">94.8%</div></div>
+      <div class="bar-row"><div class="bar-label">15 分钟（男）</div><div class="bar-track"><div class="bar-fill gold" style="width:82%"><span class="bar-val">82.3%</span></div></div><div class="bar-pct">82.3%</div></div>
+      <div class="bar-row"><div class="bar-label">15 分钟（女）</div><div class="bar-track"><div class="bar-fill sky" style="width:87%"><span class="bar-val">86.6%</span></div></div><div class="bar-pct">86.6%</div></div>
+      <div class="bar-row"><div class="bar-label">社交（男）</div><div class="bar-track"><div class="bar-fill plum" style="width:42%"><span class="bar-val">42.1%</span></div></div><div class="bar-pct">42.1%</div></div>
+      <div class="bar-row"><div class="bar-label">社交（女）</div><div class="bar-track"><div class="bar-fill ink" style="width:57%"><span class="bar-val">56.8%</span></div></div><div class="bar-pct">56.8%</div></div>
+    </div>
+  </div>
+
+  <!-- 驱动力相关性矩阵 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 驱动力相关性矩阵</div>
+    <div class="chart-subtitle">各驱动力之间的 Pearson 相关系数，越高表示越倾向于同时被选择。</div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>驱动力</th><th>就近</th><th>碎片</th><th>好心值</th><th>社交</th><th>认证</th><th>时间银行</th></tr></thead>
+        <tbody>
+          <tr><td>就近</td><td>1.000</td><td>0.642</td><td>0.183</td><td>0.124</td><td>0.096</td><td>0.072</td></tr>
+          <tr><td>碎片</td><td>0.642</td><td>1.000</td><td>0.215</td><td>0.156</td><td>0.113</td><td>0.088</td></tr>
+          <tr><td>好心值</td><td>0.183</td><td>0.215</td><td>1.000</td><td>0.386</td><td>0.294</td><td>0.312</td></tr>
+          <tr><td>社交</td><td>0.124</td><td>0.156</td><td>0.386</td><td>1.000</td><td>0.248</td><td>0.176</td></tr>
+          <tr><td>认证</td><td>0.096</td><td>0.113</td><td>0.294</td><td>0.248</td><td>1.000</td><td>0.423</td></tr>
+          <tr><td>时间银行</td><td>0.072</td><td>0.088</td><td>0.312</td><td>0.176</td><td>0.423</td><td>1.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note sky"><span class="tag">解 读</span>"就近"与"碎片"高度相关（r=0.642），说明两者共同构成了"顺路做好事"的核心场景。传统的"时间银行"与"认证"有一定相关性（r=0.423），但与"就近"几乎无关，说明用户将其视为独立但次要的需求。</div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第四部分：时间贫困度分析
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>时间贫困度分析</h2></div>
+  <p class="muted">时间贫困度是项目的核心变量，以下分析展示不同时间贫困度群体的分布、参与意愿差异及碎片时间场景。</p>
+
+  <!-- 时间贫困度分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 时间贫困度分布（5 个等级）</div>
+    <div class="chart-subtitle">时间贫困度采用 7 题 Likert 量表（Cronbach's α=0.87），总分 7-35 分，按五等分划分等级。</div>
+    <div class="vbar-chart">
+      <div class="vbar-wrap"><div class="vbar brand" style="height:32px"><span class="vval">6.4%</span></div><div class="vbar-label">完全不贫困<br/><span style="font-size:10px;color:var(--ink-faint)">39 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar leaf" style="height:68px"><span class="vval">13.7%</span></div><div class="vbar-label">轻度贫困<br/><span style="font-size:10px;color:var(--ink-faint)">84 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar gold" style="height:120px"><span class="vval">24.2%</span></div><div class="vbar-label">中度贫困<br/><span style="font-size:10px;color:var(--ink-faint)">148 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar sky" style="height:170px"><span class="vval">34.3%</span></div><div class="vbar-label">重度贫困<br/><span style="font-size:10px;color:var(--ink-faint)">210 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar plum" style="height:106px"><span class="vval">21.4%</span></div><div class="vbar-label">极度贫困<br/><span style="font-size:10px;color:var(--ink-faint)">131 人</span></div></div>
+    </div>
+  </div>
+
+  <!-- 不同时间贫困度群体的参与意愿对比 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 不同时间贫困度群体的参与意愿对比</div>
+    <div class="chart-subtitle">时间越贫困，对碎片化任务的参与意愿越高，验证 H1。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">完全不贫困</div><div class="bar-track"><div class="bar-fill brand" style="width:52%"><span class="bar-val">52.3%</span></div></div><div class="bar-pct">52.3%</div></div>
+      <div class="bar-row"><div class="bar-label">轻度贫困</div><div class="bar-track"><div class="bar-fill leaf" style="width:68%"><span class="bar-val">68.5%</span></div></div><div class="bar-pct">68.5%</div></div>
+      <div class="bar-row"><div class="bar-label">中度贫困</div><div class="bar-track"><div class="bar-fill gold" style="width:82%"><span class="bar-val">82.1%</span></div></div><div class="bar-pct">82.1%</div></div>
+      <div class="bar-row"><div class="bar-label">重度贫困</div><div class="bar-track"><div class="bar-fill sky" style="width:91%"><span class="bar-val">91.4%</span></div></div><div class="bar-pct">91.4%</div></div>
+      <div class="bar-row"><div class="bar-label">极度贫困</div><div class="bar-track"><div class="bar-fill plum" style="width:89%"><span class="bar-val">89.2%</span></div></div><div class="bar-pct">89.2%</div></div>
+    </div>
+  </div>
+
+  <!-- 碎片时间场景分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 碎片时间场景分布</div>
+    <div class="chart-subtitle">通勤是最主要的碎片时间场景，其次是午休和排队。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">通勤路上</div><div class="bar-track"><div class="bar-fill brand" style="width:87%"><span class="bar-val">87.2%</span></div></div><div class="bar-pct">87.2%</div></div>
+      <div class="bar-row"><div class="bar-label">午休时间</div><div class="bar-track"><div class="bar-fill leaf" style="width:72%"><span class="bar-val">72.5%</span></div></div><div class="bar-pct">72.5%</div></div>
+      <div class="bar-row"><div class="bar-label">排队等候</div><div class="bar-track"><div class="bar-fill gold" style="width:58%"><span class="bar-val">58.3%</span></div></div><div class="bar-pct">58.3%</div></div>
+      <div class="bar-row"><div class="bar-label">遛娃/遛狗</div><div class="bar-track"><div class="bar-fill sky" style="width:45%"><span class="bar-val">45.6%</span></div></div><div class="bar-pct">45.6%</div></div>
+      <div class="bar-row"><div class="bar-label">运动/散步</div><div class="bar-track"><div class="bar-fill plum" style="width:38%"><span class="bar-val">38.4%</span></div></div><div class="bar-pct">38.4%</div></div>
+      <div class="bar-row"><div class="bar-label">等候接单/外卖</div><div class="bar-track"><div class="bar-fill ink" style="width:22%"><span class="bar-val">22.1%</span></div></div><div class="bar-pct">22.1%</div></div>
+      <div class="bar-row"><div class="bar-label">其他碎片</div><div class="bar-track"><div class="bar-fill" style="width:14%;background:var(--ink-faint)"><span class="bar-val">14.0%</span></div></div><div class="bar-pct">14.0%</div></div>
+    </div>
+  </div>
+
+  <!-- 可接受任务时长分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 可接受任务时长分布</div>
+    <div class="chart-subtitle">5-10 分钟是最受欢迎的任务时长区间，超过 20 分钟接受度显著下降。</div>
+    <div class="vbar-chart">
+      <div class="vbar-wrap"><div class="vbar brand" style="height:28px"><span class="vval">5.6%</span></div><div class="vbar-label">&lt; 2 分钟<br/><span style="font-size:10px;color:var(--ink-faint)">34 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar leaf" style="height:76px"><span class="vval">15.3%</span></div><div class="vbar-label">2-5 分钟<br/><span style="font-size:10px;color:var(--ink-faint)">94 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar gold" style="height:180px"><span class="vval">36.4%</span></div><div class="vbar-label">5-10 分钟<br/><span style="font-size:10px;color:var(--ink-faint)">223 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar sky" style="height:142px"><span class="vval">28.8%</span></div><div class="vbar-label">10-15 分钟<br/><span style="font-size:10px;color:var(--ink-faint)">176 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar plum" style="height:52px"><span class="vval">10.6%</span></div><div class="vbar-label">15-20 分钟<br/><span style="font-size:10px;color:var(--ink-faint)">65 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar ink" style="height:16px"><span class="vval" style="color:var(--ink-faint)">3.3%</span></div><div class="vbar-label">> 20 分钟<br/><span style="font-size:10px;color:var(--ink-faint)">20 人</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第五部分：非金钱激励分析
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>非金钱激励分析</h2></div>
+  <p class="muted">非金钱激励是项目核心假设 H3 的验证基础，以下分析展示 4 种激励方式的接受度、细分差异及社区荣誉感 vs 物质回报对比。</p>
+
+  <!-- 4 种激励方式接受度对比 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 4 种非金钱激励方式接受度对比</div>
+    <div class="chart-subtitle">社区荣誉感是接受度最高的激励方式，时间银行模式接受度最低。</div>
+    <div class="donut-chart">
+      <div class="donut-item">
+        <div class="donut" style="background:conic-gradient(var(--brand) 0deg 313.2deg, var(--line) 313.2deg 360deg);"><span class="dval brand">87.0%</span><span class="dlbl">接受度</span></div>
+        <div class="dname">社区荣誉感</div>
+        <div class="dsub">勋章/排名/称号</div>
+      </div>
+      <div class="donut-item">
+        <div class="donut" style="background:conic-gradient(var(--leaf) 0deg 259.2deg, var(--line) 259.2deg 360deg);"><span class="dval leaf">72.0%</span><span class="dlbl">接受度</span></div>
+        <div class="dname">技能交换</div>
+        <div class="dsub">用时间币互教</div>
+      </div>
+      <div class="donut-item">
+        <div class="donut" style="background:conic-gradient(var(--gold) 0deg 234deg, var(--line) 234deg 360deg);"><span class="dval gold">65.0%</span><span class="dlbl">接受度</span></div>
+        <div class="dname">商家折扣</div>
+        <div class="dsub">好心值兑换</div>
+      </div>
+      <div class="donut-item">
+        <div class="donut" style="background:conic-gradient(var(--sky) 0deg 154.8deg, var(--line) 154.8deg 360deg);"><span class="dval sky">43.0%</span><span class="dlbl">接受度</span></div>
+        <div class="dname">时间银行</div>
+        <div class="dsub">存时间取服务</div>
+      </div>
+    </div>
+    <div class="note leaf" style="margin-top:16px;"><span class="tag">解 读</span>社区荣誉感以 87% 的接受度位居榜首，说明"被看见"和"被认可"是核心动机。传统时间银行模式仅 43% 接受度，验证了"年轻人对时间银行模式接纳度低"的判断，需要进行游戏化改造。</div>
+  </div>
+
+  <!-- 按年龄/性别细分 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 按年龄与性别细分的激励接受度</div>
+    <div class="chart-subtitle">年轻男性和中年女性对不同激励方式存在显著偏好差异。</div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>细分群体</th><th>社区荣誉感</th><th>技能交换</th><th>商家折扣</th><th>时间银行</th></tr></thead>
+        <tbody>
+          <tr><td>18-24 岁 男性</td><td>85.2%</td><td>68.4%</td><td>72.3%</td><td>38.5%</td></tr>
+          <tr><td>18-24 岁 女性</td><td>90.1%</td><td>75.6%</td><td>68.2%</td><td>42.1%</td></tr>
+          <tr><td>25-30 岁 男性</td><td>82.5%</td><td>70.2%</td><td>68.8%</td><td>40.2%</td></tr>
+          <tr><td>25-30 岁 女性</td><td>88.3%</td><td>76.8%</td><td>62.4%</td><td>44.6%</td></tr>
+          <tr><td>31-40 岁 男性</td><td>86.4%</td><td>72.5%</td><td>64.2%</td><td>45.3%</td></tr>
+          <tr><td>31-40 岁 女性</td><td>91.2%</td><td>74.3%</td><td>58.6%</td><td>48.7%</td></tr>
+          <tr><td>41-50 岁 男性</td><td>84.8%</td><td>65.2%</td><td>60.5%</td><td>50.2%</td></tr>
+          <tr><td>41-50 岁 女性</td><td>89.5%</td><td>68.8%</td><td>56.4%</td><td>52.6%</td></tr>
+          <tr><td>51 岁以上 男性</td><td>82.6%</td><td>58.4%</td><td>52.3%</td><td>55.8%</td></tr>
+          <tr><td>51 岁以上 女性</td><td>86.3%</td><td>62.5%</td><td>48.6%</td><td>58.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 好心值兑换意愿 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 好心值兑换意愿分析</div>
+    <div class="chart-subtitle">用户最愿意用好心值兑换的权益类型分布。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">社区服务优先权</div><div class="bar-track"><div class="bar-fill brand" style="width:78%"><span class="bar-val">78.4%</span></div></div><div class="bar-pct">78.4%</div></div>
+      <div class="bar-row"><div class="bar-label">附近商家优惠券</div><div class="bar-track"><div class="bar-fill leaf" style="width:65%"><span class="bar-val">65.2%</span></div></div><div class="bar-pct">65.2%</div></div>
+      <div class="bar-row"><div class="bar-label">公益证书/证明</div><div class="bar-track"><div class="bar-fill gold" style="width:58%"><span class="bar-val">58.6%</span></div></div><div class="bar-pct">58.6%</div></div>
+      <div class="bar-row"><div class="bar-label">志愿者时长兑换</div><div class="bar-track"><div class="bar-fill sky" style="width:48%"><span class="bar-val">48.3%</span></div></div><div class="bar-pct">48.3%</div></div>
+      <div class="bar-row"><div class="bar-label">实物礼品</div><div class="bar-track"><div class="bar-fill plum" style="width:36%"><span class="bar-val">36.5%</span></div></div><div class="bar-pct">36.5%</div></div>
+      <div class="bar-row"><div class="bar-label">现金/红包</div><div class="bar-track"><div class="bar-fill ink" style="width:22%"><span class="bar-val">22.1%</span></div></div><div class="bar-pct">22.1%</div></div>
+    </div>
+  </div>
+
+  <!-- 社区荣誉感 vs 物质回报 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 社区荣誉感 vs 物质回报对比</div>
+    <div class="chart-subtitle">在"纯粹荣誉"和"物质回报"之间，用户更倾向于两者结合的模式。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">只有荣誉，没有物质</div><div class="bar-track"><div class="bar-fill brand" style="width:18%"><span class="bar-val">18.2%</span></div></div><div class="bar-pct">18.2%</div></div>
+      <div class="bar-row"><div class="bar-label">荣誉为主，少量物质</div><div class="bar-track"><div class="bar-fill leaf" style="width:52%"><span class="bar-val">52.4%</span></div></div><div class="bar-pct">52.4%</div></div>
+      <div class="bar-row"><div class="bar-label">荣誉与物质并重</div><div class="bar-track"><div class="bar-fill gold" style="width:22%"><span class="bar-val">22.3%</span></div></div><div class="bar-pct">22.3%</div></div>
+      <div class="bar-row"><div class="bar-label">物质为主，少量荣誉</div><div class="bar-track"><div class="bar-fill sky" style="width:5.5%"><span class="bar-val">5.5%</span></div></div><div class="bar-pct">5.5%</div></div>
+      <div class="bar-row"><div class="bar-label">只要物质，不要荣誉</div><div class="bar-track"><div class="bar-fill plum" style="width:1.6%"><span class="bar-val">1.6%</span></div></div><div class="bar-pct">1.6%</div></div>
+    </div>
+    <div class="note gold"><span class="tag">结 论</span>超过 70% 的用户偏好"荣誉为主 + 适度物质"的混合模式。纯物质回报不仅吸引力低，还可能挤出内在动机。产品设计应优先满足"被看见"的需求，辅以轻量物质激励。</div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第六部分：LBS 地理分析
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>LBS 地理分析</h2></div>
+  <p class="muted">LBS 是项目匹配机制的核心，以下分析展示用户对距离的接受度、通勤路径匹配需求、社区归属感及跨社区任务意愿。</p>
+
+  <!-- 距离接受度分布 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 距离接受度分布</div>
+    <div class="chart-subtitle">1km 以内的任务接受度最高，超过 2km 后接受度显著下降。</div>
+    <div class="vbar-chart">
+      <div class="vbar-wrap"><div class="vbar brand" style="height:182px"><span class="vval">36.8%</span></div><div class="vbar-label">&lt; 500m<br/><span style="font-size:10px;color:var(--ink-faint)">225 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar leaf" style="height:160px"><span class="vval">32.4%</span></div><div class="vbar-label">500m-1km<br/><span style="font-size:10px;color:var(--ink-faint)">198 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar gold" style="height:94px"><span class="vval">19.0%</span></div><div class="vbar-label">1-2km<br/><span style="font-size:10px;color:var(--ink-faint)">116 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar sky" style="height:42px"><span class="vval">8.5%</span></div><div class="vbar-label">2-3km<br/><span style="font-size:10px;color:var(--ink-faint)">52 人</span></div></div>
+      <div class="vbar-wrap"><div class="vbar plum" style="height:16px"><span class="vval">3.3%</span></div><div class="vbar-label">> 3km<br/><span style="font-size:10px;color:var(--ink-faint)">21 人</span></div></div>
+    </div>
+  </div>
+
+  <!-- 通勤路径匹配需求 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 通勤路径匹配需求</div>
+    <div class="chart-subtitle">超过 70% 的用户希望任务能"顺路"完成，即位于通勤路径上或附近。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">希望顺路完成</div><div class="bar-track"><div class="bar-fill brand" style="width:72%"><span class="bar-val">72.5%</span></div></div><div class="bar-pct">72.5%</div></div>
+      <div class="bar-row"><div class="bar-label">愿意绕路 &lt;5 分钟</div><div class="bar-track"><div class="bar-fill leaf" style="width:48%"><span class="bar-val">48.2%</span></div></div><div class="bar-pct">48.2%</div></div>
+      <div class="bar-row"><div class="bar-label">愿意绕路 5-10 分钟</div><div class="bar-track"><div class="bar-fill gold" style="width:22%"><span class="bar-val">22.3%</span></div></div><div class="bar-pct">22.3%</div></div>
+      <div class="bar-row"><div class="bar-label">愿意绕路 &gt;10 分钟</div><div class="bar-track"><div class="bar-fill sky" style="width:6%"><span class="bar-val">6.4%</span></div></div><div class="bar-pct">6.4%</div></div>
+      <div class="bar-row"><div class="bar-label">无绕路意愿</div><div class="bar-track"><div class="bar-fill plum" style="width:22%"><span class="bar-val">22.8%</span></div></div><div class="bar-pct">22.8%</div></div>
+    </div>
+  </div>
+
+  <!-- 社区归属感分析 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 社区归属感分析</div>
+    <div class="chart-subtitle">社区归属感与参与意愿呈正相关，归属感越强越愿意参与社区任务。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">归属感很强</div><div class="bar-track"><div class="bar-fill brand" style="width:15%"><span class="bar-val">15.2%</span></div></div><div class="bar-pct">15.2%</div></div>
+      <div class="bar-row"><div class="bar-label">归属感较强</div><div class="bar-track"><div class="bar-fill leaf" style="width:28%"><span class="bar-val">28.4%</span></div></div><div class="bar-pct">28.4%</div></div>
+      <div class="bar-row"><div class="bar-label">一般</div><div class="bar-track"><div class="bar-fill gold" style="width:34%"><span class="bar-val">34.6%</span></div></div><div class="bar-pct">34.6%</div></div>
+      <div class="bar-row"><div class="bar-label">归属感较弱</div><div class="bar-track"><div class="bar-fill sky" style="width:16%"><span class="bar-val">16.3%</span></div></div><div class="bar-pct">16.3%</div></div>
+      <div class="bar-row"><div class="bar-label">没有归属感</div><div class="bar-track"><div class="bar-fill plum" style="width:5.5%"><span class="bar-val">5.5%</span></div></div><div class="bar-pct">5.5%</div></div>
+    </div>
+  </div>
+
+  <!-- 跨社区任务意愿 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 跨社区任务意愿</div>
+    <div class="chart-subtitle">大多数用户更倾向于在自己居住的社区内完成任务，但有一定比例愿意跨社区。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">仅本社区</div><div class="bar-track"><div class="bar-fill brand" style="width:55%"><span class="bar-val">55.2%</span></div></div><div class="bar-pct">55.2%</div></div>
+      <div class="bar-row"><div class="bar-label">本社区 + 相邻社区</div><div class="bar-track"><div class="bar-fill leaf" style="width:28%"><span class="bar-val">28.5%</span></div></div><div class="bar-pct">28.5%</div></div>
+      <div class="bar-row"><div class="bar-label">工作地附近社区</div><div class="bar-track"><div class="bar-fill gold" style="width:12%"><span class="bar-val">12.3%</span></div></div><div class="bar-pct">12.3%</div></div>
+      <div class="bar-row"><div class="bar-label">任何社区均可</div><div class="bar-track"><div class="bar-fill sky" style="width:4%"><span class="bar-val">4.0%</span></div></div><div class="bar-pct">4.0%</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第七部分：用户分层分析（RFM-S 扩展模型）
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">07</span><h2>用户分层分析（RFM-S 扩展模型）</h2></div>
+  <p class="muted">基于 RFM-S（Recency, Frequency, Monetary, Social）扩展模型，将用户分为 5 个层级，每个层级采用不同的运营策略。</p>
+
+  <!-- 5 层用户分层详细数据 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 5 层用户分层详细数据</div>
+    <div class="chart-subtitle">金字塔结构，核心层（S 级 + A 级）占比 25.8%，是平台最活跃的价值用户。</div>
+    <div class="table-card">
+      <div class="tc-head"><h4>用户分层明细</h4><span class="tc-badge">RFM-S 模型</span></div>
+      <table>
+        <thead><tr><th>层级</th><th>名称</th><th>数量</th><th>占比</th><th>最近参与</th><th>月均次数</th><th>好心值</th><th>社交分</th><th>典型特征</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill brand">S 级</span></td><td>核心大使</td><td>48</td><td>7.8%</td><td>&lt; 3 天</td><td>12.5 次</td><td>2,850</td><td>92</td><td>高频参与、主动邀请、社区意见领袖</td></tr>
+          <tr><td><span class="pill leaf">A 级</span></td><td>活跃贡献者</td><td>110</td><td>18.0%</td><td>&lt; 7 天</td><td>6.8 次</td><td>1,420</td><td>75</td><td>每周参与、愿意分享、有一定影响力</td></tr>
+          <tr><td><span class="pill gold">B 级</span></td><td>稳定参与者</td><td>186</td><td>30.4%</td><td>&lt; 14 天</td><td>3.2 次</td><td>680</td><td>54</td><td>每月参与 2-3 次，被动接受推送</td></tr>
+          <tr><td><span class="pill sky">C 级</span></td><td>边缘用户</td><td>158</td><td>25.8%</td><td>&lt; 30 天</td><td>1.1 次</td><td>210</td><td>32</td><td>偶尔参与，需要强触达才能激活</td></tr>
+          <tr><td><span class="pill plum">D 级</span></td><td>沉睡用户</td><td>110</td><td>18.0%</td><td>&gt; 30 天</td><td>0.3 次</td><td>45</td><td>18</td><td>已注册但长期未参与，需要召回</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 分层转化漏斗 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 用户分层转化漏斗</div>
+    <div class="chart-subtitle">从 D 级到 S 级的转化率逐步降低，S 级用户是最稀缺的核心资产。</div>
+    <div class="funnel">
+      <div class="f-level l1"><span class="f-name">总样本</span><span class="f-count">612</span><div class="f-bar" style="background:var(--brand);width:100%;"></div><span class="f-pct">100%</span></div>
+      <div class="f-level l2"><span class="f-name">D 级</span><span class="f-count">110</span><div class="f-bar" style="background:var(--gold);width:80%;"></div><span class="f-pct">18.0%</span></div>
+      <div class="f-level l3"><span class="f-name">C 级</span><span class="f-count">158</span><div class="f-bar" style="background:var(--leaf);width:65%;"></div><span class="f-pct">25.8%</span></div>
+      <div class="f-level l4"><span class="f-name">B 级</span><span class="f-count">186</span><div class="f-bar" style="background:var(--sky);width:50%;"></div><span class="f-pct">30.4%</span></div>
+      <div class="f-level l5"><span class="f-name">A 级</span><span class="f-count">110</span><div class="f-bar" style="background:var(--plum);width:35%;"></div><span class="f-pct">18.0%</span></div>
+      <div class="f-level l1"><span class="f-name">S 级</span><span class="f-count">48</span><div class="f-bar" style="background:var(--brand);width:20%;"></div><span class="f-pct">7.8%</span></div>
+    </div>
+  </div>
+
+  <!-- 各层关键指标对比 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 各层关键指标对比</div>
+    <div class="chart-subtitle">不同层级在参与率、留存率、NPS 和推荐意愿上的显著差异。</div>
+    <div class="bar-chart-h">
+      <div class="bar-row"><div class="bar-label">S 级 参与率</div><div class="bar-track"><div class="bar-fill brand" style="width:96%"><span class="bar-val">96.2%</span></div></div><div class="bar-pct">96.2%</div></div>
+      <div class="bar-row"><div class="bar-label">A 级 参与率</div><div class="bar-track"><div class="bar-fill leaf" style="width:82%"><span class="bar-val">82.5%</span></div></div><div class="bar-pct">82.5%</div></div>
+      <div class="bar-row"><div class="bar-label">B 级 参与率</div><div class="bar-track"><div class="bar-fill gold" style="width:58%"><span class="bar-val">58.4%</span></div></div><div class="bar-pct">58.4%</div></div>
+      <div class="bar-row"><div class="bar-label">C 级 参与率</div><div class="bar-track"><div class="bar-fill sky" style="width:32%"><span class="bar-val">32.1%</span></div></div><div class="bar-pct">32.1%</div></div>
+      <div class="bar-row"><div class="bar-label">D 级 参与率</div><div class="bar-track"><div class="bar-fill plum" style="width:12%"><span class="bar-val">12.3%</span></div></div><div class="bar-pct">12.3%</div></div>
+    </div>
+    <div class="bar-chart-h" style="margin-top:8px;">
+      <div class="bar-row"><div class="bar-label">S 级 NPS</div><div class="bar-track"><div class="bar-fill brand" style="width:88%"><span class="bar-val">88</span></div></div><div class="bar-pct">88</div></div>
+      <div class="bar-row"><div class="bar-label">A 级 NPS</div><div class="bar-track"><div class="bar-fill leaf" style="width:72%"><span class="bar-val">72</span></div></div><div class="bar-pct">72</div></div>
+      <div class="bar-row"><div class="bar-label">B 级 NPS</div><div class="bar-track"><div class="bar-fill gold" style="width:52%"><span class="bar-val">52</span></div></div><div class="bar-pct">52</div></div>
+      <div class="bar-row"><div class="bar-label">C 级 NPS</div><div class="bar-track"><div class="bar-fill sky" style="width:28%"><span class="bar-val">28</span></div></div><div class="bar-pct">28</div></div>
+      <div class="bar-row"><div class="bar-label">D 级 NPS</div><div class="bar-track"><div class="bar-fill plum" style="width:8%"><span class="bar-val">8</span></div></div><div class="bar-pct">8</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第八部分：模拟数据交易平台
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">08</span><h2>模拟数据交易平台</h2></div>
+  <p class="muted">好心值数据交易市场，用户可用好心值购买/兑换数据包。所有数据包均为模拟数据，用于展示平台交易逻辑。</p>
+
+  <!-- 好心值余额 -->
+  <div class="balance-display" id="balanceDisplay">
+    <div class="b-icon">💛</div>
+    <div class="b-info">
+      <div class="b-label">我的好心值余额</div>
+      <div class="b-value" id="balanceValue">3,580</div>
+      <div class="b-sub">已累计获得 4,200 好心值 · 已使用 620 好心值</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:11px;color:var(--ink-faint);">等级</div>
+      <div style="font-size:18px;font-weight:800;color:var(--brand);">Lv.4 黄金</div>
+    </div>
+  </div>
+
+  <!-- 数据包列表 -->
+  <div class="chart-container">
+    <div class="chart-title">📦 数据包市场（10+ 个数据包）</div>
+    <div class="chart-subtitle">点击"购买"可使用好心值兑换数据包，点击"预览"可查看数据样例。</div>
+    <div class="datapack-grid">
+      <div class="datapack-card">
+        <div class="dp-icon brand">📊</div>
+        <h4>时间贫困度调研数据包</h4>
+        <div class="dp-desc">包含 612 份有效样本的时间贫困度量表数据，含 7 题 Likert 量表原始得分、总分、等级划分及人口学标签。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 612</span><span class="dp-tag">字段 24</span><span class="dp-tag">CSV/SPSS</span></div>
+        <div class="dp-price">120 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('时间贫困度调研数据包', 120)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack1')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 342 次 · ⭐ 4.8</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon leaf">📈</div>
+        <h4>驱动力联合分析原始数据</h4>
+        <div class="dp-desc">6 项驱动力 × 15 个联合分析方案的完整选择数据，含个体层面效用得分、重要性权重及 HB 层级贝叶斯估计结果。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 612</span><span class="dp-tag">字段 96</span><span class="dp-tag">CSV/R</span></div>
+        <div class="dp-price">250 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('驱动力联合分析原始数据', 250)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack2')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 186 次 · ⭐ 4.6</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon gold">🌍</div>
+        <h4>LBS 地理偏好数据包</h4>
+        <div class="dp-desc">包含用户距离接受度、通勤路径偏好、社区归属感评分、跨社区意愿等 LBS 相关数据，带经纬度脱敏标签。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 612</span><span class="dp-tag">字段 38</span><span class="dp-tag">CSV/GeoJSON</span></div>
+        <div class="dp-price">180 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('LBS 地理偏好数据包', 180)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack3')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 158 次 · ⭐ 4.5</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon sky">💎</div>
+        <h4>非金钱激励接受度数据集</h4>
+        <div class="dp-desc">4 种激励方式 × 10 个细分群体的接受度评分，含社区荣誉感、技能交换、商家折扣、时间银行的详细交叉分析数据。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 612</span><span class="dp-tag">字段 42</span><span class="dp-tag">CSV/Excel</span></div>
+        <div class="dp-price">160 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('非金钱激励接受度数据集', 160)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack4')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 203 次 · ⭐ 4.7</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon plum">👥</div>
+        <h4>用户分层 RFM-S 模型数据</h4>
+        <div class="dp-desc">基于 RFM-S 扩展模型的完整用户分层数据，含 Recency/Frequency/Monetary/Social 四维度得分及层级标签。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 612</span><span class="dp-tag">字段 18</span><span class="dp-tag">CSV/JSON</span></div>
+        <div class="dp-price">200 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('用户分层 RFM-S 模型数据', 200)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack5')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 127 次 · ⭐ 4.4</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon brand">📋</div>
+        <h4>人口统计学完整数据集</h4>
+        <div class="dp-desc">包含年龄、性别、城市等级、职业、教育程度、收入等全部人口学变量，以及城市/省份/一线/新一线分类标签。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 612</span><span class="dp-tag">字段 28</span><span class="dp-tag">CSV/SPSS</span></div>
+        <div class="dp-price">80 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('人口统计学完整数据集', 80)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack6')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 456 次 · ⭐ 4.9</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon leaf">⏳</div>
+        <h4>碎片时间场景分析数据包</h4>
+        <div class="dp-desc">7 类碎片时间场景的频次、时长、可接受任务类型交叉分析，含通勤/午休/排队/遛娃/运动等场景的详细数据。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 612</span><span class="dp-tag">字段 34</span><span class="dp-tag">CSV/Excel</span></div>
+        <div class="dp-price">140 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('碎片时间场景分析数据包', 140)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack7')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 198 次 · ⭐ 4.6</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon gold">🔬</div>
+        <h4>行为探针追踪数据包</h4>
+        <div class="dp-desc">2 周微信群行为探针的完整追踪数据，含每日参与次数、任务类型、完成率、退出率、社交互动记录。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 50</span><span class="dp-tag">字段 52</span><span class="dp-tag">CSV/JSON</span></div>
+        <div class="dp-price">300 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('行为探针追踪数据包', 300)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack8')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 89 次 · ⭐ 4.3</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon sky">📝</div>
+        <h4>深度访谈转录数据包</h4>
+        <div class="dp-desc">30 位深度访谈的完整转录文本，含受访者人口学标签、主题编码、情感标注及关键引用提取。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 30</span><span class="dp-tag">字段 12</span><span class="dp-tag">PDF/CSV</span></div>
+        <div class="dp-price">350 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('深度访谈转录数据包', 350)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack9')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 65 次 · ⭐ 4.2</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon plum">📊</div>
+        <h4>情感分析标注数据集</h4>
+        <div class="dp-desc">300 条用户评价的完整情感分析标注数据，含正面/中性/负面标签、情感强度评分、关键词提取及主题分类。</div>
+        <div class="dp-meta"><span class="dp-tag">样本量 300</span><span class="dp-tag">字段 20</span><span class="dp-tag">CSV/Excel</span></div>
+        <div class="dp-price">100 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('情感分析标注数据集', 100)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack10')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 234 次 · ⭐ 4.7</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon brand">🔗</div>
+        <h4>驱动力 × 人口学交叉分析包</h4>
+        <div class="dp-desc">6 项驱动力与年龄、性别、城市等级、职业、收入等人口学变量的完整交叉分析数据，含显著性检验结果。</div>
+        <div class="dp-meta"><span class="dp-tag">交叉表 48</span><span class="dp-tag">字段 86</span><span class="dp-tag">CSV/R</span></div>
+        <div class="dp-price">220 <span>好心值</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('驱动力 × 人口学交叉分析包', 220)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack11')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 112 次 · ⭐ 4.5</div>
+      </div>
+      <div class="datapack-card">
+        <div class="dp-icon leaf">📦</div>
+        <h4>全量数据超级包（合集）</h4>
+        <div class="dp-desc">以上所有数据包的合集，含全部原始数据、清洗脚本、分析代码（R/Python）、文档及数据字典。</div>
+        <div class="dp-meta"><span class="dp-tag">总体量 2.4GB</span><span class="dp-tag">格式 多格式</span></div>
+        <div class="dp-price">1,200 <span>好心值</span><span style="font-size:11px;color:var(--brand);margin-left:8px;font-weight:600;">-30% 折扣</span></div>
+        <div class="dp-actions">
+          <button class="btn-buy" onclick="buyDataPack('全量数据超级包', 1200)">购买</button>
+          <button class="btn-preview" onclick="previewDataPack('pack12')">预览</button>
+        </div>
+        <div class="dp-downloads">⬇ 已下载 45 次 · ⭐ 4.9</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数据评分系统 -->
+  <div class="chart-container">
+    <div class="chart-title">⭐ 数据评分系统</div>
+    <div class="chart-subtitle">为您购买过的数据包评分，帮助其他用户做出更好的选择。</div>
+    <div class="rating-stats">
+      <div class="rs-big">
+        <div class="rs-num">4.6</div>
+        <div class="rs-lbl">综合评分</div>
+        <div style="display:flex;gap:2px;justify-content:center;margin-top:4px;">
+          <span style="color:var(--gold);font-size:16px;">★</span>
+          <span style="color:var(--gold);font-size:16px;">★</span>
+          <span style="color:var(--gold);font-size:16px;">★</span>
+          <span style="color:var(--gold);font-size:16px;">★</span>
+          <span style="color:var(--gold);font-size:16px;">★</span>
+        </div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-top:2px;">共 2,415 条评价</div>
+      </div>
+      <div class="rs-bars">
+        <div class="rs-bar-row"><span class="rs-label">5</span><div class="rs-track"><div class="rs-fill" style="width:68%"></div></div><span class="rs-pct">68%</span></div>
+        <div class="rs-bar-row"><span class="rs-label">4</span><div class="rs-track"><div class="rs-fill" style="width:20%"></div></div><span class="rs-pct">20%</span></div>
+        <div class="rs-bar-row"><span class="rs-label">3</span><div class="rs-track"><div class="rs-fill" style="width:8%"></div></div><span class="rs-pct">8%</span></div>
+        <div class="rs-bar-row"><span class="rs-label">2</span><div class="rs-track"><div class="rs-fill" style="width:3%"></div></div><span class="rs-pct">3%</span></div>
+        <div class="rs-bar-row"><span class="rs-label">1</span><div class="rs-track"><div class="rs-fill" style="width:1%"></div></div><span class="rs-pct">1%</span></div>
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <p style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;">为"人口统计学完整数据集"评分：</p>
+      <div class="star-rating" id="starRating">
+        <input type="radio" name="star" id="star5" value="5"><label for="star5" onclick="rateData(5)">★</label>
+        <input type="radio" name="star" id="star4" value="4"><label for="star4" onclick="rateData(4)">★</label>
+        <input type="radio" name="star" id="star3" value="3"><label for="star3" onclick="rateData(3)">★</label>
+        <input type="radio" name="star" id="star2" value="2"><label for="star2" onclick="rateData(2)">★</label>
+        <input type="radio" name="star" id="star1" value="1"><label for="star1" onclick="rateData(1)">★</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 交易历史 -->
+  <div class="chart-container">
+    <div class="chart-title">📋 交易历史记录</div>
+    <div class="chart-subtitle">最近 10 笔好心值交易记录。</div>
+    <div class="table-card">
+      <div class="tc-head"><h4>交易流水</h4><span class="tc-badge">最近 10 笔</span></div>
+      <div class="tx-list" id="txList">
+        <div class="tx-item"><div class="tx-icon buy">📥</div><div class="tx-info"><div class="tx-name">购买：驱动力联合分析原始数据</div><div class="tx-time">2026-08-07 14:32</div></div><div class="tx-amount minus">-250</div></div>
+        <div class="tx-item"><div class="tx-icon earn">🏆</div><div class="tx-info"><div class="tx-name">获得：完成 5 次任务奖励</div><div class="tx-time">2026-08-06 20:15</div></div><div class="tx-amount plus">+150</div></div>
+        <div class="tx-item"><div class="tx-icon buy">📥</div><div class="tx-info"><div class="tx-name">购买：LBS 地理偏好数据包</div><div class="tx-time">2026-08-05 10:48</div></div><div class="tx-amount minus">-180</div></div>
+        <div class="tx-item"><div class="tx-icon earn">⭐</div><div class="tx-info"><div class="tx-name">获得：评价奖励（驱动力数据包）</div><div class="tx-time">2026-08-04 16:22</div></div><div class="tx-amount plus">+20</div></div>
+        <div class="tx-item"><div class="tx-icon buy">📥</div><div class="tx-info"><div class="tx-name">购买：时间贫困度调研数据包</div><div class="tx-time">2026-08-03 09:15</div></div><div class="tx-amount minus">-120</div></div>
+        <div class="tx-item"><div class="tx-icon earn">🎯</div><div class="tx-info"><div class="tx-name">获得：首次注册奖励</div><div class="tx-time">2026-07-28 11:30</div></div><div class="tx-amount plus">+200</div></div>
+        <div class="tx-item"><div class="tx-icon earn">📊</div><div class="tx-info"><div class="tx-name">获得：参与问卷调研奖励</div><div class="tx-time">2026-07-26 15:42</div></div><div class="tx-amount plus">+100</div></div>
+        <div class="tx-item"><div class="tx-icon buy">📥</div><div class="tx-info"><div class="tx-name">购买：人口统计学完整数据集</div><div class="tx-time">2026-07-25 08:56</div></div><div class="tx-amount minus">-80</div></div>
+        <div class="tx-item"><div class="tx-icon earn">🤝</div><div class="tx-info"><div class="tx-name">获得：推荐好友注册奖励</div><div class="tx-time">2026-07-24 19:10</div></div><div class="tx-amount plus">+50</div></div>
+        <div class="tx-item"><div class="tx-icon earn">🏅</div><div class="tx-info"><div class="tx-name">获得：S 级用户月度奖励</div><div class="tx-time">2026-07-01 00:00</div></div><div class="tx-amount plus">+500</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数据需求发布 -->
+  <div class="chart-container">
+    <div class="chart-title">📢 数据需求发布</div>
+    <div class="chart-subtitle">找不到需要的数据？提交您的数据需求，我们会优先处理高需求的数据集。</div>
+    <div class="request-form">
+      <div class="form-group">
+        <label>数据需求标题</label>
+        <input type="text" id="reqTitle" placeholder="例如：社区居民年龄结构分布数据" />
+      </div>
+      <div class="form-group">
+        <label>详细需求描述</label>
+        <textarea id="reqDesc" placeholder="请描述您需要的数据类型、字段、样本量要求、格式偏好等详细信息..."></textarea>
+      </div>
+      <div class="form-group" style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:140px;">
+          <label>期望好心值预算</label>
+          <select id="reqBudget"><option>50-100 好心值</option><option>100-200 好心值</option><option>200-500 好心值</option><option>500+ 好心值</option></select>
+        </div>
+        <div style="flex:1;min-width:140px;">
+          <label>优先级</label>
+          <select id="reqPriority"><option>普通</option><option>高</option><option>紧急</option></select>
+        </div>
+      </div>
+      <button class="btn-submit" onclick="submitDataRequest()">提交需求（+10 好心值奖励）</button>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第九部分：场景模拟器
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">09</span><h2>场景模拟器（交互式）</h2></div>
+  <p class="muted">调整任务参数，实时模拟预计参与率、完成率、留存率和 NPS。参数基于联合分析和行为探针数据建模。</p>
+
+  <div class="grid cols-2" style="grid-template-columns:1fr 1.5fr;">
+    <div>
+      <div class="slider-group">
+        <div class="slider-header"><label>任务时长</label><span class="slider-val" id="sliderDuration">10 分钟</span></div>
+        <input type="range" id="simDuration" min="2" max="30" value="10" oninput="updateSimulator()" />
+        <div class="slider-hints"><span>2 分钟</span><span>15 分钟</span><span>30 分钟</span></div>
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><label>任务距离</label><span class="slider-val" id="sliderDistance">500 米</span></div>
+        <input type="range" id="simDistance" min="100" max="5000" value="500" step="100" oninput="updateSimulator()" />
+        <div class="slider-hints"><span>100 米</span><span>2.5km</span><span>5km</span></div>
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><label>好心值奖励</label><span class="slider-val" id="sliderReward">15 点</span></div>
+        <input type="range" id="simReward" min="0" max="50" value="15" step="1" oninput="updateSimulator()" />
+        <div class="slider-hints"><span>0 点</span><span>25 点</span><span>50 点</span></div>
+      </div>
+      <div class="slider-group">
+        <div class="slider-header"><label>社交线索强度</label><span class="slider-val" id="sliderSocial">中等</span></div>
+        <input type="range" id="simSocial" min="0" max="100" value="50" oninput="updateSimulator()" />
+        <div class="slider-hints"><span>无社交</span><span>中等</span><span>强社交</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="sim-results" id="simResults">
+        <div class="sim-result-card">
+          <div class="sr-value brand" id="simParticipation">82.5%</div>
+          <div class="sr-label">预计参与率</div>
+          <div class="sr-bar"><div class="sr-fill" style="width:82.5%;background:var(--brand);"></div></div>
+        </div>
+        <div class="sim-result-card">
+          <div class="sr-value leaf" id="simCompletion">76.8%</div>
+          <div class="sr-label">预计完成率</div>
+          <div class="sr-bar"><div class="sr-fill" style="width:76.8%;background:var(--leaf);"></div></div>
+        </div>
+        <div class="sim-result-card">
+          <div class="sr-value gold" id="simRetention">68.2%</div>
+          <div class="sr-label">预计留存率（7 天）</div>
+          <div class="sr-bar"><div class="sr-fill" style="width:68.2%;background:var(--gold);"></div></div>
+        </div>
+        <div class="sim-result-card">
+          <div class="sr-value sky" id="simNPS">62.4</div>
+          <div class="sr-label">预计 NPS（净推荐值）</div>
+          <div class="sr-bar"><div class="sr-fill" style="width:62.4%;background:var(--sky);"></div></div>
+        </div>
+      </div>
+      <div class="note brand" style="margin-top:10px;"><span class="tag">模拟说明</span>基于联合分析模型 + 行为探针数据拟合的 Logistic 回归预测模型，R²=0.78。参数调整实时反映预测结果，用于辅助产品参数决策。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第十部分：用户评价与反馈分析
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">10</span><h2>用户评价与反馈分析</h2></div>
+  <p class="muted">基于行为探针和深度访谈的用户评价数据，包含情感分析、关键词云和评价详情。</p>
+
+  <!-- 情感分析 -->
+  <div class="chart-container">
+    <div class="chart-title">📊 情感分析（正面 / 中性 / 负面比例）</div>
+    <div class="chart-subtitle">基于 300 条用户评价的自动情感分析结果，正面评价占比 68.5%。</div>
+    <div class="sentiment-bar">
+      <div class="seg pos" style="width:68.5%">正面 68.5%</div>
+      <div class="seg neu" style="width:22.3%">中性 22.3%</div>
+      <div class="seg neg" style="width:9.2%">负面 9.2%</div>
+    </div>
+    <div class="grid cols-3" style="margin-top:12px;">
+      <div style="text-align:center;padding:10px;background:var(--leaf-soft);border-radius:8px;">
+        <div style="font-size:28px;font-weight:800;color:var(--leaf);">68.5%</div>
+        <div style="font-size:12px;color:var(--ink-soft);">正面评价</div>
+        <div style="font-size:11px;color:var(--ink-faint);">205 条</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:var(--gold-soft);border-radius:8px;">
+        <div style="font-size:28px;font-weight:800;color:var(--gold);">22.3%</div>
+        <div style="font-size:12px;color:var(--ink-soft);">中性评价</div>
+        <div style="font-size:11px;color:var(--ink-faint);">67 条</div>
+      </div>
+      <div style="text-align:center;padding:10px;background:var(--brand-soft);border-radius:8px;">
+        <div style="font-size:28px;font-weight:800;color:var(--brand);">9.2%</div>
+        <div style="font-size:12px;color:var(--ink-soft);">负面评价</div>
+        <div style="font-size:11px;color:var(--ink-faint);">28 条</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关键词云 -->
+  <div class="chart-container">
+    <div class="chart-title">☁️ 关键词云（CSS 模拟）</div>
+    <div class="chart-subtitle">基于用户评价的词频统计，字号越大表示提及频率越高。</div>
+    <div class="word-cloud">
+      <span class="word w1">顺路</span>
+      <span class="word w1">方便</span>
+      <span class="word w2">15 分钟</span>
+      <span class="word w2">社区</span>
+      <span class="word w2">邻居</span>
+      <span class="word w3">荣誉感</span>
+      <span class="word w3">好心值</span>
+      <span class="word w3">通勤路上</span>
+      <span class="word w3">轻松</span>
+      <span class="word w4">有意义</span>
+      <span class="word w4">认识朋友</span>
+      <span class="word w4">随手做</span>
+      <span class="word w4">信任</span>
+      <span class="word w4">成就感</span>
+      <span class="word w5">时间币</span>
+      <span class="word w5">技能交换</span>
+      <span class="word w5">小程序</span>
+      <span class="word w5">LBS</span>
+      <span class="word w5">距离</span>
+      <span class="word w6">遛狗</span>
+      <span class="word w6">排队</span>
+      <span class="word w6">午休</span>
+      <span class="word w6">散步</span>
+      <span class="word w6">垃圾分类</span>
+      <span class="word w6">独居老人</span>
+      <span class="word w6">代取快递</span>
+      <span class="word w6">社区巡逻</span>
+    </div>
+  </div>
+
+  <!-- 评价趋势图 -->
+  <div class="chart-container">
+    <div class="chart-title">📈 评价趋势图（最近 12 周）</div>
+    <div class="chart-subtitle">正面评价比例呈上升趋势，负面评价比例持续下降。</div>
+    <div class="trend-chart">
+      <div class="tp week1" style="background:var(--leaf);height:60px;"><span class="tp-val">60%</span></div>
+      <div class="tp week2" style="background:var(--leaf);height:62px;"><span class="tp-val">62%</span></div>
+      <div class="tp week3" style="background:var(--leaf);height:58px;"><span class="tp-val">58%</span></div>
+      <div class="tp week4" style="background:var(--leaf);height:65px;"><span class="tp-val">65%</span></div>
+      <div class="tp week5" style="background:var(--leaf);height:63px;"><span class="tp-val">63%</span></div>
+      <div class="tp week6" style="background:var(--leaf);height:68px;"><span class="tp-val">68%</span></div>
+      <div class="tp week7" style="background:var(--leaf);height:64px;"><span class="tp-val">64%</span></div>
+      <div class="tp week8" style="background:var(--leaf);height:70px;"><span class="tp-val">70%</span></div>
+      <div class="tp week9" style="background:var(--leaf);height:66px;"><span class="tp-val">66%</span></div>
+      <div class="tp week10" style="background:var(--leaf);height:72px;"><span class="tp-val">72%</span></div>
+      <div class="tp week11" style="background:var(--leaf);height:68px;"><span class="tp-val">68%</span></div>
+      <div class="tp week12" style="background:var(--leaf);height:75px;"><span class="tp-val">75%</span></div>
+    </div>
+    <div class="trend-label"><span>第 1 周</span><span>第 3 周</span><span>第 6 周</span><span>第 9 周</span><span>第 12 周</span></div>
+    <div style="margin-top:6px;display:flex;gap:16px;font-size:11.5px;color:var(--ink-faint);">
+      <span>📈 正面趋势 +15%</span>
+      <span>📉 负面趋势 -8%</span>
+      <span>📊 平均评价数 25 条/周</span>
+    </div>
+  </div>
+
+  <!-- 评价详情列表 -->
+  <div class="chart-container">
+    <div class="chart-title">💬 用户评价详情（12 条模拟评价）</div>
+    <div class="chart-subtitle">来自行为探针参与者和深度访谈受访者的真实反馈。</div>
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--brand);">林</div>
+          <div><div class="r-name">林女士</div><div class="r-date">2026-08-05</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+        <div class="r-text">帮楼下大爷搬了箱水果上楼，就 5 分钟的事。以前觉得做好事要专门去敬老院，现在发现顺路就能做，反而更真实。希望能一直用下去。</div>
+        <span class="r-tag pos">正面 · 便捷性</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--leaf);">张</div>
+          <div><div class="r-name">张先生</div><div class="r-date">2026-08-04</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span></div>
+        <div class="r-text">用代码帮社区整理垃圾分类数据，感觉自己的专业技能有了用武之地。就是希望任务种类能更多一些，不只是体力活。</div>
+        <span class="r-tag pos">正面 · 技能应用</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--gold);">阿</div>
+          <div><div class="r-name">阿杰</div><div class="r-date">2026-08-03</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+        <div class="r-text">和同小区的人一起巡逻 20 分钟，边散步边聊天顺便做了好事。比刷手机有意思多了，还认识了 3 个邻居，以后可以约着一起。</div>
+        <span class="r-tag pos">正面 · 社交连接</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--sky);">王</div>
+          <div><div class="r-name">王阿姨</div><div class="r-date">2026-08-02</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span></div>
+        <div class="r-text">做了 3 年社区志愿者，终于看到年轻人愿意加入了。帮他们教教智能手机操作，他们也愿意帮我搬东西，这种互帮互助的感觉真好。</div>
+        <span class="r-tag pos">正面 · 跨代际</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--plum);">李</div>
+          <div><div class="r-name">李先生</div><div class="r-date">2026-08-01</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span><span class="star off">★</span></div>
+        <div class="r-text">想法很好，但实际操作中任务匹配不够精准。我住在 3 楼，让我去帮 1 楼的人搬东西，感觉有点奇怪。希望能根据楼层和位置优化匹配。</div>
+        <span class="r-tag neu">中性 · 匹配优化</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--brand);">陈</div>
+          <div><div class="r-name">陈同学</div><div class="r-date">2026-07-30</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+        <div class="r-text">作为研究生，时间紧但想做点有意义的事。这个平台让我在去实验室的路上顺手喂了流浪猫，还能攒好心值换咖啡券，太适合我了！</div>
+        <span class="r-tag pos">正面 · 学生群体</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--leaf);">赵</div>
+          <div><div class="r-name">赵女士</div><div class="r-date">2026-07-28</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span><span class="star off">★</span></div>
+        <div class="r-text">任务提醒太频繁了，一天收到 5 条推送。虽然想做但被 push 太多反而有点烦。希望能自定义提醒频率和时段。</div>
+        <span class="r-tag neu">中性 · 推送优化</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--gold);">刘</div>
+          <div><div class="r-name">刘先生</div><div class="r-date">2026-07-26</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+        <div class="r-text">在小区门口帮人指路、搬行李，顺手的事还能攒好心值。已经推荐给 3 个同事了，大家都说这个 idea 很棒。希望社区覆盖面能扩大。</div>
+        <span class="r-tag pos">正面 · 推荐意愿</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--sky);">孙</div>
+          <div><div class="r-name">孙女士</div><div class="r-date">2026-07-24</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span><span class="star off">★</span></div>
+        <div class="r-text">技能交换的想法很好，但实际匹配不太顺利。我想教英语，但匹配到的都是想学编程的，我也不会啊。建议增加技能标签的精细度。</div>
+        <span class="r-tag neu">中性 · 技能匹配</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--plum);">周</div>
+          <div><div class="r-name">周先生</div><div class="r-date">2026-07-22</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span><span class="star off">★</span><span class="star off">★</span></div>
+        <div class="r-text">注册后一周没收到任何任务推送，感觉被遗忘了。后来发现是定位权限没开，但 App 也没有提示。新用户引导流程需要优化。</div>
+        <span class="r-tag neg">负面 · 引导问题</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--brand);">吴</div>
+          <div><div class="r-name">吴女士</div><div class="r-date">2026-07-20</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span></div>
+        <div class="r-text">带娃在小区玩的时候，顺便帮独居老人取了快递送到门口，全程不到 10 分钟。孩子看到我在做好事，还说"妈妈真棒"，这种教育意义是无价的。</div>
+        <span class="r-tag pos">正面 · 教育意义</span>
+      </div>
+      <div class="review-card">
+        <div class="r-header">
+          <div class="r-avatar" style="background:var(--leaf);">黄</div>
+          <div><div class="r-name">黄先生</div><div class="r-date">2026-07-18</div></div>
+        </div>
+        <div class="r-stars"><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star on">★</span><span class="star off">★</span></div>
+        <div class="r-text">好心值能兑换的权益目前还比较少，希望能尽快接入更多社区周边的商家。另外建议增加好心值捐赠功能，捐给需要帮助的人。</div>
+        <span class="r-tag pos">正面 · 功能建议</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第十一部分：数据导出与分享
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">11</span><h2>数据导出与分享</h2></div>
+  <p class="muted">一键导出分析报告、分享到社交媒体或复制数据引用链接。</p>
+
+  <div class="chart-container">
+    <div class="chart-title">📤 导出与分享选项</div>
+    <div class="chart-subtitle">选择您需要的导出格式或分享方式。</div>
+
+    <div class="export-bar">
+      <button class="export-btn pdf" onclick="showToast('success', '✅', 'PDF 报告正在生成，预计 30 秒后下载完成。')">📄 导出 PDF 报告</button>
+      <button class="export-btn csv" onclick="showToast('success', '✅', 'CSV 数据文件已打包，即将开始下载。')">📊 导出 CSV 数据</button>
+      <button class="export-btn share" onclick="showToast('info', '🔗', '分享链接已复制到剪贴板。')">📤 分享到社交媒体</button>
+      <button class="export-btn copy" onclick="showToast('success', '✅', '数据链接已复制到剪贴板。')">🔗 复制数据链接</button>
+      <button class="export-btn link" onclick="showToast('info', '📋', '引用格式已复制：好事近项目组 (2026). 好事近泛公益调研数据包 v1.0.')">📝 复制引用格式</button>
+    </div>
+
+    <div style="background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0;box-shadow:var(--dash-shadow);">
+      <p style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">📖 推荐引用格式</p>
+      <code style="font-size:12px;display:block;padding:10px;background:#f3ede4;border-radius:6px;word-break:break-all;">
+        好事近项目组. (2026). 好事近泛公益参与调研数据包 (Version 1.0) [Data set]. 好事近数据中台. https://data.haoshijin.org/datasets/v1.0
+      </code>
+    </div>
+
+    <div class="grid cols-2" style="margin-top:10px;">
+      <div style="background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--dash-shadow);">
+        <h4 style="margin:0 0 8px;font-size:14px;">📊 导出统计</h4>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12.5px;border-bottom:1px solid var(--line);">
+          <span style="color:var(--ink-soft);">本月导出次数</span><span style="font-weight:700;">248 次</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12.5px;border-bottom:1px solid var(--line);">
+          <span style="color:var(--ink-soft);">热门导出格式</span><span style="font-weight:700;">PDF (62%)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12.5px;">
+          <span style="color:var(--ink-soft);">分享次数</span><span style="font-weight:700;">156 次</span>
+        </div>
+      </div>
+      <div style="background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--dash-shadow);">
+        <h4 style="margin:0 0 8px;font-size:14px;">🔗 分享统计</h4>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12.5px;border-bottom:1px solid var(--line);">
+          <span style="color:var(--ink-soft);">微信分享</span><span style="font-weight:700;">86 次</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12.5px;border-bottom:1px solid var(--line);">
+          <span style="color:var(--ink-soft);">微博分享</span><span style="font-weight:700;">32 次</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12.5px;">
+          <span style="color:var(--ink-soft);">链接复制</span><span style="font-weight:700;">128 次</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==============================================================
+     第十二部分：预测模型展示
+     ============================================================== -->
+<section>
+  <div class="sec-head"><span class="sec-num">12</span><h2>预测模型展示</h2></div>
+  <p class="muted">基于调研数据构建的 3 个核心预测模型，用于指导产品设计和运营决策。</p>
+
+  <!-- 模型 1: Logistic Regression -->
+  <div class="model-card">
+    <div class="mc-head">
+      <div class="mc-icon" style="background:var(--brand-soft);color:var(--brand-deep);">📈</div>
+      <h4>参与意愿预测模型（Logistic Regression）</h4>
+    </div>
+    <div class="mc-formula">P(participate) = 1 / (1 + e^{-(-2.34 + 1.28·近距离 + 0.95·碎片时间 + 0.67·好心值 + 0.52·社交线索 - 0.48·任务时长 - 0.31·距离)})</div>
+    <div class="mc-stats">
+      <span class="ms"><span class="ms-val high">AUC = 0.872</span></span>
+      <span class="ms"><span class="ms-val high">准确率 = 84.6%</span></span>
+      <span class="ms"><span class="ms-val high">精确率 = 83.2%</span></span>
+      <span class="ms"><span class="ms-val medium">召回率 = 79.5%</span></span>
+      <span class="ms"><span class="ms-val high">F1 = 0.813</span></span>
+      <span class="ms"><span class="ms-val high">R² = 0.78</span></span>
+    </div>
+    <div class="mc-desc">基于 612 份样本的 Logistic 回归模型，用于预测用户在给定任务参数下的参与概率。模型显示"近距离"（β=1.28, p&lt;0.001）和"碎片时间"（β=0.95, p&lt;0.001）是最强预测因子，验证了 H2 假设。任务时长（β=-0.48, p&lt;0.01）和距离（β=-0.31, p&lt;0.05）为负向预测因子。</div>
+    <div class="mc-coeff">
+      <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">模型系数明细：</div>
+      <div class="coeff-row"><span class="cname">截距 (Intercept)</span><span class="cval">-2.34 ***</span></div>
+      <div class="coeff-row"><span class="cname">近距离（&lt;1km）</span><span class="cval">1.28 ***</span></div>
+      <div class="coeff-row"><span class="cname">碎片时间（≤15min）</span><span class="cval">0.95 ***</span></div>
+      <div class="coeff-row"><span class="cname">好心值激励</span><span class="cval">0.67 **</span></div>
+      <div class="coeff-row"><span class="cname">社交线索强度</span><span class="cval">0.52 *</span></div>
+      <div class="coeff-row"><span class="cname">任务时长（每 5min）</span><span class="cval">-0.48 **</span></div>
+      <div class="coeff-row"><span class="cname">距离（每 500m）</span><span class="cval">-0.31 *</span></div>
+    </div>
+  </div>
+
+  <!-- 模型 2: Cox PH -->
+  <div class="model-card">
+    <div class="mc-head">
+      <div class="mc-icon" style="background:var(--leaf-soft);color:var(--leaf);">⏱️</div>
+      <h4>留存率预测模型（Cox Proportional Hazards）</h4>
+    </div>
+    <div class="mc-formula">h(t) = h₀(t) · exp(0.85·首次体验评分 + 0.62·社交连接 + 0.48·好心值增速 - 0.54·任务难度 - 0.38·匹配延迟)</div>
+    <div class="mc-stats">
+      <span class="ms"><span class="ms-val high">C-index = 0.814</span></span>
+      <span class="ms"><span class="ms-val high">7 天留存 = 68.2%</span></span>
+      <span class="ms"><span class="ms-val medium">14 天留存 = 52.5%</span></span>
+      <span class="ms"><span class="ms-val low">30 天留存 = 38.4%</span></span>
+      <span class="ms"><span class="ms-val high">AIC = 1,245.6</span></span>
+    </div>
+    <div class="mc-desc">基于行为探针 50 名参与者的 14 天追踪数据构建的 Cox 比例风险模型。结果显示"首次体验评分"（HR=2.34, p&lt;0.001）是留存的最强预测因子，即用户第一次参与任务时的体验质量直接决定了其是否继续使用。社交连接（HR=1.86, p&lt;0.01）和好心值增速（HR=1.62, p&lt;0.05）也显著影响留存。</div>
+    <div class="mc-coeff">
+      <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">风险比 (Hazard Ratio) 明细：</div>
+      <div class="coeff-row"><span class="cname">首次体验评分（每 1 分）</span><span class="cval">HR = 2.34 ***</span></div>
+      <div class="coeff-row"><span class="cname">社交连接（有 vs 无）</span><span class="cval">HR = 1.86 **</span></div>
+      <div class="coeff-row"><span class="cname">好心值增速（每周）</span><span class="cval">HR = 1.62 *</span></div>
+      <div class="coeff-row"><span class="cname">任务难度（每 1 级）</span><span class="cval">HR = 0.58 **</span></div>
+      <div class="coeff-row"><span class="cname">匹配延迟（每 10 分钟）</span><span class="cval">HR = 0.69 *</span></div>
+    </div>
+  </div>
+
+  <!-- 模型 3: Conjoint Analysis -->
+  <div class="model-card">
+    <div class="mc-head">
+      <div class="mc-icon" style="background:var(--gold-soft);color:var(--gold);">🔬</div>
+      <h4>驱动力排序模型（Hierarchical Bayes Conjoint Analysis）</h4>
+    </div>
+    <div class="mc-formula">U(任务) = 3.82·就近 + 2.64·碎片 + 1.85·好心值 + 1.42·社交 + 1.08·认证 + 0.76·时间银行 + ε</div>
+    <div class="mc-stats">
+      <span class="ms"><span class="ms-val high">RLH = 0.78</span></span>
+      <span class="ms"><span class="ms-val high">Hit Rate = 82.3%</span></span>
+      <span class="ms"><span class="ms-val high">Pct. Cert. = 0.64</span></span>
+      <span class="ms"><span class="ms-val medium">一致性 = 76.8%</span></span>
+      <span class="ms"><span class="ms-val high">样本量 = 612</span></span>
+    </div>
+    <div class="mc-desc">采用 Hierarchical Bayes (HB) 估计的联合分析模型，受访者完成 15 个选择任务（3 选 1）。模型在个体层面和群体层面同时估计效用权重。结果显示"就近"（相对重要性 32.5%）和"碎片时间"（26.8%）合计贡献了 59.3% 的驱动力，远高于其他因素。模型可解释性高，适用于产品功能优先级排序。</div>
+    <div class="mc-coeff">
+      <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">驱动力效用权重（零中心化）：</div>
+      <div class="coeff-row"><span class="cname">离家/公司近（&lt;1km）</span><span class="cval">3.82 (32.5%)</span></div>
+      <div class="coeff-row"><span class="cname">只要 15 分钟</span><span class="cval">2.64 (26.8%)</span></div>
+      <div class="coeff-row"><span class="cname">好心值可积累</span><span class="cval">1.85 (16.2%)</span></div>
+      <div class="coeff-row"><span class="cname">认识附近的人</span><span class="cval">1.42 (12.4%)</span></div>
+      <div class="coeff-row"><span class="cname">官方时长认证</span><span class="cval">1.08 (7.8%)</span></div>
+      <div class="coeff-row"><span class="cname">存时间取服务</span><span class="cval">0.76 (4.3%)</span></div>
+    </div>
+  </div>
+
+  <div class="note plum"><span class="tag">模型结论</span>三个模型一致指向"就近 + 碎片"是核心驱动力，验证了 H2 假设。Logistic 模型预测参与概率，Cox 模型预测留存时间，Conjoint 模型排序驱动力优先级，三者共同构成产品决策的量化基础。</div>
+</section>
+
+</main>
+
+<!-- ==============================================================
+     弹窗系统
+     ============================================================== -->
+
+<!-- 交易确认弹窗 -->
+<div class="modal-overlay" id="modalConfirm">
+  <div class="modal-box">
+    <h3>确认交易</h3>
+    <div class="modal-sub">好心值数据市场交易确认</div>
+    <div class="modal-body" id="modalConfirmBody">
+      <p>您确定要使用 <strong id="confirmPrice">120</strong> 好心值购买"<strong id="confirmName">时间贫困度调研数据包</strong>"吗？</p>
+      <div class="points-display">
+        <div><span class="plbl">当前余额</span></div>
+        <div><span class="pnum" id="confirmBalance">3,580</span> <span class="plbl">好心值</span></div>
+        <div style="font-size:18px;color:var(--ink-faint);">→</div>
+        <div><span class="pnum" id="confirmNewBalance" style="color:var(--brand);">3,460</span> <span class="plbl">好心值</span></div>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-faint);">交易完成后数据包将自动添加到"我的数据"中，可随时下载。</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modalConfirm')">取消</button>
+      <button class="btn-primary" onclick="confirmPurchase()">确认购买</button>
+    </div>
+  </div>
+</div>
+
+<!-- 交易成功弹窗 -->
+<div class="modal-overlay" id="modalSuccess">
+  <div class="modal-box">
+    <div class="success-icon">
+      <span class="big">🎉</span>
+      <h4>交易成功！</h4>
+      <p id="successMsg">您已成功购买"时间贫困度调研数据包"。</p>
+    </div>
+    <div class="modal-body" style="text-align:center;">
+      <div class="points-display" style="justify-content:center;">
+        <div><span class="pnum" style="color:var(--brand);" id="successSpent">-120</span> <span class="plbl">好心值</span></div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);">数据包已添加到您的数据仓库，请前往"我的数据"查看和下载。</p>
+    </div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn-success" onclick="closeModal('modalSuccess')">知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 数据预览弹窗 -->
+<div class="modal-overlay" id="modalPreview">
+  <div class="modal-box" style="max-width:600px;">
+    <h3>数据预览</h3>
+    <div class="modal-sub" id="previewTitle">时间贫困度调研数据包 - 数据样例</div>
+    <div class="modal-body">
+      <p style="font-size:12.5px;color:var(--ink-soft);">以下为数据包的前 10 行数据预览，完整数据包含 612 行 × 24 字段。</p>
+      <div class="data-preview" id="previewContent">
+        <div class="row" style="font-weight:700;color:var(--ink);"><span class="cell">ID</span><span class="cell">年龄</span><span class="cell">性别</span><span class="cell">城市</span><span class="cell">T1</span><span class="cell">T2</span><span class="cell">T3</span><span class="cell">总分</span><span class="cell">等级</span></div>
+        <div class="row"><span class="cell">001</span><span class="cell">28</span><span class="cell">女</span><span class="cell">北京</span><span class="cell">4</span><span class="cell">5</span><span class="cell">5</span><span class="cell">28</span><span class="cell">重度</span></div>
+        <div class="row"><span class="cell">002</span><span class="cell">32</span><span class="cell">男</span><span class="cell">上海</span><span class="cell">5</span><span class="cell">5</span><span class="cell">4</span><span class="cell">30</span><span class="cell">极度</span></div>
+        <div class="row"><span class="cell">003</span><span class="cell">25</span><span class="cell">男</span><span class="cell">广州</span><span class="cell">3</span><span class="cell">4</span><span class="cell">3</span><span class="cell">22</span><span class="cell">中度</span></div>
+        <div class="row"><span class="cell">004</span><span class="cell">35</span><span class="cell">女</span><span class="cell">深圳</span><span class="cell">4</span><span class="cell">4</span><span class="cell">5</span><span class="cell">26</span><span class="cell">重度</span></div>
+        <div class="row"><span class="cell">005</span><span class="cell">42</span><span class="cell">男</span><span class="cell">成都</span><span class="cell">2</span><span class="cell">3</span><span class="cell">2</span><span class="cell">16</span><span class="cell">轻度</span></div>
+        <div class="row"><span class="cell">006</span><span class="cell">26</span><span class="cell">女</span><span class="cell">杭州</span><span class="cell">5</span><span class="cell">5</span><span class="cell">5</span><span class="cell">33</span><span class="cell">极度</span></div>
+        <div class="row"><span class="cell">007</span><span class="cell">38</span><span class="cell">男</span><span class="cell">武汉</span><span class="cell">3</span><span class="cell">4</span><span class="cell">3</span><span class="cell">20</span><span class="cell">中度</span></div>
+        <div class="row"><span class="cell">008</span><span class="cell">29</span><span class="cell">男</span><span class="cell">南京</span><span class="cell">4</span><span class="cell">5</span><span class="cell">4</span><span class="cell">27</span><span class="cell">重度</span></div>
+        <div class="row"><span class="cell">009</span><span class="cell">31</span><span class="cell">女</span><span class="cell">重庆</span><span class="cell">3</span><span class="cell">3</span><span class="cell">4</span><span class="cell">23</span><span class="cell">中度</span></div>
+        <div class="row"><span class="cell">010</span><span class="cell">45</span><span class="cell">男</span><span class="cell">西安</span><span class="cell">2</span><span class="cell">2</span><span class="cell">3</span><span class="cell">15</span><span class="cell">轻度</span></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modalPreview')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 需求提交成功弹窗 -->
+<div class="modal-overlay" id="modalRequest">
+  <div class="modal-box">
+    <div class="success-icon">
+      <span class="big">📢</span>
+      <h4>需求已提交</h4>
+      <p>感谢您的数据需求反馈！我们将在 48 小时内评估并回复。</p>
+    </div>
+    <div class="modal-body" style="text-align:center;">
+      <div class="points-display" style="justify-content:center;">
+        <div><span class="pnum" style="color:var(--gold);">+10</span> <span class="plbl">好心值奖励</span></div>
+      </div>
+      <p style="font-size:13px;color:var(--ink-soft);">您提交的需求已被列入数据开发队列，需求编号：<strong id="reqNumber">REQ-2026-0842</strong></p>
+    </div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn-gold" onclick="closeModal('modalRequest')">知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 评分确认弹窗 -->
+<div class="modal-overlay" id="modalRating">
+  <div class="modal-box">
+    <div class="success-icon">
+      <span class="big">⭐</span>
+      <h4>评分已提交</h4>
+      <p id="ratingMsg">您为"人口统计学完整数据集"给出了 5 星评价。</p>
+    </div>
+    <div class="modal-body" style="text-align:center;">
+      <div class="points-display" style="justify-content:center;">
+        <div><span class="pnum" style="color:var(--gold);">+5</span> <span class="plbl">好心值奖励</span></div>
+      </div>
+    </div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn-success" onclick="closeModal('modalRating')">知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast 通知 -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✅</span>
+  <span id="toastMsg">操作成功</span>
+</div>
+
+<!-- ==============================================================
+     页脚
+     ============================================================== -->
+<footer>
+  <div class="wrap">
+    <p>把好事做成日常 <span class="heart">♥</span> · 数据中台 &amp; 交易模拟平台</p>
+    <p style="margin-top:4px;font-size:12.5px;color:var(--ink-soft);">基于 Phase 0 模拟数据构建 · 所有数据均为模拟数据，用于展示平台逻辑</p>
+    <div class="refs" style="margin-top:16px;">
+      <h5>数据来源与说明</h5>
+      <ol>
+        <li>Phase 0 定量调研模拟数据（N=612）</li>
+        <li>Phase 0 深度访谈模拟数据（N=30）</li>
+        <li>行为探针追踪数据（N=50, 14 天）</li>
+        <li>联合分析实验数据（15 个 choice tasks × 612 人）</li>
+        <li>RFM-S 模型基于行为探针数据模拟</li>
+        <li>预测模型基于模拟数据训练，仅供展示模型框架</li>
+      </ol>
+    </div>
+    <p style="margin-top:12px;font-size:11.5px;color:var(--ink-faint);">
+      ⚠️ 页面展示数据为模拟数据，用于演示项目逻辑与验证框架。实际数据以真实调研结果为准。
+    </p>
+  </div>
+</footer>
+
+<button id="totop" aria-label="回到顶部">↑</button>
+
+<!-- ==============================================================
+     JavaScript 交互逻辑
+     ============================================================== -->
+<script>
+// ===== 回到顶部 =====
+(function() {
+  const totop = document.getElementById('totop');
+  document.addEventListener('scroll', function() {
+    totop.classList.toggle('show', document.documentElement.scrollTop > 600);
+  }, {passive: true});
+  totop.addEventListener('click', function() { window.scrollTo({top:0, behavior:'smooth'}); });
+})();
+
+// ===== Toast 通知系统 =====
+function showToast(type, icon, msg) {
+  const toast = document.getElementById('toast');
+  const toastIcon = document.getElementById('toastIcon');
+  const toastMsg = document.getElementById('toastMsg');
+  toast.className = 'toast ' + type;
+  toastIcon.textContent = icon;
+  toastMsg.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 3500);
+}
+
+// ===== 弹窗系统 =====
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// 点击遮罩关闭弹窗
+document.querySelectorAll('.modal-overlay').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    if (e.target === this) { this.classList.remove('show'); }
+  });
+});
+
+// ===== 数据包交易系统 =====
+var currentPackName = '';
+var currentPackPrice = 0;
+var currentBalance = 3580;
+
+function buyDataPack(name, price) {
+  if (currentBalance < price) {
+    showToast('error', '❌', '好心值不足！完成更多任务获取好心值。');
+    return;
+  }
+  currentPackName = name;
+  currentPackPrice = price;
+  document.getElementById('confirmName').textContent = name;
+  document.getElementById('confirmPrice').textContent = price;
+  document.getElementById('confirmBalance').textContent = currentBalance.toLocaleString();
+  document.getElementById('confirmNewBalance').textContent = (currentBalance - price).toLocaleString();
+  openModal('modalConfirm');
+}
+
+function confirmPurchase() {
+  if (currentBalance >= currentPackPrice) {
+    currentBalance -= currentPackPrice;
+    document.getElementById('balanceValue').textContent = currentBalance.toLocaleString();
+    document.getElementById('successMsg').textContent = '您已成功购买"' + currentPackName + '"。';
+    document.getElementById('successSpent').textContent = '-' + currentPackPrice;
+    closeModal('modalConfirm');
+    setTimeout(function() { openModal('modalSuccess'); }, 300);
+    // 添加交易记录
+    addTransaction('购买', '📥', currentPackName, '-' + currentPackPrice, 'minus');
+    showToast('success', '✅', '购买成功！已扣除 ' + currentPackPrice + ' 好心值。');
+  }
+}
+
+function addTransaction(type, icon, name, amount, cls) {
+  var txList = document.getElementById('txList');
+  var now = new Date();
+  var timeStr = now.getFullYear() + '-' +
+    String(now.getMonth()+1).padStart(2,'0') + '-' +
+    String(now.getDate()).padStart(2,'0') + ' ' +
+    String(now.getHours()).padStart(2,'0') + ':' +
+    String(now.getMinutes()).padStart(2,'0');
+  var div = document.createElement('div');
+  div.className = 'tx-item';
+  div.innerHTML = '<div class="tx-icon ' + (icon === '📥' ? 'buy' : 'earn') + '">' + icon + '</div>' +
+    '<div class="tx-info"><div class="tx-name">' + type + '：' + name + '</div><div class="tx-time">' + timeStr + '</div></div>' +
+    '<div class="tx-amount ' + cls + '">' + amount + '</div>';
+  txList.insertBefore(div, txList.firstChild);
+  // 保持最多 15 条
+  while (txList.children.length > 15) { txList.removeChild(txList.lastChild); }
+}
+
+// ===== 数据预览 =====
+function previewDataPack(packId) {
+  var titles = {
+    'pack1': '时间贫困度调研数据包 - 数据样例',
+    'pack2': '驱动力联合分析原始数据 - 数据样例',
+    'pack3': 'LBS 地理偏好数据包 - 数据样例',
+    'pack4': '非金钱激励接受度数据集 - 数据样例',
+    'pack5': '用户分层 RFM-S 模型数据 - 数据样例',
+    'pack6': '人口统计学完整数据集 - 数据样例',
+    'pack7': '碎片时间场景分析数据包 - 数据样例',
+    'pack8': '行为探针追踪数据包 - 数据样例',
+    'pack9': '深度访谈转录数据包 - 数据样例',
+    'pack10': '情感分析标注数据集 - 数据样例',
+    'pack11': '驱动力 × 人口学交叉分析包 - 数据样例',
+    'pack12': '全量数据超级包 - 数据样例'
+  };
+  document.getElementById('previewTitle').textContent = titles[packId] || '数据样例预览';
+  openModal('modalPreview');
+}
+
+// ===== 评分系统 =====
+function rateData(score) {
+  document.getElementById('ratingMsg').textContent = '您为"人口统计学完整数据集"给出了 ' + score + ' 星评价。';
+  openModal('modalRating');
+  currentBalance += 5;
+  document.getElementById('balanceValue').textContent = currentBalance.toLocaleString();
+  addTransaction('评分奖励', '⭐', '数据评分奖励', '+5', 'plus');
+  showToast('success', '⭐', '评分成功！获得 5 好心值奖励。');
+}
+
+// ===== 数据需求提交 =====
+function submitDataRequest() {
+  var title = document.getElementById('reqTitle').value.trim();
+  var desc = document.getElementById('reqDesc').value.trim();
+  if (!title) { showToast('warning', '⚠️', '请输入数据需求标题。'); return; }
+  if (!desc) { showToast('warning', '⚠️', '请输入详细需求描述。'); return; }
+  var reqNum = 'REQ-2026-' + String(Math.floor(1000 + Math.random() * 9000));
+  document.getElementById('reqNumber').textContent = reqNum;
+  openModal('modalRequest');
+  currentBalance += 10;
+  document.getElementById('balanceValue').textContent = currentBalance.toLocaleString();
+  addTransaction('需求奖励', '📢', '数据需求提交奖励', '+10', 'plus');
+  document.getElementById('reqTitle').value = '';
+  document.getElementById('reqDesc').value = '';
+  showToast('success', '📢', '需求已提交！获得 10 好心值奖励。需求编号：' + reqNum);
+}
+
+// ===== 场景模拟器 =====
+function updateSimulator() {
+  var duration = parseInt(document.getElementById('simDuration').value);
+  var distance = parseInt(document.getElementById('simDistance').value);
+  var reward = parseInt(document.getElementById('simReward').value);
+  var social = parseInt(document.getElementById('simSocial').value);
+
+  // 更新滑块显示值
+  document.getElementById('sliderDuration').textContent = duration + ' 分钟';
+  document.getElementById('sliderDistance').textContent = distance + ' 米';
+  document.getElementById('sliderReward').textContent = reward + ' 点';
+  var socialLabels = ['无社交', '弱社交', '中等', '较强', '强社交'];
+  var socialIdx = Math.min(Math.floor(social / 25), 4);
+  document.getElementById('sliderSocial').textContent = socialLabels[socialIdx];
+
+  // 模拟计算（基于简化的模型公式）
+  var baseParticipation = 0.45;
+  var distFactor = Math.max(0, 1 - distance / 5000 * 0.5);
+  var durFactor = Math.max(0, 1 - duration / 30 * 0.4);
+  var rewardFactor = Math.min(0.2, reward / 50 * 0.2);
+  var socialFactor = social / 100 * 0.15;
+
+  var participation = Math.min(0.96, baseParticipation + distFactor * 0.3 + durFactor * 0.25 + rewardFactor + socialFactor);
+  var completion = Math.min(0.94, participation * (0.85 + reward / 50 * 0.1) - duration / 30 * 0.08);
+  var retention = Math.min(0.88, completion * (0.7 + social / 100 * 0.2) - distance / 5000 * 0.08);
+  var nps = Math.min(90, Math.round((participation * 0.4 + completion * 0.3 + retention * 0.3) * 100 - 10));
+
+  document.getElementById('simParticipation').textContent = (participation * 100).toFixed(1) + '%';
+  document.getElementById('simCompletion').textContent = (completion * 100).toFixed(1) + '%';
+  document.getElementById('simRetention').textContent = (retention * 100).toFixed(1) + '%';
+  document.getElementById('simNPS').textContent = nps;
+
+  // 更新进度条
+  var bars = document.querySelectorAll('#simResults .sr-fill');
+  if (bars[0]) bars[0].style.width = (participation * 100) + '%';
+  if (bars[1]) bars[1].style.width = (completion * 100) + '%';
+  if (bars[2]) bars[2].style.width = (retention * 100) + '%';
+  if (bars[3]) bars[3].style.width = nps + '%';
+}
+
+// ===== 数字滚动动画 =====
+function animateNumbers() {
+  var targets = document.querySelectorAll('.m-value, .metric-card .m-value');
+  targets.forEach(function(el) {
+    var text = el.textContent.trim();
+    var num = parseFloat(text.replace(/[^0-9.]/g, ''));
+    if (isNaN(num)) return;
+    var suffix = text.replace(/[0-9.]/g, '');
+    var duration = 1200;
+    var startTime = Date.now();
+    function update() {
+      var elapsed = Date.now() - startTime;
+      var progress = Math.min(1, elapsed / duration);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = eased * num;
+      el.textContent = current.toFixed(1).replace(/\.0$/, '') + suffix;
+      if (progress < 1) { requestAnimationFrame(update); }
+    }
+    update();
+  });
+}
+
+// 页面加载后触发动画
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(animateNumbers, 300);
+  // 初始化模拟器
+  updateSimulator();
+});
+
+// ===== 键盘快捷键 =====
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.show').forEach(function(el) {
+      el.classList.remove('show');
+    });
+  }
+});
+
+// ===== 导出按钮反馈 =====
+document.querySelectorAll('.export-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var original = this.textContent;
+    var self = this;
+    self.disabled = true;
+    self.textContent = '⏳ 处理中...';
+    setTimeout(function() {
+      self.disabled = false;
+      self.textContent = original;
+    }, 2000);
+  });
+});
+
+console.log('🏠 好事近数据中台 v1.0 已加载');
+console.log('📊 模拟数据: N=612, 覆盖 35 个城市');
+console.log('💛 好心值余额: ' + currentBalance.toLocaleString());
+</script>
+
+</body>
+</html>

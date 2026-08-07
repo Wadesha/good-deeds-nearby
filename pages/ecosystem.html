@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>好事近 · 生态模拟平台 | 好心值市场 · 任务流 · 权益商城</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+  /* ===== 生态模拟平台样式 ===== */
+  :root{--eco-card:var(--paper);--eco-shadow:0 2px 8px rgba(43,38,34,.06),0 12px 32px rgba(43,38,34,.08);--eco-radius:14px}
+  .eco-header{background:linear-gradient(135deg,#3a2a1a 0%,#5a3a25 50%,#7a4a35 100%);color:#fdf6ea;border-radius:16px;padding:32px;margin:20px 0;position:relative;overflow:hidden}
+  .eco-header::before{content:"";position:absolute;inset:0;background:radial-gradient(500px 250px at 80% -20%,rgba(201,138,43,.3),transparent 60%),radial-gradient(400px 200px at 0% 120%,rgba(63,125,91,.25),transparent 60%)}
+  .eco-header .label{position:relative;font-size:11px;letter-spacing:.2em;color:#f0c98a;text-transform:uppercase}
+  .eco-header h2{position:relative;font-size:clamp(22px,3vw,30px);margin:6px 0 8px;color:#fff;letter-spacing:-.01em}
+  .eco-header .stats{position:relative;display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12)}
+  .eco-header .stats .s{text-align:center}
+  .eco-header .stats .s .num{font-size:22px;font-weight:800;color:#ffd98a}
+  .eco-header .stats .s .lbl{font-size:11.5px;color:rgba(255,255,255,.6);margin-top:2px}
+  .eco-header .stats .s .chg{font-size:11px;font-weight:600;margin-top:1px}
+  .eco-header .stats .s .chg.up{color:#7ddb9e}
+  .eco-header .stats .s .chg.down{color:#e87a6a}
+
+  /* 标签切换 */
+  .tab-bar{display:flex;gap:4px;margin:18px 0;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .tab-btn{padding:8px 16px;border-radius:8px;border:none;background:transparent;font-size:13.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:.15s;display:flex;align-items:center;gap:5px}
+  .tab-btn:hover{background:var(--bg)}
+  .tab-btn.active{background:var(--brand);color:#fff}
+  .tab-btn .badge{font-size:11px;background:rgba(0,0,0,.08);padding:1px 7px;border-radius:999px;font-weight:400}
+  .tab-btn.active .badge{background:rgba(255,255,255,.2);color:rgba(255,255,255,.9)}
+
+  .tab-panel{display:none}
+  .tab-panel.active{display:block;animation:fadeIn .3s ease}
+
+  /* 任务卡片 */
+  .task-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:16px 0}
+  .task-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--eco-radius);padding:18px;box-shadow:var(--eco-shadow);transition:.2s;position:relative;overflow:hidden}
+  .task-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(43,38,34,.08),0 16px 40px rgba(43,38,34,.1)}
+  .task-card .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+  .task-card .tag.urgent{background:#fbeae3;color:var(--brand-deep)}
+  .task-card .tag.normal{background:var(--leaf-soft);color:var(--leaf)}
+  .task-card .tag.social{background:var(--sky-soft);color:var(--sky)}
+  .task-card h4{margin:0 0 6px;font-size:15.5px}
+  .task-card .meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;font-size:12px;color:var(--ink-faint)}
+  .task-card .meta span{display:flex;align-items:center;gap:3px}
+  .task-card .reward-bar{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+  .task-card .reward-bar .points{font-size:16px;font-weight:800;color:var(--gold)}
+  .task-card .reward-bar .time{font-size:12px;color:var(--ink-faint)}
+  .task-card .reward-bar .btn-claim{padding:6px 14px;border-radius:7px;border:none;background:var(--brand);color:#fff;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+  .task-card .reward-bar .btn-claim:hover{background:var(--brand-deep)}
+  .task-card .reward-bar .btn-claim:disabled{background:var(--line);color:var(--ink-faint);cursor:not-allowed}
+  .task-card .reward-bar .btn-claim.claimed{background:var(--leaf);color:#fff;cursor:default}
+
+  /* 筛选器 */
+  .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .filter-bar select,.filter-bar input{padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;background:var(--paper);color:var(--ink);font-family:inherit}
+  .filter-bar select:focus,.filter-bar input:focus{outline:none;border-color:var(--brand)}
+  .filter-bar .search-wrap{position:relative;flex:1;min-width:180px}
+  .filter-bar .search-wrap input{width:100%;padding-left:32px}
+  .filter-bar .search-wrap .ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--ink-faint);font-size:14px}
+
+  /* 账本 */
+  .ledger{background:var(--paper);border:1px solid var(--line);border-radius:var(--eco-radius);overflow:hidden;box-shadow:var(--eco-shadow)}
+  .ledger .lh{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:var(--bg);border-bottom:1px solid var(--line)}
+  .ledger .lh .balance{font-size:28px;font-weight:800;color:var(--gold)}
+  .ledger .lh .balance span{font-size:13px;font-weight:400;color:var(--ink-faint)}
+  .ledger .lh .sub{font-size:12px;color:var(--ink-soft)}
+  .ledger table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .ledger td{padding:11px 14px;border-bottom:1px solid var(--line)}
+  .ledger tr:last-child td{border-bottom:none}
+  .ledger .amount{font-weight:700;font-family:"SF Mono",ui-monospace,Menlo,monospace}
+  .ledger .amount.plus{color:var(--leaf)}
+  .ledger .amount.minus{color:var(--brand)}
+  .ledger .type-badge{font-size:11px;padding:2px 7px;border-radius:999px;font-weight:600}
+  .ledger .type-badge.earn{background:var(--leaf-soft);color:var(--leaf)}
+  .ledger .type-badge.spend{background:var(--brand-soft);color:var(--brand-deep)}
+  .ledger .type-badge.transfer{background:var(--sky-soft);color:var(--sky)}
+
+  /* 权益商城 */
+  .shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin:16px 0}
+  .shop-item{background:var(--paper);border:1px solid var(--line);border-radius:var(--eco-radius);padding:18px;box-shadow:var(--eco-shadow);text-align:center;transition:.2s}
+  .shop-item:hover{transform:translateY(-2px)}
+  .shop-item .icon{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:24px;margin:0 auto 10px}
+  .shop-item h4{margin:0 0 4px;font-size:15px}
+  .shop-item .desc{font-size:12.5px;color:var(--ink-soft);margin-bottom:10px;line-height:1.5}
+  .shop-item .price{font-size:18px;font-weight:800;color:var(--gold);margin-bottom:10px}
+  .shop-item .price span{font-size:12px;font-weight:400;color:var(--ink-faint)}
+  .shop-item .btn-buy{padding:7px 18px;border-radius:7px;border:none;background:var(--brand);color:#fff;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+  .shop-item .btn-buy:hover{background:var(--brand-deep)}
+  .shop-item .btn-buy:disabled{background:var(--line);color:var(--ink-faint);cursor:not-allowed}
+  .shop-item .stock{font-size:11px;color:var(--ink-faint);margin-top:6px}
+
+  /* 排行榜 */
+  .leaderboard{background:var(--paper);border:1px solid var(--line);border-radius:var(--eco-radius);overflow:hidden;box-shadow:var(--eco-shadow)}
+  .leaderboard .lb-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);transition:.1s}
+  .leaderboard .lb-item:hover{background:var(--bg)}
+  .leaderboard .lb-item:last-child{border-bottom:none}
+  .leaderboard .rank{font-size:16px;font-weight:800;color:var(--ink-faint);width:28px;text-align:center;font-family:"SF Mono",ui-monospace,Menlo,monospace}
+  .leaderboard .rank.top1{color:var(--gold)}
+  .leaderboard .rank.top2{color:var(--sky)}
+  .leaderboard .rank.top3{color:var(--brand)}
+  .leaderboard .avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff}
+  .leaderboard .info{flex:1}
+  .leaderboard .info .name{font-size:14px;font-weight:600}
+  .leaderboard .info .badge{font-size:11px;color:var(--ink-faint)}
+  .leaderboard .score{font-size:15px;font-weight:700;color:var(--gold);font-family:"SF Mono",ui-monospace,Menlo,monospace}
+
+  /* 社区经济模型 */
+  .flow-diagram{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0}
+  .flow-node{background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:20px 16px;text-align:center;position:relative;transition:.2s}
+  .flow-node:hover{transform:scale(1.03)}
+  .flow-node .fn-icon{font-size:32px;margin-bottom:8px}
+  .flow-node h4{margin:0 0 4px;font-size:15px}
+  .flow-node .fn-desc{font-size:12px;color:var(--ink-soft);line-height:1.5}
+  .flow-node .fn-arrow{position:absolute;right:-18px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--gold);z-index:2}
+  .flow-node.leaf{border-color:var(--leaf)}
+  .flow-node.gold{border-color:var(--gold)}
+  .flow-node.brand{border-color:var(--brand)}
+  .flow-node.sky{border-color:var(--sky)}
+  .flow-node.plum{border-color:var(--plum)}
+  .flow-node.brand .fn-icon{color:var(--brand)}
+  .flow-node.leaf .fn-icon{color:var(--leaf)}
+  .flow-node.gold .fn-icon{color:var(--gold)}
+  .flow-node.sky .fn-icon{color:var(--sky)}
+  .flow-node.plum .fn-icon{color:var(--plum)}
+
+  /* 流通图表 */
+  .circulation{margin:20px 0;position:relative}
+  .circ-ring{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+  .circ-item{text-align:center;padding:16px;background:var(--paper);border-radius:50%;width:140px;height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--eco-shadow);border:3px solid var(--line)}
+  .circ-item .ci-num{font-size:28px;font-weight:800}
+  .circ-item .ci-label{font-size:11.5px;color:var(--ink-soft);margin-top:4px}
+  .circ-item.flow-in{border-color:var(--leaf)}
+  .circ-item.flow-in .ci-num{color:var(--leaf)}
+  .circ-item.flow-out{border-color:var(--brand)}
+  .circ-item.flow-out .ci-num{color:var(--brand)}
+  .circ-item.flow-store{border-color:var(--gold)}
+  .circ-item.flow-store .ci-num{color:var(--gold)}
+  .circ-arrow{font-size:24px;color:var(--ink-faint)}
+  @media(max-width:600px){.circ-item{width:100px;height:100px}.circ-item .ci-num{font-size:20px}}
+
+  /* 模拟交易弹窗 */
+  .modal-overlay{position:fixed;inset:0;background:rgba(43,38,34,.4);backdrop-filter:blur(3px);z-index:100;display:none;place-items:center;animation:fadeIn .25s ease}
+  .modal-overlay.show{display:grid}
+  .modal{background:var(--paper);border-radius:16px;max-width:440px;width:90%;padding:28px;box-shadow:0 20px 60px rgba(43,38,34,.2);animation:slideUp .3s ease;max-height:80vh;overflow-y:auto}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .modal h3{margin:0 0 8px;font-size:18px}
+  .modal .modal-body{font-size:14px;color:var(--ink-soft);line-height:1.7;margin:10px 0 18px}
+  .modal .modal-actions{display:flex;gap:8px;justify-content:flex-end}
+  .modal .modal-actions button{padding:9px 18px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+  .modal .modal-actions .btn-confirm{background:var(--brand);color:#fff}
+  .modal .modal-actions .btn-confirm:hover{background:var(--brand-deep)}
+  .modal .modal-actions .btn-cancel{background:var(--line);color:var(--ink-soft)}
+  .modal .modal-actions .btn-cancel:hover{background:#ddd0bc}
+  .modal .success-msg{text-align:center;padding:20px 0}
+  .modal .success-msg .big-icon{font-size:48px;margin-bottom:12px}
+  .modal .success-msg h4{font-size:17px;margin:0 0 6px;color:var(--leaf)}
+  .modal .success-msg p{font-size:13.5px;color:var(--ink-soft)}
+  .modal .modal-body .points-change{display:flex;align-items:center;justify-content:center;gap:10px;margin:14px 0;padding:14px;background:var(--gold-soft);border-radius:10px}
+  .modal .modal-body .points-change .num{font-size:28px;font-weight:800;color:var(--gold)}
+  .modal .modal-body .points-change .lbl{font-size:12px;color:var(--ink-faint)}
+
+  /* 响应式 */
+  @media(max-width:600px){
+    .eco-header{padding:22px 16px}
+    .eco-header .stats{gap:10px}
+    .eco-header .stats .s .num{font-size:18px}
+    .task-grid{grid-template-columns:1fr}
+    .shop-grid{grid-template-columns:1fr}
+    .flow-diagram{grid-template-columns:1fr 1fr}
+    .flow-node .fn-arrow{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 生态模拟</a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html" class="active">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>生态模拟平台</div>
+    <span class="eyebrow"><span class="dot"></span> 基于项目框架 · 模拟数据展示</span>
+    <h1>好事近 · 生态模拟平台</h1>
+    <p class="sub">模拟"好心值 + 时间币"社区经济生态的运行状态。展示任务市场、好心值流通、权益兑换和社区经济的完整闭环。所有数据为模拟数据，用于演示项目逻辑。</p>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- 生态总览 -->
+  <div class="eco-header">
+    <div class="label">好事近 Ecosystem · 模拟运行中</div>
+    <h2>社区善意经济循环</h2>
+    <div class="stats">
+      <div class="s"><div class="num" id="totalUsers">2,847</div><div class="lbl">注册用户</div><div class="chg up">↑ 12.3% 本周</div></div>
+      <div class="s"><div class="num" id="totalTasks">6,523</div><div class="lbl">已完成任务</div><div class="chg up">↑ 8.7% 本周</div></div>
+      <div class="s"><div class="num" id="totalPoints">1,284,600</div><div class="lbl">好心值流通总量</div><div class="chg up">↑ 15.2% 本周</div></div>
+      <div class="s"><div class="num" id="totalTimeCoins">342,800</div><div class="lbl">时间币存量</div><div class="chg up">↑ 6.4% 本周</div></div>
+      <div class="s"><div class="num" id="totalExchange">18,432</div><div class="lbl">权益兑换次数</div><div class="chg up">↑ 21.6% 本周</div></div>
+      <div class="s"><div class="num" id="activeRate">67.3%</div><div class="lbl">周活跃率</div><div class="chg up">↑ 3.1% 本周</div></div>
+    </div>
+  </div>
+
+  <!-- 标签栏 -->
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="tasks"><span>📋</span> 附近任务 <span class="badge">24</span></button>
+    <button class="tab-btn" data-tab="ledger"><span>📒</span> 好心值账本</button>
+    <button class="tab-btn" data-tab="shop"><span>🎁</span> 权益商城</button>
+    <button class="tab-btn" data-tab="leaderboard"><span>🏆</span> 社区排行榜</button>
+    <button class="tab-btn" data-tab="economy"><span>🔄</span> 经济模型</button>
+  </div>
+
+  <!-- ============ 面板1：任务市场 ============ -->
+  <div class="tab-panel active" id="panel-tasks">
+    <div class="note sky"><span class="tag">LBS 匹配</span>基于"15 分钟生活圈"推送步行/通勤可达的轻量好事。任务颗粒度 5/15/30 分钟，明确"顺路就能做"。</div>
+    <div class="filter-bar">
+      <div class="search-wrap"><span class="ico">🔍</span><input type="text" placeholder="搜索任务关键词..." id="taskSearch" oninput="filterTasks()" /></div>
+      <select id="taskTypeFilter" onchange="filterTasks()">
+        <option value="all">全部类型</option>
+        <option value="help">顺手帮邻里</option>
+        <option value="community">社区公共事务</option>
+        <option value="donate">二手漂流/捐赠</option>
+        <option value="teach">技能助老/教学</option>
+        <option value="accompany">陪伴/倾听</option>
+      </select>
+      <select id="taskTimeFilter" onchange="filterTasks()">
+        <option value="all">全部时长</option>
+        <option value="5">≤5分钟</option>
+        <option value="15">5-15分钟</option>
+        <option value="30">15-30分钟</option>
+        <option value="60">30分钟以上</option>
+      </select>
+      <select id="taskSort" onchange="filterTasks()">
+        <option value="distance">按距离最近</option>
+        <option value="points">按好心值最高</option>
+        <option value="time">按时长最短</option>
+      </select>
+    </div>
+    <div class="task-grid" id="taskGrid"></div>
+  </div>
+
+  <!-- ============ 面板2：好心值账本 ============ -->
+  <div class="tab-panel" id="panel-ledger">
+    <div class="note gold"><span class="tag">好心值</span>非货币、可积累、可展示的参与资产。好心值可兑换权益、展示信用、作为社区贡献的凭证。</div>
+    <div class="ledger" id="ledgerPanel">
+      <div class="lh">
+        <div>
+          <div class="balance" id="myBalance">2,580 <span>好心值</span></div>
+          <div class="sub">时间币余额：<strong>46</strong> 小时</div>
+        </div>
+        <div style="text-align:right">
+          <div class="sub" style="font-size:12px">本周获得</div>
+          <div style="font-size:18px;font-weight:700;color:var(--leaf)">+320</div>
+        </div>
+      </div>
+      <table id="ledgerTable">
+        <thead style="display:none"><tr><th>时间</th><th>类型</th><th>说明</th><th>数量</th></tr></thead>
+        <tbody id="ledgerBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============ 面板3：权益商城 ============ -->
+  <div class="tab-panel" id="panel-shop">
+    <div class="note warn"><span class="tag">正循环</span>好心值兑换非货币权益——社区荣誉、技能交换、商家折扣、优先报名。企业出资源做品牌善意，社区自平衡。</div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </div>
+
+  <!-- ============ 面板4：社区排行榜 ============ -->
+  <div class="tab-panel" id="panel-leaderboard">
+    <div class="note plum"><span class="tag">社区激励</span>排行榜展示好心值累计排名，每周更新。荣誉感是非金钱激励的核心驱动力之一，H3 验证通过。</div>
+    <div style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap">
+      <button class="tab-btn active" style="font-size:12.5px;padding:6px 12px" onclick="switchLeaderboard('weekly')" id="lb-weekly">🏅 本周</button>
+      <button class="tab-btn" style="font-size:12.5px;padding:6px 12px" onclick="switchLeaderboard('monthly')" id="lb-monthly">📅 本月</button>
+      <button class="tab-btn" style="font-size:12.5px;padding:6px 12px" onclick="switchLeaderboard('alltime')" id="lb-alltime">🏆 总榜</button>
+    </div>
+    <div class="leaderboard" id="leaderboardContainer"></div>
+  </div>
+
+  <!-- ============ 面板5：经济模型 ============ -->
+  <div class="tab-panel" id="panel-economy">
+    <div class="note leaf"><span class="tag">经济模型</span>把"钱的循环"换成"信任与时间的循环"——而信任恰恰是公益里最稀缺、也最该被产品化的资产。</div>
+    <h3>善意经济循环模型</h3>
+    <div class="flow-diagram">
+      <div class="flow-node brand"><div class="fn-icon">⏰</div><h4>个人付出时间</h4><div class="fn-desc">完成轻量任务，投入碎片时间</div><div class="fn-arrow">→</div></div>
+      <div class="flow-node gold"><div class="fn-icon">💛</div><h4>获得好心值/时间币</h4><div class="fn-desc">系统按任务难度和时长发放</div><div class="fn-arrow">→</div></div>
+      <div class="flow-node leaf"><div class="fn-icon">🎁</div><h4>兑换非货币权益</h4><div class="fn-desc">社区荣誉、商家折扣、技能交换</div><div class="fn-arrow">→</div></div>
+      <div class="flow-node sky"><div class="fn-icon">🏘️</div><h4>社区获得人力</h4><div class="fn-desc">真实社会问题被解决</div><div class="fn-arrow">→</div></div>
+      <div class="flow-node plum"><div class="fn-icon">😊</div><h4>个人获得感↑</h4><div class="fn-desc">自我价值实现，再付出（闭环）</div></div>
+    </div>
+
+    <h3>好心值流通状态</h3>
+    <div class="circulation">
+      <div class="circ-ring">
+        <div class="circ-item flow-in"><div class="ci-num" id="circIn">48,620</div><div class="ci-label">本周流入</div></div>
+        <div class="circ-arrow">→</div>
+        <div class="circ-item flow-store"><div class="ci-num" id="circStore">1,284,600</div><div class="ci-label">流通总量</div></div>
+        <div class="circ-arrow">→</div>
+        <div class="circ-item flow-out"><div class="ci-num" id="circOut">32,180</div><div class="ci-label">本周流出</div></div>
+      </div>
+    </div>
+
+    <h3>权益来源与经济可持续性</h3>
+    <div class="grid cols-2">
+      <div class="card brand"><div class="ic">🏛️</div><h4>政府 / 社区</h4><p>志愿服务纳入"积分入户、评优"等政策红利。政府购买服务覆盖运营成本，无需向用户收费。</p></div>
+      <div class="card gold"><div class="ic">🏷️</div><h4>商家 CSR</h4><p>用"好心值"兑换折扣/体验。企业以资源置换品牌善意与社会影响力，降低市场营销成本。</p></div>
+      <div class="card leaf"><div class="ic">🔁</div><h4>技能交换</h4><p>用户之间用时间币互换技能（教英语换修图）。零成本、高价值、强社交连接，社区内自平衡。</p></div>
+      <div class="card sky"><div class="ic">⏰</div><h4>时间银行</h4><p>跨人存兑，社区内自平衡。年轻人存时间、老年人取服务，形成跨代际互助的可持续生态。</p></div>
+    </div>
+
+    <h3>平台经济关键指标（模拟）</h3>
+    <div class="table-wrap" style="margin-top:12px">
+      <table>
+        <thead><tr><th>指标</th><th>当前值</th><th>较上周变化</th><th>行业参考</th><th>健康度</th></tr></thead>
+        <tbody>
+          <tr><td>好心值流通速度</td><td>2.47 次/周</td><td><span style="color:var(--leaf)">↑ 0.31</span></td><td>1.5-3.0</td><td><span class="pill leaf">健康</span></td></tr>
+          <tr><td>时间币兑换率</td><td>1 小时 = 50 好心值</td><td><span style="color:var(--ink-faint)">→ 持平</span></td><td>40-60</td><td><span class="pill leaf">合理</span></td></tr>
+          <tr><td>任务完成率</td><td>84.7%</td><td><span style="color:var(--leaf)">↑ 2.3%</span></td><td>70-85%</td><td><span class="pill leaf">优秀</span></td></tr>
+          <tr><td>用户30天留存</td><td>62.4%</td><td><span style="color:var(--leaf)">↑ 4.1%</span></td><td>50-65%</td><td><span class="pill leaf">优秀</span></td></tr>
+          <tr><td>权益兑换成功率</td><td>91.2%</td><td><span style="color:var(--leaf)">↑ 1.8%</span></td><td>85-95%</td><td><span class="pill leaf">健康</span></td></tr>
+          <tr><td>社区自平衡率</td><td>73.5%</td><td><span style="color:var(--leaf)">↑ 5.2%</span></td><td>60-80%</td><td><span class="pill leaf">健康</span></td></tr>
+          <tr><td>用户NPS净推荐值</td><td>+42</td><td><span style="color:var(--leaf)">↑ 8</span></td><td>+30 ~ +50</td><td><span class="pill leaf">优秀</span></td></tr>
+          <tr><td>单用户月均贡献</td><td>14.6 好心值</td><td><span style="color:var(--leaf)">↑ 1.2</span></td><td>10-18</td><td><span class="pill leaf">健康</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- 交易确认弹窗 -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <div id="modalInner"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>把好事做成日常 <span class="heart">♥</span> · 生态模拟平台 · 数据均为模拟演示</p>
+  </div>
+</footer>
+
+<button id="totop" aria-label="回到顶部">↑</button>
+
+<script>
+// ===== 模拟数据 =====
+const taskTypes = ['help','community','donate','teach','accompany'];
+const taskTypeNames = {help:'顺手帮邻里',community:'社区公共事务',donate:'二手漂流/捐赠',teach:'技能助老/教学',accompany:'陪伴/倾听'};
+const taskTypeColors = {help:'urgent',community:'normal',donate:'normal',teach:'social',accompany:'social'};
+const taskIcons = {help:'📦',community:'♻️',donate:'📚',teach:'📱',accompany:'💬'};
+
+const taskTemplates = [
+  {type:'help',title:'帮楼下王奶奶取快递',desc:'3 栋 502 王奶奶腿脚不便，帮忙把快递从驿站送到家门口',time:5,points:8,dist:0.3,location:'3 栋驿站'},
+  {type:'help',title:'帮邻居搬米上楼',desc:'李阿姨买了 20 斤大米，需要帮忙搬上 4 楼',time:10,points:15,dist:0.5,location:'6 栋楼下'},
+  {type:'help',title:'代收快递并保管',desc:'张先生出差一周，帮忙代收快递并保管',time:5,points:6,dist:0.2,location:'2 栋 101'},
+  {type:'help',title:'帮遛狗 15 分钟',desc:'刘女士临时加班，帮忙遛柯基 15 分钟',time:15,points:20,dist:0.4,location:'小区花园'},
+  {type:'community',title:'社区垃圾分类引导',desc:'在垃圾投放点引导居民正确分类，30 分钟轮值',time:30,points:35,dist:0.1,location:'垃圾投放点'},
+  {type:'community',title:'社区巡逻 20 分钟',desc:'参与晚间社区安全巡逻，边走边做公益',time:20,points:25,dist:0.2,location:'社区中心'},
+  {type:'community',title:'整理共享书架',desc:'将小区共享书架的书籍按类别整理，补充新书',time:30,points:30,dist:0.3,location:'2 栋 1 楼'},
+  {type:'community',title:'社区花园浇水',desc:'给社区公共花坛浇水，维护绿化',time:15,points:18,dist:0.1,location:'社区花园'},
+  {type:'donate',title:'旧书漂流捐赠',desc:'整理家中闲置书籍，放到社区漂流书架',time:15,points:20,dist:0.5,location:'社区漂流站'},
+  {type:'donate',title:'旧衣物回收分拣',desc:'将捐赠的旧衣物进行分类整理',time:30,points:28,dist:0.3,location:'回收站'},
+  {type:'donate',title:'儿童绘本捐赠',desc:'捐赠闲置儿童绘本，丰富社区阅读角',time:10,points:12,dist:0.4,location:'社区阅读角'},
+  {type:'teach',title:'教老人用手机挂号',desc:'15 分钟教会社区老人使用手机预约挂号',time:15,points:22,dist:0.2,location:'社区活动室'},
+  {type:'teach',title:'教老人用微信视频',desc:'教老人和子女视频通话，让亲情不隔屏',time:20,points:25,dist:0.3,location:'社区活动室'},
+  {type:'teach',title:'帮助整理电子相册',desc:'帮老人把手机里的照片整理成电子相册',time:30,points:30,dist:0.2,location:'社区活动室'},
+  {type:'accompany',title:'社区老人陪伴聊天',desc:'陪独居老人聊天 30 分钟，倾听他们的故事',time:30,points:35,dist:0.3,location:'7 栋 302'},
+  {type:'accompany',title:'陪老人散步',desc:'陪社区老人散步 20 分钟，边运动边陪伴',time:20,points:24,dist:0.2,location:'社区花园'},
+  {type:'accompany',title:'给独居老人读报',desc:'每周二下午给独居老人读报纸，分享新闻',time:30,points:32,dist:0.4,location:'8 栋 201'},
+  {type:'accompany',title:'陪小朋友做手工',desc:'周六下午陪社区小朋友做手工，锻炼动手能力',time:30,points:28,dist:0.3,location:'儿童活动室'},
+  {type:'help',title:'社区图书馆整理',desc:'整理社区图书馆的书籍，按分类排放整齐',time:30,points:26,dist:0.2,location:'社区图书馆'},
+  {type:'community',title:'社区黑板报更新',desc:'负责本月社区黑板报的设计和书写',time:30,points:32,dist:0.1,location:'社区入口'},
+  {type:'teach',title:'教小朋友画画',desc:'周末 30 分钟教社区小朋友画简笔画',time:30,points:28,dist:0.3,location:'社区活动室'},
+  {type:'donate',title:'闲置玩具漂流',desc:'整理家中闲置玩具，清洁后放入漂流角',time:15,points:16,dist:0.5,location:'儿童漂流角'},
+  {type:'help',title:'帮邻居收被子',desc:'下雨了帮忙收楼下晾晒的被子',time:5,points:10,dist:0.1,location:'楼下晾晒区'},
+  {type:'community',title:'社区活动签到引导',desc:'周末社区活动入口引导签到，15 分钟',time:15,points:18,dist:0.2,location:'社区入口'}
+];
+
+// ===== 权益商品 =====
+const shopItems = [
+  {id:1,name:'社区荣誉徽章',desc:'线上荣誉徽章，展示在个人主页和社区荣誉墙',icon:'🏅',price:200,stock:9999,category:'honor',provider:'社区'},
+  {id:2,name:'社区之星证书',desc:'月度社区之星电子证书，可下载打印',icon:'📜',price:500,stock:500,category:'honor',provider:'社区'},
+  {id:3,name:'社区公告栏署名感谢',desc:'在社区公告栏署名表扬，持续展示一个月',icon:'📋',price:300,stock:200,category:'honor',provider:'社区'},
+  {id:4,name:'附近咖啡店 8 折券',desc:'社区合作咖啡店饮品 8 折优惠券，有效期 7 天',icon:'☕',price:150,stock:100,category:'discount',provider:'商家'},
+  {id:5,name:'社区便利店 9 折券',desc:'社区合作便利店全场 9 折，有效期 7 天',icon:'🏪',price:100,stock:150,category:'discount',provider:'商家'},
+  {id:6,name:'共享单车月卡体验',desc:'共享单车 7 天免费骑行卡',icon:'🚲',price:250,stock:80,category:'discount',provider:'商家'},
+  {id:7,name:'社区活动优先报名权',desc:'热门社区活动优先报名资格，不限次数',icon:'🎫',price:180,stock:9999,category:'priority',provider:'社区'},
+  {id:8,name:'社区技能交换课',desc:'用 1 小时时间币兑换 1 小时技能教学（如英语/摄影/烹饪）',icon:'🔁',price:60,stock:9999,category:'skill',provider:'用户'},
+  {id:9,name:'时间币存储生息',desc:'锁定时间币 30 天，年化 5% 好心值收益',icon:'🏦',price:0,stock:9999,category:'finance',provider:'平台'},
+  {id:10,name:'公益信用背书',desc:'可用于求职/升学等场景的公益信用证明',icon:'⭐',price:800,stock:200,category:'honor',provider:'社区'},
+  {id:11,name:'社区健身房 1 次体验',desc:'社区合作健身房免费体验 1 次',icon:'🏋️',price:200,stock:50,category:'discount',provider:'商家'},
+  {id:12,name:'老年人技能教学课时',desc:'用 1 小时时间币兑换陪伴老人 1 小时（可积累时间币）',icon:'👴',price:60,stock:9999,category:'skill',provider:'用户'}
+];
+
+// ===== 排行榜数据 =====
+const leaderboardNames = [
+  ['林晓晨','张明远','王淑芬','李建国','陈思远','刘美丽','赵志强','周晓燕','吴大伟','孙丽华'],
+  ['陈思远','刘美丽','赵志强','周晓燕','吴大伟','孙丽华','林晓晨','张明远','王淑芬','李建国'],
+  ['王淑芬','李建国','陈思远','林晓晨','张明远','刘美丽','赵志强','周晓燕','吴大伟','孙丽华']
+];
+const leaderboardAvatars = ['#c8533a','#3f7d5b','#c98a2b','#3b6b8c','#6b4a7a','#c8533a','#3f7d5b','#c98a2b','#3b6b8c','#6b4a7a'];
+const leaderboardBadges = ['社区之星','好心达人','时间富翁','善意使者','邻里模范','社区之星','好心达人','时间富翁','善意使者','邻里模范'];
+
+// ===== 账本数据 =====
+const ledgerEntries = [
+  {date:'2026-08-07 09:15',type:'earn',desc:'完成「帮楼下王奶奶取快递」',amount:'+8'},
+  {date:'2026-08-07 08:30',type:'earn',desc:'日常签到奖励',amount:'+2'},
+  {date:'2026-08-06 19:20',type:'spend',desc:'兑换「附近咖啡店 8 折券」',amount:'-150'},
+  {date:'2026-08-06 17:00',type:'earn',desc:'完成「社区垃圾分类引导」',amount:'+35'},
+  {date:'2026-08-06 12:30',type:'transfer',desc:'时间币兑换好心值（2 小时）',amount:'+100'},
+  {date:'2026-08-05 20:15',type:'earn',desc:'完成「教老人用手机挂号」',amount:'+22'},
+  {date:'2026-08-05 18:00',type:'earn',desc:'社区巡逻 20 分钟',amount:'+25'},
+  {date:'2026-08-04 10:30',type:'spend',desc:'兑换「社区之星证书」',amount:'-500'},
+  {date:'2026-08-04 09:00',type:'earn',desc:'完成「旧书漂流捐赠」',amount:'+20'},
+  {date:'2026-08-03 15:45',type:'earn',desc:'周末社区活动签到引导',amount:'+18'}
+];
+
+// ===== 渲染函数 =====
+function renderTasks(filter={}) {
+  const grid = document.getElementById('taskGrid');
+  const search = document.getElementById('taskSearch').value.toLowerCase();
+  const typeFilter = document.getElementById('taskTypeFilter').value;
+  const timeFilter = document.getElementById('taskTimeFilter').value;
+  const sort = document.getElementById('taskSort').value;
+
+  let tasks = taskTemplates.map((t,i) => ({...t,id:i}));
+
+  // 搜索
+  if (search) tasks = tasks.filter(t => t.title.includes(search) || t.desc.includes(search));
+  // 类型
+  if (typeFilter !== 'all') tasks = tasks.filter(t => t.type === typeFilter);
+  // 时间
+  if (timeFilter !== 'all') {
+    const max = parseInt(timeFilter);
+    tasks = tasks.filter(t => t.time <= max);
+  }
+  // 排序
+  if (sort === 'distance') tasks.sort((a,b) => a.dist - b.dist);
+  else if (sort === 'points') tasks.sort((a,b) => b.points - a.points);
+  else if (sort === 'time') tasks.sort((a,b) => a.time - b.time);
+
+  if (tasks.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink-faint)">😅 没有匹配的任务，试试调整筛选条件</div>';
+    return;
+  }
+
+  grid.innerHTML = tasks.map(t => `
+    <div class="task-card">
+      <span class="tag ${taskTypeColors[t.type]}">${taskIcons[t.type]} ${taskTypeNames[t.type]}</span>
+      <h4>${t.title}</h4>
+      <p style="font-size:13px;color:var(--ink-soft);line-height:1.5;margin:4px 0">${t.desc}</p>
+      <div class="meta">
+        <span>📍 ${t.location}</span>
+        <span>📏 ${t.dist}km</span>
+        <span>⏱️ ${t.time}分钟</span>
+      </div>
+      <div class="reward-bar">
+        <div>
+          <div class="points">💛 +${t.points}</div>
+          <div class="time">⏰ ${t.time} 分钟</div>
+        </div>
+        <button class="btn-claim" onclick="claimTask(${t.id})" id="claimBtn-${t.id}">领取任务</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterTasks() { renderTasks(); }
+
+// ===== 领取任务 =====
+function claimTask(id) {
+  const btn = document.getElementById(`claimBtn-${id}`);
+  if (btn.disabled) return;
+  const task = taskTemplates[id];
+  showModal(`
+    <div style="text-align:center">
+      <div style="font-size:36px;margin-bottom:10px">${taskIcons[task.type]}</div>
+      <h3>确认领取任务</h3>
+      <div class="modal-body">
+        <p style="font-size:15px;font-weight:600;margin:8px 0">${task.title}</p>
+        <p style="font-size:13px;color:var(--ink-soft)">${task.desc}</p>
+        <div class="points-change">
+          <div><span class="num">💛 +${task.points}</span><div class="lbl">好心值奖励</div></div>
+          <div style="width:1px;height:30px;background:var(--line)"></div>
+          <div><span class="num">⏰ ${task.time}min</span><div class="lbl">预计耗时</div></div>
+        </div>
+        <p style="font-size:12.5px;color:var(--ink-faint)">📍 ${task.location} · 距离 ${task.dist}km</p>
+      </div>
+      <div class="modal-actions" style="justify-content:center">
+        <button class="btn-cancel" onclick="closeModal()">再想想</button>
+        <button class="btn-confirm" onclick="confirmClaim(${id})">✅ 确认领取</button>
+      </div>
+    </div>
+  `);
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function confirmClaim(id) {
+  const task = taskTemplates[id];
+  closeModal();
+  const btn = document.getElementById(`claimBtn-${id}`);
+  if (btn) {
+    btn.textContent = '✅ 已领取';
+    btn.disabled = true;
+    btn.classList.add('claimed');
+  }
+  // 更新好心值
+  const balanceEl = document.getElementById('myBalance');
+  if (balanceEl) {
+    const current = parseInt(balanceEl.textContent.replace(/,/g,''));
+    balanceEl.innerHTML = (current + task.points).toLocaleString() + ' <span>好心值</span>';
+  }
+  showToast(`✅ 已领取「${task.title}」+${task.points} 好心值！完成后再来确认哦`);
+}
+
+// ===== 账本 =====
+function renderLedger() {
+  const body = document.getElementById('ledgerBody');
+  const typeLabels = {earn:'获得',spend:'兑换',transfer:'转换'};
+  const typeClasses = {earn:'earn',spend:'spend',transfer:'transfer'};
+  body.innerHTML = ledgerEntries.map(e => `
+    <tr>
+      <td style="white-space:nowrap;color:var(--ink-faint);font-size:12px">${e.date}</td>
+      <td><span class="type-badge ${typeClasses[e.type]}">${typeLabels[e.type]}</span></td>
+      <td style="color:var(--ink-soft)">${e.desc}</td>
+      <td style="text-align:right"><span class="amount ${e.type === 'earn' || e.type === 'transfer' ? 'plus' : 'minus'}">${e.type === 'earn' || e.type === 'transfer' ? '+' : '-'}${e.amount}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ===== 权益商城 =====
+function renderShop() {
+  const grid = document.getElementById('shopGrid');
+  const categoryLabels = {honor:'荣誉',discount:'折扣',priority:'优先',skill:'技能',finance:'金融'};
+  const categoryColors = {honor:'brand',discount:'gold',priority:'sky',skill:'leaf',finance:'plum'};
+  grid.innerHTML = shopItems.map(item => `
+    <div class="shop-item">
+      <div class="icon" style="background:${item.category === 'honor' ? 'var(--brand-soft)' : item.category === 'discount' ? 'var(--gold-soft)' : item.category === 'priority' ? 'var(--sky-soft)' : item.category === 'skill' ? 'var(--leaf-soft)' : 'var(--plum-soft)'}">${item.icon}</div>
+      <h4>${item.name}</h4>
+      <div class="desc">${item.desc}</div>
+      <div class="price">${item.price} <span>好心值</span></div>
+      <button class="btn-buy" onclick="buyItem(${item.id})" ${item.price > 2580 ? 'disabled' : ''} id="buyBtn-${item.id}">${item.price > 2580 ? '好心值不足' : '立即兑换'}</button>
+      <div class="stock">提供方：${item.provider} ${item.stock < 9999 ? `· 剩余 ${item.stock}` : '· 无限量'}</div>
+    </div>
+  `).join('');
+}
+
+function buyItem(id) {
+  const item = shopItems.find(i => i.id === id);
+  if (!item) return;
+  const balance = 2580;
+  if (item.price > balance) return;
+  showModal(`
+    <div style="text-align:center">
+      <div style="font-size:42px;margin-bottom:10px">${item.icon}</div>
+      <h3>确认兑换</h3>
+      <div class="modal-body">
+        <p style="font-size:15px;font-weight:600;margin:8px 0">${item.name}</p>
+        <p style="font-size:13px;color:var(--ink-soft)">${item.desc}</p>
+        <div class="points-change">
+          <div><span class="num" style="color:var(--brand)">-${item.price}</span><div class="lbl">好心值</div></div>
+        </div>
+      </div>
+      <div class="modal-actions" style="justify-content:center">
+        <button class="btn-cancel" onclick="closeModal()">取消</button>
+        <button class="btn-confirm" onclick="confirmBuy(${id})">✅ 确认兑换</button>
+      </div>
+    </div>
+  `);
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function confirmBuy(id) {
+  const item = shopItems.find(i => i.id === id);
+  closeModal();
+  showModal(`
+    <div class="success-msg">
+      <div class="big-icon">🎉</div>
+      <h4>兑换成功！</h4>
+      <p>已用 ${item.price} 好心值兑换「${item.name}」<br/>权益将在 24 小时内发放到你的账户</p>
+      <div class="modal-actions" style="justify-content:center;margin-top:14px">
+        <button class="btn-confirm" onclick="closeModal()">知道了</button>
+      </div>
+    </div>
+  `);
+  document.getElementById('modalOverlay').classList.add('show');
+  const btn = document.getElementById(`buyBtn-${id}`);
+  if (btn) { btn.textContent = '✅ 已兑换'; btn.disabled = true; }
+}
+
+// ===== 排行榜 =====
+let lbMode = 'weekly';
+function renderLeaderboard(mode) {
+  const container = document.getElementById('leaderboardContainer');
+  const idx = mode === 'weekly' ? 0 : mode === 'monthly' ? 1 : 2;
+  const names = leaderboardNames[idx];
+  const scores = mode === 'weekly' 
+    ? [1280, 960, 845, 720, 680, 610, 580, 520, 490, 450]
+    : mode === 'monthly'
+    ? [4520, 3810, 3240, 2980, 2650, 2340, 2100, 1880, 1650, 1420]
+    : [18600, 15200, 13800, 11200, 9800, 8500, 7200, 6100, 5500, 4800];
+  const badges = mode === 'weekly' 
+    ? ['社区之星','好心达人','时间富翁','善意使者','邻里模范','热心居民','社区新星','公益先锋','友善使者','参与达人']
+    : ['月度之星','月度达人','月度贡献','月度模范','活跃用户','积极用户','热心用户','友善用户','参与用户','新晋用户'];
+
+  container.innerHTML = `
+    <div style="padding:14px 16px;background:var(--bg);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:13px;font-weight:600;color:var(--ink-soft)">${mode === 'weekly' ? '本周' : mode === 'monthly' ? '本月' : '历史总榜'}好心值排名</span>
+      <span style="font-size:12px;color:var(--ink-faint)">更新于刚刚</span>
+    </div>
+    ${names.map((name,i) => `
+      <div class="lb-item">
+        <div class="rank ${i < 3 ? 'top'+(i+1) : ''}">${i+1}</div>
+        <div class="avatar" style="background:${leaderboardAvatars[i]}">${name[0]}</div>
+        <div class="info">
+          <div class="name">${name}</div>
+          <div class="badge">${badges[i]} · ${i < 3 ? '🏆' : '⭐'} ${i < 5 ? '已认证' : '活跃用户'}</div>
+        </div>
+        <div class="score">${scores[i].toLocaleString()}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function switchLeaderboard(mode) {
+  lbMode = mode;
+  document.querySelectorAll('#leaderboardContainer ~ *').forEach(el => el.classList.remove('active'));
+  document.getElementById(`lb-${mode}`).classList.add('active');
+  renderLeaderboard(mode);
+}
+
+// ===== 弹窗 =====
+function showModal(html) {
+  document.getElementById('modalInner').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+// ===== Toast =====
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;z-index:200;animation:fadeIn .3s ease;box-shadow:0 4px 12px rgba(0,0,0,.2)';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .3s'; setTimeout(() => t.remove(), 300); }, 2500);
+}
+
+// ===== 标签切换 =====
+document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`panel-${this.dataset.tab}`).classList.add('active');
+  });
+});
+
+// ===== 初始化 =====
+renderTasks();
+renderLedger();
+renderShop();
+renderLeaderboard('weekly');
+
+// ===== 数字滚动动画 =====
+function animateNumbers() {
+  const targets = [
+    {el:'totalUsers', target:2847},
+    {el:'totalTasks', target:6523},
+    {el:'totalPoints', target:1284600},
+    {el:'totalTimeCoins', target:342800},
+    {el:'totalExchange', target:18432}
+  ];
+  targets.forEach(({el, target}) => {
+    const elm = document.getElementById(el);
+    if (!elm) return;
+    const duration = 1500;
+    const start = performance.now();
+    function step(now) {
+      const pct = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - pct, 3);
+      elm.textContent = Math.round(target * eased).toLocaleString();
+      if (pct < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+setTimeout(animateNumbers, 300);
+
+// ===== 模拟实时更新 =====
+setInterval(() => {
+  const totalTasks = document.getElementById('totalTasks');
+  if (totalTasks) {
+    const current = parseInt(totalTasks.textContent.replace(/,/g,''));
+    totalTasks.textContent = (current + 1).toLocaleString();
+  }
+  const totalPoints = document.getElementById('totalPoints');
+  if (totalPoints) {
+    const current = parseInt(totalPoints.textContent.replace(/,/g,''));
+    totalPoints.textContent = (current + Math.floor(Math.random() * 50)).toLocaleString();
+  }
+}, 8000);
+</script>
+</body>
+</html>

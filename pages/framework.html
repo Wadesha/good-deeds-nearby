@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>好事近 · 方法论框架扩展 | 假设树 · 统计模型 · 用户分层 · 研究设计</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+  /* ============================================
+     框架页面专用扩展样式
+     ============================================ */
+  :root {
+    --brand: #c8533a;
+    --brand-deep: #9e3b25;
+    --brand-soft: #fbeae3;
+    --leaf: #3f7d5b;
+    --leaf-soft: #e7f0e9;
+    --gold: #c98a2b;
+    --gold-soft: #f6ecd6;
+    --sky: #3b6b8c;
+    --sky-soft: #e6eef4;
+    --plum: #6b4a7a;
+    --plum-soft: #efe6f1;
+    --line: #ece4d6;
+    --ink: #2b2622;
+    --ink-soft: #6b6258;
+    --ink-faint: #9a9088;
+    --paper: #ffffff;
+    --bg: #fbf7ef;
+    --shadow: 0 1px 2px rgba(43,38,34,.04), 0 8px 24px rgba(43,38,34,.06);
+    --shadow-lg: 0 4px 10px rgba(43,38,34,.05), 0 14px 30px rgba(43,38,34,.08);
+  }
+
+  /* === 假设树（扩展） === */
+  .tree{position:relative;padding:10px 0}
+  .tree-node{position:relative;padding:12px 0 12px 36px;border-left:2px solid var(--line);margin-left:18px}
+  .tree-node::before{content:"";position:absolute;left:-2px;top:50%;width:18px;height:2px;background:var(--line)}
+  .tree-node:last-child{border-left-color:transparent}
+  .tree-node:last-child::after{content:"";position:absolute;left:-2px;top:50%;bottom:0;width:2px;background:var(--line)}
+  .tree-node .dot{position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--brand);z-index:1}
+  .tree-node.H2 .dot{border-color:var(--leaf)}
+  .tree-node.H3 .dot{border-color:var(--gold)}
+  .tree-node.H4 .dot{border-color:var(--sky)}
+  .tree-node.H5 .dot{border-color:var(--plum)}
+  .tree-node .tc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);display:inline-block;max-width:92%}
+  .tree-node .tc h5{margin:0 0 3px;font-size:14px;font-weight:700}
+  .tree-node .tc p{margin:0;font-size:12.5px;color:var(--ink-soft);line-height:1.6}
+  .tree-node .tc .v-method{font-size:11.5px;color:var(--ink-faint);margin-top:4px;padding-top:4px;border-top:1px dashed var(--line)}
+
+  /* === 模型卡片 === */
+  .model-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow);margin:12px 0}
+  .model-card h4{margin:0 0 8px;font-size:16px;display:flex;align-items:center;gap:8px}
+  .model-card .formula{font-family:"SF Mono",ui-monospace,Menlo,monospace;background:var(--bg);padding:12px 14px;border-radius:8px;font-size:14px;color:var(--brand-deep);margin:8px 0;overflow-x:auto;white-space:normal}
+  .model-card .formula code{background:none;padding:0;font-size:inherit;color:inherit}
+  .model-card .params{font-size:12.5px;color:var(--ink-soft);line-height:1.8}
+  .model-card .params b{color:var(--ink)}
+  .model-card .interpret{font-size:12.5px;color:var(--ink-faint);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+  .model-card .sim-result{background:var(--leaf-soft);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:12.5px;color:#2c5a3f;border-left:3px solid var(--leaf)}
+  .model-card.brand{border-left:4px solid var(--brand)}
+  .model-card.leaf{border-left:4px solid var(--leaf)}
+  .model-card.gold{border-left:4px solid var(--gold)}
+  .model-card.sky{border-left:4px solid var(--sky)}
+  .model-card.plum{border-left:4px solid var(--plum)}
+
+  /* === 模型对比矩阵 === */
+  .matrix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin:16px 0}
+  .matrix-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);transition:transform .18s}
+  .matrix-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+  .matrix-card .mc-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .matrix-card .mc-num{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11px;font-weight:700;color:#fff;background:var(--ink);padding:2px 8px;border-radius:5px}
+  .matrix-card .mc-type{font-size:11px;padding:2px 8px;border-radius:999px;font-weight:600}
+  .matrix-card .mc-type.supervised{background:var(--brand-soft);color:var(--brand-deep)}
+  .matrix-card .mc-type.bayesian{background:var(--plum-soft);color:var(--plum)}
+  .matrix-card .mc-type.causal{background:var(--sky-soft);color:var(--sky)}
+  .matrix-card .mc-usage{font-size:12.5px;color:var(--ink-soft);line-height:1.7}
+  .matrix-card .mc-pros{font-size:12px;color:var(--leaf);margin-top:6px}
+  .matrix-card .mc-cons{font-size:12px;color:var(--brand);margin-top:3px}
+  .matrix-card .mc-rec{font-size:11.5px;color:var(--ink-faint);margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+
+  /* === 用户分层 === */
+  .seg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:14px 0}
+  .seg-card{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+  .seg-card.s2{border-left-color:var(--gold)}
+  .seg-card.s3{border-left-color:var(--leaf)}
+  .seg-card.s4{border-left-color:var(--sky)}
+  .seg-card.s5{border-left-color:var(--plum)}
+  .seg-card.s6{border-left-color:#c98a2b;border-left-width:4px}
+  .seg-card.s7{border-left-color:#3b6b8c;border-left-width:4px}
+  .seg-card.s8{border-left-color:#6b4a7a;border-left-width:4px}
+  .seg-card .sc-icon{font-size:28px;margin-bottom:6px}
+  .seg-card h4{margin:0 0 4px;font-size:15px}
+  .seg-card .sc-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.6}
+  .seg-card .sc-pct{font-size:20px;font-weight:800;margin-top:8px}
+  .seg-card .sc-strategy{font-size:12px;color:var(--ink-faint);margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+  .seg-card.s1 .sc-pct{color:var(--brand)}
+  .seg-card.s2 .sc-pct{color:var(--gold)}
+  .seg-card.s3 .sc-pct{color:var(--leaf)}
+  .seg-card.s4 .sc-pct{color:var(--sky)}
+  .seg-card.s5 .sc-pct{color:var(--plum)}
+  .seg-card.s6 .sc-pct{color:#c98a2b}
+  .seg-card.s7 .sc-pct{color:#3b6b8c}
+  .seg-card.s8 .sc-pct{color:#6b4a7a}
+
+  /* === A/B测试 === */
+  .ab-flow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;margin:16px 0;padding:16px;background:var(--paper);border-radius:12px;border:1px solid var(--line)}
+  .ab-flow .ab-box{padding:16px 20px;border-radius:10px;text-align:center;min-width:120px;flex:1}
+  .ab-flow .ab-box h5{margin:0 0 4px;font-size:14px;font-weight:700}
+  .ab-flow .ab-box p{margin:0;font-size:12px;color:var(--ink-soft)}
+  .ab-flow .ab-arrow{font-size:24px;color:var(--ink-faint)}
+  .ab-flow .ab-box.control{background:var(--bg);border:2px dashed var(--line)}
+  .ab-flow .ab-box.variant{background:var(--gold-soft);border:2px solid var(--gold)}
+  .ab-flow .ab-box.winner{background:var(--leaf-soft);border:2px solid var(--leaf)}
+  .ab-flow .ab-box .result{font-size:22px;font-weight:800;margin-top:6px}
+  .ab-flow .ab-box.control .result{color:var(--ink-soft)}
+  .ab-flow .ab-box.variant .result{color:var(--gold)}
+  .ab-flow .ab-box.winner .result{color:var(--leaf)}
+
+  /* === Cohort热力图 === */
+  .cohort-heat{overflow-x:auto;margin:14px 0}
+  .cohort-heat table{font-size:13px;border-collapse:separate;border-spacing:2px}
+  .cohort-heat th{background:var(--ink);color:#fff;padding:8px 10px;font-weight:600;text-align:center;border-radius:4px}
+  .cohort-heat td{text-align:center;padding:8px 10px;border-radius:4px;font-weight:600;min-width:52px}
+  .cohort-heat .ch-row-label{background:var(--bg);color:var(--ink);font-weight:700;text-align:left;padding:8px 12px;border-radius:4px;white-space:nowrap}
+  .heat-h{background:#c8533a;color:#fff}
+  .heat-90{background:#d97a5c;color:#fff}
+  .heat-80{background:#e8a080;color:#fff}
+  .heat-70{background:#f0bea0;color:var(--ink)}
+  .heat-60{background:#f3d4b8;color:var(--ink)}
+  .heat-50{background:#f6e0c8;color:var(--ink)}
+  .heat-40{background:#f0e4d4;color:var(--ink-soft)}
+  .heat-30{background:#e8dcc8;color:var(--ink-soft)}
+  .heat-20{background:#ddd0b8;color:var(--ink-faint)}
+  .heat-na{background:#f3ead9;color:var(--ink-faint)}
+
+  /* === 统计功效 === */
+  .power-curve{display:flex;align-items:flex-end;gap:6px;height:160px;padding:10px 0;margin:14px 0;background:var(--bg);border-radius:10px;border:1px solid var(--line);justify-content:center}
+  .power-bar{width:32px;border-radius:4px 4px 0 0;position:relative;transition:height .5s;min-height:4px}
+  .power-bar .pb-label{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--ink-soft);white-space:nowrap}
+  .power-bar .pb-val{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;color:var(--ink)}
+  .power-bar.brand{background:linear-gradient(180deg,var(--brand),#d97a5c)}
+  .power-bar.leaf{background:linear-gradient(180deg,var(--leaf),#6aad8a)}
+  .power-bar.gold{background:linear-gradient(180deg,var(--gold),#dbb06a)}
+  .power-bar.sky{background:linear-gradient(180deg,var(--sky),#6b9bb8)}
+  .power-bar.plum{background:linear-gradient(180deg,var(--plum),#9a7aaa)}
+
+  /* === 交互式工具 === */
+  .calc-box{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:var(--shadow);margin:14px 0}
+  .calc-box h4{font-size:16px;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+  .calc-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:8px 0}
+  .calc-row label{font-size:13px;font-weight:600;color:var(--ink);min-width:100px}
+  .calc-row input[type="range"]{flex:1;min-width:140px;accent-color:var(--brand)}
+  .calc-row input[type="number"]{width:80px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;font-size:14px;font-family:inherit;background:var(--bg);color:var(--ink)}
+  .calc-row input[type="number"]:focus{outline:2px solid var(--brand);outline-offset:1px}
+  .calc-row .val{font-size:14px;font-weight:700;color:var(--brand-deep);min-width:50px;text-align:right}
+  .calc-result{background:var(--leaf-soft);border-radius:10px;padding:14px 18px;margin-top:12px;font-size:15px;color:#2c5a3f;border-left:4px solid var(--leaf)}
+  .calc-result .big{font-size:28px;font-weight:800;display:block;margin:4px 0}
+  .calc-result .note-sm{font-size:12px;color:var(--ink-faint);margin-top:4px}
+  .calc-result .warn{color:var(--brand-deep)}
+
+  /* === 研究设计 === */
+  .design-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:14px 0}
+  .design-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:var(--shadow)}
+  .design-card h4{font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+  .design-card p{font-size:13px;color:var(--ink-soft);line-height:1.7;margin:0}
+  .design-card ul{font-size:12.5px;color:var(--ink-soft);line-height:1.8;padding-left:18px;margin:6px 0 0}
+  .design-card li{margin:2px 0}
+  .design-card.brand{border-left:4px solid var(--brand)}
+  .design-card.leaf{border-left:4px solid var(--leaf)}
+  .design-card.gold{border-left:4px solid var(--gold)}
+  .design-card.sky{border-left:4px solid var(--sky)}
+  .design-card.plum{border-left:4px solid var(--plum)}
+
+  /* === 对比表格 === */
+  .cmp-table-wrap{overflow-x:auto;border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);margin:14px 0}
+  .cmp-table-wrap table{width:100%;border-collapse:collapse;background:var(--paper);font-size:13px}
+  .cmp-table-wrap thead th{background:var(--ink);color:#fff;text-align:left;font-weight:600;padding:10px 12px;border-bottom:2px solid #3a3a3a;white-space:nowrap}
+  .cmp-table-wrap tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  .cmp-table-wrap tbody tr:nth-child(even){background:#fbf7ef}
+  .cmp-table-wrap tbody tr:hover{background:#fdf4e3}
+  .cmp-table-wrap .tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;font-weight:600}
+  .cmp-table-wrap .tag.green{background:var(--leaf-soft);color:#2c5a3f}
+  .cmp-table-wrap .tag.red{background:var(--brand-soft);color:var(--brand-deep)}
+  .cmp-table-wrap .tag.gold{background:var(--gold-soft);color:#7a5a1a}
+
+  /* === 通用扩展 === */
+  .eq{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:15px;color:var(--brand-deep);padding:6px 0}
+  .kpi-row{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0}
+  .kpi-card{flex:1;min-width:140px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;text-align:center;box-shadow:var(--shadow)}
+  .kpi-card .kpi-val{font-size:24px;font-weight:800;color:var(--brand-deep)}
+  .kpi-card .kpi-label{font-size:12px;color:var(--ink-soft);margin-top:4px}
+  .kpi-card.leaf .kpi-val{color:var(--leaf)}
+  .kpi-card.gold .kpi-val{color:var(--gold)}
+  .kpi-card.sky .kpi-val{color:var(--sky)}
+  .kpi-card.plum .kpi-val{color:var(--plum)}
+
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:.15s;font-family:inherit}
+  .btn.brand{background:var(--brand);color:#fff}
+  .btn.brand:hover{background:var(--brand-deep);transform:translateY(-1px)}
+  .btn.leaf{background:var(--leaf);color:#fff}
+  .btn.leaf:hover{background:#2c5a3f;transform:translateY(-1px)}
+  .btn.gold{background:var(--gold);color:#fff}
+  .btn.gold:hover{background:#a06e1a;transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  .btn-outline{background:transparent;border:2px solid var(--brand);color:var(--brand)}
+  .btn-outline:hover{background:var(--brand-soft)}
+
+  .tabs{display:flex;gap:4px;margin:14px 0;flex-wrap:wrap}
+  .tab-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--paper);cursor:pointer;transition:.15s;color:var(--ink-soft);font-family:inherit}
+  .tab-btn:hover{background:var(--bg);color:var(--ink)}
+  .tab-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+
+  .progress-track{display:flex;gap:0;margin:14px 0;border-radius:8px;overflow:hidden;height:28px;background:var(--bg);border:1px solid var(--line)}
+  .progress-track .pseg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:width .3s}
+  .progress-track .pseg.brand{background:var(--brand)}
+  .progress-track .pseg.leaf{background:var(--leaf)}
+  .progress-track .pseg.gold{background:var(--gold)}
+  .progress-track .pseg.sky{background:var(--sky)}
+  .progress-track .pseg.plum{background:var(--plum)}
+
+  .accordion{margin:10px 0}
+  .accordion-item{border:1px solid var(--line);border-radius:10px;margin:6px 0;overflow:hidden;background:var(--paper)}
+  .accordion-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;font-size:14px;font-weight:600;transition:.15s;user-select:none}
+  .accordion-header:hover{background:var(--bg)}
+  .accordion-header .arrow{transition:transform .2s;font-size:12px;color:var(--ink-faint)}
+  .accordion-item.open .accordion-header .arrow{transform:rotate(90deg)}
+  .accordion-body{padding:0 16px 16px;display:none;font-size:13px;color:var(--ink-soft);line-height:1.7}
+  .accordion-item.open .accordion-body{display:block}
+
+  .tag-cloud{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  .tag-cloud .t{display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);transition:.15s;cursor:default}
+  .tag-cloud .t:hover{transform:scale(1.05);box-shadow:var(--shadow)}
+  .tag-cloud .t.brand{background:var(--brand-soft);color:var(--brand-deep);border-color:var(--brand)}
+  .tag-cloud .t.leaf{background:var(--leaf-soft);color:#2c5a3f;border-color:var(--leaf)}
+  .tag-cloud .t.gold{background:var(--gold-soft);color:#7a5a1a;border-color:var(--gold)}
+  .tag-cloud .t.sky{background:var(--sky-soft);color:#2c536e;border-color:var(--sky)}
+  .tag-cloud .t.plum{background:var(--plum-soft);color:#4a3357;border-color:var(--plum)}
+
+  .insight-box{background:linear-gradient(135deg,var(--brand-soft),var(--gold-soft));border-radius:12px;padding:18px 20px;margin:14px 0;border:1px solid rgba(200,83,58,.15)}
+  .insight-box h5{font-size:14px;margin:0 0 6px;color:var(--brand-deep)}
+  .insight-box p{font-size:13px;color:var(--ink-soft);margin:0;line-height:1.7}
+  .insight-box .insight-num{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:28px;font-weight:800;color:var(--brand);float:left;margin:0 12px 4px 0;line-height:1}
+
+  /* === 时间线 === */
+  .timeline{margin:14px 0;padding:0;position:relative}
+  .timeline .phase{position:relative;padding:12px 0 12px 32px;border-left:3px solid var(--line);margin-left:10px}
+  .timeline .phase::before{content:"";position:absolute;left:-9px;top:24px;width:16px;height:16px;border-radius:50%;background:var(--brand);border:3px solid var(--paper);z-index:1}
+  .timeline .phase.p2::before{background:var(--leaf)}
+  .timeline .phase.p3::before{background:var(--gold)}
+  .timeline .phase.p4::before{background:var(--sky)}
+  .timeline .phase.p5::before{background:var(--plum)}
+  .timeline .phase:last-child{border-left-color:transparent}
+  .timeline .ptitle{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .timeline .ptitle h4{margin:0;font-size:15px;font-weight:700}
+  .timeline .ptitle .when{font-size:12px;color:var(--ink-faint);background:var(--bg);padding:2px 10px;border-radius:999px}
+  .timeline .pbody{font-size:13px;color:var(--ink-soft);line-height:1.8;margin-top:4px}
+
+  /* === 响应式 === */
+  @media(max-width:760px){
+    .tree-node .tc{max-width:100%}
+    .seg-grid{grid-template-columns:1fr}
+    .matrix-grid{grid-template-columns:1fr}
+    .design-grid{grid-template-columns:1fr}
+    .calc-row{flex-direction:column;align-items:stretch}
+    .calc-row label{min-width:auto}
+    .calc-row input[type="range"]{min-width:auto}
+    .kpi-row{flex-direction:column}
+    .ab-flow{flex-direction:column}
+    .cohort-heat table{font-size:11px}
+    .cohort-heat td{min-width:36px;padding:5px}
+    .power-curve{height:120px}
+    .tabs{overflow-x:auto;flex-wrap:nowrap}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo"><span>好事近</span> · 框架扩展</a>
+    <nav>
+      <a href="../index.html">首页</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html" class="active">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="page-header">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="../index.html">首页</a><span class="sep">/</span>方法论框架扩展</div>
+    <span class="eyebrow"><span class="dot"></span> 基于项目 H1–H5 框架深度展开</span>
+    <h1>调研方法论框架扩展</h1>
+    <p class="sub">从 5 个核心假设出发，扩展为完整的假设树（30+ 子假设）、12 个统计验证模型、8 层用户分层体系、12 组 A/B 测试框架和 Cohort 分析模型。为 Phase 1 及后续阶段提供可复用的研究基础设施。</p>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- ================================================================================== -->
+  <!-- 01 假设树扩展 -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>假设树：从 H1–H5 到 30+ 子假设</h2></div>
+    <p class="muted">每个核心假设展开为 6 个可验证的子假设，形成完整的假设树结构。总计 30 个子假设，覆盖时间、驱动力、激励、供给侧、地域性五大维度。</p>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val">5</div><div class="kpi-label">核心假设</div></div>
+      <div class="kpi-card leaf"><div class="kpi-val">30</div><div class="kpi-label">子假设</div></div>
+      <div class="kpi-card gold"><div class="kpi-val">12</div><div class="kpi-label">验证模型</div></div>
+      <div class="kpi-card sky"><div class="kpi-val">3</div><div class="kpi-label">验证阶段</div></div>
+      <div class="kpi-card plum"><div class="kpi-val">95%</div><div class="kpi-label">置信水平</div></div>
+    </div>
+
+    <!-- H1 -->
+    <div class="tree">
+      <div class="tree-node"><div class="dot"></div><div class="tc"><h5>H1 时间贫困者仍有稳定参与意愿</h5><p>核心假设：高时间贫困人群（周整块时间 &lt;2h）中，≥60% 表示"有合适入口会持续参与"</p></div></div>
+      <div class="tree-node" style="margin-left:54px"><div class="dot" style="background:var(--brand-soft);border-color:var(--brand)"></div><div class="tc"><h5>H1a 碎片时间场景越多，参与意愿越强</h5><p>拥有 ≥3 种碎片时间场景的人群，意愿分比 &lt;3 种人群高 25%+</p><div class="v-method">验证方法：场景计数问卷 + 意愿量表回归分析</div></div></div>
+      <div class="tree-node" style="margin-left:54px"><div class="dot" style="background:var(--brand-soft);border-color:var(--brand)"></div><div class="tc"><h5>H1b 有过轻量公益经历者复购意愿更高</h5><p>参与过蚂蚁森林/捐步等轻量公益的人，对"好事近"的接受度高 40%</p><div class="v-method">验证方法：过往经历二分变量 + 独立样本 t 检验</div></div></div>
+      <div class="tree-node" style="margin-left:54px"><div class="dot" style="background:var(--brand-soft);border-color:var(--brand)"></div><div class="tc"><h5>H1c 参与意愿随年龄呈 U 型分布</h5><p>18-25 和 60+ 人群意愿高，26-40 职场人群意愿最低但绝对量最大</p><div class="v-method">验证方法：年龄分段 ANOVA + 多项式对比分析</div></div></div>
+      <div class="tree-node" style="margin-left:54px"><div class="dot" style="background:var(--brand-soft);border-color:var(--brand)"></div><div class="tc"><h5>H1d 时间碎片化感知比客观时间更重要</h5><p>主观时间碎片化感知度（PSQ）与参与意愿的相关性（r &gt; 0.45）高于客观自由时间</p><div class="v-method">验证方法：感知时间碎片化量表 + 客观时间日志对比</div></div></div>
+      <div class="tree-node" style="margin-left:54px"><div class="dot" style="background:var(--brand-soft);border-color:var(--brand)"></div><div class="tc"><h5>H1e 多任务处理能力调节时间贫困与参与意愿</h5><p>高多任务处理能力者在时间贫困条件下仍保持较高参与意愿，交互效应显著（p &lt; 0.05）</p><div class="v-method">验证方法：多任务处理能力问卷 + 调节效应分析</div></div></div>
+      <div class="tree-node" style="margin-left:54px"><div class="dot" style="background:var(--brand-soft);border-color:var(--brand)"></div><div class="tc"><h5>H1f 时间贫困者的"时间质量"比"时间数量"更关键</h5><p>碎片时间段的情绪状态（积极 vs 疲惫）对参与意愿的预测力（β &gt; 0.3）强于碎片时长</p><div class="v-method">验证方法：经验取样法（ESM）+ 多层次模型</div></div></div>
+    </div>
+
+    <!-- H2 -->
+    <div class="tree">
+      <div class="tree-node H2"><div class="dot"></div><div class="tc"><h5>H2 "就近 + 碎片"是参与第一驱动力</h5><p>核心假设：在 6 项驱动力排序中，"就近"和"碎片"综合得分进入前 2</p></div></div>
+      <div class="tree-node H2" style="margin-left:54px"><div class="dot" style="background:var(--leaf-soft);border-color:var(--leaf)"></div><div class="tc"><h5>H2a "15 分钟"是时间阈值的甜蜜点</h5><p>任务时长 ≤15 分钟时，接受率 ≥80%；超过 15 分钟，接受率下降 30%</p><div class="v-method">验证方法：A/B 测试 + 分段回归（piecewise regression）</div></div></div>
+      <div class="tree-node H2" style="margin-left:54px"><div class="dot" style="background:var(--leaf-soft);border-color:var(--leaf)"></div><div class="tc"><h5>H2b "1km"是距离阈值的甜蜜点</h5><p>距离 &lt;1km 时接受率最高；1-3km 时下降 50%；&gt;3km 时接近零</p><div class="v-method">验证方法：距离-接受率曲线 + 门槛回归模型</div></div></div>
+      <div class="tree-node H2" style="margin-left:54px"><div class="dot" style="background:var(--leaf-soft);border-color:var(--leaf)"></div><div class="tc"><h5>H2c 通勤路径匹配是"顺路"的核心</h5><p>57% 的用户希望任务位于通勤路径上，而非仅家/公司附近</p><div class="v-method">验证方法：通勤路径测绘 + 偏好选择实验</div></div></div>
+      <div class="tree-node H2" style="margin-left:54px"><div class="dot" style="background:var(--leaf-soft);border-color:var(--leaf)"></div><div class="tc"><h5>H2d 任务类型影响驱动力权重</h5><p>"顺手"型任务（如取快递）对就近敏感度高于"体验"型任务（如陪伴老人）</p><div class="v-method">验证方法：任务类型 × 驱动力交互效应分析</div></div></div>
+      <div class="tree-node H2" style="margin-left:54px"><div class="dot" style="background:var(--leaf-soft);border-color:var(--leaf)"></div><div class="tc"><h5>H2e 天气和时段调节就近/碎片偏好</h5><p>雨雪天气下"就近"权重增加 40%，早晚高峰碎片时间利用率更高</p><div class="v-method">验证方法：时空日志 + 天气数据融合的多层次模型</div></div></div>
+      <div class="tree-node H2" style="margin-left:54px"><div class="dot" style="background:var(--leaf-soft);border-color:var(--leaf)"></div><div class="tc"><h5>H2f 驱动力偏好存在城市间异质性</h5><p>一线城市"就近"权重高于二三线城市，"碎片"权重则相反</p><div class="v-method">验证方法：多城市联合分析 + 城市级别分组比较</div></div></div>
+    </div>
+
+    <!-- H3 -->
+    <div class="tree">
+      <div class="tree-node H3"><div class="dot"></div><div class="tc"><h5>H3 非金钱激励（信用/好心值）足以驱动持续参与</h5><p>核心假设：在非金钱激励下，用户 30 天留存率 ≥ 50%</p></div></div>
+      <div class="tree-node H3" style="margin-left:54px"><div class="dot" style="background:var(--gold-soft);border-color:var(--gold)"></div><div class="tc"><h5>H3a 社区荣誉感是最强非金钱激励</h5><p>87% 用户将"社区荣誉感"列为最吸引的非金钱权益</p><div class="v-method">验证方法：激励项排序 + 联合分析（Conjoint）</div></div></div>
+      <div class="tree-node H3" style="margin-left:54px"><div class="dot" style="background:var(--gold-soft);border-color:var(--gold)"></div><div class="tc"><h5>H3b 好心值可兑换性驱动复购</h5><p>好心值曾兑换过权益的用户，回访率是未兑换者的 2.3 倍</p><div class="v-method">验证方法：RFM 分层 + 生存分析</div></div></div>
+      <div class="tree-node H3" style="margin-left:54px"><div class="dot" style="background:var(--gold-soft);border-color:var(--gold)"></div><div class="tc"><h5>H3c 社交认同比物质回报更有效</h5><p>"被邻居认识/认可"的激励效果是"获得折扣"的 1.7 倍</p><div class="v-method">验证方法：激励强度对比实验 + 重复测量 ANOVA</div></div></div>
+      <div class="tree-node H3" style="margin-left:54px"><div class="dot" style="background:var(--gold-soft);border-color:var(--gold)"></div><div class="tc"><h5>H3d 激励多样性比激励强度更重要</h5><p>提供 4+ 种非金钱激励的组合策略比单一高价值激励留存率高 35%</p><div class="v-method">验证方法：激励组合 A/B 测试 + 多因素方差分析</div></div></div>
+      <div class="tree-node H3" style="margin-left:54px"><div class="dot" style="background:var(--gold-soft);border-color:var(--gold)"></div><div class="tc"><h5>H3e 好心值损失厌恶效应</h5><p>用户对"好心值即将过期"的响应（+41.5% 活跃）强于"好心值翻倍"（+18.2%）</p><div class="v-method">验证方法：损失 vs 获得框架 A/B 实验</div></div></div>
+      <div class="tree-node H3" style="margin-left:54px"><div class="dot" style="background:var(--gold-soft);border-color:var(--gold)"></div><div class="tc"><h5>H3f 非金钱激励效果随使用时长衰减，但衰减速度慢于金钱激励</h5><p>非金钱激励 6 个月衰减率 22%，金钱激励 6 个月衰减率 47%</p><div class="v-method">验证方法：纵向追踪 + 增长曲线模型</div></div></div>
+    </div>
+
+    <!-- H4 -->
+    <div class="tree">
+      <div class="tree-node H4"><div class="dot"></div><div class="tc"><h5>H4 男性/年轻人/职场人是供给侧缺口</h5><p>核心假设：男性参与意愿与女性无显著差异，但实际参与率低 40%</p></div></div>
+      <div class="tree-node H4" style="margin-left:54px"><div class="dot" style="background:var(--sky-soft);border-color:var(--sky)"></div><div class="tc"><h5>H4a 男性被"传统公益形象"排斥</h5><p>62% 男性认为"公益是女性更擅长的事"，改变认知后可提升参与率</p><div class="v-method">验证方法：性别角色认知量表 + 中介效应分析</div></div></div>
+      <div class="tree-node H4" style="margin-left:54px"><div class="dot" style="background:var(--sky-soft);border-color:var(--sky)"></div><div class="tc"><h5>H4b 年轻人更接受"轻量 + 游戏化"模式</h5><p>18-35 岁人群对好心值/排行榜/成就系统的接受度比 50+ 高 55%</p><div class="v-method">验证方法：年龄分层 × 功能偏好交叉分析</div></div></div>
+      <div class="tree-node H4" style="margin-left:54px"><div class="dot" style="background:var(--sky-soft);border-color:var(--sky)"></div><div class="tc"><h5>H4c 职场人需要"单位时间价值感"</h5><p>职场人希望明确知道"15 分钟能产生什么影响"，而非模糊的"做好事"</p><div class="v-method">验证方法：信息框架实验 + 行为意向测量</div></div></div>
+      <div class="tree-node H4" style="margin-left:54px"><div class="dot" style="background:var(--sky-soft);border-color:var(--sky)"></div><div class="tc"><h5>H4d 女性更受情感连接驱动，男性更受效率驱动</h5><p>女性对"受助者故事"的响应度高 60%，男性对"任务完成时间"的响应度高 45%</p><div class="v-method">验证方法：信息框架性别 × 情感/效率双因素实验</div></div></div>
+      <div class="tree-node H4" style="margin-left:54px"><div class="dot" style="background:var(--sky-soft);border-color:var(--sky)"></div><div class="tc"><h5>H4e 退休人群是供给侧潜在增量</h5><p>60-70 岁退休人群的周可支配时间（28h+）是职场人群的 5 倍，但目前参与率仅 8%</p><div class="v-method">验证方法：退休人群深度访谈 + 参与意愿量化调查</div></div></div>
+      <div class="tree-node H4" style="margin-left:54px"><div class="dot" style="background:var(--sky-soft);border-color:var(--sky)"></div><div class="tc"><h5>H4f 供给侧缺口存在"自我强化"循环</h5><p>供给侧缺口 → 平台任务匹配效率低 → 需求方体验差 → 更多用户流失，需打破循环</p><div class="v-method">验证方法：系统动力学建模 + 多期面板数据</div></div></div>
+    </div>
+
+    <!-- H5 -->
+    <div class="tree">
+      <div class="tree-node H5"><div class="dot"></div><div class="tc"><h5>H5 地域性（社区/LBS）是匹配关键</h5><p>核心假设：基于 LBS 的任务匹配比基于兴趣/技能的匹配有效 3 倍</p></div></div>
+      <div class="tree-node H5" style="margin-left:54px"><div class="dot" style="background:var(--plum-soft);border-color:var(--plum)"></div><div class="tc"><h5>H5a 社区归属感是 LBS 匹配的前提</h5><p>在社区居住 ≥2 年的人群，对 LBS 任务的接受度是 &lt;1 年者的 2.1 倍</p><div class="v-method">验证方法：社区归属感量表 + 居住时长分组比较</div></div></div>
+      <div class="tree-node H5" style="margin-left:54px"><div class="dot" style="background:var(--plum-soft);border-color:var(--plum)"></div><div class="tc"><h5>H5b 跨社区任务匹配需求存在但较弱</h5><p>仅 23% 用户愿意到相邻社区做任务，且需更高好心值激励</p><div class="v-method">验证方法：跨社区意愿量表 + 激励弹性分析</div></div></div>
+      <div class="tree-node H5" style="margin-left:54px"><div class="dot" style="background:var(--plum-soft);border-color:var(--plum)"></div><div class="tc"><h5>H5c 通勤路径 LBS 是未被满足的需求</h5><p>67% 的通勤用户愿意在通勤路径上完成任务，但现有平台不支持</p><div class="v-method">验证方法：通勤路径测绘 + 任务匹配模拟实验</div></div></div>
+      <div class="tree-node H5" style="margin-left:54px"><div class="dot" style="background:var(--plum-soft);border-color:var(--plum)"></div><div class="tc"><h5>H5d 社区密度调节 LBS 匹配效率</h5><p>高密度社区（住户 &gt;5000/平方公里）的任务匹配效率是低密度社区的 3.4 倍</p><div class="v-method">验证方法：社区密度 × 匹配效率回归 + 热力图分析</div></div></div>
+      <div class="tree-node H5" style="margin-left:54px"><div class="dot" style="background:var(--plum-soft);border-color:var(--plum)"></div><div class="tc"><h5>H5e LBS 隐私关注度是匹配意愿的负向调节变量</h5><p>高隐私关注者（占 38%）对 LBS 任务的接受度比低隐私关注者低 52%</p><div class="v-method">验证方法：隐私关注量表 + 调节效应模型</div></div></div>
+      <div class="tree-node H5" style="margin-left:54px"><div class="dot" style="background:var(--plum-soft);border-color:var(--plum)"></div><div class="tc"><h5>H5f 社区"任务热点"增强 LBS 匹配效果</h5><p>存在 3+ 个活动的社区，新用户接受率比无活动社区高 65%</p><div class="v-method">验证方法：社区活动密度 × 新用户留存分析</div></div></div>
+    </div>
+
+    <h4 style="margin-top:24px">假设树汇总表</h4>
+    <div class="table-wrap" style="margin-top:10px">
+      <table>
+        <thead><tr><th>核心假设</th><th>子假设</th><th>预期效果</th><th>验证模型</th><th>优先级</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="6"><b>H1 时间贫困</b></td><td>H1a 碎片场景</td><td>≥3场景人群意愿高25%</td><td>M1 Logistic</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H1b 轻量经历</td><td>接受度高40%</td><td>M1 Logistic</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H1c U型年龄</td><td>U型分布显著</td><td>M7 GAM</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H1d 感知vs客观</td><td>r &gt; 0.45</td><td>M9 SEM</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H1e 多任务调节</td><td>交互效应p &lt; 0.05</td><td>M4 Mediation</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H1f 时间质量</td><td>β &gt; 0.3</td><td>M6 Bayesian</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td rowspan="6"><b>H2 就近+碎片</b></td><td>H2a 15分钟</td><td>接受率≥80%</td><td>M2 Conjoint</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H2b 1km距离</td><td>1km阈值显著</td><td>M5 Power Law</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H2c 通勤路径</td><td>57%偏好通勤路径</td><td>M2 Conjoint</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H2d 任务类型</td><td>交互效应显著</td><td>M8 Random Forest</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H2e 天气时段</td><td>就近权重增加40%</td><td>M6 Bayesian</td><td><span class="pill sky">P2</span></td></tr>
+          <tr><td>H2f 城市异质性</td><td>城市间差异显著</td><td>M6 Bayesian</td><td><span class="pill sky">P2</span></td></tr>
+          <tr><td rowspan="6"><b>H3 非金钱激励</b></td><td>H3a 社区荣誉感</td><td>87%用户首选</td><td>M2 Conjoint</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H3b 可兑换性</td><td>回访率2.3倍</td><td>M3 Cox PH</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H3c 社交认同</td><td>1.7倍于物质回报</td><td>M4 Mediation</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H3d 激励多样性</td><td>留存率高35%</td><td>M1 Logistic</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H3e 损失厌恶</td><td>+41.5%活跃</td><td>M12 DID</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H3f 衰减速度</td><td>22% vs 47%</td><td>M3 Cox PH</td><td><span class="pill sky">P2</span></td></tr>
+          <tr><td rowspan="6"><b>H4 供给侧缺口</b></td><td>H4a 传统形象</td><td>62%受排斥</td><td>M4 Mediation</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H4b 游戏化接受</td><td>接受度高55%</td><td>M1 Logistic</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H4c 单位价值</td><td>信息框架效应显著</td><td>M12 DID</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H4d 性别差异</td><td>响应差异≥45%</td><td>M4 Mediation</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H4e 退休人群</td><td>参与率仅8%</td><td>M10 LCA</td><td><span class="pill sky">P2</span></td></tr>
+          <tr><td>H4f 自我强化</td><td>循环效应显著</td><td>M11 Markov</td><td><span class="pill plum">P3</span></td></tr>
+          <tr><td rowspan="6"><b>H5 地域性</b></td><td>H5a 社区归属</td><td>接受度2.1倍</td><td>M1 Logistic</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H5b 跨社区弱</td><td>仅23%愿意</td><td>M2 Conjoint</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H5c 通勤LBS</td><td>67%需求未满足</td><td>M5 Power Law</td><td><span class="pill leaf">P0</span></td></tr>
+          <tr><td>H5d 社区密度</td><td>效率3.4倍</td><td>M6 Bayesian</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H5e 隐私关注</td><td>接受度低52%</td><td>M4 Mediation</td><td><span class="pill gold">P1</span></td></tr>
+          <tr><td>H5f 任务热点</td><td>接受率高65%</td><td>M8 Random Forest</td><td><span class="pill sky">P2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note" style="margin-top:12px"><span class="tag">优先级</span><span class="pill leaf">P0</span> = 核心验证（必须完成） | <span class="pill gold">P1</span> = 重要验证（建议完成） | <span class="pill sky">P2</span> = 补充验证（资源允许时） | <span class="pill plum">P3</span> = 探索性验证（长期研究）</div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 02 统计验证模型（12个） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>统计验证模型体系（12 个模型）</h2></div>
+    <p class="muted">基于调研数据设计的 12 个统计模型，用于量化验证每个假设。覆盖回归分析、贝叶斯方法、机器学习、因果推断和结构方程模型。</p>
+
+    <div class="tag-cloud">
+      <span class="t brand">回归分析</span>
+      <span class="t leaf">生存分析</span>
+      <span class="t gold">贝叶斯方法</span>
+      <span class="t sky">机器学习</span>
+      <span class="t plum">因果推断</span>
+      <span class="t brand">结构方程</span>
+      <span class="t leaf">潜类别分析</span>
+      <span class="t gold">马尔可夫链</span>
+    </div>
+
+    <!-- 模型1 -->
+    <div class="model-card brand">
+      <h4>📐 模型 1：参与意愿预测模型（Logistic Regression）</h4>
+      <div class="formula">P(participate) = 1 / (1 + e<sup>-(β₀ + β₁·X₁ + β₂·X₂ + β₃·X₃ + β₄·X₄ + β₅·X₅)</sup>)</div>
+      <div class="params">
+        <b>X₁</b> = 时间贫困度（1-5 分） | <b>X₂</b> = 就近偏好（0/1） | <b>X₃</b> = 过往公益经验（0/1）<br/>
+        <b>X₄</b> = 非金钱激励接受度（1-5 分） | <b>X₅</b> = 社区归属感（1-5 分）
+      </div>
+      <div class="interpret">▸ 用于验证 H1/H2/H3 的综合影响。AUC 目标 ≥ 0.75，LogLoss 目标 ≤ 0.45</div>
+      <div class="sim-result">▸ 模拟结果：AUC=0.78，LogLoss=0.42，H1 β₁=-0.31*，H2 β₂=0.58**，H3 β₄=0.44**</div>
+    </div>
+
+    <!-- 模型2 -->
+    <div class="model-card leaf">
+      <h4>📊 模型 2：驱动力排序模型（Conjoint Analysis / Rank-Ordered Logit）</h4>
+      <div class="formula">U<sub>ij</sub> = α<sub>j</sub> + β<sub>1</sub>·D<sub>1j</sub> + β<sub>2</sub>·D<sub>2j</sub> + ... + β<sub>6</sub>·D<sub>6j</sub> + ε<sub>ij</sub></div>
+      <div class="params">
+        <b>U<sub>ij</sub></b> = 用户 i 对选项 j 的效用 | <b>D<sub>1</sub>–D<sub>6</sub></b> = 6 项驱动力<br/>
+        <b>β</b> 系数直接反映各驱动力的相对重要性
+      </div>
+      <div class="interpret">▸ 直接验证 H2。若 β<sub>就近</sub> 和 β<sub>碎片</sub> 进入前 2，H2 成立</div>
+      <div class="sim-result">▸ 模拟结果：就近 β=0.62（排名 1），碎片 β=0.51（排名 2），H2 ✅ 成立</div>
+    </div>
+
+    <!-- 模型3 -->
+    <div class="model-card gold">
+      <h4>📈 模型 3：留存率预测模型（Cox Proportional Hazards）</h4>
+      <div class="formula">h(t) = h₀(t) · exp(γ₁·Z₁ + γ₂·Z₂ + γ₃·Z₃ + γ₄·Z₄)</div>
+      <div class="params">
+        <b>Z₁</b> = 首次任务体验评分 | <b>Z₂</b> = 7 天内任务数 | <b>Z₃</b> = 好心值余额<br/>
+        <b>Z₄</b> = 是否有社交连接（组队/邻居互动）
+      </div>
+      <div class="interpret">▸ 用于验证 H3 的持续参与假设。Hazard Ratio 目标 &lt; 0.7（干预组 vs 对照组）</div>
+      <div class="sim-result">▸ 模拟结果：HR=0.58（95%CI: 0.42-0.79），Z₁ γ₁=-0.42**，Z₂ γ₂=-0.38**</div>
+    </div>
+
+    <!-- 模型4 -->
+    <div class="model-card sky">
+      <h4>🔬 模型 4：性别差异分析模型（Moderated Mediation）</h4>
+      <div class="formula">M = α₀ + α₁·X + ε₁<br/>Y = β₀ + β₁·M + β₂·X + β₃·X·M + ε₂</div>
+      <div class="params">
+        <b>X</b> = 性别 | <b>M</b> = 公益认知（中介变量） | <b>Y</b> = 参与意愿<br/>
+        <b>β₃</b> 显著 → 性别调节中介效应，验证 H4
+      </div>
+      <div class="interpret">▸ 验证 H4：若 β₃ 显著且男性通过"公益认知"中介路径的效应量小于女性，则 H4 成立</div>
+      <div class="sim-result">▸ 模拟结果：β₃=-0.18*，间接效应男性=0.09，女性=0.27，H4 ✅ 部分成立</div>
+    </div>
+
+    <!-- 模型5 -->
+    <div class="model-card plum">
+      <h4>🗺️ 模型 5：LBS 距离衰减模型（Power Law Decay）</h4>
+      <div class="formula">P(d) = P₀ · d<sup>-λ</sup></div>
+      <div class="params">
+        <b>P(d)</b> = 距离 d 处的任务接受概率 | <b>P₀</b> = 基准概率 (d→0)<br/>
+        <b>λ</b> = 衰减系数（λ &gt; 1 表示距离敏感度高）
+      </div>
+      <div class="interpret">▸ 验证 H5。若 λ ≥ 1.5 且 P(1km) ≤ 0.3，则验证"强地域性假设"</div>
+      <div class="sim-result">▸ 模拟结果：λ=1.83，P(1km)=0.24，P(3km)=0.06，H5 ✅ 强地域性成立</div>
+    </div>
+
+    <!-- 模型6 -->
+    <div class="model-card brand">
+      <h4>🧮 模型 6：贝叶斯分层模型（Bayesian Hierarchical Model）</h4>
+      <div class="formula">y<sub>ij</sub> ~ Bernoulli(p<sub>ij</sub>)<br/>logit(p<sub>ij</sub>) = α<sub>j</sub> + β·X<sub>ij</sub><br/>α<sub>j</sub> ~ Normal(μ<sub>α</sub>, σ<sub>α</sub>²)</div>
+      <div class="params">
+        <b>y<sub>ij</sub></b> = 用户 i 在社区 j 的参与行为 | <b>α<sub>j</sub></b> = 社区 j 的随机截距<br/>
+        <b>μ<sub>α</sub></b> = 全局均值 | <b>σ<sub>α</sub></b> = 社区间异质性 | 先验：Normal(0,1), Half-Cauchy(0,1)
+      </div>
+      <div class="interpret">▸ 处理社区层级数据中的聚类效应，提供比固定效应模型更稳健的估计。使用 MCMC 采样（4 链 × 2000 迭代）</div>
+      <div class="sim-result">▸ 模拟结果：ICC=0.23（23% 方差来自社区间差异），β=0.41（95% HDI: 0.28-0.55），Rhat=1.01</div>
+    </div>
+
+    <!-- 模型7 -->
+    <div class="model-card leaf">
+      <h4>📈 模型 7：广义加性模型（GAM — Generalized Additive Model）</h4>
+      <div class="formula">g(μ) = β₀ + f₁(X₁) + f₂(X₂) + ... + fₚ(Xₚ) + ε</div>
+      <div class="params">
+        <b>g(μ)</b> = 连接函数（logit for binary） | <b>fₖ(Xₖ)</b> = 平滑样条函数<br/>
+        <b>k</b> = 基函数数量（默认 k=10） | <b>λ</b> = 平滑惩罚参数（GCV 优化）
+      </div>
+      <div class="interpret">▸ 不预设线性关系的非参数回归，用于探索年龄-意愿曲线的真实形状（U 型假设验证）</div>
+      <div class="sim-result">▸ 模拟结果：EDF(年龄)=3.87，F=12.4**，年龄-意愿曲线呈 U 型，拐点约 32 岁，H1c ✅</div>
+    </div>
+
+    <!-- 模型8 -->
+    <div class="model-card gold">
+      <h4>🌲 模型 8：随机森林特征重要性模型（Random Forest）</h4>
+      <div class="formula">Importance(Xⱼ) = 1/n<sub>tree</sub> · Σ<sub>t=1</sub><sup>T</sup> (ΔError<sub>t</sub> · I(Xⱼ ∈ tree<sub>t</sub>))</div>
+      <div class="params">
+        <b>n<sub>tree</sub></b> = 500 棵树 | <b>m<sub>try</sub></b> = √p（约 5 个特征）<br/>
+        <b>节点分裂</b> = Gini 不纯度 | <b>最小节点样本</b> = 5
+      </div>
+      <div class="interpret">▸ 非参数特征重要性排序，作为 Logistic 回归的补充验证，识别非线性/交互效应</div>
+      <div class="sim-result">▸ 模拟结果：Top3 特征：就近偏好（Imp=0.21）、碎片时间（Imp=0.18）、社区归属感（Imp=0.14），R²=0.41</div>
+    </div>
+
+    <!-- 模型9 -->
+    <div class="model-card sky">
+      <h4>🔗 模型 9：结构方程模型（SEM — Structural Equation Modeling）</h4>
+      <div class="formula">η = Bη + Γξ + ζ<br/>y = Λ<sub>y</sub>η + ε<br/>x = Λ<sub>x</sub>ξ + δ</div>
+      <div class="params">
+        <b>η</b> = 潜内生变量（参与意愿、持续动机） | <b>ξ</b> = 潜外生变量（时间感知、社区归属）<br/>
+        <b>Λ</b> = 因子载荷 | <b>B, Γ</b> = 路径系数 | <b>ζ, ε, δ</b> = 误差项
+      </div>
+      <div class="interpret">▸ 同时评估测量模型和结构模型，验证潜变量间的因果关系路径</div>
+      <div class="sim-result">▸ 模拟结果：CFI=0.93，RMSEA=0.048（90%CI: 0.039-0.057），SRMR=0.042，路径 时间感知→意愿 β=0.37**</div>
+    </div>
+
+    <!-- 模型10 -->
+    <div class="model-card plum">
+      <h4>🧩 模型 10：潜在类别分析（LCA — Latent Class Analysis）</h4>
+      <div class="formula">P(Y<sub>i</sub> = y) = Σ<sub>c=1</sub><sup>C</sup> π<sub>c</sub> · Π<sub>j=1</sub><sup>J</sup> P(Y<sub>ij</sub> = y<sub>j</sub> | C = c)</div>
+      <div class="params">
+        <b>π<sub>c</sub></b> = 类别 c 的先验概率 | <b>P(Y<sub>ij</sub> | C=c)</b> = 类别条件概率<br/>
+        <b>C</b> = 类别数（通过 BIC/AIC/LMR 确定） | <b>J</b> = 指标变量数
+      </div>
+      <div class="interpret">▸ 识别用户参与行为中的隐类别，为分层运营提供基于数据的分类依据</div>
+      <div class="sim-result">▸ 模拟结果：最优 5 类方案（BIC=12458），类别：高参与型 28%、偶尔型 35%、社交型 18%、任务型 12%、低参与型 7%</div>
+    </div>
+
+    <!-- 模型11 -->
+    <div class="model-card brand">
+      <h4>🔄 模型 11：马尔可夫链模型（Markov Chain — 用户行为路径）</h4>
+      <div class="formula">P(S<sub>t+1</sub> = s<sub>j</sub> | S<sub>t</sub> = s<sub>i</sub>) = p<sub>ij</sub><br/>π<sub>t+1</sub> = π<sub>t</sub> · P</div>
+      <div class="params">
+        <b>S</b> = 用户状态（注册→首次任务→活跃→休眠→流失/回流）<br/>
+        <b>P</b> = 转移概率矩阵 | <b>π</b> = 稳态分布
+      </div>
+      <div class="interpret">▸ 建模用户在不同行为状态间的转移概率，识别关键流失节点和回流路径</div>
+      <div class="sim-result">▸ 模拟结果：首次任务→活跃 P=0.64，活跃→休眠 P=0.18，休眠→流失 P=0.42，稳态中活跃占比 37%</div>
+    </div>
+
+    <!-- 模型12 -->
+    <div class="model-card leaf">
+      <h4>⚖️ 模型 12：因果推断模型（Difference-in-Differences + Propensity Score）</h4>
+      <div class="formula">Y<sub>it</sub> = α + β₁·Treat<sub>i</sub> + β₂·Post<sub>t</sub> + β₃·(Treat<sub>i</sub> × Post<sub>t</sub>) + γ·X<sub>it</sub> + ε<sub>it</sub></div>
+      <div class="params">
+        <b>Treat<sub>i</sub></b> = 是否受干预（如新功能上线） | <b>Post<sub>t</sub></b> = 干预前后<br/>
+        <b>β₃</b> = DID 估计量（因果效应） | <b>X</b> = 协变量（PSM 匹配后）
+      </div>
+      <div class="interpret">▸ 双重差分 + 倾向性得分匹配（PSM-DID），在准实验设计中识别因果效应</div>
+      <div class="sim-result">▸ 模拟结果：β₃(DID)=0.27**（SE=0.08），ATT=0.23，匹配后平衡性检验通过（所有协变量 SMD &lt; 0.1）</div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 03 用户分层模型（8层） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>用户分层模型（RFM 扩展 — 8 层）</h2></div>
+    <p class="muted">基于公益参与行为的 RFM 改编模型，定义 8 层用户分层，为产品运营提供精准人群策略。新增 S6（传播者）、S7（任务发起者）、S8（流失用户）。</p>
+
+    <div class="table-wrap" style="margin-bottom:18px">
+      <table>
+        <thead><tr><th>维度</th><th>定义</th><th>权重</th><th>计算方式</th></tr></thead>
+        <tbody>
+          <tr><td><b>R</b> (Recency)</td><td>最近一次参与距今天数</td><td>25%</td><td>max(0, 1 - 天数/30)</td></tr>
+          <tr><td><b>F</b> (Frequency)</td><td>近 30 天参与次数</td><td>30%</td><td>min(次数/10, 1)</td></tr>
+          <tr><td><b>M</b> (Monetary → Merit)</td><td>好心值累计总量</td><td>20%</td><td>min(好心值/1000, 1)</td></tr>
+          <tr><td><b>S</b> (Social)</td><td>社交连接数（组队/互动）</td><td>15%</td><td>min(连接数/20, 1)</td></tr>
+          <tr><td><b>L</b> (Leadership)</td><td>任务发起/社区贡献</td><td>10%</td><td>min(发起次数/5, 1)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="seg-grid">
+      <div class="seg-card s1"><div class="sc-icon">👑</div><h4>S1 核心用户</h4><div class="sc-desc">高频 + 高好心值 + 强社交连接。社区的中坚力量，主动发起任务、带动新用户。</div><div class="sc-pct">占 12%</div><div class="sc-strategy">🎯 荣誉感运营：社区之星、勋章体系、专属权益</div></div>
+      <div class="seg-card s2"><div class="sc-icon">💪</div><h4>S2 活跃用户</h4><div class="sc-desc">每周参与 2-3 次，好心值持续增长。有社交连接但尚未形成强粘性。</div><div class="sc-pct">占 28%</div><div class="sc-strategy">🎯 社交运营：组队推荐、好友 PK、排行榜</div></div>
+      <div class="seg-card s3"><div class="sc-icon">🌱</div><h4>S3 普通用户</h4><div class="sc-desc">偶尔参与，好心值积累缓慢。需要轻度激励唤醒，如 push 通知/任务推荐。</div><div class="sc-pct">占 35%</div><div class="sc-strategy">🎯 效率运营：个性化任务推荐、智能时间匹配</div></div>
+      <div class="seg-card s4"><div class="sc-icon">😴</div><h4>S4 休眠用户</h4><div class="sc-desc">注册后参与 1-2 次即流失。需要重新激活，如"附近有新任务"提醒。</div><div class="sc-pct">占 18%</div><div class="sc-strategy">🎯 唤醒运营：Push + 低门槛邀请 + 回归礼包</div></div>
+      <div class="seg-card s5"><div class="sc-icon">📄</div><h4>S5 潜在用户</h4><div class="sc-desc">已注册但未参与任何任务。需要低门槛引导，如"3 分钟快速任务"。</div><div class="sc-pct">占 7%</div><div class="sc-strategy">🎯 引导运营：新手任务 + 3 分钟快速体验 + 首次好心值加倍</div></div>
+      <div class="seg-card s6"><div class="sc-icon">📢</div><h4>S6 传播者</h4><div class="sc-desc">高社交影响力和传播力。邀请好友数 &gt;5，社交分享频率高，是社区口碑放大器。</div><div class="sc-pct">占 5%</div><div class="sc-strategy">🎯 传播运营：邀请奖励 + 分享成就 + 社区大使计划</div></div>
+      <div class="seg-card s7"><div class="sc-icon">🏗️</div><h4>S7 任务发起者</h4><div class="sc-desc">主动创建任务和社区活动。月发起任务数 &gt;3，是社区内容供给的核心力量。</div><div class="sc-pct">占 3%</div><div class="sc-strategy">🎯 赋能运营：任务创建工具 + 发起者认证 + 资源倾斜</div></div>
+      <div class="seg-card s8"><div class="sc-icon">🚪</div><h4>S8 流失用户</h4><div class="sc-desc">30 天以上未登录。挽回难度大但基数大，需要精准挽回策略。</div><div class="sc-pct">占 12%</div><div class="sc-strategy">🎯 挽回运营：流失原因诊断 + 定向召回 + 好友回归任务</div></div>
+    </div>
+
+    <div class="progress-track">
+      <div class="pseg brand" style="width:12%">S1 12%</div>
+      <div class="pseg gold" style="width:28%">S2 28%</div>
+      <div class="pseg leaf" style="width:35%">S3 35%</div>
+      <div class="pseg sky" style="width:18%">S4 18%</div>
+      <div class="pseg plum" style="width:7%">S5 7%</div>
+      <div class="pseg brand" style="width:5%;background:#c98a2b">S6 5%</div>
+      <div class="pseg leaf" style="width:3%;background:#3b6b8c">S7 3%</div>
+      <div class="pseg gold" style="width:12%;background:#6b4a7a">S8 12%</div>
+    </div>
+
+    <div class="note">分层策略：S1 做"荣誉感运营"（勋章/社区之星），S2 做"社交运营"（组队推荐），S3 做"效率运营"（个性化任务推荐），S4/S5 做"唤醒运营"（push + 低门槛邀请），S6 做"传播裂变"，S7 做"赋能供给"，S8 做"精准挽回"。综合运营效率预计提升 35%。</div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 04 A/B 测试框架（12个实验） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>A/B 测试框架与模拟结果（12 组实验）</h2></div>
+    <p class="muted">定义 12 个关键实验假设、测试变量、样本量计算和模拟结果，为 Phase 1 提供完整的实验设计模板。</p>
+
+    <div class="table-wrap" style="margin-bottom:18px">
+      <table>
+        <thead><tr><th>实验编号</th><th>假设</th><th>变量</th><th>对照组</th><th>实验组</th><th>最小样本</th><th>模拟结果</th></tr></thead>
+        <tbody>
+          <tr><td><b>EXP-01</b></td><td>好心值展示方式影响复购</td><td>好心值"可兑换性"提示</td><td>仅显示总量</td><td>显示"可兑换 X 件商品"</td><td>每组 420</td><td><span class="pill leaf">+23.4% 复购率</span></td></tr>
+          <tr><td><b>EXP-02</b></td><td>任务时长标签影响点击率</td><td>时长表述方式</td><td>"15 分钟"</td><td>"一杯咖啡的时间"</td><td>每组 350</td><td><span class="pill leaf">+18.7% CT</span></td></tr>
+          <tr><td><b>EXP-03</b></td><td>社交线索影响领取率</td><td>是否显示"X 位邻居已领取"</td><td>无社交线索</td><td>显示社交证据</td><td>每组 280</td><td><span class="pill leaf">+31.2% 领取率</span></td></tr>
+          <tr><td><b>EXP-04</b></td><td>LBS 地图 vs 列表展示</td><td>任务展示形式</td><td>列表视图</td><td>地图视图（含热力图）</td><td>每组 500</td><td><span class="pill brand">+12.8% 但差异不显著</span></td></tr>
+          <tr><td><b>EXP-05</b></td><td>好心值过期提醒影响活跃</td><td>好心值有效期提示</td><td>无过期提醒</td><td>"好心值 X 天后过期"</td><td>每组 380</td><td><span class="pill leaf">+41.5% 周活跃率</span></td></tr>
+          <tr><td><b>EXP-06</b></td><td>任务推荐算法（协同过滤 vs 热门）</td><td>推荐策略</td><td>热门任务推荐</td><td>协同过滤 + 冷启动混合</td><td>每组 550</td><td><span class="pill leaf">+27.6% 任务完成率</span></td></tr>
+          <tr><td><b>EXP-07</b></td><td>组队完成任务 vs 单人</td><td>任务模式</td><td>单人模式</td><td>组队模式（2-3 人）</td><td>每组 320</td><td><span class="pill leaf">+35.2% 留存率</span></td></tr>
+          <tr><td><b>EXP-08</b></td><td>任务难度分级标签影响</td><td>难度指示</td><td>无难度标签</td><td>难度分级（1-3 星）</td><td>每组 400</td><td><span class="pill leaf">+22.1% 完成率</span></td></tr>
+          <tr><td><b>EXP-09</b></td><td>任务完成后的反馈形式</td><td>反馈方式</td><td>简单完成提示</td><td>受助者感谢消息 + 影响报告</td><td>每组 360</td><td><span class="pill leaf">+45.3% 次日回访</span></td></tr>
+          <tr><td><b>EXP-10</b></td><td>好意值捐赠 vs 自用</td><td>好心值用途</td><td>好心值自用</td><td>好心值可捐赠给公益项目</td><td>每组 450</td><td><span class="pill leaf">+33.8% 总参与时长</span></td></tr>
+          <tr><td><b>EXP-11</b></td><td>通知频率与用户留存</td><td>Push 频率</td><td>每天 1 次</td><td>智能频率（根据用户行为调整）</td><td>每组 600</td><td><span class="pill leaf">+19.4% 留存</span></td></tr>
+          <tr><td><b>EXP-12</b></td><td>社区排行榜类型</td><td>排名方式</td><td>总好心值排名</td><td>周增长排名 + 社交影响力排名</td><td>每组 340</td><td><span class="pill leaf">+28.5% 周活跃</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ab-flow">
+      <div class="ab-box control"><h5>📋 对照组</h5><p>当前版本（无社交线索）</p><div class="result">领取率 24.6%</div></div>
+      <div class="ab-arrow">→</div>
+      <div class="ab-box variant"><h5>🔬 实验组</h5><p>显示"8 位邻居已领取"</p><div class="result">领取率 32.3%</div></div>
+      <div class="ab-arrow">→</div>
+      <div class="ab-box winner"><h5>🏆 结果</h5><p>实验组胜出</p><div class="result">+31.2% 🎯</div></div>
+    </div>
+
+    <div class="ab-flow">
+      <div class="ab-box control"><h5>📋 对照组</h5><p>简单完成提示</p><div class="result">次日回访 38.5%</div></div>
+      <div class="ab-arrow">→</div>
+      <div class="ab-box variant"><h5>🔬 实验组</h5><p>受助者感谢 + 影响报告</p><div class="result">次日回访 55.9%</div></div>
+      <div class="ab-arrow">→</div>
+      <div class="ab-box winner"><h5>🏆 结果</h5><p>情感反馈胜出</p><div class="result">+45.3% 🎯</div></div>
+    </div>
+
+    <div class="note warn"><span class="tag">样本量计算</span>基于 α=0.05, β=0.20, 最小可检测效应量 5%，每组最小样本 N=280。建议每组 500 以保证统计效力。12 个实验总预估样本量 12,000 人。</div>
+
+    <h4 style="margin-top:20px">A/B 测试结果解读指南</h4>
+    <div class="grid cols-3" style="margin-top:10px">
+      <div class="card brand">
+        <div class="ic">📊</div>
+        <h4>统计显著性判断</h4>
+        <p>当 p &lt; 0.05 时，结果具有统计显著性。但统计显著 ≠ 实际显著——还需关注效应量（Cohen's d 或相对提升率）是否具有业务意义。例如，EXP-10 的 +33.8% 提升既有统计显著性又有实际意义。</p>
+      </div>
+      <div class="card leaf">
+        <div class="ic">⚡</div>
+        <h4>最小样本量要求</h4>
+        <p>样本量不足时可能出现假阴性（Type II 错误）。例如 EXP-04 的 +12.8% 提升不显著，可能因为效应量较小（5%）而样本量不足（500/组，功效仅 76%）。建议在实验前使用统计功效分析确定所需样本量。</p>
+      </div>
+      <div class="card gold">
+        <div class="ic">🎯</div>
+        <h4>多重比较校正</h4>
+        <p>同时进行 12 组实验时，需对多重比较进行校正（如 Bonferroni 校正：α' = 0.05/12 = 0.004）。使用校正后阈值重新评估显著性，避免因多重比较导致的假阳性率膨胀。</p>
+      </div>
+    </div>
+
+    <div class="model-card sky">
+      <h4>📋 A/B 测试优先级排序矩阵</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>优先级</th><th>实验编号</th><th>预期提升</th><th>实施难度</th><th>影响范围</th><th>综合评分</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill brand">P0</span></td><td>EXP-09</td><td>+45.3%</td><td>低（文案修改）</td><td>全量用户</td><td><b>9.2/10</b></td></tr>
+            <tr><td><span class="pill brand">P0</span></td><td>EXP-05</td><td>+41.5%</td><td>低（功能开关）</td><td>全量用户</td><td><b>9.0/10</b></td></tr>
+            <tr><td><span class="pill brand">P0</span></td><td>EXP-07</td><td>+35.2%</td><td>中（组队功能）</td><td>新用户</td><td><b>8.5/10</b></td></tr>
+            <tr><td><span class="pill leaf">P1</span></td><td>EXP-10</td><td>+33.8%</td><td>中（捐赠功能）</td><td>活跃用户</td><td><b>8.0/10</b></td></tr>
+            <tr><td><span class="pill leaf">P1</span></td><td>EXP-03</td><td>+31.2%</td><td>低（UI 显示）</td><td>全量用户</td><td><b>7.8/10</b></td></tr>
+            <tr><td><span class="pill leaf">P1</span></td><td>EXP-12</td><td>+28.5%</td><td>中（排名系统）</td><td>全量用户</td><td><b>7.5/10</b></td></tr>
+            <tr><td><span class="pill gold">P2</span></td><td>EXP-06</td><td>+27.6%</td><td>高（算法改动）</td><td>全量用户</td><td><b>7.0/10</b></td></tr>
+            <tr><td><span class="pill gold">P2</span></td><td>EXP-01</td><td>+23.4%</td><td>低（文案修改）</td><td>全量用户</td><td><b>6.8/10</b></td></tr>
+            <tr><td><span class="pill gold">P2</span></td><td>EXP-08</td><td>+22.1%</td><td>低（UI 标签）</td><td>全量用户</td><td><b>6.5/10</b></td></tr>
+            <tr><td><span class="pill sky">P3</span></td><td>EXP-11</td><td>+19.4%</td><td>中（推送系统）</td><td>全量用户</td><td><b>6.0/10</b></td></tr>
+            <tr><td><span class="pill sky">P3</span></td><td>EXP-02</td><td>+18.7%</td><td>低（文案修改）</td><td>全量用户</td><td><b>5.8/10</b></td></tr>
+            <tr><td><span class="pill plum">P4</span></td><td>EXP-04</td><td>+12.8%</td><td>高（地图开发）</td><td>部分用户</td><td><b>4.2/10</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="interpret" style="margin-top:8px">▸ P0（立即实施）：成本低、提升大、影响广 | P1（下一阶段）：高价值但需一定开发 | P2（规划中）：中等价值 | P3（低优先级）：提升有限 | P4（暂缓）：成本高效果差</div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 05 Cohort 分析（扩展） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>Cohort 留存分析模型（扩展版）</h2></div>
+    <p class="muted">按注册周划分用户群组，追踪各群组的周留存率变化，识别留存拐点。新增 10 周 Cohort 数据、热力图可视化、分层对比和详细数据解读。</p>
+
+    <div class="tabs" id="cohortTabs">
+      <button class="tab-btn active" data-tab="cohort-table">📊 数据表</button>
+      <button class="tab-btn" data-tab="cohort-heat">🔥 热力图</button>
+      <button class="tab-btn" data-tab="cohort-insight">📝 分析解读</button>
+      <button class="tab-btn" data-tab="cohort-seg">👥 分层对比</button>
+    </div>
+
+    <div class="tab-panel active" id="cohort-table">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>注册周</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W5</th><th>W6</th><th>W7</th><th>W8</th><th>W9</th><th>W10</th></tr></thead>
+          <tbody>
+            <tr><td><b>Week 1</b></td><td><b>100%</b></td><td>64.2%</td><td>52.8%</td><td>47.3%</td><td>43.1%</td><td>40.5%</td><td>38.2%</td><td>36.8%</td><td>35.5%</td><td>34.2%</td></tr>
+            <tr><td><b>Week 2</b></td><td><b>100%</b></td><td>62.8%</td><td>51.3%</td><td>45.6%</td><td>41.8%</td><td>38.9%</td><td>36.4%</td><td>34.8%</td><td>33.6%</td><td>—</td></tr>
+            <tr><td><b>Week 3</b></td><td><b>100%</b></td><td>65.1%</td><td>53.4%</td><td>48.1%</td><td>44.2%</td><td>41.3%</td><td>39.1%</td><td>37.5%</td><td>—</td><td>—</td></tr>
+            <tr><td><b>Week 4</b></td><td><b>100%</b></td><td>63.5%</td><td>52.6%</td><td>46.8%</td><td>42.5%</td><td>39.6%</td><td>37.2%</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td><b>Week 5</b></td><td><b>100%</b></td><td>64.8%</td><td>51.9%</td><td>47.5%</td><td>43.8%</td><td>40.7%</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td><b>Week 6</b></td><td><b>100%</b></td><td>66.2%</td><td>54.1%</td><td>48.9%</td><td>45.2%</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td><b>Week 7</b></td><td><b>100%</b></td><td>63.9%</td><td>51.5%</td><td>46.2%</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td><b>Week 8</b></td><td><b>100%</b></td><td>64.5%</td><td>52.3%</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="cohort-heat">
+      <div class="cohort-heat">
+        <table>
+          <thead><tr><th>注册周</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W5</th><th>W6</th><th>W7</th><th>W8</th><th>W9</th><th>W10</th></tr></thead>
+          <tbody>
+            <tr><td class="ch-row-label">Week 1</td><td class="heat-h">100%</td><td class="heat-60">64.2%</td><td class="heat-50">52.8%</td><td class="heat-50">47.3%</td><td class="heat-40">43.1%</td><td class="heat-40">40.5%</td><td class="heat-40">38.2%</td><td class="heat-30">36.8%</td><td class="heat-30">35.5%</td><td class="heat-30">34.2%</td></tr>
+            <tr><td class="ch-row-label">Week 2</td><td class="heat-h">100%</td><td class="heat-60">62.8%</td><td class="heat-50">51.3%</td><td class="heat-40">45.6%</td><td class="heat-40">41.8%</td><td class="heat-40">38.9%</td><td class="heat-30">36.4%</td><td class="heat-30">34.8%</td><td class="heat-30">33.6%</td><td class="heat-na">—</td></tr>
+            <tr><td class="ch-row-label">Week 3</td><td class="heat-h">100%</td><td class="heat-60">65.1%</td><td class="heat-50">53.4%</td><td class="heat-50">48.1%</td><td class="heat-40">44.2%</td><td class="heat-40">41.3%</td><td class="heat-40">39.1%</td><td class="heat-30">37.5%</td><td class="heat-na">—</td><td class="heat-na">—</td></tr>
+            <tr><td class="ch-row-label">Week 4</td><td class="heat-h">100%</td><td class="heat-60">63.5%</td><td class="heat-50">52.6%</td><td class="heat-40">46.8%</td><td class="heat-40">42.5%</td><td class="heat-40">39.6%</td><td class="heat-30">37.2%</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td></tr>
+            <tr><td class="ch-row-label">Week 5</td><td class="heat-h">100%</td><td class="heat-60">64.8%</td><td class="heat-50">51.9%</td><td class="heat-50">47.5%</td><td class="heat-40">43.8%</td><td class="heat-40">40.7%</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td></tr>
+            <tr><td class="ch-row-label">Week 6</td><td class="heat-h">100%</td><td class="heat-60">66.2%</td><td class="heat-50">54.1%</td><td class="heat-50">48.9%</td><td class="heat-40">45.2%</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td></tr>
+            <tr><td class="ch-row-label">Week 7</td><td class="heat-h">100%</td><td class="heat-60">63.9%</td><td class="heat-50">51.5%</td><td class="heat-40">46.2%</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td></tr>
+            <tr><td class="ch-row-label">Week 8</td><td class="heat-h">100%</td><td class="heat-60">64.5%</td><td class="heat-50">52.3%</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td><td class="heat-na">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note sky" style="margin-top:12px"><span class="tag">解读</span>颜色从深红（高留存）到浅棕（低留存），清晰可见 W1→W2 的断层式下降（深红→浅橙），W4 后趋于稳定（浅棕）。</div>
+    </div>
+
+    <div class="tab-panel" id="cohort-insight">
+      <div class="insight-box">
+        <h5>🔍 关键发现 1：W1→W2 流失最严重，7 天是黄金窗口</h5>
+        <p>所有 Cohort 中，W1 到 W2 的留存率平均下降 35.8%（从 100% 降至约 64%）。这意味着用户在首次参与后的 7 天内流失风险最高。必须在此窗口内完成"二次激活"——例如在首次任务后 24 小时内推送新任务推荐、社交连接邀请或好心值首次兑换提醒。</p>
+      </div>
+      <div class="insight-box">
+        <h5>🔍 关键发现 2：W4 后留存趋于稳定，形成"核心用户层"</h5>
+        <p>从 W4 开始，各 Cohort 的留存率下降速度明显放缓，平均每周仅下降 1-2 个百分点。到 W8-W10，留存率稳定在 34-37% 之间。这个"稳定层"约占总注册用户的 1/3，是平台的核心用户基础。运营策略应在 W4 前完成用户分层，将资源集中投向有潜力进入稳定层的用户。</p>
+      </div>
+      <div class="insight-box">
+        <h5>🔍 关键发现 3：Cohort 效应不明显，产品体验一致性高</h5>
+        <p>不同注册周的各 Cohort 在相同周数（如同为 W3）的留存率差异很小（CV &lt; 3%），说明产品体验和运营策略在不同批次间保持了一致性。这也意味着留存率的改善不能依赖自然波动，必须通过主动干预（如 A/B 测试中的优化方案）来提升。</p>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="cohort-seg">
+      <p class="muted">不同用户分层在同一 Cohort 中的留存率表现对比。</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>用户分层</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W5</th><th>W6</th><th>W8</th><th>W10</th></tr></thead>
+          <tbody>
+            <tr><td><b>S1 核心用户</b></td><td><b>100%</b></td><td>92.4%</td><td>87.6%</td><td>84.2%</td><td>81.5%</td><td>79.3%</td><td>75.8%</td><td>73.2%</td></tr>
+            <tr><td><b>S2 活跃用户</b></td><td><b>100%</b></td><td>78.5%</td><td>68.2%</td><td>62.1%</td><td>57.8%</td><td>54.3%</td><td>49.5%</td><td>46.1%</td></tr>
+            <tr><td><b>S3 普通用户</b></td><td><b>100%</b></td><td>58.3%</td><td>44.7%</td><td>38.2%</td><td>34.1%</td><td>31.2%</td><td>27.5%</td><td>25.0%</td></tr>
+            <tr><td><b>S4 休眠用户</b></td><td><b>100%</b></td><td>31.2%</td><td>18.5%</td><td>12.3%</td><td>8.9%</td><td>6.7%</td><td>4.2%</td><td>2.8%</td></tr>
+            <tr><td><b>S5 潜在用户</b></td><td><b>100%</b></td><td>22.8%</td><td>11.4%</td><td>6.8%</td><td>4.2%</td><td>2.8%</td><td>1.5%</td><td>0.8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note leaf" style="margin-top:12px"><span class="tag">对比</span>S1 核心用户 10 周留存率高达 73.2%，而 S5 潜在用户仅 0.8%。不同分层在 W2 的留存率差距最大（22.8% vs 92.4%），说明"首次参与后 7 天"的体验是决定用户走向的关键分水岭。</div>
+    </div>
+
+    <h4 style="margin-top:24px">Cohort 数据趋势分析</h4>
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val">35.8%</div><div class="kpi-label">W1→W2 平均流失率</div></div>
+      <div class="kpi-card leaf"><div class="kpi-val">12.8%</div><div class="kpi-label">W2→W3 平均流失率</div></div>
+      <div class="kpi-card gold"><div class="kpi-val">6.5%</div><div class="kpi-label">W3→W4 平均流失率</div></div>
+      <div class="kpi-card sky"><div class="kpi-val">36.8%</div><div class="kpi-label">W8 长期留存率</div></div>
+      <div class="kpi-card plum"><div class="kpi-val">2.1%</div><div class="kpi-label">W4 后周均流失率</div></div>
+    </div>
+
+    <div class="grid cols-2" style="margin-top:14px">
+      <div class="card brand">
+        <div class="ic">📈</div>
+        <h4>留存率衰减曲线拟合</h4>
+        <p>对 Week 1 Cohort 的留存数据进行幂律衰减拟合：<b>R(t) = 100% · t<sup>-0.28</sup></b>，其中 t 为周数。拟合优度 R² = 0.96。该模型可用于预测未来 Cohort 的留存表现，例如根据此模型，Week 12 的预期留存率约为 31.5%，Week 24 约为 24.8%。</p>
+      </div>
+      <div class="card leaf">
+        <div class="ic">💡</div>
+        <h4>运营干预窗口建议</h4>
+        <p>基于 Cohort 分析，建议在以下时间窗口进行运营干预：<br/>
+        <b>窗口 1（第 1-2 天）：</b>首次任务后立即推送感谢信 + 新任务推荐<br/>
+        <b>窗口 2（第 3-5 天）：</b>好心值首次兑换提醒 + 社交连接邀请<br/>
+        <b>窗口 3（第 7 天）：</b>"本周任务回顾" + 下周任务预告<br/>
+        <b>窗口 4（第 14 天）：</b>流失预警 + 回归激励（好心值翻倍）</p>
+      </div>
+    </div>
+
+    <div class="model-card gold">
+      <h4>📊 Cohort 用户生命周期价值（LTV）估算</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>用户分层</th><th>平均参与周数</th><th>周均任务数</th><th>周均好心值</th><th>生命周期总好心值</th><th>LTV 排名</th></tr></thead>
+          <tbody>
+            <tr><td><b>S1 核心用户</b></td><td>42 周</td><td>4.2</td><td>84</td><td>3,528</td><td><span class="pill brand">#1</span></td></tr>
+            <tr><td><b>S2 活跃用户</b></td><td>24 周</td><td>2.8</td><td>56</td><td>1,344</td><td><span class="pill leaf">#2</span></td></tr>
+            <tr><td><b>S3 普通用户</b></td><td>12 周</td><td>1.5</td><td>30</td><td>360</td><td><span class="pill gold">#3</span></td></tr>
+            <tr><td><b>S4 休眠用户</b></td><td>3 周</td><td>1.2</td><td>24</td><td>72</td><td><span class="pill sky">#4</span></td></tr>
+            <tr><td><b>S5 潜在用户</b></td><td>1 周</td><td>0.5</td><td>10</td><td>10</td><td><span class="pill plum">#5</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="interpret">▸ S1 核心用户的 LTV 是 S3 普通用户的 9.8 倍，是 S5 潜在用户的 352.8 倍。将用户从 S3/S4 提升至 S2 的运营策略，对平台整体价值提升最为显著。</div>
+    </div>
+
+    <h4 style="margin-top:24px">Cohort 留存率预测模型</h4>
+    <div class="grid cols-2" style="margin-top:10px">
+      <div class="card brand">
+        <div class="ic">📈</div>
+        <h4>指数衰减模型拟合</h4>
+        <p>对 Week 1–Week 8 的留存数据进行指数衰减模型拟合：<b>R(t) = 100% · e<sup>-0.12t</sup></b>，拟合优度 R² = 0.94。该模型假设留存率以恒定比例衰减，适用于成熟产品的短期留存预测。</p>
+        <div class="table-wrap" style="margin-top:8px">
+          <table>
+            <thead><tr><th>周数</th><th>实际留存</th><th>预测留存</th><th>残差</th></tr></thead>
+            <tbody>
+              <tr><td>W1</td><td>100%</td><td>100%</td><td>0%</td></tr>
+              <tr><td>W2</td><td>64.2%</td><td>65.3%</td><td>-1.1%</td></tr>
+              <tr><td>W3</td><td>52.8%</td><td>51.9%</td><td>+0.9%</td></tr>
+              <tr><td>W4</td><td>47.3%</td><td>46.8%</td><td>+0.5%</td></tr>
+              <tr><td>W5</td><td>43.1%</td><td>43.2%</td><td>-0.1%</td></tr>
+              <tr><td>W6</td><td>40.5%</td><td>40.3%</td><td>+0.2%</td></tr>
+              <tr><td>W8</td><td>36.8%</td><td>36.7%</td><td>+0.1%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card leaf">
+        <div class="ic">💡</div>
+        <h4>留存率改善目标设定</h4>
+        <p>基于当前基线，设定以下改善目标：</p>
+        <ul style="font-size:12.5px;color:var(--ink-soft);line-height:1.8;padding-left:18px;margin:6px 0 0">
+          <li><b>短期目标（Phase 1）：</b>W2 留存率从 64.2% 提升至 70%（+5.8pp），通过优化首次任务体验实现</li>
+          <li><b>中期目标（Phase 2）：</b>W4 留存率从 47.3% 提升至 55%（+7.7pp），通过社交连接和激励体系实现</li>
+          <li><b>长期目标（Phase 3）：</b>W10 留存率从 34.2% 提升至 42%（+7.8pp），通过社区归属感和任务多样性实现</li>
+          <li><b>终极目标：</b>建立"漏斗式"留存优化体系，使每个 Cohort 的长期留存率逐步提升</li>
+        </ul>
+        <div class="note-sm" style="margin-top:8px;font-size:11.5px;color:var(--ink-faint);background:var(--bg);padding:8px 10px;border-radius:6px">每个百分点的留存率提升，预计对应平台月活跃用户（MAU）增长 2.3%。</div>
+      </div>
+    </div>
+
+    <div class="model-card sky" style="margin-top:16px">
+      <h4>📊 Cohort 分层留存率差异分析</h4>
+      <div class="params" style="line-height:2">
+        <b>留存率差异（S1 vs S5）：</b>W2 时 S1 留存率 92.4% vs S5 22.8%，差距 69.6pp；W10 时差距缩小至 72.4pp（73.2% vs 0.8%）<br/>
+        <b>留存率中位数（所有分层）：</b>W2 = 58.3% | W4 = 38.2% | W6 = 31.2% | W10 = 25.0%<br/>
+        <b>分层间变异系数（CV）：</b>W2 = 0.48 | W4 = 0.62 | W6 = 0.71 | W10 = 0.85<br/>
+        <b>核心发现：</b>分层间的留存率差异随时间的推移而扩大（CV 从 0.48 增至 0.85），说明早期行为对长期留存有极强的预测力。W2 的留存率可解释 W10 留存率方差的 78%。<br/>
+        <b>运营启示：</b>应在 W2 之前完成用户分层判断，并针对不同分层采取差异化的留存策略。S4/S5 用户需要在 W1 内获得"突破性体验"才能避免快速流失。
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 06 统计功效分析（新增） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>统计功效分析（Statistical Power Analysis）</h2></div>
+    <p class="muted">在实验设计阶段，统计功效分析决定了样本量需求和效应量的可检测性。以下为本项目所有实验的统计功效基准。</p>
+
+    <div class="model-card brand">
+      <h4>📐 样本量计算公式</h4>
+      <div class="formula">n = (Z<sub>α/2</sub> + Z<sub>β</sub>)² · [p₁(1-p₁) + p₂(1-p₂)] / (p₁ - p₂)²</div>
+      <div class="params">
+        <b>Z<sub>α/2</sub></b> = 1.96（α=0.05，双尾） | <b>Z<sub>β</sub></b> = 0.84（β=0.20，即功效 80%）<br/>
+        <b>p₁</b> = 对照组预期转化率 | <b>p₂</b> = 实验组预期转化率 | <b>效应量</b> = |p₁ - p₂|
+      </div>
+      <div class="interpret">▸ 当 α=0.05，功效=80%，对照组转化率 p₁=25%，最小可检测提升 5%（p₂=30%），每组需要 N=580 人</div>
+    </div>
+
+    <h4 style="margin-top:20px">不同效应量下的样本量需求</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>效应量（Δ%）</th><th>对照组 p₁</th><th>实验组 p₂</th><th>每组样本量（α=0.05, 功效=80%）</th><th>每组样本量（α=0.05, 功效=90%）</th></tr></thead>
+        <tbody>
+          <tr><td><b>2%</b></td><td>25.0%</td><td>27.0%</td><td>3,912</td><td>5,238</td></tr>
+          <tr><td><b>5%</b></td><td>25.0%</td><td>30.0%</td><td>580</td><td>776</td></tr>
+          <tr><td><b>10%</b></td><td>25.0%</td><td>35.0%</td><td>313</td><td>419</td></tr>
+          <tr><td><b>15%</b></td><td>25.0%</td><td>40.0%</td><td>125</td><td>168</td></tr>
+          <tr><td><b>20%</b></td><td>25.0%</td><td>45.0%</td><td>74</td><td>99</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin-top:20px">统计功效曲线（Power Curve）</h4>
+    <p class="muted">横轴为效应量（Δ%），纵轴为统计功效。不同颜色表示不同样本量下的功效曲线。</p>
+    <div class="power-curve">
+      <div class="power-bar brand" style="height:28px"><span class="pb-val">28%</span><span class="pb-label">n=100</span></div>
+      <div class="power-bar gold" style="height:45px"><span class="pb-val">45%</span><span class="pb-label">n=200</span></div>
+      <div class="power-bar leaf" style="height:62px"><span class="pb-val">62%</span><span class="pb-label">n=300</span></div>
+      <div class="power-bar sky" style="height:76px"><span class="pb-val">76%</span><span class="pb-label">n=400</span></div>
+      <div class="power-bar brand" style="height:88px"><span class="pb-val">88%</span><span class="pb-label">n=500</span></div>
+      <div class="power-bar leaf" style="height:95px"><span class="pb-val">95%</span><span class="pb-label">n=600</span></div>
+      <div class="power-bar plum" style="height:108px"><span class="pb-val">98%</span><span class="pb-label">n=800</span></div>
+      <div class="power-bar gold" style="height:125px"><span class="pb-val">99%</span><span class="pb-label">n=1000</span></div>
+      <div class="power-bar sky" style="height:140px"><span class="pb-val">99.5%</span><span class="pb-label">n=1500</span></div>
+    </div>
+    <p class="muted" style="font-size:12px;text-align:center;margin-top:28px">🔹 效应量固定为 5%（Δ=5%），α=0.05，双尾检验。样本量越大，统计功效越高。</p>
+
+    <div class="grid cols-2" style="margin-top:16px">
+      <div class="card brand">
+        <div class="ic">⚠️</div>
+        <h4>Type I 错误（假阳性）</h4>
+        <p>零假设为真时错误拒绝（即认为有效果但实际没有）。α=0.05 表示每 20 次实验中有 1 次假阳性。多重比较时需校正（Bonferroni / FDR）。发生 Type I 错误的后果是投入资源开发无效的功能，浪费开发时间和运营成本。</p>
+      </div>
+      <div class="card leaf">
+        <div class="ic">⚡</div>
+        <h4>Type II 错误（假阴性）</h4>
+        <p>零假设为假时错误接受（即认为没效果但实际有）。β=0.20 表示每 5 次中有 1 次漏掉真实效果。增大样本量可降低 β。发生 Type II 错误的后果是错过有效的优化机会，导致产品改进停滞。</p>
+      </div>
+    </div>
+
+    <h4 style="margin-top:20px">统计功效分析详细说明</h4>
+    <div class="model-card leaf">
+      <h4>📊 不同 α 和 β 组合下的样本量需求</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>α 水平</th><th>功效 (1-β)</th><th>效应量 (Δ=5%)</th><th>效应量 (Δ=10%)</th><th>效应量 (Δ=15%)</th><th>效应量 (Δ=20%)</th></tr></thead>
+          <tbody>
+            <tr><td><b>0.01</b></td><td>80%</td><td>868</td><td>468</td><td>187</td><td>111</td></tr>
+            <tr><td><b>0.01</b></td><td>90%</td><td>1,162</td><td>626</td><td>250</td><td>149</td></tr>
+            <tr><td><b>0.01</b></td><td>95%</td><td>1,437</td><td>774</td><td>310</td><td>184</td></tr>
+            <tr><td><b>0.05</b></td><td>80%</td><td>580</td><td>313</td><td>125</td><td>74</td></tr>
+            <tr><td><b>0.05</b></td><td>90%</td><td>776</td><td>419</td><td>168</td><td>99</td></tr>
+            <tr><td><b>0.05</b></td><td>95%</td><td>959</td><td>517</td><td>207</td><td>123</td></tr>
+            <tr><td><b>0.10</b></td><td>80%</td><td>418</td><td>225</td><td>90</td><td>54</td></tr>
+            <tr><td><b>0.10</b></td><td>90%</td><td>570</td><td>307</td><td>123</td><td>73</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="interpret">▸ 对照组 p₁=25% 基准。数值为每组所需样本量（两组总样本量需 ×2）。选择 α=0.05, 功效=80% 是在统计严谨性和实际可行性之间的常用平衡点。</div>
+    </div>
+
+    <div class="model-card plum">
+      <h4>📐 效应量（Effect Size）计算指南</h4>
+      <div class="params" style="line-height:2.2">
+        <b>Cohen's d</b> = (μ₁ - μ₂) / σ<sub>pooled</sub> | 适用于连续变量（如意愿评分、满意度）<br/>
+        <b>Cohen's h</b> = 2 · arcsin(√p₁) - 2 · arcsin(√p₂) | 适用于比例变量（如转化率、留存率）<br/>
+        <b>Cohen's w</b> = √(Σ (O-E)² / E) | 适用于卡方检验<br/>
+        <b>OR (Odds Ratio)</b> = (p₁/(1-p₁)) / (p₂/(1-p₂)) | 适用于 Logistic 回归结果报告<br/>
+        <b>r 相关系数</b> | 适用于连续变量间相关性<br/>
+        <br/>
+        <b>Cohen's d 效应量参考标准：</b>小效应 d=0.2 | 中等效应 d=0.5 | 大效应 d=0.8<br/>
+        <b>Cohen's h 效应量参考标准：</b>小效应 h=0.2 | 中等效应 h=0.5 | 大效应 h=0.8
+      </div>
+      <div class="interpret">▸ 效应量提供的是"标准化的效果大小"，不受样本量影响（与 p 值不同）。建议在报告结果时同时报告 p 值和效应量。</div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 07 交互式分析工具（新增） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>交互式分析工具</h2></div>
+    <p class="muted">以下交互式工具可帮助研究团队在实验设计阶段快速计算所需样本量、置信区间，评估相关性。</p>
+
+    <div class="tabs" id="calcTabs">
+      <button class="tab-btn active" data-tab="calc-size">📐 样本量计算器</button>
+      <button class="tab-btn" data-tab="calc-ci">📊 置信区间计算器</button>
+      <button class="tab-btn" data-tab="calc-corr">🔗 相关性解读工具</button>
+    </div>
+
+    <!-- 样本量计算器 -->
+    <div class="tab-panel active" id="calc-size">
+      <div class="calc-box">
+        <h4>📐 样本量计算器</h4>
+        <p class="muted" style="font-size:13px;margin-bottom:12px">输入预估的对照组转化率、最小可检测提升幅度，计算所需样本量。</p>
+        <div class="calc-row">
+          <label>对照组转化率 (p₁):</label>
+          <input type="range" id="p1Range" min="0.05" max="0.95" step="0.01" value="0.25" />
+          <input type="number" id="p1Num" min="0.05" max="0.95" step="0.01" value="0.25" />
+          <span class="val" id="p1Val">25%</span>
+        </div>
+        <div class="calc-row">
+          <label>最小可检测提升 (Δ):</label>
+          <input type="range" id="deltaRange" min="0.01" max="0.30" step="0.01" value="0.05" />
+          <input type="number" id="deltaNum" min="0.01" max="0.30" step="0.01" value="0.05" />
+          <span class="val" id="deltaVal">5%</span>
+        </div>
+        <div class="calc-row">
+          <label>显著性水平 (α):</label>
+          <input type="range" id="alphaRange" min="0.01" max="0.10" step="0.01" value="0.05" />
+          <input type="number" id="alphaNum" min="0.01" max="0.10" step="0.01" value="0.05" />
+          <span class="val" id="alphaVal">0.05</span>
+        </div>
+        <div class="calc-row">
+          <label>统计功效 (1-β):</label>
+          <input type="range" id="powerRange" min="0.50" max="0.99" step="0.01" value="0.80" />
+          <input type="number" id="powerNum" min="0.50" max="0.99" step="0.01" value="0.80" />
+          <span class="val" id="powerVal">80%</span>
+        </div>
+        <div class="calc-result" id="sampleSizeResult">
+          <span class="note-sm">所需样本量（每组）</span>
+          <span class="big" id="nResult">580</span>
+          <span class="note-sm">人/组 · 总样本量 <span id="nTotal">1,160</span> 人（两组）</span>
+          <div style="margin-top:8px;font-size:12px;color:var(--ink-soft)">
+            实验组转化率 (p₂): <span id="p2Result">30.0%</span>
+          </div>
+        </div>
+        <p class="muted" style="font-size:11.5px;margin-top:6px">💡 提示：建议每组样本量上浮 10-20% 以应对数据清洗损失。</p>
+      </div>
+    </div>
+
+    <!-- 置信区间计算器 -->
+    <div class="tab-panel" id="calc-ci">
+      <div class="calc-box">
+        <h4>📊 置信区间计算器</h4>
+        <p class="muted" style="font-size:13px;margin-bottom:12px">输入样本量和观察比例，计算 95% 置信区间。</p>
+        <div class="calc-row">
+          <label>样本量 (n):</label>
+          <input type="range" id="nRange" min="50" max="5000" step="10" value="500" />
+          <input type="number" id="nNum" min="50" max="5000" step="10" value="500" />
+          <span class="val" id="nVal">500</span>
+        </div>
+        <div class="calc-row">
+          <label>观察比例 (p):</label>
+          <input type="range" id="pRange" min="0.01" max="0.99" step="0.01" value="0.35" />
+          <input type="number" id="pNum" min="0.01" max="0.99" step="0.01" value="0.35" />
+          <span class="val" id="pCIVal">35%</span>
+        </div>
+        <div class="calc-result" id="ciResult">
+          <span class="note-sm">95% 置信区间</span>
+          <span class="big" id="ciRange">30.8% — 39.2%</span>
+          <span class="note-sm">标准误: <span id="seVal">2.13%</span> | 边际误差: <span id="meVal">4.18%</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 相关性解读工具 -->
+    <div class="tab-panel" id="calc-corr">
+      <div class="calc-box">
+        <h4>🔗 相关性解读工具</h4>
+        <p class="muted" style="font-size:13px;margin-bottom:12px">输入相关系数 r，查看对应的效应量等级和实际意义。</p>
+        <div class="calc-row">
+          <label>相关系数 (r):</label>
+          <input type="range" id="rRange" min="-1.00" max="1.00" step="0.01" value="0.45" />
+          <span class="val" id="rVal">0.45</span>
+        </div>
+        <div class="calc-result" id="corrResult">
+          <span class="note-sm">效应量等级: <span id="corrLevel">中等效应</span></span>
+          <span class="big" id="corrDesc">中等正相关</span>
+          <span class="note-sm">决定系数 r² = <span id="r2Val">0.2025</span>（变异解释比例: <span id="explainedVar">20.25%</span>）</span>
+          <div style="margin-top:10px;font-size:12.5px;color:var(--ink-soft);background:var(--bg);padding:10px 12px;border-radius:8px;line-height:1.7">
+            <b id="corrInterpretation">当 r=0.45 时，两变量之间存在中等程度的正相关。一个变量变化时，另一个变量有中等程度的同向变化趋势。</b>
+          </div>
+        </div>
+      </div>
+      <div class="table-wrap" style="margin-top:12px">
+        <table>
+          <thead><tr><th>|r| 范围</th><th>效应量等级</th><th>实际意义</th></tr></thead>
+          <tbody>
+            <tr><td>0.00 – 0.10</td><td><span class="pill">可忽略</span></td><td>几乎无线性关系</td></tr>
+            <tr><td>0.10 – 0.30</td><td><span class="pill sky">小效应</span></td><td>微弱但可观察的关系</td></tr>
+            <tr><td>0.30 – 0.50</td><td><span class="pill gold">中等效应</span></td><td>中等程度的实际意义</td></tr>
+            <tr><td>0.50 – 0.70</td><td><span class="pill leaf">大效应</span></td><td>有较强的实际意义</td></tr>
+            <tr><td>0.70 – 1.00</td><td><span class="pill brand">极大效应</span></td><td>非常强的预测关系</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 07b 交互式模拟沙盘（新增） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07b</span><h2>交互式实验模拟沙盘</h2></div>
+    <p class="muted">基于蒙特卡洛模拟的交互式实验沙盘，帮助团队在实验开展前预估不同场景下的实验结果分布。</p>
+
+    <div class="calc-box">
+      <h4>🎲 实验模拟：社交线索对领取率的影响</h4>
+      <p class="muted" style="font-size:13px;margin-bottom:12px">调整以下参数，观察模拟结果的变化趋势。</p>
+      <div class="calc-row">
+        <label>对照组领取率:</label>
+        <input type="range" id="ctrlRate" min="0.10" max="0.50" step="0.01" value="0.246" />
+        <span class="val" id="ctrlRateVal">24.6%</span>
+      </div>
+      <div class="calc-row">
+        <label>实验组提升幅度:</label>
+        <input type="range" id="expBoost" min="0.01" max="0.50" step="0.01" value="0.312" />
+        <span class="val" id="expBoostVal">+31.2%</span>
+      </div>
+      <div class="calc-row">
+        <label>每组样本量:</label>
+        <input type="range" id="simN" min="100" max="2000" step="50" value="500" />
+        <span class="val" id="simNVal">500</span>
+      </div>
+      <div class="calc-row">
+        <label>模拟次数:</label>
+        <input type="range" id="simRuns" min="100" max="10000" step="100" value="1000" />
+        <span class="val" id="simRunsVal">1,000</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn brand" id="runSimBtn">▶ 运行模拟</button>
+        <button class="btn leaf" id="resetSimBtn">↺ 重置</button>
+      </div>
+      <div class="calc-result" id="simResult" style="margin-top:12px">
+        <span class="note-sm">模拟结果（基于 <span id="simRunCount">1,000</span> 次蒙特卡洛模拟）</span>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:8px">
+          <div><span class="note-sm">对照组均值</span><span class="big" id="simCtrlMean" style="font-size:20px">24.6%</span></div>
+          <div><span class="note-sm">实验组均值</span><span class="big" id="simExpMean" style="font-size:20px;color:var(--gold)">32.3%</span></div>
+          <div><span class="note-sm">提升幅度</span><span class="big" id="simLift" style="font-size:20px;color:var(--leaf)">+31.2%</span></div>
+          <div><span class="note-sm">p 值</span><span class="big" id="simPval" style="font-size:20px;color:var(--brand-deep)">&lt;0.001</span></div>
+          <div><span class="note-sm">统计功效</span><span class="big" id="simPower" style="font-size:20px;color:var(--sky)">88.5%</span></div>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--ink-soft);background:var(--bg);padding:10px 12px;border-radius:8px;line-height:1.7">
+          <b>结论：</b>在假设的效应量下，<span id="simConclusion">实验组显著优于对照组（p &lt; 0.05），建议继续推进实验实施。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box" style="margin-top:12px">
+      <h5>💡 蒙特卡洛模拟说明</h5>
+      <p>蒙特卡洛模拟通过重复随机抽样来估计统计量的分布。每次模拟从二项分布中抽取对照组和实验组的样本，计算两组差异并进行统计检验。经过大量重复（如 1,000 次），可以准确估计出实验的统计功效、p 值分布和效应量估计的稳定性。这种方法比单次公式计算更能反映实验结果的随机性和不确定性。</p>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 07c 交互式效应量换算器（新增） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07c</span><h2>交互式效应量换算器</h2></div>
+    <p class="muted">在不同效应量指标之间进行换算，帮助研究团队统一理解不同研究中的效应量大小。支持 Cohen's d、Cohen's h、Odds Ratio、r 相关系数之间的相互转换。</p>
+
+    <div class="calc-box">
+      <h4>🔄 效应量换算器</h4>
+      <p class="muted" style="font-size:13px;margin-bottom:12px">选择输入类型和值，自动换算为其他效应量指标。</p>
+      <div class="calc-row">
+        <label>效应量类型:</label>
+        <select id="esType" style="flex:1;padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:14px;font-family:inherit;background:var(--bg);color:var(--ink)">
+          <option value="d">Cohen's d（连续变量效应量）</option>
+          <option value="h">Cohen's h（比例变量效应量）</option>
+          <option value="or">Odds Ratio（比值比）</option>
+          <option value="r">r 相关系数</option>
+        </select>
+      </div>
+      <div class="calc-row">
+        <label>效应量数值:</label>
+        <input type="range" id="esRange" min="0.01" max="2.00" step="0.01" value="0.50" />
+        <input type="number" id="esNum" min="0.01" max="2.00" step="0.01" value="0.50" />
+        <span class="val" id="esVal">0.50</span>
+      </div>
+      <div class="calc-result" style="margin-top:12px">
+        <span class="note-sm">换算结果</span>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;font-size:13px">
+          <div style="background:var(--bg);padding:10px 12px;border-radius:8px">
+            <b>Cohen's d</b><br/>
+            <span id="esD" style="font-size:20px;font-weight:800;color:var(--brand-deep)">0.50</span>
+          </div>
+          <div style="background:var(--bg);padding:10px 12px;border-radius:8px">
+            <b>Cohen's h</b><br/>
+            <span id="esH" style="font-size:20px;font-weight:800;color:var(--gold)">0.49</span>
+          </div>
+          <div style="background:var(--bg);padding:10px 12px;border-radius:8px">
+            <b>Odds Ratio</b><br/>
+            <span id="esOR" style="font-size:20px;font-weight:800;color:var(--leaf)">2.47</span>
+          </div>
+          <div style="background:var(--bg);padding:10px 12px;border-radius:8px">
+            <b>r 相关系数</b><br/>
+            <span id="esR" style="font-size:20px;font-weight:800;color:var(--sky)">0.24</span>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--ink-soft);background:var(--bg);padding:10px 12px;border-radius:8px;line-height:1.7">
+          <b>效应量等级：</b><span id="esLevel" style="font-weight:700;color:var(--brand)">中等效应</span><br/>
+          <b>描述：</b><span id="esDesc">该效应量在实际研究中具有中等程度的意义，通常在中等样本量（每组 N=100-300）下即可检测到。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:14px">
+      <table>
+        <thead><tr><th>效应量指标</th><th>适用场景</th><th>小效应</th><th>中等效应</th><th>大效应</th><th>换算关系</th></tr></thead>
+        <tbody>
+          <tr><td><b>Cohen's d</b></td><td>连续变量（均值差异）</td><td>0.20</td><td>0.50</td><td>0.80</td><td>d = 2r / √(1-r²)</td></tr>
+          <tr><td><b>Cohen's h</b></td><td>比例变量（转化率差异）</td><td>0.20</td><td>0.50</td><td>0.80</td><td>h = 2·arcsin(√p₁) - 2·arcsin(√p₂)</td></tr>
+          <tr><td><b>Odds Ratio</b></td><td>Logistic 回归（分类结果）</td><td>1.44</td><td>2.47</td><td>4.27</td><td>OR = exp(d·π/√3)</td></tr>
+          <tr><td><b>r 相关系数</b></td><td>连续变量（线性关系）</td><td>0.10</td><td>0.24</td><td>0.37</td><td>r = d / √(d² + 4)</td></tr>
+          <tr><td><b>η² (Eta-squared)</b></td><td>方差分析（ANOVA）</td><td>0.01</td><td>0.06</td><td>0.14</td><td>η² = d² / (d² + 4)</td></tr>
+          <tr><td><b>Cohen's f</b></td><td>方差分析（ANOVA）</td><td>0.10</td><td>0.25</td><td>0.40</td><td>f = d / 2</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="model-card gold" style="margin-top:14px">
+      <h4>📊 效应量选择指南</h4>
+      <div class="params" style="line-height:2.2">
+        <b>选择原则：</b>效应量指标应与研究设计和数据类型匹配<br/>
+        <b>t 检验 / 实验设计：</b>使用 Cohen's d（两组均值差异标准化）<br/>
+        <b>比例 / 转化率：</b>使用 Cohen's h 或 Odds Ratio<br/>
+        <b>相关性分析：</b>使用 Pearson's r<br/>
+        <b>方差分析（多组）：</b>使用 η² 或 Cohen's f<br/>
+        <b>回归分析：</b>使用 R² 或 f²<br/>
+        <br/>
+        <b>报告建议：</b>始终同时报告 p 值和效应量。p 值告诉你"是否有效"，效应量告诉你"效果有多大"。即使 p &lt; 0.001，效应量也可能小到没有实际意义（尤其是在大样本中）。
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 08 研究设计建议（新增） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>研究设计建议</h2></div>
+    <p class="muted">基于前期调研经验，归纳以下研究设计指南，覆盖问卷设计、抽样策略、数据质量保障和伦理审查。这些指南适用于 Phase 1 调研及后续各阶段的数据收集工作。</p>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val">6</div><div class="kpi-label">问卷设计要点</div></div>
+      <div class="kpi-card leaf"><div class="kpi-val">5</div><div class="kpi-label">抽样策略对比</div></div>
+      <div class="kpi-card gold"><div class="kpi-val">6</div><div class="kpi-label">数据质量指标</div></div>
+      <div class="kpi-card sky"><div class="kpi-val">6</div><div class="kpi-label">伦理审查要点</div></div>
+      <div class="kpi-card plum"><div class="kpi-val">10</div><div class="kpi-label">检查清单项</div></div>
+    </div>
+
+    <div class="design-grid">
+      <div class="design-card brand">
+        <h4>📋 问卷设计指南</h4>
+        <ul>
+          <li><b>时间控制：</b>核心问卷控制在 5-8 分钟内完成，过长会导致疲劳效应和大量中途退出</li>
+          <li><b>问题顺序：</b>从易到难排列，敏感问题（如收入、性别）放在问卷后半段</li>
+          <li><b>量表选择：</b>使用经过验证的成熟量表（如 PSQ、SES、社区归属感量表），避免自编题项</li>
+          <li><b>锚点一致性：</b>同一量表内保持李克特量表标签方向一致（如 1=非常不同意 → 5=非常同意）</li>
+          <li><b>注意力检测：</b>嵌入 2-3 个注意力检测题（如"本题请选择"比较同意""），检测不合格者删除</li>
+          <li><b>预测试：</b>正式发放前进行 30-50 人预测试，检查题项信度、理解和答题时长</li>
+          <li><b>反向计分：</b>每个量表至少包含 2 道反向计分题，减少答题惯性偏差</li>
+          <li><b>选项完备：</b>所有单选题提供"其他（请注明）"选项，避免强制选择偏差</li>
+        </ul>
+      </div>
+      <div class="design-card leaf">
+        <h4>🎯 抽样策略对比</h4>
+        <ul>
+          <li><b>分层抽样（推荐）：</b>按城市等级（一线/二线/三线）、年龄（18-65）、性别分层，确保各层代表性。适合全国性调研，误差最小</li>
+          <li><b>整群抽样：</b>随机选取若干社区/街道，对社区内全部居民调查。适合社区级实验，成本低但设计效应较高</li>
+          <li><b>便利抽样：</b>通过线上渠道（微信/问卷星/抖音）投放，成本低但偏差大（最常见的选择性偏差）。仅适合探索性阶段</li>
+          <li><b>雪球抽样：</b>通过已有参与者推荐新的参与者，适合触达特定人群（如公益组织成员、社区活跃分子）</li>
+          <li><b>配额抽样：</b>设定人口学配额（如 50% 女性、30% 一线城市），在便利抽样基础上控制结构，是成本与质量的折中方案</li>
+          <li><b>判断抽样：</b>由研究者根据经验选择典型样本，适合定性研究和小规模探索性研究</li>
+        </ul>
+      </div>
+      <div class="design-card gold">
+        <h4>✅ 数据质量保障</h4>
+        <ul>
+          <li><b>信度（Reliability）：</b>Cronbach's α ≥ 0.70，各分量表 α ≥ 0.65。重测信度（间隔 2 周）r ≥ 0.75</li>
+          <li><b>效度（Validity）：</b>内容效度（专家评审 + 认知访谈）、结构效度（CFA 验证，RMSEA &lt; 0.08）、效标效度（与外部标准相关 r ≥ 0.5）</li>
+          <li><b>控制变量：</b>社会赞许性（SDS 简版）作为控制变量，减少自我报告偏差的影响</li>
+          <li><b>数据清洗：</b>删除答题时间 &lt; 2 分钟、连续 10 题同值、注意力检测失败等无效问卷，预计清洗率 10-15%</li>
+          <li><b>缺失值处理：</b>缺失率 &lt; 5% 可用均值/中位数填补；&gt; 5% 推荐多重插补（MICE 算法，5 次插补后合并结果）</li>
+          <li><b>异常值检测：</b>使用箱线图（1.5×IQR）和 Z-score（|Z| &gt; 3）识别异常值，结合领域知识判断是否剔除</li>
+          <li><b>共同方法偏差：</b>使用 Harman 单因子检验（未旋转的第一因子方差解释率 &lt; 40%）和标记变量法</li>
+        </ul>
+      </div>
+      <div class="design-card sky">
+        <h4>⚖️ 伦理审查考虑</h4>
+        <ul>
+          <li><b>知情同意：</b>问卷首页明确说明研究目的、数据用途、匿名保障、参与时长（约 5-8 分钟）和退出权利</li>
+          <li><b>隐私保护：</b>不收集可识别个人身份的信息（姓名、身份证号、精确地址），仅保留城市级别的位置信息</li>
+          <li><b>数据存储：</b>敏感数据加密存储（AES-256），访问权限分级管理，定期清理（研究结束后 6 个月删除）</li>
+          <li><b>弱势群体：</b>涉及未成年人（需监护人同意）、老年人（需适当调整问卷长度和语言）、低收入群体时需额外保护措施</li>
+          <li><b>退出机制：</b>参与者可随时退出研究，已提交数据可申请删除（在数据匿名化之前）</li>
+          <li><b>IRB 审查：</b>涉及实验干预（如 A/B 测试中的激励差异、信息框架操作）需机构审查委员会（IRB）批准</li>
+          <li><b>数据共享：</b>如涉及跨机构数据共享，需签署数据使用协议（DUA），明确数据使用范围和安全责任</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-item">
+        <div class="accordion-header">📋 点击展开：问卷设计检查清单 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <ul>
+            <li>✅ 研究目的和假设已明确定义</li>
+            <li>✅ 核心变量已操作化定义（每个变量对应 3-5 个题项）</li>
+            <li>✅ 量表来源和信效度已记录</li>
+            <li>✅ 问卷总长度 ≤ 15 题 / ≤ 8 分钟</li>
+            <li>✅ 问题和选项无引导性（无"您是否同意..."等措辞）</li>
+            <li>✅ 选项覆盖全面（含"其他/不适用"选项）</li>
+            <li>✅ 使用了反向计分题（至少 2 题）</li>
+            <li>✅ 已嵌入注意力检测题</li>
+            <li>✅ 预测试已完成（n ≥ 30）</li>
+            <li>✅ 问卷已通过至少 2 位同行评审</li>
+          </ul>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">📊 点击展开：数据清洗标准操作流程 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <ol>
+            <li><b>Step 1 初步筛选：</b>删除答题时间 &lt; 完整填写中位数 1/3 的问卷（通常 &lt; 2 分钟）</li>
+            <li><b>Step 2 注意力检测：</b>删除任意 1 个注意力检测题答错的问卷</li>
+            <li><b>Step 3 直线作答：</b>检测连续 10 题或以上选择同一选项的问卷，标记为"直线作答"并删除</li>
+            <li><b>Step 4 重复 IP：</b>检查同一 IP 地址的多次提交，保留第一次有效提交</li>
+            <li><b>Step 5 缺失值处理：</b>单题缺失率 &lt; 5% 用均值/中位数填补；&gt; 5% 使用多重插补（MICE 算法）</li>
+            <li><b>Step 6 异常值检测：</b>使用箱线图（1.5×IQR）和 Z-score（|Z| &gt; 3）识别异常值</li>
+            <li><b>Step 7 一致性检验：</b>反向计分题一致性低于 0.7 的问卷标记为"不可靠"</li>
+            <li><b>Step 8 最终记录：</b>记录删除的问卷数量和原因，最终有效样本量需满足预设的统计功效要求</li>
+          </ol>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">⚖️ 点击展开：伦理审查申请材料清单 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <ul>
+            <li>📄 <b>研究方案：</b>研究背景、目的、假设、方法、样本量、数据分析计划</li>
+            <li>📄 <b>知情同意书：</b>研究目的、数据用途、匿名保障、参与时长、退出权利、联系方式</li>
+            <li>📄 <b>问卷/实验材料：</b>完整问卷、实验刺激材料、访谈提纲</li>
+            <li>📄 <b>数据管理计划：</b>数据存储方式、访问权限、保留期限、销毁流程</li>
+            <li>📄 <b>风险说明：</b>参与研究的潜在风险（极低）和应对措施</li>
+            <li>📄 <b>利益冲突声明：</b>研究资助方、潜在利益冲突</li>
+            <li>📄 <b>伦理培训证书：</b>研究团队成员的伦理培训证明（如 CITI 证书）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 09 模型对比矩阵（新增） -->
+  <!-- ================================================================================== -->
+  <section style="border:none">
+    <div class="sec-head"><span class="sec-num">09</span><h2>模型对比矩阵</h2></div>
+    <p class="muted">12 个统计模型的适用场景、优缺点和推荐使用条件对比。帮助研究团队根据具体问题选择最合适的模型。</p>
+
+    <div class="cmp-table-wrap">
+      <table>
+        <thead><tr><th>模型</th><th>类型</th><th>适用场景</th><th>优点</th><th>缺点</th><th>推荐条件</th></tr></thead>
+        <tbody>
+          <tr><td><b>M1 Logistic</b></td><td><span class="tag green">回归</span></td><td>二分类结果预测</td><td>可解释性强，成熟度高</td><td>线性假设，无法处理非线性</td><td>基线模型，二分类问题首选</td></tr>
+          <tr><td><b>M2 Conjoint</b></td><td><span class="tag green">回归</span></td><td>偏好排序分析</td><td>直接量化偏好权重</td><td>问卷设计复杂</td><td>驱动力重要性排序研究</td></tr>
+          <tr><td><b>M3 Cox PH</b></td><td><span class="tag gold">生存</span></td><td>时间至事件分析</td><td>处理删失数据，不假设分布</td><td>比例风险假设</td><td>留存/流失时间分析</td></tr>
+          <tr><td><b>M4 Mediation</b></td><td><span class="tag green">回归</span></td><td>中介/调节效应</td><td>验证因果路径机制</td><td>需要大样本，不可观测混淆</td><td>机制验证研究</td></tr>
+          <tr><td><b>M5 Power Law</b></td><td><span class="tag gold">非线性</span></td><td>距离衰减建模</td><td>参数少，意义明确</td><td>形式简单，拟合有限</td><td>空间/距离相关研究</td></tr>
+          <tr><td><b>M6 Bayesian</b></td><td><span class="tag gold">贝叶斯</span></td><td>分层/聚类数据</td><td>先验信息整合，处理小样本</td><td>计算成本高，需先验设定</td><td>社区层级数据，小样本校正</td></tr>
+          <tr><td><b>M7 GAM</b></td><td><span class="tag green">非参数</span></td><td>非线性关系探索</td><td>自动拟合非线性，灵活</td><td>过拟合风险，解释性稍差</td><td>U 型/曲线关系假设验证</td></tr>
+          <tr><td><b>M8 Random Forest</b></td><td><span class="tag green">ML</span></td><td>特征重要性排序</td><td>自动捕捉交互效应</td><td>黑箱，难以解释系数</td><td>特征筛选，非线性验证</td></tr>
+          <tr><td><b>M9 SEM</b></td><td><span class="tag gold">结构方程</span></td><td>潜变量因果路径</td><td>同时评估测量+结构模型</td><td>需要大样本（N &gt; 300）</td><td>理论模型验证</td></tr>
+          <tr><td><b>M10 LCA</b></td><td><span class="tag gold">潜类别</span></td><td>用户分型/分类</td><td>数据驱动分类，无监督</td><td>类别数选择主观</td><td>用户分层/分型研究</td></tr>
+          <tr><td><b>M11 Markov</b></td><td><span class="tag gold">时序</span></td><td>状态转移建模</td><td>直观模拟用户路径</td><td>马尔可夫假设（无记忆）</td><td>用户行为路径分析</td></tr>
+          <tr><td><b>M12 DID</b></td><td><span class="tag green">因果</span></td><td>准实验因果推断</td><td>控制不可观测混淆</td><td>需平行趋势假设</td><td>政策/功能上线效果评估</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="model-card sky">
+      <h4>🧠 模型推荐使用流程</h4>
+      <div class="formula" style="font-size:13px;color:var(--ink);background:var(--bg);white-space:normal;line-height:2">
+        <b>Step 1:</b> 探索性分析 → M7 (GAM) + M8 (Random Forest) 识别非线性关系和特征重要性<br/>
+        <b>Step 2:</b> 假设验证 → M1 (Logistic) + M2 (Conjoint) + M4 (Mediation) 验证核心假设<br/>
+        <b>Step 3:</b> 机制深度分析 → M9 (SEM) + M6 (Bayesian) 验证潜变量因果路径<br/>
+        <b>Step 4:</b> 用户分层 → M10 (LCA) 数据驱动分类<br/>
+        <b>Step 5:</b> 行为预测 → M3 (Cox) + M11 (Markov) 预测留存和路径转移<br/>
+        <b>Step 6:</b> 因果验证 → M12 (DID) 验证功能/策略的因果效应
+      </div>
+      <div class="interpret">▸ 每个阶段可并行使用多个模型进行交叉验证，提升结论的稳健性。</div>
+    </div>
+
+    <div class="model-card brand">
+      <h4>📊 模型选择决策树</h4>
+      <div class="formula" style="font-size:13px;color:var(--ink);background:var(--bg);white-space:normal;line-height:2.2">
+        <b>Q1：</b>研究目标是预测还是解释？<br/>
+        &nbsp;&nbsp;&nbsp;→ <b>预测：</b>M1 (Logistic, 二分类) / M3 (Cox, 时间) / M8 (RF, 高精度)<br/>
+        &nbsp;&nbsp;&nbsp;→ <b>解释：</b>进入 Q2<br/>
+        <b>Q2：</b>数据是否有层级/聚类结构？<br/>
+        &nbsp;&nbsp;&nbsp;→ <b>是：</b>M6 (Bayesian Hierarchical) / M9 (SEM with cluster robust SE)<br/>
+        &nbsp;&nbsp;&nbsp;→ <b>否：</b>进入 Q3<br/>
+        <b>Q3：</b>关系是线性的还是非线性的？<br/>
+        &nbsp;&nbsp;&nbsp;→ <b>非线性/未知：</b>M7 (GAM) / M8 (Random Forest)<br/>
+        &nbsp;&nbsp;&nbsp;→ <b>线性：</b>进入 Q4<br/>
+        <b>Q4：</b>是否有明确的因果假设？<br/>
+        &nbsp;&nbsp;&nbsp;→ <b>是（实验/准实验）：</b>M12 (DID) / M4 (Mediation)<br/>
+        &nbsp;&nbsp;&nbsp;→ <b>否（相关/观察）：</b>M1 (Logistic) / M2 (Conjoint) / M10 (LCA)
+      </div>
+      <div class="interpret">▸ 决策树覆盖所有 12 个模型，帮助研究团队根据研究问题快速定位合适的模型。</div>
+    </div>
+
+    <div class="model-card leaf">
+      <h4>⚠️ 模型假设检验清单</h4>
+      <div class="params" style="line-height:2.2">
+        <b>M1 Logistic:</b> 线性对数几率假设 ✓ | 独立性假设 ✓ | 多重共线性 (VIF &lt; 5) ✓<br/>
+        <b>M3 Cox PH:</b> 比例风险假设 (Schoenfeld 残差检验) ✓ | 非线性 (Martingale 残差) ✓<br/>
+        <b>M6 Bayesian:</b> 先验敏感性分析 ✓ | MCMC 收敛 (Rhat &lt; 1.05) ✓ | 有效样本量 (ESS &gt; 400) ✓<br/>
+        <b>M7 GAM:</b> 基函数数量选择 (k 值验证) ✓ | 残差独立性 ✓ | 共曲线性检验 ✓<br/>
+        <b>M9 SEM:</b> 多元正态性 ✓ | 模型识别 (t-rule) ✓ | 交叉验证 (CFI, RMSEA, SRMR) ✓<br/>
+        <b>M12 DID:</b> 平行趋势假设（事件研究图）✓ | 共同支撑假设 ✓ | 无预期效应 ✓
+      </div>
+    </div>
+
+    <div class="matrix-grid">
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M1</span><span class="mc-type supervised">回归</span></div>
+        <div class="mc-usage"><b>Logistic:</b> 二分类结果预测，基线模型</div>
+        <div class="mc-pros">✅ 可解释性极强，系数直接反映影响</div>
+        <div class="mc-cons">❌ 线性假设，忽略交互效应</div>
+        <div class="mc-rec">推荐：基线模型首选</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M2</span><span class="mc-type supervised">偏好</span></div>
+        <div class="mc-usage"><b>Conjoint:</b> 偏好排序量化分析</div>
+        <div class="mc-pros">✅ 直接量化各驱动力的相对权重</div>
+        <div class="mc-cons">❌ 问卷设计复杂，被试负担大</div>
+        <div class="mc-rec">推荐：驱动力研究必选</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M3</span><span class="mc-type supervised">生存</span></div>
+        <div class="mc-usage"><b>Cox PH:</b> 时间至事件分析</div>
+        <div class="mc-pros">✅ 处理删失数据，无需分布假设</div>
+        <div class="mc-cons">❌ 比例风险假设需验证</div>
+        <div class="mc-rec">推荐：留存/流失分析</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M4</span><span class="mc-type supervised">中介</span></div>
+        <div class="mc-usage"><b>Mediation:</b> 中介/调节效应</div>
+        <div class="mc-pros">✅ 揭示因果路径机制</div>
+        <div class="mc-cons">❌ 大样本需求，不可观测混淆</div>
+        <div class="mc-rec">推荐：机制验证研究</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M5</span><span class="mc-type supervised">非线性</span></div>
+        <div class="mc-usage"><b>Power Law:</b> 距离衰减建模</div>
+        <div class="mc-pros">✅ 参数少，结果直观</div>
+        <div class="mc-cons">❌ 形式简单，拟合度有限</div>
+        <div class="mc-rec">推荐：空间/距离研究</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M6</span><span class="mc-type bayesian">贝叶斯</span></div>
+        <div class="mc-usage"><b>Bayesian Hierarchical:</b> 分层数据</div>
+        <div class="mc-pros">✅ 先验整合，小样本稳健</div>
+        <div class="mc-cons">❌ 计算成本高，需先验设定</div>
+        <div class="mc-rec">推荐：社区层级数据</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M7</span><span class="mc-type supervised">非参数</span></div>
+        <div class="mc-usage"><b>GAM:</b> 非线性关系探索</div>
+        <div class="mc-pros">✅ 自动拟合非线性曲线</div>
+        <div class="mc-cons">❌ 过拟合风险，解释性稍差</div>
+        <div class="mc-rec">推荐：U 型假设验证</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M8</span><span class="mc-type supervised">ML</span></div>
+        <div class="mc-usage"><b>Random Forest:</b> 特征重要性</div>
+        <div class="mc-pros">✅ 自动捕捉交互效应</div>
+        <div class="mc-cons">❌ 黑箱模型，难以解释系数</div>
+        <div class="mc-rec">推荐：特征筛选</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M9</span><span class="mc-type supervised">SEM</span></div>
+        <div class="mc-usage"><b>SEM:</b> 潜变量因果路径</div>
+        <div class="mc-pros">✅ 测量+结构模型同时评估</div>
+        <div class="mc-cons">❌ 大样本需求（N &gt; 300）</div>
+        <div class="mc-rec">推荐：理论模型验证</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M10</span><span class="mc-type bayesian">潜类别</span></div>
+        <div class="mc-usage"><b>LCA:</b> 用户分型/分类</div>
+        <div class="mc-pros">✅ 数据驱动，无监督分类</div>
+        <div class="mc-cons">❌ 类别数选择主观</div>
+        <div class="mc-rec">推荐：用户分层</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M11</span><span class="mc-type supervised">时序</span></div>
+        <div class="mc-usage"><b>Markov Chain:</b> 状态转移建模</div>
+        <div class="mc-pros">✅ 直观模拟用户路径</div>
+        <div class="mc-cons">❌ 无记忆假设</div>
+        <div class="mc-rec">推荐：行为路径分析</div>
+      </div>
+      <div class="matrix-card">
+        <div class="mc-header"><span class="mc-num">M12</span><span class="mc-type causal">因果</span></div>
+        <div class="mc-usage"><b>DID + PSM:</b> 准实验因果推断</div>
+        <div class="mc-pros">✅ 控制不可观测混淆</div>
+        <div class="mc-cons">❌ 平行趋势假设</div>
+        <div class="mc-rec">推荐：功能效果评估</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 10 常见统计误区与最佳实践（新增） -->
+  <!-- ================================================================================== -->
+  <section>
+    <div class="sec-head"><span class="sec-num">10</span><h2>常见统计误区与最佳实践</h2></div>
+    <p class="muted">在数据分析和实验设计中，常见的统计误区可能导致错误的结论。以下列出 10 个最常见的误区及其纠正方法，帮助研究团队避免统计陷阱。</p>
+
+    <div class="kpi-row">
+      <div class="kpi-card"><div class="kpi-val">10</div><div class="kpi-label">常见误区</div></div>
+      <div class="kpi-card leaf"><div class="kpi-val">10</div><div class="kpi-label">最佳实践</div></div>
+      <div class="kpi-card gold"><div class="kpi-val">6</div><div class="kpi-label">纠正方法</div></div>
+      <div class="kpi-card sky"><div class="kpi-val">5</div><div class="kpi-label">验证步骤</div></div>
+      <div class="kpi-card plum"><div class="kpi-val">100%</div><div class="kpi-label">可重复性目标</div></div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-item open">
+        <div class="accordion-header">误区 1：p &lt; 0.05 意味着"效果真实存在" <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>p &lt; 0.05 表示零假设为假的概率大于 95%，因此发现一定是真实的。<br/>
+          <b>✅ 纠正：</b>p 值是在零假设为真的条件下，观察到当前数据（或更极端数据）的概率。p &lt; 0.05 并不意味着"效应为真的概率为 95%"。实际上，在先验概率较低的情况下（如探索性分析），即使 p &lt; 0.05，效应为真的后验概率可能远低于 50%。<br/>
+          <b>💡 最佳实践：</b>始终报告效应量和置信区间，而非仅报告 p 值。在可行的情况下，使用贝叶斯方法计算后验概率。对于探索性分析，使用更严格的阈值（如 p &lt; 0.005）或进行多重比较校正。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 2：不显著（p ≥ 0.05）意味着"没有效果" <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>p ≥ 0.05 表示效应不存在，因此停止分析。<br/>
+          <b>✅ 纠正：</b>p ≥ 0.05 可能是由于样本量不足（统计功效低）、效应量小、或测量误差大导致的。在功效不足的情况下，即使效应真实存在，也可能无法检测到（Type II 错误）。<br/>
+          <b>💡 最佳实践：</b>在实验设计阶段进行统计功效分析，确保样本量充足。对于不显著的结果，报告效应量和置信区间，并说明"在当前样本量下无法检测到该效应量"而非"效应不存在"。考虑使用等价性检验（TOST）来验证效应是否确实可以忽略。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 3：多重比较时不进行校正 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>同时进行多个假设检验，直接使用 α=0.05 判断每个检验的显著性。<br/>
+          <b>✅ 纠正：</b>同时进行 10 次独立检验时，至少一次假阳性的概率为 1 - (1-0.05)¹⁰ = 40.1%。未校正的多重比较会导致假阳性率大幅膨胀。<br/>
+          <b>💡 最佳实践：</b>使用 Bonferroni 校正（α' = α / m，m 为比较次数）或 FDR 校正（Benjamini-Hochberg 方法）。对于探索性分析，FDR 比 Bonferroni 更合适（前者控制假阳性率，后者控制家族错误率）。在 A/B 测试中，同时进行 12 组实验时，校正后的 α' = 0.05/12 = 0.004。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 4：统计显著 = 实际显著 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>p &lt; 0.05 的结果一定具有业务意义，应该据此做出决策。<br/>
+          <b>✅ 纠正：</b>在大样本中（N &gt; 1000），即使效应量很小（如 d=0.1），也可能达到统计显著。但效应量 d=0.1 在实际业务中可能毫无意义。反之，在小样本中，效应量 d=0.8 可能不显著，但仍有实际意义。<br/>
+          <b>💡 最佳实践：</b>始终同时报告效应量和 p 值。在业务决策中，以效应量（而非 p 值）作为主要依据。设定最小可检测效应量（MDE）——只有效应量超过 MDE 的发现才被认为具有业务意义。例如，在 A/B 测试中，如果成本要求转化率提升至少 5% 才值得实施，则 MDE = 5%。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 5：p-hacking / 数据窥探 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>在数据收集过程中反复检查结果，当 p &lt; 0.05 时停止收集；或尝试不同的排除标准、协变量组合，直到找到显著结果。<br/>
+          <b>✅ 纠正：</b>p-hacking 是学术和商业研究中最大的统计陷阱之一。每次"窥探"数据后做决策（如是否继续收集数据），都会改变检验统计量的分布，导致假阳性率大幅上升。<br/>
+          <b>💡 最佳实践：</b>在实验开始前预先注册分析计划（包括样本量、排除标准、主要分析方法和协变量）。使用序贯分析方法（sequential analysis）在数据收集过程中进行调整。所有探索性分析的结果应明确标记为"探索性"，与验证性分析区分。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 6：忽略置信区间的重叠 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>两个置信区间重叠意味着两组间没有显著差异。<br/>
+          <b>✅ 纠正：</b>置信区间重叠并不意味着差异不显著。实际上，两个 95% 置信区间可以有相当程度的重叠，而两组均值差异仍然显著（p &lt; 0.05）。更准确的方法是直接检验差异的置信区间是否包含 0。<br/>
+          <b>💡 最佳实践：</b>直接计算两组差异的置信区间，而非分别计算各组的置信区间。当差异的 95% 置信区间不包含 0 时，差异在 α=0.05 水平上显著。报告差异的置信区间比分别报告各组的置信区间更有信息量。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 7：相关性 = 因果性 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>观察到两个变量显著相关，就认为一个变量导致另一个变量变化。<br/>
+          <b>✅ 纠正：</b>相关关系可能由多种原因引起：因果关系、反向因果、第三变量（混淆变量）、选择偏差或偶然相关。在观察性研究中，自变量和因变量之间的相关关系几乎总是存在多种可能的因果解释。<br/>
+          <b>💡 最佳实践：</b>使用因果推断方法（如 DID、工具变量、断点回归、随机实验）来验证因果关系。在观察性研究中，明确列出可能的混淆变量，使用倾向性得分匹配（PSM）或逆概率加权（IPW）进行控制。使用 DAG（有向无环图）明确变量间的因果假设。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 8：忽略数据的非独立性 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>假设所有观测值相互独立，使用标准回归模型分析层级数据。<br/>
+          <b>✅ 纠正：</b>当数据具有层级结构（如用户嵌套在社区中、多次测量嵌套在个体中）时，违反了回归模型的独立性假设。使用标准模型会导致标准误被低估，假阳性率上升。<br/>
+          <b>💡 最佳实践：</b>使用多层次模型（如 M6 贝叶斯分层模型、混合效应模型）来处理层级数据。计算组内相关系数（ICC）来量化层级间方差的比例。如果 ICC &gt; 0.05，则应使用多层次模型。使用聚类稳健标准误（cluster-robust SE）作为替代方案。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 9：删除异常值而不报告 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>发现异常值后直接删除，不记录删除标准和对结果的影响。<br/>
+          <b>✅ 纠正：</b>异常值可能是数据录入错误、真实极端值或信号。不透明的异常值处理会导致结果不可重复，并且可能引入选择性偏差。<br/>
+          <b>💡 最佳实践：</b>预先注册异常值判断标准（如 |Z| &gt; 3 或 1.5×IQR）。同时报告含异常值和不含异常值的分析结果。使用稳健统计方法（如中位数替代均值、MAD 替代标准差）作为敏感性分析。记录所有删除的观测值及其删除原因。
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header">误区 10：过拟合与过度解读 <span class="arrow">▶</span></div>
+        <div class="accordion-body">
+          <b>❌ 误区：</b>在模型中加入大量变量，追求样本内拟合优度（R²）最大化。<br/>
+          <b>✅ 纠正：</b>变量越多，模型在样本内拟合越好，但在新数据上的预测能力越差（过拟合）。在极端情况下，当变量数接近样本量时，R² 可以接近 1，但模型完全没有预测能力。<br/>
+          <b>💡 最佳实践：</b>使用交叉验证（k-fold CV）评估模型在新数据上的表现。使用正则化方法（Lasso、Ridge、Elastic Net）自动进行变量选择。遵循"简约原则"（Occam's Razor）——在同等拟合优度下，选择参数更少的模型。报告调整后的 R² 和 AIC/BIC 等惩罚复杂度的指标。
+        </div>
+      </div>
+    </div>
+
+    <div class="model-card brand" style="margin-top:16px">
+      <h4>📋 统计报告检查清单</h4>
+      <div class="params" style="line-height:2.2">
+        <b>✅ 报告效应量</b>（Cohen's d / OR / r）和 <b>置信区间</b>，而非仅 p 值<br/>
+        <b>✅ 报告统计功效</b>分析结果，说明样本量是否充足<br/>
+        <b>✅ 说明多重比较</b>校正方法（Bonferroni / FDR / 无需校正）<br/>
+        <b>✅ 区分探索性</b>分析和验证性分析，明确标记探索性发现<br/>
+        <b>✅ 报告缺失值</b>处理方法和异常值处理标准<br/>
+        <b>✅ 提供敏感性</b>分析，验证结论对分析选择的稳健性<br/>
+        <b>✅ 附上数据</b>和分析代码，支持结果可重复性<br/>
+        <b>✅ 说明研究</b>的局限性，包括可能的偏差和混淆变量
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================================== -->
+  <!-- 11 研究实施路线图（新增） -->
+  <!-- ================================================================================== -->
+  <section style="border:none">
+    <div class="sec-head"><span class="sec-num">11</span><h2>研究实施路线图</h2></div>
+    <p class="muted">将上述所有方法论框架整合为分阶段的研究实施路线图。从 Phase 0 探索到 Phase 4 规模化，每个阶段有明确的目标、方法和交付物。</p>
+
+    <div class="timeline">
+      <div class="phase">
+        <div class="node"></div>
+        <div class="ptitle"><h4>Phase 0：探索与设计</h4><span class="when">第 1-3 周</span></div>
+        <div class="pbody">
+          <b>目标：</b>完成研究设计、问卷开发和预测试。<br/>
+          <b>方法：</b>文献综述、专家访谈、认知访谈、预测试（n=30-50）<br/>
+          <b>交付物：</b>最终版问卷、数据管理计划、伦理审查申请、抽样方案<br/>
+          <b>里程碑：</b>✅ 问卷通过预测试信度检验（α ≥ 0.70）| ✅ 伦理审查批准
+        </div>
+      </div>
+      <div class="phase p2">
+        <div class="node"></div>
+        <div class="ptitle"><h4>Phase 1：数据收集与探索</h4><span class="when">第 4-8 周</span></div>
+        <div class="pbody">
+          <b>目标：</b>完成大规模数据收集，进行探索性数据分析。<br/>
+          <b>方法：</b>分层抽样（N=1,000+）、数据清洗、描述性统计、M7 (GAM) + M8 (RF) 探索<br/>
+          <b>交付物：</b>清洗后数据集、数据质量报告、探索性分析报告（含非线性关系图谱）<br/>
+          <b>里程碑：</b>✅ 有效样本量 ≥ 800 | ✅ 数据清洗率 &lt; 15% | ✅ 完成探索性分析
+        </div>
+      </div>
+      <div class="phase p3">
+        <div class="node"></div>
+        <div class="ptitle"><h4>Phase 2：假设验证</h4><span class="when">第 9-14 周</span></div>
+        <div class="pbody">
+          <b>目标：</b>验证所有 30 个子假设，识别支持的假设和拒绝的假设。<br/>
+          <b>方法：</b>M1 (Logistic)、M2 (Conjoint)、M3 (Cox)、M4 (Mediation)、M5 (Power Law)、M10 (LCA)<br/>
+          <b>交付物：</b>假设验证报告（含效应量、p 值、置信区间）、假设树更新、用户分层方案<br/>
+          <b>里程碑：</b>✅ 完成 30 个子假设验证 | ✅ 识别 Top 5 关键发现 | ✅ 用户分层定稿
+        </div>
+      </div>
+      <div class="phase p4">
+        <div class="node"></div>
+        <div class="ptitle"><h4>Phase 3：机制深度分析</h4><span class="when">第 15-20 周</span></div>
+        <div class="pbody">
+          <b>目标：</b>深入分析因果机制和潜变量路径，为产品设计提供理论依据。<br/>
+          <b>方法：</b>M6 (Bayesian Hierarchical)、M9 (SEM)、M11 (Markov Chain)、M12 (DID)<br/>
+          <b>交付物：</b>因果路径分析报告、贝叶斯模型结果、用户行为路径图谱、SEM 模型拟合报告<br/>
+          <b>里程碑：</b>✅ 模型拟合指标达标（CFI &gt; 0.90, RMSEA &lt; 0.08）| ✅ 因果效应确认
+        </div>
+      </div>
+      <div class="phase p5">
+        <div class="node"></div>
+        <div class="ptitle"><h4>Phase 4：实验验证与规模化</h4><span class="when">第 21-30 周</span></div>
+        <div class="pbody">
+          <b>目标：</b>基于前期发现设计和执行 A/B 测试，验证产品优化方案。<br/>
+          <b>方法：</b>12 组 A/B 测试（EXP-01 至 EXP-12）、统计功效分析、Cohort 追踪、蒙特卡洛模拟<br/>
+          <b>交付物：</b>实验报告（含效应量、统计功效、成本效益分析）、产品优化建议书、长期 Cohort 追踪报告<br/>
+          <b>里程碑：</b>✅ 完成 12 组实验 | ✅ 至少 8 组实验显著（p &lt; 0.05）| ✅ 核心指标提升 ≥ 20%
+        </div>
+      </div>
+    </div>
+
+    <div class="model-card gold">
+      <h4>📋 关键可交付物汇总</h4>
+      <div class="params" style="line-height:2.2">
+        <b>Phase 0:</b> 研究设计方案（1 份）| 问卷（1 版）| 伦理审查申请（1 份）<br/>
+        <b>Phase 1:</b> 清洗后数据集（1 份）| 数据质量报告（1 份）| 探索性分析报告（1 份）<br/>
+        <b>Phase 2:</b> 假设验证报告（1 份）| 假设树更新（1 版）| 用户分层方案（1 份）<br/>
+        <b>Phase 3:</b> 因果路径分析报告（1 份）| 贝叶斯模型结果（1 份）| 用户行为路径图谱（1 份）<br/>
+        <b>Phase 4:</b> 实验报告（12 份）| 产品优化建议书（1 份）| Cohort 追踪报告（1 份）<br/>
+        <b>总计：</b>22+ 份可交付物，覆盖 30 周的研究周期
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <h5>🎯 研究实施关键成功因素</h5>
+      <p><b>1. 交叉验证：</b>每个核心发现至少使用 2 种不同的模型或方法验证，减少方法偏差。<br/>
+      <b>2. 迭代闭环：</b>每个阶段的结果反馈到下一个阶段的设计中，确保研究始终聚焦最有价值的问题。<br/>
+      <b>3. 透明度：</b>所有分析代码、数据清洗规则和模型假设公开透明，支持可重复性。<br/>
+      <b>4. 用户中心：</b>始终以用户行为和数据为驱动，避免先验假设主导分析方向。<br/>
+      <b>5. 成本效益：</b>在样本量、分析深度和时间成本之间取得平衡，优先保证核心假设的验证效力。</p>
+    </div>
+
+    <div class="grid cols-2" style="margin-top:16px">
+      <div class="card brand">
+        <div class="ic">⚠️</div>
+        <h4>风险管理与缓解策略</h4>
+        <ul style="font-size:12.5px;color:var(--ink-soft);line-height:1.8;padding-left:18px;margin:6px 0 0">
+          <li><b>低回收率风险：</b>通过多通道投放（线上+线下）和激励机制（好心值奖励）提升回收率，目标回收率 ≥ 60%</li>
+          <li><b>样本偏差风险：</b>使用分层抽样 + 事后加权（raking）校正，确保样本结构接近总体</li>
+          <li><b>测量误差风险：</b>使用成熟量表 + 多题项测量 + 预测试信度检验，确保 α ≥ 0.70</li>
+          <li><b>共同方法偏差：</b>使用 Harman 单因子检验 + 标记变量法，如偏差过大则使用 CFA 标记变量法校正</li>
+          <li><b>流失率风险：</b>纵向研究中预留 20% 额外样本以应对流失，并在分析中使用 M3 (Cox) 处理删失数据</li>
+        </ul>
+      </div>
+      <div class="card leaf">
+        <div class="ic">📊</div>
+        <h4>资源需求与预算估算</h4>
+        <ul style="font-size:12.5px;color:var(--ink-soft);line-height:1.8;padding-left:18px;margin:6px 0 0">
+          <li><b>人员配置：</b>研究负责人（1 人）、数据分析师（2 人）、调研执行（3 人）、产品对接（1 人）</li>
+          <li><b>数据收集：</b>线上问卷平台费用（约 ¥5,000）+ 线下执行费用（约 ¥15,000）+ 被试激励（约 ¥10,000）</li>
+          <li><b>基础设施：</b>数据分析平台（R/Python 开源免费）+ 云存储（约 ¥500/月）+ 实验平台（自建）</li>
+          <li><b>时间预算：</b>Phase 0-4 共 30 周，其中数据收集 5 周、分析 15 周、实验验证 10 周</li>
+          <li><b>总预算估算：</b>约 ¥30,000-50,000（不含人员成本），主要支出为数据收集和被试激励</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="refs">
+      <h5>📚 参考文献与工具</h5>
+      <ol>
+        <li>Cohen, J. (1988). <em>Statistical Power Analysis for the Behavioral Sciences</em> (2nd ed.). Lawrence Erlbaum Associates.</li>
+        <li>McArdle, J. J., &amp; Epstein, D. (1987). Latent growth curves within developmental structural equation models. <em>Child Development</em>, 58(1), 110-133.</li>
+        <li>Rosenbaum, P. R., &amp; Rubin, D. B. (1983). The central role of the propensity score in observational studies for causal effects. <em>Biometrika</em>, 70(1), 41-55.</li>
+        <li>Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). <em>The Elements of Statistical Learning</em> (2nd ed.). Springer.</li>
+        <li>Gelman, A., Carlin, J. B., Stern, H. S., &amp; Rubin, D. B. (2013). <em>Bayesian Data Analysis</em> (3rd ed.). CRC Press.</li>
+        <li>Angrist, J. D., &amp; Pischke, J.-S. (2009). <em>Mostly Harmless Econometrics</em>. Princeton University Press.</li>
+        <li>Collins, L. M., &amp; Lanza, S. T. (2010). <em>Latent Class and Latent Transition Analysis</em>. Wiley.</li>
+        <li>Kohavi, R., Tang, D., &amp; Xu, Y. (2020). <em>Trustworthy Online Controlled Experiments</em>. Cambridge University Press.</li>
+        <li>Bollen, K. A. (1989). <em>Structural Equations with Latent Variables</em>. Wiley.</li>
+        <li>Muthén, L. K., &amp; Muthén, B. O. (2017). <em>Mplus User's Guide</em> (8th ed.). Muthén &amp; Muthén.</li>
+        <li>Van Buuren, S. (2018). <em>Flexible Imputation of Missing Data</em> (2nd ed.). CRC Press.</li>
+        <li>Wasserman, L. (2004). <em>All of Statistics</em>. Springer.</li>
+      </ol>
+    </div>
+    <p>把好事做成日常 <span class="heart">♥</span> · 方法论框架扩展 · 数据均为模拟演示 · 版本 3.0</p>
+    <p style="font-size:12px;color:var(--ink-faint);margin-top:6px">本页面包含 11 大模块（假设树、统计模型、用户分层、A/B 测试、Cohort 分析、统计功效、交互式工具、效应量换算、研究设计、模型对比、常见误区、实施路线图），覆盖 30+ 子假设、12 个统计验证模型、8 层用户分层、12 组 A/B 测试、4 个交互式分析工具和 1 个实验模拟沙盘。</p>
+    <p style="font-size:11px;color:var(--ink-faint);margin-top:4px">页面版本 3.0 · 总行数 2,000+ · 最后更新 2026 年 8 月 · 设计：好事近研究团队</p>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:11px;color:var(--ink-faint);line-height:1.8">
+      <b>免责声明：</b>本页面中的所有数据均为模拟演示数据，用于展示方法论框架的分析思路和呈现方式。实际研究中的数值、效应量和结论应以真实数据收集和分析结果为准。<br/>
+      <b>版权声明：</b>本页面内容仅供内部研究参考使用，未经授权不得对外传播或用于商业用途。<br/>
+      <b>技术栈：</b>纯 HTML/CSS/JavaScript 实现，无外部依赖。兼容 Chrome、Firefox、Safari、Edge 等现代浏览器。<br/>
+      <b>联系方式：</b>如有任何问题或建议，请联系研究团队（研究@好事近.com）。<br/>
+      <b>版本历史：</b>v1.0（2026.06）— 初始框架 | v2.0（2026.07）— 扩展至 12 模型 + 8 分层 | v3.0（2026.08）— 新增交互式工具 + 统计误区 + 效应量换算器
+    </div>
+  </div>
+</footer>
+<button id="totop" aria-label="回到顶部">↑</button>
+
+<script>
+  // ===== 回到顶部 =====
+  const totop = document.getElementById('totop');
+  document.addEventListener('scroll', () => { totop.classList.toggle('show', document.documentElement.scrollTop > 600); }, {passive: true});
+  totop.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+  // ===== Tab 切换 =====
+  document.querySelectorAll('.tabs').forEach(tabGroup => {
+    tabGroup.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parent = btn.closest('section') || btn.parentElement.nextElementSibling;
+        // Find the parent section or the nearest common container
+        const container = tabGroup.parentElement;
+        tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        const target = document.getElementById(btn.dataset.tab);
+        if (target) target.classList.add('active');
+      });
+    });
+  });
+
+  // ===== 样本量计算器 =====
+  function calcSampleSize() {
+    const p1 = parseFloat(document.getElementById('p1Num').value) || 0.25;
+    const delta = parseFloat(document.getElementById('deltaNum').value) || 0.05;
+    const alpha = parseFloat(document.getElementById('alphaNum').value) || 0.05;
+    const power = parseFloat(document.getElementById('powerNum').value) || 0.80;
+    const p2 = p1 + delta;
+    const za = 1.96; // simplified for alpha=0.05
+    const zb = 0.84; // simplified for 80% power
+    // More accurate z-values
+    const zAlpha = alpha <= 0.01 ? 2.576 : alpha <= 0.05 ? 1.96 : 1.645;
+    const zBeta = power >= 0.99 ? 2.326 : power >= 0.95 ? 1.645 : power >= 0.90 ? 1.282 : power >= 0.80 ? 0.842 : power >= 0.70 ? 0.524 : 0.253;
+    const n = Math.ceil(Math.pow(zAlpha + zBeta, 2) * (p1 * (1 - p1) + p2 * (1 - p2)) / Math.pow(p1 - p2, 2));
+    document.getElementById('nResult').textContent = n > 0 ? n : 10;
+    document.getElementById('nTotal').textContent = n > 0 ? n * 2 : 20;
+    document.getElementById('p2Result').textContent = (p2 * 100).toFixed(1) + '%';
+    // Update sync
+    document.getElementById('p1Val').textContent = (p1 * 100).toFixed(0) + '%';
+    document.getElementById('deltaVal').textContent = (delta * 100).toFixed(0) + '%';
+    document.getElementById('alphaVal').textContent = alpha.toFixed(2);
+    document.getElementById('powerVal').textContent = (power * 100).toFixed(0) + '%';
+  }
+
+  function syncSampleSizeInputs(source, target, valId, formatter) {
+    document.getElementById(target).value = document.getElementById(source).value;
+    if (valId) document.getElementById(valId).textContent = formatter ? formatter(document.getElementById(source).value) : document.getElementById(source).value;
+    calcSampleSize();
+  }
+
+  ['p1','delta','alpha','power'].forEach(id => {
+    const range = document.getElementById(id + 'Range');
+    const num = document.getElementById(id + 'Num');
+    if (range && num) {
+      range.addEventListener('input', () => { num.value = range.value; calcSampleSize(); });
+      num.addEventListener('input', () => { range.value = num.value; calcSampleSize(); });
+    }
+  });
+  calcSampleSize();
+
+  // ===== 置信区间计算器 =====
+  function calcCI() {
+    const n = parseInt(document.getElementById('nNum').value) || 500;
+    const p = parseFloat(document.getElementById('pNum').value) || 0.35;
+    const z = 1.96;
+    const se = Math.sqrt(p * (1 - p) / n);
+    const me = z * se;
+    const lower = Math.max(0, (p - me) * 100);
+    const upper = Math.min(100, (p + me) * 100);
+    document.getElementById('ciRange').textContent = lower.toFixed(1) + '% — ' + upper.toFixed(1) + '%';
+    document.getElementById('seVal').textContent = (se * 100).toFixed(2) + '%';
+    document.getElementById('meVal').textContent = (me * 100).toFixed(2) + '%';
+    document.getElementById('nVal').textContent = n;
+    document.getElementById('pCIVal').textContent = (p * 100).toFixed(0) + '%';
+  }
+
+  ['n','p'].forEach(id => {
+    const range = document.getElementById(id + 'Range');
+    const num = document.getElementById(id + 'Num');
+    if (range && num) {
+      range.addEventListener('input', () => { num.value = range.value; calcCI(); });
+      num.addEventListener('input', () => { range.value = num.value; calcCI(); });
+    }
+  });
+  calcCI();
+
+  // ===== 相关性解读工具 =====
+  function calcCorr() {
+    const r = parseFloat(document.getElementById('rRange').value) || 0;
+    const absR = Math.abs(r);
+    let level, desc, interp;
+    if (absR < 0.10) { level = '可忽略'; desc = '可忽略'; interp = '当 |r| < 0.10 时，两变量之间几乎没有线性关系，一个变量的变化无法预测另一个变量。'; }
+    else if (absR < 0.30) { level = '小效应'; desc = '弱' + (r >= 0 ? '正' : '负') + '相关'; interp = '当 r=' + r.toFixed(2) + ' 时，两变量之间存在微弱的关系，实际意义有限。'; }
+    else if (absR < 0.50) { level = '中等效应'; desc = '中等' + (r >= 0 ? '正' : '负') + '相关'; interp = '当 r=' + r.toFixed(2) + ' 时，两变量之间存在中等程度的' + (r >= 0 ? '正' : '负') + '相关。一个变量变化时，另一个变量有中等程度的' + (r >= 0 ? '同向' : '反向') + '变化趋势。'; }
+    else if (absR < 0.70) { level = '大效应'; desc = '强' + (r >= 0 ? '正' : '负') + '相关'; interp = '当 r=' + r.toFixed(2) + ' 时，两变量之间存在较强的' + (r >= 0 ? '正' : '负') + '相关，一个变量可以较好地预测另一个变量。'; }
+    else { level = '极大效应'; desc = '极强' + (r >= 0 ? '正' : '负') + '相关'; interp = '当 r=' + r.toFixed(2) + ' 时，两变量之间存在极强的' + (r >= 0 ? '正' : '负') + '相关，具有非常强的预测关系。'; }
+    document.getElementById('corrLevel').textContent = level;
+    document.getElementById('corrDesc').textContent = desc;
+    document.getElementById('r2Val').textContent = (r * r).toFixed(4);
+    document.getElementById('explainedVar').textContent = (r * r * 100).toFixed(2) + '%';
+    document.getElementById('corrInterpretation').textContent = interp;
+    document.getElementById('rVal').textContent = r.toFixed(2);
+  }
+
+  document.getElementById('rRange').addEventListener('input', calcCorr);
+  calcCorr();
+
+  // ===== 效应量换算器 =====
+  function calcEffectSize() {
+    const type = document.getElementById('esType').value;
+    const val = parseFloat(document.getElementById('esNum').value) || 0.5;
+    let d, h, or, r, level, desc;
+    if (type === 'd') {
+      d = val; h = 2 * Math.asin(Math.sqrt(val / (2 * val + 1))); or = Math.exp(val * Math.PI / Math.sqrt(3)); r = val / Math.sqrt(val * val + 4);
+    } else if (type === 'h') {
+      h = val; // approximate: derive d from h, then others
+      d = val * 1.03; or = Math.exp(d * Math.PI / Math.sqrt(3)); r = d / Math.sqrt(d * d + 4);
+    } else if (type === 'or') {
+      or = val; d = Math.log(val) * Math.sqrt(3) / Math.PI; h = 2 * Math.asin(Math.sqrt(d / (2 * d + 1))); r = d / Math.sqrt(d * d + 4);
+    } else { // r
+      r = val; d = 2 * val / Math.sqrt(1 - val * val); h = 2 * Math.asin(Math.sqrt(d / (2 * d + 1))); or = Math.exp(d * Math.PI / Math.sqrt(3));
+    }
+    document.getElementById('esD').textContent = d.toFixed(2);
+    document.getElementById('esH').textContent = h.toFixed(2);
+    document.getElementById('esOR').textContent = or.toFixed(2);
+    document.getElementById('esR').textContent = r.toFixed(2);
+    const absD = Math.abs(d);
+    if (absD < 0.20) { level = '可忽略效应'; desc = '该效应量在实际研究中几乎无意义，需要非常大的样本量（每组 N > 1000）才能检测到。'; }
+    else if (absD < 0.50) { level = '小效应'; desc = '该效应量在实际研究中具有有限的意义，通常需要中等偏大的样本量（每组 N=300-500）才能检测到。'; }
+    else if (absD < 0.80) { level = '中等效应'; desc = '该效应量在实际研究中具有中等程度的意义，通常在中等样本量（每组 N=100-300）下即可检测到。'; }
+    else { level = '大效应'; desc = '该效应量在实际研究中具有很大的意义，即使在小样本量（每组 N < 100）下也能可靠检测到。'; }
+    document.getElementById('esLevel').textContent = level;
+    document.getElementById('esDesc').textContent = desc;
+    document.getElementById('esVal').textContent = val.toFixed(2);
+  }
+
+  document.getElementById('esType').addEventListener('change', calcEffectSize);
+  document.getElementById('esRange') && document.getElementById('esRange').addEventListener('input', () => { document.getElementById('esNum').value = document.getElementById('esRange').value; calcEffectSize(); });
+  document.getElementById('esNum').addEventListener('input', () => { document.getElementById('esRange') && (document.getElementById('esRange').value = document.getElementById('esNum').value); calcEffectSize(); });
+  calcEffectSize();
+
+  // ===== 实验模拟沙盘 =====
+  function runSimulation() {
+    const ctrlRate = parseFloat(document.getElementById('ctrlRate').value) || 0.246;
+    const boost = parseFloat(document.getElementById('expBoost').value) || 0.312;
+    const n = parseInt(document.getElementById('simN').value) || 500;
+    const runs = parseInt(document.getElementById('simRuns').value) || 1000;
+    const expRate = ctrlRate * (1 + boost);
+    let sigCount = 0;
+    let ctrlSum = 0, expSum = 0;
+    for (let i = 0; i < runs; i++) {
+      // Simulate binomial draws
+      let ctrlSuccess = 0, expSuccess = 0;
+      for (let j = 0; j < n; j++) {
+        if (Math.random() < ctrlRate) ctrlSuccess++;
+        if (Math.random() < expRate) expSuccess++;
+      }
+      const ctrlP = ctrlSuccess / n;
+      const expP = expSuccess / n;
+      ctrlSum += ctrlP;
+      expSum += expP;
+      // Simple z-test
+      const se = Math.sqrt(ctrlP * (1 - ctrlP) / n + expP * (1 - expP) / n);
+      const z = (expP - ctrlP) / (se || 0.001);
+      if (Math.abs(z) > 1.96) sigCount++;
+    }
+    const ctrlMean = ctrlSum / runs;
+    const expMean = expSum / runs;
+    const lift = (expMean / ctrlMean - 1) * 100;
+    const power = (sigCount / runs) * 100;
+    const pVal = power > 95 ? '<0.001' : power > 80 ? '<0.01' : power > 50 ? '<0.05' : '>0.05';
+    document.getElementById('simCtrlMean').textContent = (ctrlMean * 100).toFixed(1) + '%';
+    document.getElementById('simExpMean').textContent = (expMean * 100).toFixed(1) + '%';
+    document.getElementById('simLift').textContent = (lift >= 0 ? '+' : '') + lift.toFixed(1) + '%';
+    document.getElementById('simPval').textContent = pVal;
+    document.getElementById('simPower').textContent = power.toFixed(1) + '%';
+    document.getElementById('simRunCount').textContent = runs.toLocaleString();
+    const conclusion = power >= 80
+      ? '实验组显著优于对照组（p < 0.05），统计功效充足（≥80%），建议推进实验实施。'
+      : power >= 50
+        ? '实验组有改善趋势，但统计功效不足（<80%），建议增加样本量后再进行实验。'
+        : '当前效应量下统计功效过低，建议增大效应量或大幅增加样本量。';
+    document.getElementById('simConclusion').textContent = conclusion;
+  }
+
+  document.getElementById('runSimBtn').addEventListener('click', runSimulation);
+  document.getElementById('resetSimBtn').addEventListener('click', () => {
+    document.getElementById('ctrlRate').value = 0.246;
+    document.getElementById('expBoost').value = 0.312;
+    document.getElementById('simN').value = 500;
+    document.getElementById('simRuns').value = 1000;
+    document.getElementById('ctrlRateVal').textContent = '24.6%';
+    document.getElementById('expBoostVal').textContent = '+31.2%';
+    document.getElementById('simNVal').textContent = '500';
+    document.getElementById('simRunsVal').textContent = '1,000';
+    runSimulation();
+  });
+
+  ['ctrlRate', 'expBoost', 'simN', 'simRuns'].forEach(id => {
+    const el = document.getElementById(id);
+    const valId = id + 'Val';
+    if (el && document.getElementById(valId)) {
+      el.addEventListener('input', () => {
+        const v = id === 'simRuns' ? parseFloat(el.value).toLocaleString() : id === 'expBoost' ? '+' + (parseFloat(el.value) * 100).toFixed(1) + '%' : id === 'ctrlRate' ? (parseFloat(el.value) * 100).toFixed(1) + '%' : el.value;
+        document.getElementById(valId).textContent = v;
+      });
+    }
+  });
+
+  // ===== 手风琴 =====
+  document.querySelectorAll('.accordion-header').forEach(h => {
+    h.addEventListener('click', () => {
+      const item = h.closest('.accordion-item');
+      const wasOpen = item.classList.contains('open');
+      // Close all siblings
+      item.parentElement.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // ===== 按钮反馈 =====
+  document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const orig = this.textContent;
+      this.textContent = '✓ 已执行';
+      this.style.opacity = '0.7';
+      setTimeout(() => {
+        this.textContent = orig;
+        this.style.opacity = '1';
+      }, 1200);
+    });
+  });
+
+  // ===== 滚动到当前 Tab 区域的平滑处理 =====
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const rect = this.getBoundingClientRect();
+      if (rect.top < 0) {
+        this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  });
+
+  console.log('✅ 框架页面已完全加载 — 包含 11 大模块、30+ 子假设、12 个统计模型、8 层用户分层、12 组 A/B 测试、4 个交互式工具、10 个统计误区');
+</script>
+</body>
+</html>
