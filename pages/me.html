@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>个人中心 · 好事近</title>
+<link rel="stylesheet" href="../css/style.css" />
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f7f5f2; color: #2b2622; }
+
+/* 导航 */
+.topbar { background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #eee8e2; position: sticky; top: 0; z-index: 1000; }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; max-width: 1200px; margin: 0 auto; height: 56px; }
+.topbar .logo { font-size: 18px; font-weight: 800; text-decoration: none; color: #2b2622; }
+.topbar .logo span { color: #c8533a; }
+.topbar nav { display: flex; gap: 4px; overflow-x: auto; }
+.topbar nav a { padding: 6px 12px; font-size: 13px; font-weight: 600; color: #7a6e66; text-decoration: none; border-radius: 6px; white-space: nowrap; transition: all .15s; }
+.topbar nav a:hover { color: #2b2622; background: #f5f0eb; }
+.topbar nav a.active { color: #c8533a; background: #fef3ef; }
+
+.wrap { max-width: 960px; margin: 0 auto; padding: 20px 16px 80px; }
+
+/* 通知条 */
+.notice-bar {
+  background: linear-gradient(135deg, #fef3ef, #fff8f0); border: 1px solid #fde0d6;
+  border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 12px;
+  margin-bottom: 20px; flex-wrap: wrap; animation: fadeIn .4s ease;
+}
+.notice-bar .nb-icon { font-size: 22px; flex-shrink: 0; }
+.notice-bar .nb-text { flex: 1; font-size: 14px; line-height: 1.5; }
+.notice-bar .nb-text b { color: #c8533a; }
+.notice-bar .nb-btn {
+  padding: 6px 16px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  color: #fff; background: #c8533a; border: none; cursor: pointer; transition: all .2s;
+}
+.notice-bar .nb-btn:hover { background: #b0442e; }
+
+/* 个人资料卡 */
+.profile-card {
+  background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(43,38,34,.04), 0 4px 20px rgba(43,38,34,.06); margin-bottom: 20px;
+}
+.profile-cover { height: 100px; background: linear-gradient(135deg, #c8533a, #da7a4a, #e8a87a); position: relative; }
+.profile-avatar {
+  position: absolute; bottom: -40px; left: 24px; width: 80px; height: 80px; border-radius: 50%;
+  border: 4px solid #fff; background: #fef3ef; display: grid; place-items: center; font-size: 36px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.profile-body { padding: 48px 24px 20px 24px; }
+.profile-body .p-name { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.profile-body .p-name .p-badge { font-size: 11px; padding: 2px 10px; border-radius: 999px; background: #fef3ef; color: #c8533a; font-weight: 700; }
+.profile-body .p-meta { font-size: 13px; color: #7a6e66; margin-top: 4px; display: flex; gap: 16px; flex-wrap: wrap; }
+.profile-body .p-meta span { display: flex; align-items: center; gap: 4px; }
+.profile-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid #f5f0eb; }
+.profile-stats .ps-item { text-align: center; }
+.profile-stats .ps-item .ps-num { font-size: 20px; font-weight: 800; color: #c8533a; }
+.profile-stats .ps-item .ps-label { font-size: 11px; color: #7a6e66; margin-top: 2px; }
+
+/* 成就徽章 */
+.badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.badge-item {
+  width: 36px; height: 36px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center;
+  font-size: 16px; position: relative; cursor: help;
+}
+.badge-item.unlocked { background: #fef3ef; box-shadow: 0 0 0 2px #fde0d6; }
+.badge-item.locked { opacity: .4; }
+
+/* 内容网格 */
+.content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+@media(max-width:768px) { .content-grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 2px rgba(43,38,34,.04), 0 4px 16px rgba(43,38,34,.05);
+  border: 1px solid #eee8e2;
+}
+.card-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.card-hd h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.card-hd .more { font-size: 12px; color: #c8533a; font-weight: 600; cursor: pointer; }
+
+/* 动态流 */
+.feed-item {
+  display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f0eb; align-items: flex-start;
+}
+.feed-item:last-child { border-bottom: none; }
+.feed-item .fi-avatar { width: 32px; height: 32px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 14px; flex-shrink: 0; }
+.feed-item .fi-body { flex: 1; }
+.feed-item .fi-body .fi-text { font-size: 13px; line-height: 1.5; }
+.feed-item .fi-body .fi-text b { color: #2b2622; }
+.feed-item .fi-body .fi-time { font-size: 11px; color: #b5a99e; margin-top: 2px; }
+.feed-item .fi-action { font-size: 11px; padding: 3px 10px; border-radius: 999px; background: #fef3ef; color: #c8533a; font-weight: 600; white-space: nowrap; }
+
+/* 足迹时间线 */
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 2px; background: #eee8e2; }
+.tl-item { position: relative; padding-bottom: 14px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item::before { content: ''; position: absolute; left: -19px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #c8533a; border: 2px solid #fff; box-shadow: 0 0 0 2px #fde0d6; }
+.tl-item .tl-date { font-size: 11px; color: #b5a99e; }
+.tl-item .tl-title { font-size: 13px; font-weight: 600; margin-top: 2px; }
+.tl-item .tl-desc { font-size: 12px; color: #7a6e66; margin-top: 1px; }
+.tl-item .tl-points { font-size: 11px; font-weight: 700; color: #c8533a; margin-top: 2px; }
+
+/* 热力图 */
+.hm-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.hm-cell {
+  aspect-ratio: 1; border-radius: 4px; font-size: 9px; display: grid; place-items: center;
+  color: #b5a99e; background: #f5f0eb; cursor: help; transition: all .2s;
+}
+.hm-cell.l1 { background: #fef3ef; color: #c8533a; }
+.hm-cell.l2 { background: #fde0d6; color: #c8533a; font-weight: 600; }
+.hm-cell.l3 { background: #c8533a; color: #fff; font-weight: 700; }
+.hm-cell.today { box-shadow: 0 0 0 2px #c8533a; }
+.hm-label { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+.hm-label span { font-size: 10px; color: #b5a99e; text-align: center; }
+.hm-legend { display: flex; gap: 8px; align-items: center; margin-top: 8px; font-size: 11px; color: #7a6e66; }
+.hm-legend .hm-l { width: 14px; height: 14px; border-radius: 3px; background: #f5f0eb; }
+
+/* 排行榜 */
+.rank-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f5f0eb; }
+.rank-item:last-child { border-bottom: none; }
+.rank-item .r-num { width: 22px; font-size: 13px; font-weight: 800; color: #b5a99e; text-align: center; }
+.rank-item .r-num.top1 { color: #f5a623; }
+.rank-item .r-num.top2 { color: #7a9bb5; }
+.rank-item .r-num.top3 { color: #c47a2e; }
+.rank-item .r-avatar { width: 28px; height: 28px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 12px; }
+.rank-item .r-name { flex: 1; font-size: 13px; font-weight: 600; }
+.rank-item .r-score { font-size: 12px; color: #7a6e66; }
+.rank-item .r-badge { font-size: 10px; padding: 2px 6px; border-radius: 999px; background: #f5f0eb; color: #7a6e66; }
+
+/* 邻里 */
+.neighbor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.neighbor-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 12px; border-radius: 10px; border: 1px solid #eee8e2; cursor: pointer; transition: all .2s;
+}
+.neighbor-card:hover { border-color: #c8533a; background: #fef3ef; }
+.neighbor-card .nc-avatar { width: 40px; height: 40px; border-radius: 50%; background: #f5f0eb; display: grid; place-items: center; font-size: 18px; margin-bottom: 6px; }
+.neighbor-card .nc-name { font-size: 13px; font-weight: 600; }
+.neighbor-card .nc-meta { font-size: 11px; color: #7a6e66; margin-top: 2px; }
+.neighbor-card .nc-tag { font-size: 10px; padding: 2px 6px; border-radius: 999px; background: #fef3ef; color: #c8533a; font-weight: 600; margin-top: 4px; }
+
+/* 消息 */
+.msg-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f0eb; align-items: flex-start; }
+.msg-item:last-child { border-bottom: none; }
+.msg-item .mi-icon { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; }
+.msg-item .mi-body { flex: 1; }
+.msg-item .mi-body .mi-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.msg-item .mi-body .mi-desc { font-size: 12px; color: #7a6e66; margin-top: 2px; }
+.msg-item .mi-body .mi-time { font-size: 11px; color: #b5a99e; margin-top: 2px; }
+.msg-item .mi-dot { width: 8px; height: 8px; border-radius: 50%; background: #c8533a; flex-shrink: 0; margin-top: 4px; }
+
+/* 任务 */
+.task-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f0eb; }
+.task-item:last-child { border-bottom: none; }
+.task-item .t-check {
+  width: 22px; height: 22px; border-radius: 50%; border: 2px solid #ddd5cc;
+  display: grid; place-items: center; cursor: pointer; transition: all .2s; flex-shrink: 0;
+}
+.task-item .t-check.done { background: #4a9e6e; border-color: #4a9e6e; color: #fff; font-size: 11px; }
+.task-item .t-info { flex: 1; }
+.task-item .t-info .t-title { font-size: 13px; font-weight: 600; }
+.task-item .t-info .t-desc { font-size: 12px; color: #7a6e66; }
+.task-item .t-reward { font-size: 11px; font-weight: 700; color: #c8533a; white-space: nowrap; }
+.task-item .t-check.checked { background: #4a9e6e; border-color: #4a9e6e; color: #fff; }
+
+/* 空的tab切换 */
+.tab-bar { display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 1px solid #eee8e2; }
+.tab-bar .tab { padding: 8px 16px; font-size: 13px; font-weight: 600; color: #7a6e66; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; }
+.tab-bar .tab:hover { color: #2b2622; }
+.tab-bar .tab.active { color: #c8533a; border-bottom-color: #c8533a; }
+.tab-content { display: none; }
+.tab-content.show { display: block; animation: fadeIn .25s ease; }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* Toast */
+.toast-box { position: fixed; top: 72px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  background: #fff; border: 1px solid #eee8e2; border-left: 4px solid #4a9e6e; border-radius: 10px;
+  padding: 14px 18px; box-shadow: 0 8px 32px rgba(43,38,34,.12); display: flex; align-items: center; gap: 10px; max-width: 380px; animation: slideIn .3s ease;
+}
+.toast .t-icon { font-size: 22px; }
+.toast .t-title { font-size: 14px; font-weight: 700; }
+.toast .t-desc { font-size: 12px; color: #7a6e66; margin-top: 1px; }
+@keyframes slideIn { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
+
+@media(max-width:640px) {
+  .profile-stats { grid-template-columns: repeat(3, 1fr); }
+  .neighbor-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<div class="topbar">
+  <div class="wrap">
+    <a href="../index.html" class="logo">好事近 <span>·</span> 全案</a>
+    <nav>
+      <a href="../index.html">平台首页</a>
+      <a href="project.html">项目总览</a>
+      <a href="thesis.html">立论</a>
+      <a href="market.html">市场</a>
+      <a href="research.html">调研产品</a>
+      <a href="mvp.html">MVP</a>
+      <a href="roadmap.html">递进</a>
+      <a href="risks.html">风险</a>
+      <a href="ecosystem.html">生态模拟</a>
+      <a href="framework.html">框架</a>
+      <a href="dashboard.html">数据</a>
+      <a href="interact.html">互动</a>
+      <a href="simulator.html">模拟器</a>
+      <a href="choose.html">选择器</a>
+      <a href="cases.html">好事库</a>
+      <a href="interact2.html">互动广场</a>
+      <a href="me.html" class="active">个人中心</a>
+      <a href="next.html">下一步</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 通知条 -->
+  <div class="notice-bar" id="noticeBar">
+    <div class="nb-icon">🎉</div>
+    <div class="nb-text">欢迎回来！你已连续签到 <b>5</b> 天。今天还有 <b>3</b> 个每日任务未完成，完成可领 <b>+80</b> 好心值。</div>
+    <button class="nb-btn" onclick="claimDaily()">去完成</button>
+  </div>
+
+  <!-- 个人资料卡 -->
+  <div class="profile-card">
+    <div class="profile-cover"></div>
+    <div class="profile-avatar">🙋</div>
+    <div class="profile-body">
+      <div class="p-name">
+        林小暖
+        <span class="p-badge">🌟 热心邻居</span>
+      </div>
+      <div class="p-meta">
+        <span>📍 杭州·阳光花园 3号楼</span>
+        <span>📅 加入 65 天</span>
+        <span>🏅 Lv.7 好事达人</span>
+      </div>
+      <div class="badge-row">
+        <span class="badge-item unlocked" title="🌟 第一次好事">🌟</span>
+        <span class="badge-item unlocked" title="🔥 连续3天">🔥</span>
+        <span class="badge-item unlocked" title="💫 连续7天">💫</span>
+        <span class="badge-item unlocked" title="🤝 助人达人">🤝</span>
+        <span class="badge-item unlocked" title="🌿 环保先锋">🌿</span>
+        <span class="badge-item locked" title="💛 暖心陪伴（未解锁）">💛</span>
+        <span class="badge-item locked" title="🏆 挑战王者（未解锁）">🏆</span>
+        <span class="badge-item locked" title="👑 全能好事家（未解锁）">👑</span>
+      </div>
+      <div class="profile-stats">
+        <div class="ps-item"><div class="ps-num" id="psPoints">1,280</div><div class="ps-label">好心值</div></div>
+        <div class="ps-item"><div class="ps-num" id="psActs">47</div><div class="ps-label">完成好事</div></div>
+        <div class="ps-item"><div class="ps-num" id="psDays">5</div><div class="ps-label">连续签到</div></div>
+        <div class="ps-item"><div class="ps-num" id="psHelped">12</div><div class="ps-label">帮助邻居</div></div>
+        <div class="ps-item"><div class="ps-num" id="psRank">8</div><div class="ps-label">社区排名</div></div>
+        <div class="ps-item"><div class="ps-num" id="psBadges">5</div><div class="ps-label">成就徽章</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 标签页 -->
+  <div class="card" style="padding:0;">
+    <div class="tab-bar" style="padding:0 16px;">
+      <div class="tab active" data-tab="tab1" onclick="switchTab('tab1',this)">📋 每日任务</div>
+      <div class="tab" data-tab="tab2" onclick="switchTab('tab2',this)">📰 社区动态</div>
+      <div class="tab" data-tab="tab3" onclick="switchTab('tab3',this)">👣 好事足迹</div>
+      <div class="tab" data-tab="tab4" onclick="switchTab('tab4',this)">📊 签到热力图</div>
+      <div class="tab" data-tab="tab5" onclick="switchTab('tab5',this)">🔔 消息</div>
+    </div>
+
+    <!-- Tab1: 每日任务 -->
+    <div class="tab-content show" id="tab1" style="padding:0 16px 16px;">
+      <div style="font-size:12px;color:#7a6e66;margin:10px 0 6px;">今日任务 · 完成全部可得 <b style="color:#c8533a;">+80</b> 好心值</div>
+      <div class="task-item" data-task="1">
+        <div class="t-check" onclick="toggleTask(this)">✓</div>
+        <div class="t-info"><div class="t-title">今日签到</div><div class="t-desc">打开平台，完成今日签到</div></div>
+        <div class="t-reward">+10</div>
+      </div>
+      <div class="task-item" data-task="2">
+        <div class="t-check" onclick="toggleTask(this)">✓</div>
+        <div class="t-info"><div class="t-title">做一件好事</div><div class="t-desc">帮邻居一个小忙或做一件环保小事</div></div>
+        <div class="t-reward">+20</div>
+      </div>
+      <div class="task-item" data-task="3">
+        <div class="t-check" onclick="toggleTask(this)">✓</div>
+        <div class="t-info"><div class="t-title">记录好事</div><div class="t-desc">在互动广场记录你今天做的好事</div></div>
+        <div class="t-reward">+15</div>
+      </div>
+      <div class="task-item" data-task="4">
+        <div class="t-check" onclick="toggleTask(this)">✓</div>
+        <div class="t-info"><div class="t-title">给邻居点赞</div><div class="t-desc">在社区动态中给一位邻居的好事点赞</div></div>
+        <div class="t-reward">+10</div>
+      </div>
+      <div class="task-item" data-task="5">
+        <div class="t-check" onclick="toggleTask(this)">✓</div>
+        <div class="t-info"><div class="t-title">分享好事</div><div class="t-desc">把今天做的好事分享到朋友圈或群</div></div>
+        <div class="t-reward">+25</div>
+      </div>
+      <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:13px;color:#7a6e66;">进度：<b id="taskProgress" style="color:#c8533a;">0</b>/5 · 可领 <b id="taskReward" style="color:#c8533a;">0</b> 好心值</span>
+        <button class="nb-btn" id="claimTaskBtn" disabled onclick="claimTaskReward()">领取奖励</button>
+      </div>
+    </div>
+
+    <!-- Tab2: 社区动态 -->
+    <div class="tab-content" id="tab2" style="padding:0 16px 16px;">
+      <div style="font-size:12px;color:#7a6e66;margin:10px 0 6px;">实时更新 · 邻居们的最新好事</div>
+      <div id="feedContainer"></div>
+    </div>
+
+    <!-- Tab3: 好事足迹 -->
+    <div class="tab-content" id="tab3" style="padding:0 16px 16px;">
+      <div style="font-size:12px;color:#7a6e66;margin:10px 0 6px;">你的好事时间线 · 累计 <b style="color:#c8533a;">47</b> 件好事</div>
+      <div class="timeline" id="timelineContainer"></div>
+    </div>
+
+    <!-- Tab4: 签到热力图 -->
+    <div class="tab-content" id="tab4" style="padding:0 16px 16px;">
+      <div style="font-size:12px;color:#7a6e66;margin:10px 0 8px;">近30天签到记录 · 连续签到 <b style="color:#c8533a;">5</b> 天</div>
+      <div class="hm-label"><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span></div>
+      <div class="hm-grid" id="hmGrid"></div>
+      <div class="hm-legend">
+        <span>少</span>
+        <span class="hm-l"></span>
+        <span class="hm-l" style="background:#fef3ef;"></span>
+        <span class="hm-l" style="background:#fde0d6;"></span>
+        <span class="hm-l" style="background:#c8533a;"></span>
+        <span>多</span>
+      </div>
+    </div>
+
+    <!-- Tab5: 消息 -->
+    <div class="tab-content" id="tab5" style="padding:0 16px 16px;">
+      <div style="font-size:12px;color:#7a6e66;margin:10px 0 6px;">通知中心 · 你有 <b id="unreadCount" style="color:#c8533a;">3</b> 条未读</div>
+      <div id="msgContainer"></div>
+    </div>
+  </div>
+
+  <!-- 邻里和排行榜双栏 -->
+  <div class="content-grid" style="margin-top:16px;">
+    <!-- 我的邻里 -->
+    <div class="card">
+      <div class="card-hd"><h3>👥 我的邻里</h3><span class="more" onclick="showToast('👥','邻里互动','查看全部邻居')">查看全部 →</span></div>
+      <div class="neighbor-grid" id="neighborGrid"></div>
+    </div>
+    <!-- 社区排行榜 -->
+    <div class="card">
+      <div class="card-hd"><h3>🏆 社区排行榜</h3><span class="more" onclick="showToast('🏆','排行榜','查看完整排名')">本周排名 →</span></div>
+      <div id="rankContainer"></div>
+    </div>
+  </div>
+
+</div><!-- /.wrap -->
+
+<!-- 页脚 -->
+<footer style="margin-top:0;padding:24px;text-align:center;color:#7a6e66;font-size:13px;border-top:1px solid #eee8e2;background:#fff;">
+  <p>好事近 · 个人中心 &mdash; 你的每一个善意，都值得被看见 <span style="color:#c8533a;">♥</span></p>
+</footer>
+
+<!-- Toast -->
+<div class="toast-box" id="toastBox"></div>
+
+<script>
+// ==================== Toast ====================
+function showToast(icon, title, desc) {
+  var box = document.getElementById('toastBox');
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = '<span class="t-icon">' + icon + '</span><div><div class="t-title">' + title + '</div><div class="t-desc">' + desc + '</div></div>';
+  box.appendChild(t);
+  setTimeout(function() {
+    t.style.opacity = '0'; t.style.transform = 'translateX(40px)'; t.style.transition = 'all .3s ease';
+    setTimeout(function() { t.remove(); }, 300);
+  }, 3500);
+}
+
+// ==================== Tab切换 ====================
+function switchTab(tabId, el) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('show'); });
+  document.getElementById(tabId).classList.add('show');
+}
+
+// ==================== 每日任务 ====================
+var taskDone = {};
+function toggleTask(el) {
+  var task = el.closest('.task-item').dataset.task;
+  if (taskDone[task]) {
+    taskDone[task] = false;
+    el.classList.remove('done');
+    el.textContent = '';
+  } else {
+    taskDone[task] = true;
+    el.classList.add('done');
+    el.textContent = '✓';
+  }
+  var count = Object.keys(taskDone).filter(function(k) { return taskDone[k]; }).length;
+  var reward = 0;
+  if (taskDone['1']) reward += 10;
+  if (taskDone['2']) reward += 20;
+  if (taskDone['3']) reward += 15;
+  if (taskDone['4']) reward += 10;
+  if (taskDone['5']) reward += 25;
+  document.getElementById('taskProgress').textContent = count;
+  document.getElementById('taskReward').textContent = reward;
+  document.getElementById('claimTaskBtn').disabled = count === 0;
+}
+
+function claimTaskReward() {
+  var count = Object.keys(taskDone).filter(function(k) { return taskDone[k]; }).length;
+  var reward = 0;
+  if (taskDone['1']) reward += 10;
+  if (taskDone['2']) reward += 20;
+  if (taskDone['3']) reward += 15;
+  if (taskDone['4']) reward += 10;
+  if (taskDone['5']) reward += 25;
+  var pts = document.getElementById('psPoints');
+  pts.textContent = parseInt(pts.textContent.replace(',','')) + reward;
+  showToast('🎉', '任务奖励已领取！', '+' + reward + ' 好心值');
+  // 重置
+  taskDone = {};
+  document.querySelectorAll('.task-item .t-check').forEach(function(c) { c.classList.remove('done'); c.textContent = ''; });
+  document.getElementById('taskProgress').textContent = 0;
+  document.getElementById('taskReward').textContent = 0;
+  document.getElementById('claimTaskBtn').disabled = true;
+}
+
+// ==================== 通知条 ====================
+function claimDaily() {
+  switchTab('tab1', document.querySelector('.tab[data-tab="tab1"]'));
+  showToast('📋', '跳转到每日任务', '完成今日任务，领取好心值奖励');
+}
+
+// ==================== 社区动态 ====================
+var feedData = [
+  { avatar:'👩', name:'赵姐', action:'completed', text:'帮3号楼的王奶奶取了快递还送上门', time:'3分钟前', tag:'热心助人' },
+  { avatar:'👨', name:'张哥', action:'completed', text:'在小区门口摆正了12辆共享单车', time:'15分钟前', tag:'环保先锋' },
+  { avatar:'👧', name:'小雅', action:'completed', text:'在楼道放了共享雨伞，贴了"用完请还"的纸条', time:'28分钟前', tag:'共享达人' },
+  { avatar:'👴', name:'刘叔', action:'completed', text:'教1号楼的陈爷爷用手机预约挂号', time:'1小时前', tag:'技能互助' },
+  { avatar:'👩', name:'李姐', action:'completed', text:'包了饺子分给楼上楼下的邻居', time:'2小时前', tag:'美食共享' },
+  { avatar:'🧑', name:'小王', action:'completed', text:'清理了楼道里的小广告和过期通知', time:'3小时前', tag:'美化环境' },
+  { avatar:'👵', name:'周阿姨', action:'launched', text:'发起了一个"周末小区健步走"活动', time:'4小时前', tag:'活动组织' },
+  { avatar:'👨', name:'陈哥', action:'completed', text:'把家里的旧书整理出来放在楼道图书角', time:'5小时前', tag:'闲置共享' },
+  { avatar:'👩', name:'小林', action:'completed', text:'陪独居老人聊了20分钟，帮整理了药箱', time:'6小时前', tag:'暖心陪伴' },
+  { avatar:'🧑', name:'阿杰', action:'completed', text:'捡到一串钥匙，拍照发业主群找到了失主', time:'8小时前', tag:'拾金不昧' },
+];
+
+function renderFeed() {
+  var container = document.getElementById('feedContainer');
+  container.innerHTML = feedData.map(function(f) {
+    return '<div class="feed-item"><div class="fi-avatar">' + f.avatar + '</div><div class="fi-body"><div class="fi-text"><b>' + f.name + '</b> ' + (f.action === 'completed' ? '完成了一件好事：' : '发起了一个活动：') + f.text + '</div><div class="fi-time">' + f.time + '</div></div><div class="fi-action">' + f.tag + '</div></div>';
+  }).join('');
+}
+renderFeed();
+
+// ==================== 好事足迹 ====================
+var timelineData = [
+  { date:'今天 08:30', title:'帮邻居取快递', desc:'3号楼李姐的大件快递，送到门口', points:'+10' },
+  { date:'昨天 18:20', title:'垃圾分类站岗', desc:'在垃圾投放点帮邻居分类10分钟', points:'+15' },
+  { date:'昨天 07:45', title:'给保安送水', desc:'天热，给小区保安送了杯凉茶', points:'+5' },
+  { date:'3天前', title:'共享雨伞角落成', desc:'在楼道放了共享雨伞角', points:'+10' },
+  { date:'4天前', title:'陪老人聊天', desc:'陪5号楼的赵奶奶聊了15分钟', points:'+10' },
+  { date:'5天前', title:'清理楼道小广告', desc:'撕掉3号楼楼道里的6张小广告', points:'+10' },
+  { date:'6天前', title:'帮邻居打印资料', desc:'帮2楼刘姐打印孩子作业', points:'+5' },
+  { date:'7天前', title:'摆正共享单车', desc:'小区门口摆正了8辆乱停的单车', points:'+10' },
+  { date:'8天前', title:'捡到钥匙归还', desc:'在小区花园捡到钥匙，群里找到失主', points:'+15' },
+  { date:'9天前', title:'教老人用手机', desc:'教1号楼陈爷爷用微信视频通话', points:'+15' },
+];
+
+function renderTimeline() {
+  var container = document.getElementById('timelineContainer');
+  container.innerHTML = timelineData.map(function(t) {
+    return '<div class="tl-item"><div class="tl-date">' + t.date + '</div><div class="tl-title">' + t.title + '</div><div class="tl-desc">' + t.desc + '</div><div class="tl-points">' + t.points + ' 好心值</div></div>';
+  }).join('');
+}
+renderTimeline();
+
+// ==================== 签到热力图 ====================
+function renderHeatmap() {
+  var grid = document.getElementById('hmGrid');
+  var days = 28;
+  var cells = [];
+  var today = new Date();
+  var patterns = [0,1,1,0,1,2,1,0,0,1,2,3,2,1,0,1,1,2,1,0,1,2,3,3,2,1,2,3]; // 模拟签到模式
+  for (var i = 0; i < days; i++) {
+    var d = new Date(today);
+    d.setDate(d.getDate() - (days - 1 - i));
+    var level = patterns[i % patterns.length];
+    var cls = 'hm-cell';
+    if (i === days - 1) cls += ' today';
+    if (level === 1) cls += ' l1';
+    else if (level === 2) cls += ' l2';
+    else if (level >= 3) cls += ' l3';
+    cells.push('<div class="' + cls + '" title="' + (d.getMonth()+1) + '/' + d.getDate() + (level > 0 ? ' · 已签到' : ' · 未签到') + '">' + d.getDate() + '</div>');
+  }
+  grid.innerHTML = cells.join('');
+}
+renderHeatmap();
+
+// ==================== 消息 ====================
+var msgData = [
+  { icon:'💛', bg:'#fef3ef', title:'好心值到账', desc:'你帮助邻居取快递，获得 +10 好心值', time:'10分钟前', unread:true },
+  { icon:'🌟', bg:'#fef6e8', title:'成就解锁', desc:'恭喜你解锁"助人达人"徽章！', time:'1小时前', unread:true },
+  { icon:'👥', bg:'#eef4fa', title:'新邻居加入', desc:'7号楼502的新邻居加入了社区，打个招呼吧', time:'3小时前', unread:true },
+  { icon:'🎯', bg:'#edf7f0', title:'任务提醒', desc:'今日还有2个任务未完成，快去看看吧', time:'5小时前', unread:false },
+  { icon:'🏆', bg:'#f5f0fa', title:'排名更新', desc:'你在社区排行榜上升了2位，继续保持！', time:'昨天', unread:false },
+  { icon:'📢', bg:'#fef3ef', title:'社区公告', desc:'本周末将举办"邻里跳蚤市场"，欢迎报名', time:'昨天', unread:false },
+  { icon:'🤝', bg:'#e0f7fa', title:'互助请求', desc:'5号楼张先生需要人帮忙遛狗，你有空吗？', time:'2天前', unread:false },
+];
+
+function renderMsgs() {
+  var container = document.getElementById('msgContainer');
+  var unread = 0;
+  container.innerHTML = msgData.map(function(m) {
+    if (m.unread) unread++;
+    return '<div class="msg-item"><div class="mi-icon" style="background:' + m.bg + ';">' + m.icon + '</div><div class="mi-body"><div class="mi-title">' + m.title + '</div><div class="mi-desc">' + m.desc + '</div><div class="mi-time">' + m.time + '</div></div>' + (m.unread ? '<div class="mi-dot"></div>' : '') + '</div>';
+  }).join('');
+  document.getElementById('unreadCount').textContent = unread;
+}
+renderMsgs();
+
+// ==================== 邻里 ====================
+var neighbors = [
+  { avatar:'👩', name:'赵姐', building:'3-201', tag:'热心邻居', acts:23 },
+  { avatar:'👨', name:'张哥', building:'5-102', tag:'环保达人', acts:18 },
+  { avatar:'👧', name:'小雅', building:'7-301', tag:'共享达人', acts:15 },
+  { avatar:'👴', name:'刘叔', building:'1-502', tag:'技能能手', acts:12 },
+  { avatar:'👩', name:'李姐', building:'2-401', tag:'美食家', acts:10 },
+  { avatar:'🧑', name:'小王', building:'3-603', tag:'好帮手', acts:9 },
+];
+
+function renderNeighbors() {
+  var grid = document.getElementById('neighborGrid');
+  grid.innerHTML = neighbors.map(function(n) {
+    return '<div class="neighbor-card" onclick="showToast(\'👥\',\'' + n.name + '\',\'共完成 ' + n.acts + ' 件好事\n' + n.building + '\')"><div class="nc-avatar">' + n.avatar + '</div><div class="nc-name">' + n.name + '</div><div class="nc-meta">' + n.building + '</div><div class="nc-tag">' + n.tag + '</div></div>';
+  }).join('');
+}
+renderNeighbors();
+
+// ==================== 排行榜 ====================
+var rankData = [
+  { name:'赵姐', avatar:'👩', score:1280, badge:'热心楼长' },
+  { name:'张哥', avatar:'👨', score:960, badge:'环保先锋' },
+  { name:'小雅', avatar:'👧', score:850, badge:'共享达人' },
+  { name:'刘叔', avatar:'👴', score:720, badge:'技能能手' },
+  { name:'你（林小暖）', avatar:'🙋', score:640, badge:'Lv7 好事达人' },
+  { name:'李姐', avatar:'👩', score:580, badge:'美食家' },
+];
+
+function renderRank() {
+  var container = document.getElementById('rankContainer');
+  container.innerHTML = rankData.map(function(r, i) {
+    var numCls = 'r-num' + (i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '');
+    var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+    var isMe = r.name.indexOf('你') === 0;
+    return '<div class="rank-item"><div class="' + numCls + '">' + medal + '</div><div class="r-avatar">' + r.avatar + '</div><div class="r-name"' + (isMe ? ' style="color:#c8533a;"' : '') + '>' + r.name + '</div><div class="r-score">' + r.score + ' 值</div><div class="r-badge">' + r.badge + '</div></div>';
+  }).join('');
+}
+renderRank();
+
+// ==================== 模拟新消息推送 ====================
+setTimeout(function() {
+  msgData.unshift({ icon:'💛', bg:'#fef3ef', title:'好心值到账', desc:'好事记录已保存，获得 +5 好心值', time:'刚刚', unread:true });
+  renderMsgs();
+  showToast('💛', '好心值+5', '今日好事记录已保存');
+}, 8000);
+
+setTimeout(function() {
+  feedData.unshift({ avatar:'🙋', name:'你（林小暖）', action:'completed', text:'完成了每日任务，领取了奖励', time:'刚刚', tag:'任务达人' });
+  renderFeed();
+  showToast('🌟', '动态已更新', '你的好事已出现在社区动态中');
+}, 15000);
+</script>
+
+</body>
+</html>
